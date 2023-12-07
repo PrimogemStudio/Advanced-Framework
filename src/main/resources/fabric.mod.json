@@ -21,6 +21,9 @@
     ],
     "main": [
       "com.primogemstudio.advancedui.AdvancedUI"
+    ],
+    "preLaunch": [
+      "com.primogemstudio.advancedui.EarlyInitializer"
     ]
   },
   "mixins": [
