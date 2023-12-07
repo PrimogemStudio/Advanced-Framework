@@ -1,0 +1,86 @@
+//file:noinspection GroovyAssignabilityCheck
+//file:noinspection GroovyAccessibility
+plugins {
+    id 'fabric-loom' version '1.4-SNAPSHOT'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+loom {
+    // accessWidenerPath = file("src/main/resources/META-INF/aw.accesswidener")
+}
+
+repositories {
+    maven { url = 'https://maven.aliyun.com/repository/central' }
+    maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven {
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+    maven { url = 'https://maven.aliyun.com/repository/jcenter' }
+    maven { url = 'https://maven.aliyun.com/repository/google' }
+    maven { url = 'https://maven.aliyun.com/repository/public' }
+    maven { url = 'https://maven.parchmentmc.org' }
+    maven { url = 'https://maven.shedaniel.me' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+    }
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version,
+                "minecraft_version": project.minecraft_version,
+                "loader_version": project.loader_version
+    }
+}
+
+def targetJavaVersion = 17
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    archivesBaseName = project.archives_base_name
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
