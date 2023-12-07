@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "advanced-ui",
+  "id": "advancedui",
   "version": "0.1",
-  "name": "Advanced-UI",
+  "name": "Advanced UI",
   "description": "",
   "authors": [
     "Jack253-png"
@@ -13,7 +13,7 @@
     "issues": "https://github.com/Primogem-Craft-Development/Advanced-UI/issues"
   },
   "license": "GPLv3",
-  "icon": "assets/advanced-ui/icon.png",
+  "icon": "assets/advancedui/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -24,7 +24,7 @@
     ]
   },
   "mixins": [
-    "advanced-ui.mixins.json"
+    "advancedui.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.0",
