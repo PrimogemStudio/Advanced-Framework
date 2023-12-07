@@ -51,7 +51,7 @@ jobs:
       - name: Upload JAR file
         uses: actions/upload-artifact@v3
         with:
-          name: primogemcraft-${{ env.LAST_COMMIT_SHA }}
+          name: AdvancedUI-${{ env.LAST_COMMIT_SHA }}
           path: |
             build/libs/*.jar
             !build/libs/*-sources.jar
