@@ -9,12 +9,12 @@
       "outtarget": "swap",
       "uniforms": [
         {
-          "name": "BlurDir",
-          "values": [ 0.0, 0.0 ]
+          "name": "RectPos",
+          "values": [ 0.0, 0.0, 0.5, 0.5 ]
         },
         {
           "name": "Radius",
-          "values": [ 20.0 ]
+          "values": [ 1.0 ]
         }
       ]
     },
