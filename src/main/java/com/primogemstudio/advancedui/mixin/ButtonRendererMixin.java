@@ -23,22 +23,30 @@ public abstract class ButtonRendererMixin extends Screen {
 
     @Inject(at = @At("RETURN"), method = "render")
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        RenderSystem.setShader(AdvancedUI.ROUNDED_RECT::getProgram);
-        AdvancedUI.ROUNDED_RECT.findUniform2f("Resolution").set(width, height);
-        AdvancedUI.ROUNDED_RECT.findUniform2f("Center").set(mouseX, mouseY);
-        var x1 = mouseX - 100;
-        var x2 = mouseX + 100;
-        var y1 = mouseY - 50;
-        var y2 = mouseY + 50;
-        var matrix = graphics.pose().last().pose();
-        var buff = Tesselator.getInstance().getBuilder();
-        buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        buff.vertex(matrix, x1, y1, 0).color(0.1f, 0.3f, 0.2f, 0.7f).endVertex();
-        buff.vertex(matrix, x1, y2, 0).color(0.1f, 0.3f, 0.2f, 0.7f).endVertex();
-        buff.vertex(matrix, x2, y2, 0).color(0.1f, 0.3f, 0.2f, 0.7f).endVertex();
-        buff.vertex(matrix, x2, y1, 0).color(0.1f, 0.3f, 0.2f, 0.7f).endVertex();
-        RenderSystem.enableBlend();
-        BufferUploader.drawWithShader(buff.end());
-        RenderSystem.disableBlend();
+        try {
+            RenderSystem.setShader(AdvancedUI.ROUNDED_RECT::getProgram);
+            AdvancedUI.ROUNDED_RECT.findUniform2f("Resolution").set(width, height);
+            AdvancedUI.ROUNDED_RECT.findUniform2f("Center").set(mouseX, mouseY);
+            AdvancedUI.ROUNDED_RECT.findUniform1f("Radius").set(10);
+            AdvancedUI.ROUNDED_RECT.findUniform1f("Thickness").set(0.0F);
+            AdvancedUI.ROUNDED_RECT.findUniform2f("Size").set(300, 300);
+            var x1 = 0;
+            var x2 = width;
+            var y1 = 0;
+            var y2 = height;
+            var matrix = graphics.pose().last().pose();
+            var buff = Tesselator.getInstance().getBuilder();
+            buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            buff.vertex(matrix, x1, y1, 0).color(0xcccccccc).endVertex();
+            buff.vertex(matrix, x1, y2, 0).color(0xcccccccc).endVertex();
+            buff.vertex(matrix, x2, y2, 0).color(0xcccccccc).endVertex();
+            buff.vertex(matrix, x2, y1, 0).color(0xcccccccc).endVertex();
+            RenderSystem.enableBlend();
+            BufferUploader.drawWithShader(buff.end());
+            RenderSystem.disableBlend();
+        }
+        catch (Exception ignored) {
+
+        }
     }
 }

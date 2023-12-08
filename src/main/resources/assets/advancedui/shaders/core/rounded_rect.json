@@ -10,6 +10,7 @@
     "Color"
   ],
   "samplers": [
+    { "name": "Sampler0" }
   ],
   "uniforms": [
     {
@@ -85,6 +86,30 @@
       "values": [
         0.0,
         0.0
+      ]
+    },
+    {
+      "name": "Radius",
+      "type": "float",
+      "count": 1,
+      "values": [
+        10.0
+      ]
+    },
+    {
+      "name": "Thickness",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.012
+      ]
+    },
+    {
+      "name": "Size",
+      "type": "float",
+      "count": 2,
+      "values": [
+        300.0, 300.0
       ]
     }
   ]
