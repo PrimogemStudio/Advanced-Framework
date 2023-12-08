@@ -30,10 +30,10 @@ public abstract class ButtonRendererMixin extends Screen {
             AdvancedUI.ROUNDED_RECT.findUniform1f("Radius").set(10);
             AdvancedUI.ROUNDED_RECT.findUniform1f("Thickness").set(0.0F);
             AdvancedUI.ROUNDED_RECT.findUniform2f("Size").set(300, 300);
-            var x1 = 0;
-            var x2 = width;
-            var y1 = 0;
-            var y2 = height;
+            var x1 = mouseX - 150;
+            var x2 = mouseX + 150;
+            var y1 = mouseY - 150;
+            var y2 = mouseY + 150;
             var matrix = graphics.pose().last().pose();
             var buff = Tesselator.getInstance().getBuilder();
             buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
@@ -44,9 +44,7 @@ public abstract class ButtonRendererMixin extends Screen {
             RenderSystem.enableBlend();
             BufferUploader.drawWithShader(buff.end());
             RenderSystem.disableBlend();
-        }
-        catch (Exception ignored) {
-
+        } catch (Exception ignored) {
         }
     }
 }

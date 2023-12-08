@@ -26,11 +26,11 @@ void main()
     vec2 ratio = vec2(aspect, 1.0);
     vec2 uv = (2.0 * npos - 1.0) * ratio;
 
-    vec2 size = Size / Resolution[0];
+    vec2 size = Size / Resolution.x;
     vec2 pos = (2.0 * Center / Resolution - 1.0) * ratio;
-    float radius = Radius / Resolution[0];
+    float radius = Radius / Resolution.x;
     float thickness = Thickness;
 
     float intensity = roundedRectangle(uv, pos, size, radius, thickness);
-    fragColor = mix(vec4(0.0), vec4(vertexColor[0], vertexColor[1], vertexColor[2], 1.0), intensity * vertexColor[3]);
+    fragColor = mix(vec4(0.0), vec4(vertexColor.xyz, 1.0), intensity * vertexColor.w);
 }
