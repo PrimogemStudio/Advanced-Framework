@@ -68,6 +68,24 @@
         1.0,
         1.0
       ]
+    },
+    {
+      "name": "Resolution",
+      "type": "float",
+      "count": 2,
+      "values": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Center",
+      "type": "float",
+      "count": 2,
+      "values": [
+        0.0,
+        0.0
+      ]
     }
   ]
 }

@@ -7,10 +7,10 @@ uniform mat4 ModelViewMat;
 uniform mat4 ProjMat;
 
 out vec4 vertexColor;
-out vec4 vertexPos;
+out vec2 vertexUV;
 
 void main() {
-    vertexPos = ProjMat * ModelViewMat * vec4(Position, 1.0);
+    gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     vertexColor = Color;
-    gl_Position = vertexPos;
+    vertexUV = Position.xy;
 }

@@ -1,9 +1,11 @@
 #version 150
 
 in vec4 vertexColor;
-in vec4 vertexPos;
+in vec2 vertexUV;
 
 uniform vec4 ColorModulator;
+uniform vec2 Resolution;
+uniform vec2 Center;
 
 out vec4 fragColor;
 
@@ -15,14 +17,16 @@ float roundedRectangle(vec2 offset, vec2 pos, vec2 size, float radius, float thi
 
 void main()
 {
-    vec3 col = vec3(0.0);
-    vec2 pos = vec2(0.0, 0.0);
+    vec2 npos = vertexUV.xy / Resolution.xy;
+    float aspect = Resolution.x / Resolution.y;
+    vec2 ratio = vec2(aspect, 1.0);
+    vec2 uv = (2.0 * npos - 1.0) * ratio;
+
     vec2 size = vec2(0.2, 0.2);
+    vec2 pos = (2.0 * Center / Resolution - 1.0) * ratio;
     float radius = 0.1;
     float thickness = 0.012;
 
-    const vec3 rectColor = vec3(0.1, 0.3, 0.2);
-    float intensity = roundedRectangle(vertexPos.xy, pos, size, radius, thickness);
-    col = mix(col, rectColor, intensity);
-    fragColor = vec4(col, 1);
+    float intensity = roundedRectangle(uv, pos, size, radius, thickness);
+    fragColor = mix(vec4(0.0), vertexColor, intensity);
 }
