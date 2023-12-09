@@ -6,7 +6,7 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import static com.primogemstudio.advancedui.render.Shaders.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
 
-public class GaussianBlur implements Filter {
+public class GaussianBlurFilter implements Filter {
     private static final TextureTarget target = new TextureTarget(1, 1, true, ON_OSX);
     private boolean enable;
 

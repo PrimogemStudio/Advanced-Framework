@@ -3,7 +3,7 @@ package com.primogemstudio.advancedui.render;
 import com.google.common.collect.ImmutableMap;
 import com.primogemstudio.advancedui.render.filter.Filter;
 import com.primogemstudio.advancedui.render.filter.FilterType;
-import com.primogemstudio.advancedui.render.filter.GaussianBlur;
+import com.primogemstudio.advancedui.render.filter.GaussianBlurFilter;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class RenderQueue {
 
     static {
         var mb = ImmutableMap.<FilterType, Filter>builder();
-        mb.put(FilterType.GAUSSIAN_BLUR, new GaussianBlur());
+        mb.put(FilterType.GAUSSIAN_BLUR, new GaussianBlurFilter());
         filters = mb.build();
     }
 
