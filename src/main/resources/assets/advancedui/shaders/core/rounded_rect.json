@@ -10,7 +10,6 @@
     "Color"
   ],
   "samplers": [
-    { "name": "Sampler0" }
   ],
   "uniforms": [
     {
@@ -109,7 +108,8 @@
       "type": "float",
       "count": 2,
       "values": [
-        300.0, 300.0
+        300.0,
+        300.0
       ]
     }
   ]

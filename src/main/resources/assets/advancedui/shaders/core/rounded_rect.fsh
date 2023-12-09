@@ -9,7 +9,6 @@ uniform vec2 Center;
 uniform float Radius;
 uniform float Thickness;
 uniform vec2 Size;
-uniform sampler2D Sampler0;
 
 out vec4 fragColor;
 
@@ -32,5 +31,5 @@ void main()
     float thickness = Thickness;
 
     float intensity = roundedRectangle(uv, pos, size, radius, thickness);
-    fragColor = mix(vec4(0.0), vec4(vertexColor.xyz, 1.0), intensity * vertexColor.w);
+    fragColor = mix(vec4(0.0), vec4(vertexColor.xyz, 1.0), intensity * vertexColor.w) * ColorModulator;
 }

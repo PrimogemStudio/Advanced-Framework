@@ -1,0 +1,33 @@
+{
+  "targets": [
+    "temp",
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "advancedui:gaussian_blur",
+      "intarget": "minecraft:main",
+      "outtarget": "temp",
+      "uniforms": [
+      ]
+    },
+    {
+      "name": "advancedui:gaussian_blur",
+      "intarget": "temp",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "Horizontal",
+          "values": [
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}
