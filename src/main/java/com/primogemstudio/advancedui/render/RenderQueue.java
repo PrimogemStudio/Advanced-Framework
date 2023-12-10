@@ -1,13 +1,14 @@
 package com.primogemstudio.advancedui.render;
 
-import com.google.common.collect.ImmutableMap;
 import com.primogemstudio.advancedui.render.filter.Filter;
 import com.primogemstudio.advancedui.render.filter.FilterType;
 import com.primogemstudio.advancedui.render.filter.GaussianBlurFilter;
+import net.minecraft.client.Minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.primogemstudio.advancedui.render.FilterTypes.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
 
 public class RenderQueue {
@@ -15,7 +16,7 @@ public class RenderQueue {
     private static final Map<FilterType, Filter> filters = new HashMap<>();
 
     static {
-        register(FilterType.GAUSSIAN_BLUR, new GaussianBlurFilter());
+        register(GAUSSIAN_BLUR, new GaussianBlurFilter());
     }
 
     public static void init(int width, int height) {
@@ -31,8 +32,8 @@ public class RenderQueue {
         }
     }
 
-    public static void register(FilterType type, Filter impl) {
-        filters.put(type, impl);
+    public static void register(FilterType type, Filter filter) {
+        filters.put(type, filter);
     }
 
     public static void post(float partialTicks) {
@@ -52,5 +53,6 @@ public class RenderQueue {
         renderable.render(renderResource);
         target.unbindWrite();
         filter.enable();
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
     }
 }
