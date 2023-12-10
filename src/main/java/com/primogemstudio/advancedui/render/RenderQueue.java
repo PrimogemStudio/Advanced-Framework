@@ -5,18 +5,17 @@ import com.primogemstudio.advancedui.render.filter.Filter;
 import com.primogemstudio.advancedui.render.filter.FilterType;
 import com.primogemstudio.advancedui.render.filter.GaussianBlurFilter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static net.minecraft.client.Minecraft.ON_OSX;
 
 public class RenderQueue {
     private static final RenderResource renderResource = new RenderResource();
-    private static final Map<FilterType, Filter> filters;
+    private static final Map<FilterType, Filter> filters = new HashMap<>();
 
     static {
-        var mb = ImmutableMap.<FilterType, Filter>builder();
-        mb.put(FilterType.GAUSSIAN_BLUR, new GaussianBlurFilter());
-        filters = mb.build();
+        register(FilterType.GAUSSIAN_BLUR, new GaussianBlurFilter());
     }
 
     public static void init(int width, int height) {
@@ -30,6 +29,10 @@ public class RenderQueue {
             f.getTarget().clear(ON_OSX);
             f.reset();
         }
+    }
+
+    public static void register(FilterType type, Filter impl) {
+        filters.put(type, impl);
     }
 
     public static void post(float partialTicks) {

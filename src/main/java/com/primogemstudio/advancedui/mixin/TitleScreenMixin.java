@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin {
-    @Inject(at = @At("HEAD"), method = "render")
+    @Inject(at = @At("RETURN"), method = "render")
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         var matrix = graphics.pose().last().pose();
         var center = new Vector2f(mouseX, mouseY);
