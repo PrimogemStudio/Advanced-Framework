@@ -16,7 +16,7 @@ float roundedRectangleSDF(vec2 p, vec2 a, float r)
 {
     vec2 q = abs(p) - a + r;
     float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-    return 1.0 - step(0, d);
+    return 1.0 - smoothstep(0, 0.002, d);
 }
 
 void main()
