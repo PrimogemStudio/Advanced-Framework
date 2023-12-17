@@ -6,7 +6,6 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import java.util.Map;
 
 import static com.primogemstudio.advancedui.render.Shaders.FAST_GAUSSIAN_BLUR;
-import static com.primogemstudio.advancedui.render.Shaders.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
 
 public class FastGaussianBlurFilter implements Filter {
