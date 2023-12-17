@@ -3,6 +3,7 @@ package com.primogemstudio.advancedui.render.filter;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 
+import static com.primogemstudio.advancedui.render.Shaders.FAST_GAUSSIAN_BLUR;
 import static com.primogemstudio.advancedui.render.Shaders.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
 

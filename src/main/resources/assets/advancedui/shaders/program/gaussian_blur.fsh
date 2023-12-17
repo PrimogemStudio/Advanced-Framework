@@ -4,39 +4,36 @@ uniform sampler2D DiffuseSampler;
 uniform sampler2D InputSampler;
 
 uniform vec4 ColorModulate;
+uniform int Radius;
 
 in vec2 texCoord;
 
 out vec4 fragColor;
 
-uniform bool Horizontal;
-uniform float Weight[5] = float[](0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 
-vec3 gaussian_blur(vec4 col)
-{
-    vec2 tex_offset = 2.0 / textureSize(DiffuseSampler, 0);
-    vec3 result = texture(DiffuseSampler, texCoord).rgb * Weight[0];
-    if (Horizontal)
+vec4 gaussian_blur() {
+    vec4 color = vec4(0.0);
+    int seg = Radius;
+    int i = -seg;
+    int j = 0;
+    float f = 0.0f;
+    float dv = 2.0f/512.0f;
+    float tot = 0.0f;
+    for(; i <= seg; ++i)
     {
-        for (int i = 1; i < 5; ++i)
+        for(j = -seg; j <= seg; ++j)
         {
-            result += texture(DiffuseSampler, texCoord + vec2(tex_offset.x * i, 0.0)).rgb * Weight[i];
-            result += texture(DiffuseSampler, texCoord - vec2(tex_offset.x * i, 0.0)).rgb * Weight[i];
-        }
-        result = col.xyz + result * (1 - col.a);
-    }
-    else
-    {
-        for (int i = 1; i < 5; ++i)
-        {
-            result += texture(DiffuseSampler, texCoord + vec2(0.0, tex_offset.y * i)).rgb * Weight[i];
-            result += texture(DiffuseSampler, texCoord - vec2(0.0, tex_offset.y * i)).rgb * Weight[i];
+            f = (1.1 - sqrt(i*i + j*j)/8.0);
+            f *= f;
+            tot += f;
+            color += texture(DiffuseSampler, vec2(texCoord.x + j * dv, texCoord.y + i * dv)).rgba * f;
         }
     }
-    return result;
+    color /= tot;
+    return color;
 }
 
-void main(){
+void main() {
     vec4 col = texture(InputSampler, texCoord);
     vec4 dst = texture(DiffuseSampler, texCoord);
     if (col.a <= 0.01)
@@ -45,5 +42,6 @@ void main(){
         return;
     }
 
-    fragColor = vec4(gaussian_blur(col), 1) * ColorModulate;
+    // fragColor = vec4(gaussian_blur(col), 1) * ColorModulate;
+    fragColor = mix(gaussian_blur(), vec4(col.xyz, 1.0), col.a);
 }

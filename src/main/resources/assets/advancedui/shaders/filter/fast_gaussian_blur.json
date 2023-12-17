@@ -1,19 +1,11 @@
 {
   "targets": [
-    "temp",
     "swap"
   ],
   "passes": [
     {
-      "name": "advancedui:gaussian_blur",
+      "name": "advancedui:fast_gaussian_blur",
       "intarget": "minecraft:main",
-      "outtarget": "temp",
-      "uniforms": [
-      ]
-    },
-    {
-      "name": "advancedui:gaussian_blur",
-      "intarget": "temp",
       "outtarget": "swap",
       "uniforms": [
       ]

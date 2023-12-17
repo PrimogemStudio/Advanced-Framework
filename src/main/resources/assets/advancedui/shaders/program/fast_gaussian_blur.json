@@ -4,8 +4,8 @@
     "srcrgb": "one",
     "dstrgb": "zero"
   },
-  "vertex": "advancedui:gaussian_blur",
-  "fragment": "advancedui:gaussian_blur",
+  "vertex": "advancedui:fast_gaussian_blur",
+  "fragment": "advancedui:fast_gaussian_blur",
   "attributes": [
     "Position"
   ],
@@ -62,11 +62,11 @@
       ]
     },
     {
-      "name": "Radius",
-      "type": "int",
+      "name": "Horizontal",
+      "type": "float",
       "count": 1,
       "values": [
-        5
+        0.0
       ]
     }
   ]

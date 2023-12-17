@@ -3,7 +3,6 @@
 in vec4 vertexColor;
 in vec2 vertexUV;
 
-uniform vec4 ColorModulator;
 uniform vec2 Resolution;
 uniform vec2 Center;
 uniform float Radius;
@@ -16,7 +15,7 @@ float roundedRectangleSDF(vec2 p, vec2 a, float r)
 {
     vec2 q = abs(p) - a + r;
     float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-    return 1.0 - smoothstep(0, 0.002, d);
+    return 1.0 - smoothstep(Thickness, Thickness + 0.002, d);
 }
 
 void main()

@@ -19,7 +19,7 @@ public abstract class TitleScreenMixin {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         var matrix = graphics.pose().last().pose();
         var center = new Vector2f(mouseX, mouseY);
-        var size = new Vector2f(200, 20);
+        var size = new Vector2f(200, 200);
         var color = new Vector4f(1, 1, 1, 0.4f);
         RenderQueue.draw(new RoundedRectangle(matrix, center, size, color, 20, 0), FilterTypes.GAUSSIAN_BLUR);
     }
