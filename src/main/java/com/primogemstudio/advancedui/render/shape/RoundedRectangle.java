@@ -11,13 +11,15 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.awt.*;
+
 import static com.primogemstudio.advancedui.render.Shaders.ROUNDED_RECT;
 
 public class RoundedRectangle implements Renderable {
     private final Matrix4f matrix;
-    private final Vector2f center;
-    private final Vector2f size;
-    private final Vector4f color;
+    private Vector2f center = new Vector2f();
+    private Vector2f size = new Vector2f();
+    private Vector4f color = new Vector4f();
     private final float radius;
     private final float thickness;
 
@@ -28,6 +30,23 @@ public class RoundedRectangle implements Renderable {
         this.color = color;
         this.radius = radius;
         this.thickness = thickness;
+    }
+
+    public RoundedRectangle(Matrix4f matrix, float radius, float thickness) {
+        this.matrix = matrix;
+        this.radius = radius;
+        this.thickness = thickness;
+    }
+
+    public RoundedRectangle xywh(float x, float y, float w, float h) {
+        size = new Vector2f(w, h);
+        center = new Vector2f(x + w / 2, y + h / 2);
+        return this;
+    }
+
+    public RoundedRectangle color(Color color) {
+        this.color = new Vector4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
+        return this;
     }
 
     @Override

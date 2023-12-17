@@ -9,10 +9,9 @@ import static com.primogemstudio.advancedui.render.Shaders.FAST_GAUSSIAN_BLUR;
 import static com.primogemstudio.advancedui.render.Shaders.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
 
-public class GaussianBlurFilter implements Filter {
+public class FastGaussianBlurFilter implements Filter {
     private static final TextureTarget target = new TextureTarget(1, 1, true, ON_OSX);
     private boolean enable;
-    private int radius = 5;
     static {
         target.setClearColor(0, 0, 0, 0);
     }
@@ -23,17 +22,14 @@ public class GaussianBlurFilter implements Filter {
     }
 
     public void setArgs(Map<String, Object> data) {
-        if (data.containsKey("Radius") && data.get("Radius") instanceof Integer i) {
-            radius = i;
-        }
+
     }
 
     @Override
     public void render(float partialTicks) {
         if (enable) {
-            GAUSSIAN_BLUR.setSamplerUniform("InputSampler", target);
-            GAUSSIAN_BLUR.setUniformValue("Radius", radius);
-            GAUSSIAN_BLUR.render(partialTicks);
+            FAST_GAUSSIAN_BLUR.setSamplerUniform("InputSampler", target);
+            FAST_GAUSSIAN_BLUR.render(partialTicks);
         }
     }
 
