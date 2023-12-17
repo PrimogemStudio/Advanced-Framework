@@ -10,20 +10,16 @@ in vec2 texCoord;
 
 out vec4 fragColor;
 
-
 vec4 gaussian_blur() {
     vec4 color = vec4(0.0);
     int seg = Radius;
-    int i = -seg;
-    int j = 0;
-    float f = 0.0f;
-    float dv = 2.0f/512.0f;
+    float dv = 2.0f / 512.0f;
     float tot = 0.0f;
-    for(; i <= seg; ++i)
+    for (int i = -seg; i <= seg; ++i)
     {
-        for(j = -seg; j <= seg; ++j)
+        for (int j = -seg; j <= seg; ++j)
         {
-            f = (1.1 - sqrt(i*i + j*j)/8.0);
+            float f = (1.1 - sqrt(i*i + j*j) / 8.0);
             f *= f;
             tot += f;
             color += texture(DiffuseSampler, vec2(texCoord.x + j * dv, texCoord.y + i * dv)).rgba * f;
@@ -42,6 +38,5 @@ void main() {
         return;
     }
 
-    // fragColor = vec4(gaussian_blur(col), 1) * ColorModulate;
     fragColor = mix(gaussian_blur(), vec4(col.xyz, 1.0), col.a);
 }

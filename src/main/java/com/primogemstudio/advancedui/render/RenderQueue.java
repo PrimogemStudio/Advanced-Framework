@@ -45,20 +45,26 @@ public class RenderQueue {
         }
     }
 
-    public static void postNow(float partialTicks) {
+    public static void flush(float partialTicks) {
         post(partialTicks);
-        var win = Minecraft.getInstance().getWindow();
-        init(win.getWidth(), win.getHeight());
+        for (var f : filters.values()) {
+            f.getTarget().clear(ON_OSX);
+            f.reset();
+        }
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+    }
+
+    public static void setFilterArg(FilterType type, String name, Object value) {
+        var filter = filters.get(type);
+        filter.setArg(name, value);
     }
 
     public static void draw(Renderable renderable) {
         renderable.render(renderResource);
     }
 
-    public static void draw(Renderable renderable, FilterType type, Map<String, Object> data) {
+    public static void draw(Renderable renderable, FilterType type) {
         var filter = filters.get(type);
-        filter.setArgs(data);
         var target = filter.getTarget();
         target.bindWrite(true);
         renderable.render(renderResource);
