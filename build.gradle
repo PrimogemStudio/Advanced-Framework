@@ -1,6 +1,7 @@
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection GroovyAccessibility
 plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'fabric-loom' version '1.4-SNAPSHOT'
 }
 
@@ -12,6 +13,8 @@ loom {
 }
 
 repositories {
+    maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
+    maven { url = 'https://www.jitpack.io' }
     maven { url = 'https://maven.aliyun.com/repository/central' }
     maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
     maven {
@@ -52,6 +55,12 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
+    ext.imguiVersion = "1.89.7-1"
+    ["gl", "glfw", "core"].each {
+        implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
+            exclude group: "org.lwjgl"
+        }
+    }
 }
 
 processResources {
@@ -82,6 +91,10 @@ java {
     }
     archivesBaseName = project.archives_base_name
     withSourcesJar()
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 jar {

@@ -6,8 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "TitleScreenMixin",
-    "GameRendererMixin"
+    "GameRendererMixin",
+    "ImguiHook",
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -10,13 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.primogemstudio.advancedui.test.ImguiRender.*;
+
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin {
     @Inject(method = "render", at = @At(value = "RETURN"))
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), 20, 0).resize(mouseX, mouseY, 200, 200).color(1, 1, 1, 0.4f), FilterTypes.GAUSSIAN_BLUR);
-        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "Radius", 20);
-        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "EnableFrostGrass", true);
+        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), Radius, Thickness).resize(Pos[0], Pos[1], Size[0], Size[1]).color(Color), FilterTypes.GAUSSIAN_BLUR);
+        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "Radius", Radius);
+        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "EnableFrostGrass", FrostGrass);
         RenderQueue.flush(partialTick);
     }
 }

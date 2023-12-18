@@ -47,6 +47,11 @@ public class RoundedRectangle implements Renderable {
         return this;
     }
 
+    public RoundedRectangle color(float[] col) {
+        color.set(col);
+        return this;
+    }
+
     @Override
     public void render(RenderResource res) {
         RenderSystem.setShader(ROUNDED_RECT::getProgram);
