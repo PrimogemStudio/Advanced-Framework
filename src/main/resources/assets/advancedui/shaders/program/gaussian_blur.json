@@ -77,6 +77,14 @@
       "values": [
         5
       ]
+    },
+    {
+      "name": "DigType",
+      "type": "int",
+      "count": 1,
+      "values": [
+        0
+      ]
     }
   ]
 }

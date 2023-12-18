@@ -10,6 +10,7 @@ public class GaussianBlurFilter implements Filter {
     private static final TextureTarget target = new TextureTarget(1, 1, true, ON_OSX);
     private boolean enable;
     private int radius = 5;
+    private boolean enableFrostedGrass = false;
 
     static {
         target.setClearColor(0, 0, 0, 0);
@@ -24,6 +25,7 @@ public class GaussianBlurFilter implements Filter {
     public void setArg(String name, Object value) {
         switch (name) {
             case "Radius" -> radius = (int) value;
+            case "EnableFrostGrass" -> enableFrostedGrass = (boolean) value;
         }
     }
 
@@ -32,6 +34,7 @@ public class GaussianBlurFilter implements Filter {
         if (enable) {
             GAUSSIAN_BLUR.setSamplerUniform("InputSampler", target);
             GAUSSIAN_BLUR.setUniformValue("Radius", radius);
+            GAUSSIAN_BLUR.setUniformValue("DigType", enableFrostedGrass ? 1 : 0);
             GAUSSIAN_BLUR.render(partialTicks);
         }
     }

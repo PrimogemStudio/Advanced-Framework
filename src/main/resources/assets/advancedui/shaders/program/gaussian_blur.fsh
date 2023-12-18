@@ -5,11 +5,14 @@ uniform sampler2D InputSampler;
 
 uniform vec4 ColorModulate;
 uniform int Radius;
+uniform int DigType;
 
 in vec2 texCoord;
 in vec2 oneTexel;
 
 out vec4 fragColor;
+
+#define PI2 6.2831853072
 
 vec4 blur(int samples) {
     vec4 O = vec4(0.0);
@@ -26,6 +29,29 @@ vec4 blur(int samples) {
     return O/O.a;
 }
 
+vec4 blur_dig2(int samples) {
+    float count = 1.0;
+    vec4 color = texture(DiffuseSampler, texCoord);
+    float directionStep = PI2 / 48;
+
+    vec2 off;
+    float c, s, dist, dist2, weight;
+    for (float d = 0.0; d < PI2; d += directionStep) {
+        c = cos(d);
+        s = sin(d);
+        dist = 1.0 / max(abs(c), abs(s));
+        dist2 = dist * 3.0;
+        off = vec2(c, s);
+        for (float i = dist2; i <= 32.0; i += dist2) {
+            weight = i / samples;
+            count += weight;
+            color += texture(DiffuseSampler, texCoord + off * oneTexel * i) * weight;
+        }
+    }
+
+    return color / count;
+}
+
 void main() {
     vec4 col = texture(InputSampler, texCoord);
     vec4 dst = texture(DiffuseSampler, texCoord);
@@ -35,5 +61,5 @@ void main() {
         return;
     }
 
-    fragColor = mix(blur(Radius), vec4(col.xyz, 1.0), col.a);
+    fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a);
 }
