@@ -93,6 +93,14 @@
       ]
     },
     {
+      "name": "SmoothEdge",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.001
+      ]
+    },
+    {
       "name": "Size",
       "type": "float",
       "count": 2,

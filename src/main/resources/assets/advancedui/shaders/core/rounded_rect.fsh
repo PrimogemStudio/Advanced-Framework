@@ -8,6 +8,7 @@ uniform vec2 Center;
 uniform float Radius;
 uniform float Thickness;
 uniform vec2 Size;
+uniform float SmoothEdge;
 
 out vec4 fragColor;
 
@@ -15,7 +16,7 @@ float roundedRectangleSDF(vec2 p, vec2 a, float r)
 {
     vec2 q = abs(p) - a + r;
     float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
-    return 1.0 - smoothstep(Thickness, Thickness + 0.002, d);
+    return 1.0 - smoothstep(Thickness, Thickness + SmoothEdge, d);
 }
 
 void main()
