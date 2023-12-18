@@ -12,11 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin {
-    @Inject(at = @At(value = "RETURN"), method = "render")
+    @Inject(method = "render", at = @At(value = "RETURN"))
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), 20, 0)
-                        .resize(mouseX, mouseY, 200, 200)
-                        .color(1, 1, 1, 0.4F), FilterTypes.GAUSSIAN_BLUR);
+        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), 20, 0).resize(mouseX, mouseY, 200, 200).color(1, 1, 1, 0.4f), FilterTypes.GAUSSIAN_BLUR);
         RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "Radius", 4);
         RenderQueue.flush(partialTick);
     }
