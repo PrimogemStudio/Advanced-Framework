@@ -16,8 +16,8 @@ import static com.primogemstudio.advancedui.test.ImguiRender.*;
 public abstract class TitleScreenMixin {
     @Inject(method = "render", at = @At(value = "RETURN"))
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), Radius, Thickness).resize(Pos[0], Pos[1], Size[0], Size[1]).color(Color), FilterTypes.GAUSSIAN_BLUR);
-        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "Radius", Radius);
+        RenderQueue.draw(new RoundedRectangle(graphics.pose().last().pose(), Radius, Thickness).resize(Pos[0], Pos[1], Size[0], Size[1]).color(Color), FastBlur ? FilterTypes.FAST_GAUSSIAN_BLUR : FilterTypes.GAUSSIAN_BLUR);
+        RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "Radius", BlurRadius);
         RenderQueue.setFilterArg(FilterTypes.GAUSSIAN_BLUR, "EnableFrostGrass", FrostGrass);
         RenderQueue.flush(partialTick);
     }

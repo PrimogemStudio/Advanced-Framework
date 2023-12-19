@@ -6,6 +6,8 @@ import imgui.ImGui;
 import imgui.ImguiKt;
 import imgui.MouseButton;
 import imgui.classes.Context;
+import imgui.font.Font;
+import imgui.font.FontConfig;
 import imgui.impl.gl.ImplGL3;
 import imgui.impl.glfw.ImplGlfw;
 import net.minecraft.client.Minecraft;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import uno.gl.GlWindow;
 import uno.glfw.GlfwWindow;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Mixin(value = TitleScreen.class, priority = Integer.MAX_VALUE)
@@ -41,6 +44,7 @@ public class ImguiHook extends Screen {
         new Context();
         implGlfw = new ImplGlfw(window, false, null);
         implGl3 = new ImplGL3();
+        ImguiRender.initFont(imgui);
     }
 
     protected ImguiHook(Component title) {
