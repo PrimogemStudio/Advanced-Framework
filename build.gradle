@@ -13,6 +13,7 @@ loom {
 }
 
 repositories {
+    maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
     maven { url = "https://usercontent.githubfast.com/raw/kotlin-graphics/mary/master" }
     maven { url = 'https://www.jitpack.io' }
     maven { url = 'https://maven.aliyun.com/repository/central' }
