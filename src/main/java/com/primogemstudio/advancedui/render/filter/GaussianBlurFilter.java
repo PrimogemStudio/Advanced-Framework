@@ -2,6 +2,7 @@ package com.primogemstudio.advancedui.render.filter;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import net.minecraft.util.Mth;
 
 import static com.primogemstudio.advancedui.render.Shaders.GAUSSIAN_BLUR;
 import static net.minecraft.client.Minecraft.ON_OSX;
@@ -33,7 +34,7 @@ public class GaussianBlurFilter implements Filter {
     public void render(float partialTicks) {
         if (enable) {
             GAUSSIAN_BLUR.setSamplerUniform("InputSampler", target);
-            GAUSSIAN_BLUR.setUniformValue("Radius", radius);
+            GAUSSIAN_BLUR.setUniformValue("Radius", (int) (Math.ceil((double) Math.max(4, radius) / 2) * 2));
             GAUSSIAN_BLUR.setUniformValue("DigType", enableFrostedGrass ? 1 : 0);
             GAUSSIAN_BLUR.render(partialTicks);
         }
