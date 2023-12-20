@@ -9,7 +9,7 @@ import imgui.api.slider
 class ImguiRender {
     companion object {
         @JvmField
-        var SmoothEdge = 0f
+        var SmoothEdge = 0.001f
 
         @JvmField
         var Radius = 20

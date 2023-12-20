@@ -20,14 +20,16 @@ public class RoundedRectangle implements Renderable {
     private final Vector4f color = new Vector4f();
     private final float radius;
     private final float thickness;
+    private float smoothedge = 0.001F;
 
-    public RoundedRectangle(Matrix4f matrix, Vector2f center, Vector2f size, Vector4f color, float radius, float thickness) {
+    public RoundedRectangle(Matrix4f matrix, Vector2f center, Vector2f size, Vector4f color, float radius, float thickness, float smoothedge) {
         this.matrix = matrix;
         this.radius = radius;
         this.thickness = thickness;
         this.center.set(center);
         this.size.set(size);
         this.color.set(color);
+        this.smoothedge = smoothedge;
     }
 
     public RoundedRectangle(Matrix4f matrix, float radius, float thickness) {
@@ -47,6 +49,11 @@ public class RoundedRectangle implements Renderable {
         return this;
     }
 
+    public RoundedRectangle smoothedge(float edg) {
+        this.smoothedge = edg;
+        return this;
+    }
+
     public RoundedRectangle color(float[] col) {
         color.set(col);
         return this;
@@ -59,6 +66,7 @@ public class RoundedRectangle implements Renderable {
         ROUNDED_RECT.findUniform2f("Center").set(center);
         ROUNDED_RECT.findUniform1f("Radius").set(radius);
         ROUNDED_RECT.findUniform1f("Thickness").set(thickness);
+        ROUNDED_RECT.findUniform1f("SmoothEdge").set(smoothedge);
         ROUNDED_RECT.findUniform2f("Size").set(size);
         var x1 = center.x - size.x / 2;
         var x2 = center.x + size.x / 2;

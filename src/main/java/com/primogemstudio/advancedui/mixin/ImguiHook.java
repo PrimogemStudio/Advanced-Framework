@@ -6,29 +6,24 @@ import imgui.ImGui;
 import imgui.ImguiKt;
 import imgui.MouseButton;
 import imgui.classes.Context;
-import imgui.font.Font;
-import imgui.font.FontConfig;
 import imgui.impl.gl.ImplGL3;
 import imgui.impl.glfw.ImplGlfw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import uno.gl.GlWindow;
 import uno.glfw.GlfwWindow;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
-@Mixin(value = TitleScreen.class, priority = Integer.MAX_VALUE)
-public class ImguiHook extends Screen {
+@Mixin(value = Screen.class, priority = Integer.MAX_VALUE)
+public abstract class ImguiHook extends AbstractContainerEventHandler {
     @Unique
     private static final ImGui imgui = ImGui.INSTANCE;
     @Unique
@@ -45,10 +40,6 @@ public class ImguiHook extends Screen {
         implGlfw = new ImplGlfw(window, false, null);
         implGl3 = new ImplGL3();
         ImguiRender.initFont(imgui);
-    }
-
-    protected ImguiHook(Component title) {
-        super(title);
     }
 
     @Inject(method = "render", at = @At(value = "RETURN"))
@@ -69,9 +60,10 @@ public class ImguiHook extends Screen {
         return super.mouseScrolled(d, e, amount);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
-    private void click(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         imgui.getIo().addMouseButtonEvent(MouseButton.Left, true);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
