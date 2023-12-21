@@ -6,36 +6,25 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedui.render.RenderResource;
-import com.primogemstudio.advancedui.render.Renderable;
+import net.minecraft.network.chat.Component;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import static com.primogemstudio.advancedui.render.Shaders.ROUNDED_RECT;
 
-public class RoundedRectangle implements Renderable {
-    private final Matrix4f matrix;
+public class RoundedRectangle extends AbstractBackdropableShape {
+    private Matrix4f matrix = new Matrix4f();
     private final Vector2f center = new Vector2f();
     private final Vector2f size = new Vector2f();
     private final Vector4f color = new Vector4f();
-    private final float radius;
-    private final float thickness;
+    private float radius = 10F;
+    private float thickness = 0.00F;
     private float smoothedge = 0.001F;
 
-    public RoundedRectangle(Matrix4f matrix, Vector2f center, Vector2f size, Vector4f color, float radius, float thickness, float smoothedge) {
-        this.matrix = matrix;
-        this.radius = radius;
-        this.thickness = thickness;
-        this.center.set(center);
-        this.size.set(size);
-        this.color.set(color);
-        this.smoothedge = smoothedge;
-    }
-
-    public RoundedRectangle(Matrix4f matrix, float radius, float thickness) {
-        this.matrix = matrix;
-        this.radius = radius;
-        this.thickness = thickness;
+    public RoundedRectangle(float x, float y, float w, float h, Component message) {
+        super((int) x, (int) y, (int) w, (int) h, message);
+        resize(x, y, w, h);
     }
 
     public RoundedRectangle resize(float x, float y, float w, float h) {
@@ -48,7 +37,14 @@ public class RoundedRectangle implements Renderable {
         color.set(r, g, b, a);
         return this;
     }
-
+    public RoundedRectangle radius(float rad) {
+        this.radius = rad;
+        return this;
+    }
+    public RoundedRectangle thickness(float thi) {
+        this.thickness = thi;
+        return this;
+    }
     public RoundedRectangle smoothedge(float edg) {
         this.smoothedge = edg;
         return this;
@@ -81,5 +77,9 @@ public class RoundedRectangle implements Renderable {
         RenderSystem.enableBlend();
         BufferUploader.drawWithShader(buff.end());
         RenderSystem.disableBlend();
+    }
+
+    protected void updateStack(Matrix4f matrix) {
+        this.matrix = matrix;
     }
 }
