@@ -5,6 +5,7 @@ import glm_.vec4.Vec4
 import imgui.Cond
 import imgui.ImGui
 import imgui.api.slider
+import net.minecraft.client.Minecraft
 
 class ImguiRender {
     companion object {
@@ -40,8 +41,10 @@ class ImguiRender {
         }
         @JvmStatic
         fun render(imgui: ImGui) {
+            var win = Minecraft.getInstance().window;
             imgui.begin("Minecraft")
-            imgui.setWindowSize(Vec2(320, 240), Cond.Once)
+            imgui.setWindowFontScale(win.guiScale.toFloat() / 2)
+            imgui.setWindowSize(Vec2(win.guiScaledWidth / 4, win.guiScaledHeight / 4), Cond.Once)
             imgui.text("Hello Minecraft!")
             imgui.slider("BlurRadius", ::BlurRadius, 1, 100)
             imgui.slider("Radius", ::Radius, 1, 100)
