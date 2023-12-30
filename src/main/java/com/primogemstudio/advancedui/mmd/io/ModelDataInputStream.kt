@@ -23,11 +23,12 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         return ByteBuffer.wrap(readNBytes(2)).order(ByteOrder.LITTLE_ENDIAN).getShort()
     }
 
-    fun readText(isUtf16: Boolean): String {
+    private fun readText(isUtf16: Boolean): String {
         val length = readLEInt()
         return String(readNBytes(length), if (isUtf16) StandardCharsets.UTF_16LE else StandardCharsets.UTF_8)
     }
 
+    @Suppress("NOTHING_TO_INLINE")
     private inline fun readNLEFloats(n: Int): FloatArray {
         val buf = ByteBuffer.wrap(readNBytes(n * 4)).order(ByteOrder.LITTLE_ENDIAN)
         val arr = FloatArray(n)
@@ -36,18 +37,15 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     }
 
     private fun readVec2(input: Vector2f) {
-        val arr = readNLEFloats(2)
-        input.set(arr[0], arr[1])
+        input.set(readNLEFloats(2))
     }
 
     private fun readVec3(input: Vector3f) {
-        val arr = readNLEFloats(3)
-        input.set(arr[0], arr[1], arr[2])
+        input.set(readNLEFloats(3))
     }
 
     private fun readVec4(input: Vector4f) {
-        val arr = readNLEFloats(4)
-        input.set(arr[0], arr[1], arr[2], arr[3])
+        input.set(readNLEFloats(4))
     }
 
     private fun readHeader(header: PMXHeader) {
