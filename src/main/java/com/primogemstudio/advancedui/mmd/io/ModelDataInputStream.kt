@@ -37,6 +37,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         return arr
     }
 
+    @Suppress("NOTHING_TO_INLINE")
     private inline fun readNLEShorts(n: Int): ShortArray {
         val buf = ByteBuffer.wrap(readNBytes(n * 2)).order(ByteOrder.LITTLE_ENDIAN)
         val arr = ShortArray(n)
@@ -44,6 +45,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         return arr
     }
 
+    @Suppress("NOTHING_TO_INLINE")
     private inline fun readNLEInts(n: Int): IntArray {
         val buf = ByteBuffer.wrap(readNBytes(n * 4)).order(ByteOrder.LITTLE_ENDIAN)
         val arr = IntArray(n)
