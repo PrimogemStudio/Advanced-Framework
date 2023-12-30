@@ -11,15 +11,15 @@ import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
 
 class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
-    fun readLEInt(): Int {
+    private fun readLEInt(): Int {
         return ByteBuffer.wrap(readNBytes(4)).order(ByteOrder.LITTLE_ENDIAN).getInt()
     }
 
-    fun readLEFloat(): Float {
+    private fun readLEFloat(): Float {
         return ByteBuffer.wrap(readNBytes(4)).order(ByteOrder.LITTLE_ENDIAN).getFloat()
     }
 
-    fun readLEShort(): Short {
+    private fun readLEShort(): Short {
         return ByteBuffer.wrap(readNBytes(2)).order(ByteOrder.LITTLE_ENDIAN).getShort()
     }
 
@@ -28,19 +28,26 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         return String(readNBytes(length), if (isUtf16) StandardCharsets.UTF_16LE else StandardCharsets.UTF_8)
     }
 
+    private inline fun readNLEFloats(n: Int): FloatArray {
+        val buf = ByteBuffer.wrap(readNBytes(n * 4)).order(ByteOrder.LITTLE_ENDIAN)
+        val arr = FloatArray(n)
+        for (i in 0 until n) arr[i] = buf.getFloat(i * 4)
+        return arr
+    }
+
     private fun readVec2(input: Vector2f) {
-        val buf = ByteBuffer.wrap(readNBytes(8)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(), buf.getFloat())
+        val arr = readNLEFloats(2)
+        input.set(arr[0], arr[1])
     }
 
     private fun readVec3(input: Vector3f) {
-        val buf = ByteBuffer.wrap(readNBytes(12)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(), buf.getFloat(), buf.getFloat())
+        val arr = readNLEFloats(3)
+        input.set(arr[0], arr[1], arr[2])
     }
 
     private fun readVec4(input: Vector4f) {
-        val buf = ByteBuffer.wrap(readNBytes(16)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(), buf.getFloat(), buf.getFloat(), buf.getFloat())
+        val arr = readNLEFloats(4)
+        input.set(arr[0], arr[1], arr[2], arr[3])
     }
 
     private fun readHeader(header: PMXHeader) {
@@ -127,7 +134,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     }
 
     private fun readFaces(vertices: Array<PMXVertex>, header: PMXHeader) {
-        println(readLEInt())
+        val faces = readLEInt() / 3
+        println(faces)
     }
 
     fun readPMXFile(): PMXFile {
