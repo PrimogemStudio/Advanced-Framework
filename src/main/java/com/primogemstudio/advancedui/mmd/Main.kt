@@ -31,6 +31,7 @@ class Main {
                 println("m_englishComment: $m_englishComment")
             }
             println("mdl_vertex_count: ${pmx.m_vertices.size}")
+            println("mdl_face_count: ${pmx.m_faces.size}")
             println("${pmx.m_vertices[0].m_uv.x} ${pmx.m_vertices[0].m_uv.y}")
             println("${pmx.m_vertices[0].m_position.x} ${pmx.m_vertices[0].m_position.y} ${pmx.m_vertices[0].m_position.z}")
             model.readNBytes(20).forEach { print(String.format("%02X ", it)) }

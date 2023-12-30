@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedui.mmd.io
 
 import com.primogemstudio.advancedui.mmd.io.PMXVertexWeight.*
+import kool.toPtr
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -12,15 +13,15 @@ import java.nio.charset.StandardCharsets
 
 class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     private fun readLEInt(): Int {
-        return ByteBuffer.wrap(readNBytes(4)).order(ByteOrder.LITTLE_ENDIAN).getInt()
+        return readNLEInts(1)[0]
     }
 
     private fun readLEFloat(): Float {
-        return ByteBuffer.wrap(readNBytes(4)).order(ByteOrder.LITTLE_ENDIAN).getFloat()
+        return readNLEFloats(1)[0]
     }
 
     private fun readLEShort(): Short {
-        return ByteBuffer.wrap(readNBytes(2)).order(ByteOrder.LITTLE_ENDIAN).getShort()
+        return readNLEShorts(1)[0]
     }
 
     private fun readText(isUtf16: Boolean): String {
@@ -33,6 +34,20 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         val buf = ByteBuffer.wrap(readNBytes(n * 4)).order(ByteOrder.LITTLE_ENDIAN)
         val arr = FloatArray(n)
         for (i in 0 until n) arr[i] = buf.getFloat(i * 4)
+        return arr
+    }
+
+    private inline fun readNLEShorts(n: Int): ShortArray {
+        val buf = ByteBuffer.wrap(readNBytes(n * 2)).order(ByteOrder.LITTLE_ENDIAN)
+        val arr = ShortArray(n)
+        for (i in 0 until n) arr[i] = buf.getShort(i * 2)
+        return arr
+    }
+
+    private inline fun readNLEInts(n: Int): IntArray {
+        val buf = ByteBuffer.wrap(readNBytes(n * 4)).order(ByteOrder.LITTLE_ENDIAN)
+        val arr = IntArray(n)
+        for (i in 0 until n) arr[i] = buf.getInt(i * 4)
         return arr
     }
 
@@ -131,9 +146,16 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
-    private fun readFaces(vertices: Array<PMXVertex>, header: PMXHeader) {
-        val faces = readLEInt() / 3
-        println(faces)
+    private fun readFaces(face: Array<PMXFace>, header: PMXHeader) {
+        val arr = when (header.m_vertexIndexSize) {
+            1.toByte() -> readNBytes(face.size * 3)
+            2.toByte() -> readNLEShorts(face.size * 3)
+            4.toByte() -> readNLEInts(face.size * 3)
+            else -> TODO("Unknown data size: ${header.m_vertexIndexSize}")
+        }
+        for (faceIdx in face.indices) {
+            for (i in 0 until 3) face[faceIdx].m_vertices[i] = arr.fetchInt(faceIdx * 3 + i)
+        }
     }
 
     fun readPMXFile(): PMXFile {
@@ -142,7 +164,18 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readInfo(file.m_info, file.m_header.m_encode == 0.toByte())
         file.m_vertices = Array(readLEInt()) { PMXVertex() }
         readVertices(file.m_vertices, file.m_header)
-        readFaces(file.m_vertices, file.m_header)
+        file.m_faces = Array(readLEInt() / 3) { PMXFace() }
+        readFaces(file.m_faces, file.m_header)
         return file
     }
+}
+
+private fun Any.fetchInt(i: Int): Int {
+    if (this is ByteArray) return this[i].toInt()
+    if (this is ShortArray) return this[i].toInt()
+    if (this is IntArray) return this[i]
+    if (this is LongArray) return this[i].toInt()
+    if (this is FloatArray) return this[i].toInt()
+    if (this is DoubleArray) return this[i].toInt()
+    return 0
 }

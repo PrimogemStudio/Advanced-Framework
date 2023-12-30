@@ -25,4 +25,5 @@ class PMXFile {
     var m_header = PMXHeader()
     var m_info = PMXInfo()
     var m_vertices = emptyArray<PMXVertex>()
+    var m_faces = emptyArray<PMXFace>()
 }
