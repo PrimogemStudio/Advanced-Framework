@@ -5,6 +5,7 @@ import kool.toPtr
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
+import uno.kotlin.readVec2d
 import java.io.DataInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -86,6 +87,12 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         info.m_englishComment = readText(isU16)
     }
 
+    private fun readIndex(size: Int): Int {
+        val arr = Array(1) { 0 }
+        readIndex(arr, 0, size)
+        return arr[0]
+    }
+
     private fun readIndex(index: Array<Int>, offset: Int, size: Int) {
         when (size) {
             1 -> {
@@ -160,6 +167,39 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readTextures(textures: Array<String>, header: PMXHeader) {
+        for (i in textures.indices) textures[i] = readText(header.m_encode == 0.toByte())
+    }
+
+    private fun readMaterials(materials: Array<PMXMaterial>, header: PMXHeader) {
+        for (i in materials.indices) {
+            materials[i].m_name = readText(header.m_encode == 0.toByte())
+            materials[i].m_englishName = readText(header.m_encode == 0.toByte())
+            readVec4(materials[i].m_diffuse)
+            readVec3(materials[i].m_specular)
+            materials[i].m_specularPower = readLEFloat()
+            readVec3(materials[i].m_ambient)
+            materials[i].m_drawMode = PMXDrawModeFlags.findMode(readByte())
+            readVec4(materials[i].m_edgeColor)
+            materials[i].m_edgeSize = readLEFloat()
+            materials[i].m_textureIndex = readIndex(header.m_textureIndexSize.toInt())
+            materials[i].m_sphereTextureIndex = readIndex(header.m_textureIndexSize.toInt())
+            materials[i].m_sphereMode = PMXSphereMode.entries[readByte().toInt()]
+            materials[i].m_toonMode = PMXToonMode.entries[readByte().toInt()]
+            materials[i].m_toonTextureIndex = when (materials[i].m_toonMode) {
+                PMXToonMode.Separate -> readIndex(header.m_textureIndexSize.toInt())
+                PMXToonMode.Common -> readByte().toInt()
+            }
+
+            materials[i].m_memo = readText(header.m_encode == 0.toByte())
+            materials[i].m_numFaceVertices = readLEInt()
+        }
+    }
+
+    fun debugBytes(i: Int) {
+        readNBytes(i).forEach { print(String.format("%02X ", it)) }
+    }
+
     fun readPMXFile(): PMXFile {
         val file = PMXFile()
         readHeader(file.m_header)
@@ -168,6 +208,11 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readVertices(file.m_vertices, file.m_header)
         file.m_faces = Array(readLEInt() / 3) { PMXFace() }
         readFaces(file.m_faces, file.m_header)
+        file.m_textures = Array(readLEInt()) { "" }
+        readTextures(file.m_textures, file.m_header)
+        file.m_materials = Array(readLEInt()) { PMXMaterial() }
+        readMaterials(file.m_materials, file.m_header)
+
         return file
     }
 }

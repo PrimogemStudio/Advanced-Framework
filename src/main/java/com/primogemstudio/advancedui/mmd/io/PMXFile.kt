@@ -26,4 +26,6 @@ class PMXFile {
     var m_info = PMXInfo()
     var m_vertices = emptyArray<PMXVertex>()
     var m_faces = emptyArray<PMXFace>()
+    var m_textures = emptyArray<String>()
+    var m_materials = emptyArray<PMXMaterial>()
 }
