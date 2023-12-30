@@ -33,6 +33,8 @@ class Main {
             println("mdl_vertex_count: ${pmx.m_vertices.size}")
             println("mdl_face_count: ${pmx.m_faces.size}")
             println("mdl_texture_count: ${pmx.m_textures.size}")
+            println("mdl_material_count: ${pmx.m_materials.size}")
+            println("mdl_bone_count: ${pmx.m_bones.size}")
             model.debugBytes(32)
         }
     }

@@ -196,6 +196,50 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    fun readBones(bones: Array<PMXBone>, header: PMXHeader) {
+        for (i in bones.indices) {
+            bones[i].m_name = readText(header.m_encode == 0.toByte())
+            bones[i].m_englishName = readText(header.m_encode == 0.toByte())
+            readVec3(bones[i].m_position)
+            bones[i].m_parentBoneIndex = readIndex(header.m_boneIndexSize.toInt())
+            bones[i].m_deformDepth = readLEInt()
+            bones[i].m_boneFlag = readLEShort().toInt()
+
+            val flag = bones[i].m_boneFlag
+
+            if (flag and PMXBoneFlags.TargetShowMode.flag == 0) readVec3(bones[i].m_positionOffset)
+            else bones[i].m_linkBoneIndex = readIndex(header.m_boneIndexSize.toInt())
+
+            if ((flag and PMXBoneFlags.AppendRotate.flag) != 0 || (flag and PMXBoneFlags.AppendTranslate.flag) != 0) {
+                bones[i].m_appendBoneIndex = readIndex(header.m_boneIndexSize.toInt())
+                bones[i].m_appendWeight = readLEFloat()
+            }
+
+            if ((flag and PMXBoneFlags.FixedAxis.flag) != 0) readVec3(bones[i].m_fixedAxis)
+            if ((flag and PMXBoneFlags.LocalAxis.flag) != 0) {
+                readVec3(bones[i].m_localXAxis)
+                readVec3(bones[i].m_localZAxis)
+            }
+            if ((flag and PMXBoneFlags.DeformOuterParent.flag) != 0) bones[i].m_keyValue = readLEInt()
+            if ((flag and PMXBoneFlags.IK.flag) != 0) {
+                bones[i].m_ikTargetBoneIndex = readIndex(header.m_boneIndexSize.toInt())
+                bones[i].m_ikIterationCount = readLEInt()
+                bones[i].m_ikLimit = readLEFloat()
+
+                val lnk_siz = readLEInt()
+                bones[i].m_ikLinks = Array(lnk_siz) { PMXIKLink() }
+                for (j in bones[i].m_ikLinks.indices) {
+                    bones[i].m_ikLinks[j].m_ikBoneIndex = readIndex(header.m_boneIndexSize.toInt())
+                    bones[i].m_ikLinks[j].m_enableLimit = readByte()
+                    if (bones[i].m_ikLinks[j].m_enableLimit.toUByte() != 0.toUByte()) {
+                        readVec3(bones[i].m_ikLinks[j].m_limitMin)
+                        readVec3(bones[i].m_ikLinks[j].m_limitMax)
+                    }
+                }
+            }
+        }
+    }
+
     fun debugBytes(i: Int) {
         readNBytes(i).forEach { print(String.format("%02X ", it)) }
     }
@@ -212,6 +256,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readTextures(file.m_textures, file.m_header)
         file.m_materials = Array(readLEInt()) { PMXMaterial() }
         readMaterials(file.m_materials, file.m_header)
+        file.m_bones = Array(readLEInt()) { PMXBone() }
+        readBones(file.m_bones, file.m_header)
 
         return file
     }
