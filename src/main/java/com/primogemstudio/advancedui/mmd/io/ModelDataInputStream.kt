@@ -29,18 +29,15 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     }
 
     private fun readVec2(input: Vector2f) {
-        val buf = ByteBuffer.wrap(readNBytes(8)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(0), buf.getFloat(1))
+        input.set(readLEFloat(), readLEFloat())
     }
 
     private fun readVec3(input: Vector3f) {
-        val buf = ByteBuffer.wrap(readNBytes(12)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(0), buf.getFloat(1), buf.getFloat(2))
+        input.set(readLEFloat(), readLEFloat(), readLEFloat())
     }
 
     private fun readVec4(input: Vector4f) {
-        val buf = ByteBuffer.wrap(readNBytes(16)).order(ByteOrder.LITTLE_ENDIAN)
-        input.set(buf.getFloat(0), buf.getFloat(1), buf.getFloat(2), buf.getFloat(3))
+        input.set(readLEFloat(), readLEFloat(), readLEFloat(), readLEFloat())
     }
 
     private fun readHeader(header: PMXHeader) {
