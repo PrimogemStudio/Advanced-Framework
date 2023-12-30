@@ -126,12 +126,17 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readFaces(vertices: Array<PMXVertex>, header: PMXHeader) {
+        println(readLEInt())
+    }
+
     fun readPMXFile(): PMXFile {
         val file = PMXFile()
         readHeader(file.m_header)
         readInfo(file.m_info, file.m_header.m_encode == 0.toByte())
         file.m_vertices = Array(readLEInt()) { PMXVertex() }
         readVertices(file.m_vertices, file.m_header)
+        readFaces(file.m_vertices, file.m_header)
         return file
     }
 }

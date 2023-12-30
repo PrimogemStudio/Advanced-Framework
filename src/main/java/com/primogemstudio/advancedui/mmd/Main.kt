@@ -8,7 +8,7 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val pth = "D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\lumine.pmx"
+            val pth = "D:\\Windows 文件夹\\下载\\lumine module\\lumine.pmx"
             val model = ModelDataInputStream(Files.newInputStream(Path.of(pth)))
             val pmx = model.readPMXFile()
             with(pmx.m_header) {
@@ -31,6 +31,9 @@ class Main {
                 println("m_englishComment: $m_englishComment")
             }
             println("mdl_vertex_count: ${pmx.m_vertices.size}")
+            println("${pmx.m_vertices[0].m_uv.x} ${pmx.m_vertices[0].m_uv.y}")
+            println("${pmx.m_vertices[0].m_position.x} ${pmx.m_vertices[0].m_position.y} ${pmx.m_vertices[0].m_position.z}")
+            model.readNBytes(20).forEach { print(String.format("%02X ", it)) }
         }
     }
 }
