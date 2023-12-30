@@ -2,6 +2,7 @@ package com.primogemstudio.advancedui.mmd.io
 
 import com.primogemstudio.advancedui.mmd.io.PMXVertexWeight.*
 import kool.toPtr
+import org.joml.Quaternionf
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -11,6 +12,7 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
+import javax.swing.GroupLayout.Group
 
 class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     private fun readLEInt(): Int {
@@ -64,6 +66,10 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
 
     private fun readVec4(input: Vector4f) {
         input.set(readNLEFloats(4))
+    }
+
+    private fun readQuaternion(input: Quaternionf) {
+        input.set(readLEFloat(), readLEFloat(), readLEFloat(), readLEFloat())
     }
 
     private fun readHeader(header: PMXHeader) {
@@ -240,6 +246,87 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readMorphs(morphs: Array<PMXMorph>, header: PMXHeader) {
+        for (i in morphs.indices) {
+            morphs[i].m_name = readText(header.m_encode == 0.toByte())
+            morphs[i].m_englishName = readText(header.m_encode == 0.toByte())
+            morphs[i].m_controlPanel = readByte()
+            morphs[i].m_morphType = PMXMorphType.entries[readByte().toInt()]
+            val data_cnt = readLEInt()
+            val type = morphs[i].m_morphType
+            when {
+                type == PMXMorphType.Position -> {
+                    morphs[i].m_positionMorph = Array(data_cnt) { PositionMorph() }
+                    for (j in morphs[i].m_positionMorph.indices) {
+                        morphs[i].m_positionMorph[j].m_vertexIndex = readIndex(header.m_vertexIndexSize.toInt())
+                        readVec3(morphs[i].m_positionMorph[j].m_position)
+                    }
+                }
+                setOf(
+                    PMXMorphType.UV,
+                    PMXMorphType.AddUV1,
+                    PMXMorphType.AddUV2,
+                    PMXMorphType.AddUV3,
+                    PMXMorphType.AddUV4
+                ).contains(type) -> {
+                    morphs[i].m_uvMorph = Array(data_cnt) { UVMorph() }
+                    for (j in morphs[i].m_uvMorph.indices) {
+                        morphs[i].m_uvMorph[j].m_vertexIndex = readIndex(header.m_vertexIndexSize.toInt())
+                        readVec4(morphs[i].m_uvMorph[j].m_uv)
+                    }
+                }
+                type == PMXMorphType.Bone -> {
+                    morphs[i].m_boneMorph = Array(data_cnt) { BoneMorph() }
+                    for (j in morphs[i].m_boneMorph.indices) {
+                        morphs[i].m_boneMorph[j].m_boneIndex = readIndex(header.m_boneIndexSize.toInt())
+                        readVec3(morphs[i].m_boneMorph[j].m_position)
+                        readQuaternion(morphs[i].m_boneMorph[j].m_quaternion)
+                    }
+                }
+                type == PMXMorphType.Material -> {
+                    morphs[i].m_materialMorph = Array(data_cnt) { MaterialMorph() }
+                    for (j in morphs[i].m_materialMorph.indices) {
+                        morphs[i].m_materialMorph[j].m_materialIndex = readIndex(header.m_materialIndexSize.toInt())
+                        morphs[i].m_materialMorph[j].m_opType = MaterialMorph.OpType.entries[readByte().toInt()]
+                        readVec4(morphs[i].m_materialMorph[j].m_diffuse)
+                        readVec3(morphs[i].m_materialMorph[j].m_specular)
+                        morphs[i].m_materialMorph[j].m_specularPower = readLEFloat()
+                        readVec3(morphs[i].m_materialMorph[j].m_ambient)
+                        readVec4(morphs[i].m_materialMorph[j].m_edgeColor)
+                        morphs[i].m_materialMorph[j].m_edgeSize = readLEFloat()
+                        readVec4(morphs[i].m_materialMorph[j].m_textureFactor)
+                        readVec4(morphs[i].m_materialMorph[j].m_sphereTextureFactor)
+                        readVec4(morphs[i].m_materialMorph[j].m_toonTextureFactor)
+                    }
+                }
+                type == PMXMorphType.Group -> {
+                    morphs[i].m_groupMorph = Array(data_cnt) { GroupMorph() }
+                    for (j in morphs[i].m_groupMorph.indices) {
+                        morphs[i].m_groupMorph[j].m_morphIndex = readIndex(header.m_morphIndexSize.toInt())
+                        morphs[i].m_groupMorph[j].m_weight = readLEFloat()
+                    }
+                }
+                type == PMXMorphType.Flip -> {
+                    morphs[i].m_flipMorph = Array(data_cnt) { FlipMorph() }
+                    for (j in morphs[i].m_flipMorph.indices) {
+                        morphs[i].m_flipMorph[j].m_morphIndex = readIndex(header.m_morphIndexSize.toInt())
+                        morphs[i].m_flipMorph[j].m_weight = readLEFloat()
+                    }
+                }
+                type == PMXMorphType.Impluse -> {
+                    morphs[i].m_impulseMorph = Array(data_cnt) { ImpulseMorph() }
+                    for (j in morphs[i].m_impulseMorph.indices) {
+                        morphs[i].m_impulseMorph[j].m_rigidbodyIndex = readIndex(header.m_rigidbodyIndexSize.toInt())
+                        morphs[i].m_impulseMorph[j].m_localFlag = readByte()
+                        readVec3(morphs[i].m_impulseMorph[j].m_translateVelocity)
+                        readVec3(morphs[i].m_impulseMorph[j].m_rotateTorque)
+                    }
+                }
+                else -> TODO("Unknown morph type")
+            }
+        }
+    }
+
     fun debugBytes(i: Int) {
         readNBytes(i).forEach { print(String.format("%02X ", it)) }
     }
@@ -258,6 +345,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readMaterials(file.m_materials, file.m_header)
         file.m_bones = Array(readLEInt()) { PMXBone() }
         readBones(file.m_bones, file.m_header)
+        file.m_morphs = Array(readLEInt()) { PMXMorph() }
+        readMorphs(file.m_morphs, file.m_header)
 
         return file
     }

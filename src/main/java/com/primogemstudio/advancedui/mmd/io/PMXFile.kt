@@ -29,4 +29,5 @@ class PMXFile {
     var m_textures = emptyArray<String>()
     var m_materials = emptyArray<PMXMaterial>()
     var m_bones = emptyArray<PMXBone>()
+    var m_morphs = emptyArray<PMXMorph>()
 }
