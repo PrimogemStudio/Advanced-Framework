@@ -1,18 +1,15 @@
 package com.primogemstudio.advancedui.mmd.io
 
 import com.primogemstudio.advancedui.mmd.io.PMXVertexWeight.*
-import kool.toPtr
 import org.joml.Quaternionf
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
-import uno.kotlin.readVec2d
 import java.io.DataInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
-import javax.swing.GroupLayout.Group
 
 class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     private fun readLEInt(): Int {
@@ -69,7 +66,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
     }
 
     private fun readQuaternion(input: Quaternionf) {
-        input.set(readLEFloat(), readLEFloat(), readLEFloat(), readLEFloat())
+        val buf = readNLEFloats(4)
+        input.set(buf[0], buf[1], buf[2], buf[3])
     }
 
     private fun readHeader(header: PMXHeader) {
@@ -202,7 +200,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
-    fun readBones(bones: Array<PMXBone>, header: PMXHeader) {
+    private fun readBones(bones: Array<PMXBone>, header: PMXHeader) {
         for (i in bones.indices) {
             bones[i].m_name = readText(header.m_encode == 0.toByte())
             bones[i].m_englishName = readText(header.m_encode == 0.toByte())
@@ -262,12 +260,9 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         readVec3(morphs[i].m_positionMorph[j].m_position)
                     }
                 }
+
                 setOf(
-                    PMXMorphType.UV,
-                    PMXMorphType.AddUV1,
-                    PMXMorphType.AddUV2,
-                    PMXMorphType.AddUV3,
-                    PMXMorphType.AddUV4
+                    PMXMorphType.UV, PMXMorphType.AddUV1, PMXMorphType.AddUV2, PMXMorphType.AddUV3, PMXMorphType.AddUV4
                 ).contains(type) -> {
                     morphs[i].m_uvMorph = Array(data_cnt) { UVMorph() }
                     for (j in morphs[i].m_uvMorph.indices) {
@@ -275,6 +270,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         readVec4(morphs[i].m_uvMorph[j].m_uv)
                     }
                 }
+
                 type == PMXMorphType.Bone -> {
                     morphs[i].m_boneMorph = Array(data_cnt) { BoneMorph() }
                     for (j in morphs[i].m_boneMorph.indices) {
@@ -283,6 +279,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         readQuaternion(morphs[i].m_boneMorph[j].m_quaternion)
                     }
                 }
+
                 type == PMXMorphType.Material -> {
                     morphs[i].m_materialMorph = Array(data_cnt) { MaterialMorph() }
                     for (j in morphs[i].m_materialMorph.indices) {
@@ -299,6 +296,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         readVec4(morphs[i].m_materialMorph[j].m_toonTextureFactor)
                     }
                 }
+
                 type == PMXMorphType.Group -> {
                     morphs[i].m_groupMorph = Array(data_cnt) { GroupMorph() }
                     for (j in morphs[i].m_groupMorph.indices) {
@@ -306,6 +304,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         morphs[i].m_groupMorph[j].m_weight = readLEFloat()
                     }
                 }
+
                 type == PMXMorphType.Flip -> {
                     morphs[i].m_flipMorph = Array(data_cnt) { FlipMorph() }
                     for (j in morphs[i].m_flipMorph.indices) {
@@ -313,6 +312,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         morphs[i].m_flipMorph[j].m_weight = readLEFloat()
                     }
                 }
+
                 type == PMXMorphType.Impluse -> {
                     morphs[i].m_impulseMorph = Array(data_cnt) { ImpulseMorph() }
                     for (j in morphs[i].m_impulseMorph.indices) {
@@ -322,6 +322,7 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
                         readVec3(morphs[i].m_impulseMorph[j].m_rotateTorque)
                     }
                 }
+
                 else -> TODO("Unknown morph type")
             }
         }
