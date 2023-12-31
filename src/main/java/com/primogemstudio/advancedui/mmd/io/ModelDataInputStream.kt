@@ -328,6 +328,25 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readDisplayFrames(frames: Array<PMXDisplayFrame>, header: PMXHeader) {
+        for (i in frames.indices) {
+            frames[i].m_name = readText(header.m_encode == 0.toByte())
+            frames[i].m_englishName = readText(header.m_encode == 0.toByte())
+            frames[i].m_flag = FrameType.entries[readByte().toInt()]
+            val siz = readLEInt()
+            frames[i].m_targets = Array(siz) { Target() }
+            for (j in frames[i].m_targets.indices) {
+                frames[i].m_targets[j].m_type = TargetType.entries[readByte().toInt()]
+                frames[i].m_targets[j].m_index = readIndex(
+                    when (frames[i].m_targets[j].m_type) {
+                        TargetType.BoneIndex -> header.m_boneIndexSize
+                        TargetType.MorphIndex -> header.m_morphIndexSize
+                    }.toInt()
+                )
+            }
+        }
+    }
+
     fun debugBytes(i: Int) {
         readNBytes(i).forEach { print(String.format("%02X ", it)) }
     }
@@ -348,6 +367,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readBones(file.m_bones, file.m_header)
         file.m_morphs = Array(readLEInt()) { PMXMorph() }
         readMorphs(file.m_morphs, file.m_header)
+        file.m_displayFrames = Array(readLEInt()) { PMXDisplayFrame() }
+        readDisplayFrames(file.m_displayFrames, file.m_header)
 
         return file
     }

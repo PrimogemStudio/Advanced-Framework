@@ -36,6 +36,7 @@ class Main {
             println("mdl_material_count: ${pmx.m_materials.size}")
             println("mdl_bone_count: ${pmx.m_bones.size}")
             println("mdl_morph_count: ${pmx.m_morphs.size}")
+            println("mdl_displayframe_count: ${pmx.m_displayFrames.size}")
             model.debugBytes(32)
         }
     }
