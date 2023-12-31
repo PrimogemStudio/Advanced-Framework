@@ -3,15 +3,15 @@ package com.primogemstudio.advancedui.mmd.io
 class PMXHeader {
     var m_magic = ""
     var m_version = 0f
-    var m_dataSize = 0.toByte()
-    var m_encode = 0.toByte()
-    var m_addUVNum = 0.toByte()
-    var m_vertexIndexSize = 0.toByte()
-    var m_textureIndexSize = 0.toByte()
-    var m_materialIndexSize = 0.toByte()
-    var m_boneIndexSize = 0.toByte()
-    var m_morphIndexSize = 0.toByte()
-    var m_rigidbodyIndexSize = 0.toByte()
+    var m_dataSize: Byte = 0
+    var m_encode: Byte = 0
+    var m_addUVNum: Byte = 0
+    var m_vertexIndexSize: Byte = 0
+    var m_textureIndexSize: Byte = 0
+    var m_materialIndexSize: Byte = 0
+    var m_boneIndexSize: Byte = 0
+    var m_morphIndexSize: Byte = 0
+    var m_rigidbodyIndexSize: Byte = 0
 }
 
 class PMXInfo {
@@ -32,4 +32,6 @@ class PMXFile {
     var m_morphs = emptyArray<PMXMorph>()
     var m_displayFrames = emptyArray<PMXDisplayFrame>()
     var m_rigidbodies = emptyArray<PMXRigidBody>()
+    var m_joints = emptyArray<PMXJoint>()
+    var m_softbodies = emptyArray<PMXSoftBody>()
 }

@@ -8,11 +8,11 @@ class PMXMaterial {
     var m_englishName = ""
     var m_diffuse = Vector4f()
     var m_specular = Vector3f()
-    var m_specularPower = 0.toFloat()
+    var m_specularPower = 0f
     var m_ambient = Vector3f()
     var m_drawMode = PMXDrawModeFlags.BothFace
     var m_edgeColor = Vector4f()
-    var m_edgeSize = 0.toFloat()
+    var m_edgeSize = 0f
     var m_textureIndex = 0
     var m_sphereTextureIndex = 0
     var m_sphereMode = PMXSphereMode.None

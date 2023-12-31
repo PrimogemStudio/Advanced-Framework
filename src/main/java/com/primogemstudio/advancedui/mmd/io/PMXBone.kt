@@ -12,14 +12,14 @@ class PMXBone {
     var m_positionOffset = Vector3f()
     var m_linkBoneIndex = 0
     var m_appendBoneIndex = 0
-    var m_appendWeight = 0.toFloat()
+    var m_appendWeight = 0f
     var m_fixedAxis = Vector3f()
     var m_localXAxis = Vector3f()
     var m_localZAxis = Vector3f()
     var m_keyValue = 0
     var m_ikTargetBoneIndex = 0
     var m_ikIterationCount = 0
-    var m_ikLimit = 0.toFloat()
+    var m_ikLimit = 0f
     var m_ikLinks = emptyArray<PMXIKLink>()
 }
 
@@ -41,7 +41,7 @@ enum class PMXBoneFlags(val flag: Int) {
 
 class PMXIKLink {
     var m_ikBoneIndex = 0
-    var m_enableLimit = 0.toByte()
+    var m_enableLimit: Byte = 0
 
     var m_limitMin = Vector3f()
     var m_limitMax = Vector3f()

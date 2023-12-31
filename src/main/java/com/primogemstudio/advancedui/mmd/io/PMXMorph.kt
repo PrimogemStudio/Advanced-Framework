@@ -7,7 +7,7 @@ import org.joml.Vector4f
 class PMXMorph {
     var m_name = ""
     var m_englishName = ""
-    var m_controlPanel = 0.toByte()
+    var m_controlPanel: Byte = 0
     var m_morphType = PMXMorphType.Group
     var m_positionMorph = emptyArray<PositionMorph>()
     var m_uvMorph = emptyArray<UVMorph>()
@@ -58,10 +58,10 @@ class MaterialMorph {
     var m_opType = OpType.Mul
     var m_diffuse = Vector4f()
     var m_specular = Vector3f()
-    var m_specularPower = 0.toFloat()
+    var m_specularPower = 0f
     var m_ambient = Vector3f()
     var m_edgeColor = Vector4f()
-    var m_edgeSize = 0.toFloat()
+    var m_edgeSize = 0f
     var m_textureFactor = Vector4f()
     var m_sphereTextureFactor = Vector4f()
     var m_toonTextureFactor = Vector4f()
@@ -69,17 +69,17 @@ class MaterialMorph {
 
 class GroupMorph {
     var	m_morphIndex = 0
-    var m_weight = 0.toFloat()
+    var m_weight = 0f
 }
 
 class FlipMorph {
     var	m_morphIndex = 0
-    var m_weight = 0.toFloat()
+    var m_weight = 0f
 }
 
 class ImpulseMorph {
     var m_rigidbodyIndex = 0
-    var m_localFlag = 0.toByte()	//0:OFF 1:ON
+    var m_localFlag: Byte = 0	//0:OFF 1:ON
     var m_translateVelocity = Vector3f()
     var m_rotateTorque = Vector3f()
 }

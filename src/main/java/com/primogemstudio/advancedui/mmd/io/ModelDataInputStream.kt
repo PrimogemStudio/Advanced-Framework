@@ -368,6 +368,85 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readJoints(joints: Array<PMXJoint>, header: PMXHeader) {
+        for (i in joints.indices) {
+            joints[i].m_name = readText(header.m_encode == 0.toByte())
+            joints[i].m_englishName = readText(header.m_encode == 0.toByte())
+            joints[i].m_type = JointType.entries[readByte().toInt()]
+            joints[i].m_rigidbodyAIndex = readIndex(header.m_rigidbodyIndexSize.toInt())
+            joints[i].m_rigidbodyBIndex = readIndex(header.m_rigidbodyIndexSize.toInt())
+
+            readVec3(joints[i].m_translate)
+            readVec3(joints[i].m_rotate)
+            readVec3(joints[i].m_translateLowerLimit)
+            readVec3(joints[i].m_translateUpperLimit)
+            readVec3(joints[i].m_rotateLowerLimit)
+            readVec3(joints[i].m_rotateUpperLimit)
+            readVec3(joints[i].m_springTranslateFactor)
+            readVec3(joints[i].m_springRotateFactor)
+        }
+    }
+
+    private fun readSoftBodies(bodies: Array<PMXSoftBody>, header: PMXHeader) {
+        for (i in 0 until 1) {
+            bodies[i].m_name = readText(header.m_encode == 0.toByte())
+            bodies[i].m_englishName = readText(header.m_encode == 0.toByte())
+            bodies[i].m_type = SoftbodyType.entries[readByte().toInt()]
+            bodies[i].m_materialIndex = readIndex(header.m_materialIndexSize.toInt())
+            bodies[i].m_group = readByte()
+            bodies[i].m_collisionGroup = readLEShort()
+            bodies[i].m_flag = SoftbodyMask.getMask(readByte())
+            bodies[i].m_BLinkLength = readLEInt()
+            bodies[i].m_numClusters = readLEInt()
+            bodies[i].m_totalMass = readLEFloat()
+            bodies[i].m_collisionMargin = readLEFloat()
+            bodies[i].m_aeroModel = AeroModel.entries[readLEInt()]
+
+            bodies[i].m_VCF = readLEFloat()
+            bodies[i].m_DP = readLEFloat()
+            bodies[i].m_DG = readLEFloat()
+            bodies[i].m_LF = readLEFloat()
+            bodies[i].m_PR = readLEFloat()
+            bodies[i].m_VC = readLEFloat()
+            bodies[i].m_DF = readLEFloat()
+            bodies[i].m_MT = readLEFloat()
+            bodies[i].m_CHR = readLEFloat()
+            bodies[i].m_KHR = readLEFloat()
+            bodies[i].m_SHR = readLEFloat()
+            bodies[i].m_AHR = readLEFloat()
+
+            bodies[i].m_SRHR_CL = readLEFloat()
+            bodies[i].m_SKHR_CL = readLEFloat()
+            bodies[i].m_SSHR_CL = readLEFloat()
+            bodies[i].m_SR_SPLT_CL = readLEFloat()
+            bodies[i].m_SK_SPLT_CL = readLEFloat()
+            bodies[i].m_SS_SPLT_CL = readLEFloat()
+
+            bodies[i].m_V_IT = readLEInt()
+            bodies[i].m_P_IT = readLEInt()
+            bodies[i].m_D_IT = readLEInt()
+            bodies[i].m_C_IT = readLEInt()
+
+            bodies[i].m_LST = readLEFloat()
+            bodies[i].m_AST = readLEFloat()
+            bodies[i].m_VST = readLEFloat()
+
+            val ar_cnt = readLEInt()
+            bodies[i].m_anchorRigidBodies = Array(ar_cnt) { AnchorRigidbody() }
+            for (j in bodies[i].m_anchorRigidBodies.indices) {
+                bodies[i].m_anchorRigidBodies[j].m_rigidBodyIndex = readIndex(header.m_rigidbodyIndexSize.toInt())
+                bodies[i].m_anchorRigidBodies[j].m_vertexIndex = readIndex(header.m_vertexIndexSize.toInt())
+                bodies[i].m_anchorRigidBodies[j].m_nearMode = readByte()
+            }
+
+            val pv_cnt = readLEInt()
+            bodies[i].m_pinVertexIndices = Array(pv_cnt) { 0 }
+            for (n in bodies[i].m_pinVertexIndices.indices) {
+                bodies[i].m_pinVertexIndices[n] = readIndex(header.m_vertexIndexSize.toInt())
+            }
+        }
+    }
+
     fun debugBytes(i: Int) {
         readNBytes(i).forEach { print(String.format("%02X ", it)) }
     }
@@ -392,6 +471,12 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readDisplayFrames(file.m_displayFrames, file.m_header)
         file.m_rigidbodies = Array(readLEInt()) { PMXRigidBody() }
         readRigidBodies(file.m_rigidbodies, file.m_header)
+        file.m_joints = Array(readLEInt()) { PMXJoint() }
+        readJoints(file.m_joints, file.m_header)
+        if (available() > 0) {
+            file.m_softbodies = Array(readLEInt()) { PMXSoftBody() }
+            readSoftBodies(file.m_softbodies, file.m_header)
+        }
 
         return file
     }
