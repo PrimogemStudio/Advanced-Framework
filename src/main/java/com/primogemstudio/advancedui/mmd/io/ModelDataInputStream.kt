@@ -347,6 +347,27 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         }
     }
 
+    private fun readRigidBodies(rigidbodies: Array<PMXRigidBody>, header: PMXHeader) {
+        for (i in rigidbodies.indices) {
+            rigidbodies[i].m_name = readText(header.m_encode == 0.toByte())
+            rigidbodies[i].m_englishName = readText(header.m_encode == 0.toByte())
+            rigidbodies[i].m_boneIndex = readIndex(header.m_boneIndexSize.toInt())
+            rigidbodies[i].m_group = readByte()
+            rigidbodies[i].m_collisionGroup = readLEShort()
+            rigidbodies[i].m_shape = Shape.entries[readByte().toInt()]
+            readVec3(rigidbodies[i].m_shapeSize)
+            readVec3(rigidbodies[i].m_translate)
+            readVec3(rigidbodies[i].m_rotate)
+
+            rigidbodies[i].m_mass = readLEFloat()
+            rigidbodies[i].m_translateDimmer = readLEFloat()
+            rigidbodies[i].m_rotateDimmer = readLEFloat()
+            rigidbodies[i].m_repulsion = readLEFloat()
+            rigidbodies[i].m_friction = readLEFloat()
+            rigidbodies[i].m_op = Operation.entries[readByte().toInt()]
+        }
+    }
+
     fun debugBytes(i: Int) {
         readNBytes(i).forEach { print(String.format("%02X ", it)) }
     }
@@ -369,6 +390,8 @@ class ModelDataInputStream(flow: InputStream) : DataInputStream(flow) {
         readMorphs(file.m_morphs, file.m_header)
         file.m_displayFrames = Array(readLEInt()) { PMXDisplayFrame() }
         readDisplayFrames(file.m_displayFrames, file.m_header)
+        file.m_rigidbodies = Array(readLEInt()) { PMXRigidBody() }
+        readRigidBodies(file.m_rigidbodies, file.m_header)
 
         return file
     }

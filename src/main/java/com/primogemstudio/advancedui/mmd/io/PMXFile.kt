@@ -31,4 +31,5 @@ class PMXFile {
     var m_bones = emptyArray<PMXBone>()
     var m_morphs = emptyArray<PMXMorph>()
     var m_displayFrames = emptyArray<PMXDisplayFrame>()
+    var m_rigidbodies = emptyArray<PMXRigidBody>()
 }
