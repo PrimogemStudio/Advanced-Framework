@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedui.mixin;
 
+import com.primogemstudio.advancedui.mmd.renderer.ShaderProvider;
 import com.primogemstudio.advancedui.render.RenderQueue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -15,6 +16,7 @@ public class GameRendererMixin {
         var window = Minecraft.getInstance().getWindow();
         RenderQueue.init(window.getWidth(), window.getHeight());
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+        ShaderProvider.INSTANCE.Init();
     }
 
     @Inject(method = "render", at = @At("TAIL"))
