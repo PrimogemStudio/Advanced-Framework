@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.primogemstudio.advancedui.mmd.Loader
 import com.primogemstudio.advancedui.mmd.io.PMXFile
-import com.primogemstudio.advancedui.mmd.renderer.RendererConstants
+import com.primogemstudio.advancedui.mmd.renderer.CustomRenderType
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.culling.Frustum
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.resources.ResourceLocation
@@ -16,8 +16,15 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
     companion object {
         private val model = Loader.load().second
     }
+
     override fun getTextureLocation(entity: TestEntity): ResourceLocation {
         return ResourceLocation("")
+    }
+
+    override fun shouldRender(
+        livingEntity: TestEntity, camera: Frustum, camX: Double, camY: Double, camZ: Double
+    ): Boolean {
+        return true
     }
 
     override fun render(
@@ -29,21 +36,23 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         poseStack.pushPose()
-        val buf = buffer.getBuffer(RendererConstants.MMD_DBG)
-        val pose = poseStack.last()
-        model.m_faces.forEach {
-            it.m_vertices.forEach { i ->
-                buf.mvertex(pose.pose(), model, i).color(1f, 1f, 1f, 1f).endVertex()
+        with(model.textureManager) {
+            ids.forEach {
+                val buf = buffer.getBuffer(CustomRenderType.mmd(it.value))
+                val range = ranges[it.key]!!
+                for (i in range.a until range.b) {
+                    model.m_faces[i].m_vertices.forEach { v ->
+                        buf.pmxVertex(poseStack.last().pose(), model, v).endVertex()
+                    }
+                }
             }
         }
-        /*buf.vertex(pose.pose(), 0f, 1f, 0f).color(1f, 0f, 0f, 0.5f).endVertex()
-        buf.vertex(pose.pose(), 1f, -1f, 0f).color(0f, 1f, 0f, 0.5f).endVertex()
-        buf.vertex(pose.pose(), -1f, -1f, 0f).color(0f, 0f, 1f, 0.5f).endVertex()*/
         poseStack.popPose()
     }
 }
 
-fun VertexConsumer.mvertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
+fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
-    return this.vertex(mat, v.x, v.y, v.z)
+    val uv = m.m_vertices[i].m_uv
+    return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
 }

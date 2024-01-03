@@ -2,17 +2,32 @@ package com.primogemstudio.advancedui.mmd
 
 import com.primogemstudio.advancedui.mmd.io.ModelDataInputStream
 import com.primogemstudio.advancedui.mmd.io.PMXFile
+import com.primogemstudio.advancedui.mmd.renderer.MMDTexture
+import net.minecraft.util.Tuple
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
 object Loader {
     @JvmStatic
     fun load(): Pair<ModelDataInputStream, PMXFile> {
-        val pth = "D:\\Windows 文件夹\\下载\\lumine module\\lumine.pmx"
-        val model = ModelDataInputStream(Files.newInputStream(Path.of(pth)))
+        val root = "D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\"
+        val name = "lumine.pmx"
+        val model = ModelDataInputStream(Files.newInputStream(Path.of(root + name)))
         val pmx = model.readPMXFile()
+        var sum = 0
+        var i = 0
+        pmx.m_materials.forEach {
+            val tmp = it.m_numFaceVertices / 3
+            pmx.textureManager.ranges[i] = Tuple(sum, sum + tmp)
+            pmx.textureManager.textures[i] = MMDTexture(File(root + pmx.m_textures[it.m_textureIndex]))
+            sum += tmp
+            i++
+        }
+        pmx.textureManager.register("mmd_lumine")
         return Pair(model, pmx)
     }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val pck = load()

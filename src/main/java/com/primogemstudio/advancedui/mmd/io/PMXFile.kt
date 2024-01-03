@@ -1,5 +1,7 @@
 package com.primogemstudio.advancedui.mmd.io
 
+import com.primogemstudio.advancedui.mmd.renderer.TextureManager
+
 class PMXHeader {
     var m_magic = ""
     var m_version = 0f
@@ -34,4 +36,5 @@ class PMXFile {
     var m_rigidbodies = emptyArray<PMXRigidBody>()
     var m_joints = emptyArray<PMXJoint>()
     var m_softbodies = emptyArray<PMXSoftBody>()
+    val textureManager = TextureManager()
 }
