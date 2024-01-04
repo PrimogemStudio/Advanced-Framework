@@ -54,18 +54,22 @@ class TextureManager {
 }
 
 object CustomRenderType {
+    private val cache = mutableMapOf<ResourceLocation, RenderType>()
     fun mmd(id: ResourceLocation): RenderType {
-        return RenderType.create(
-            "mmd_dbg",
-            DefaultVertexFormat.POSITION_TEX,
-            VertexFormat.Mode.TRIANGLES,
-            0x200000,
-            false,
-            true,
-            CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
-                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false)
-        )
+        if (!cache.containsKey(id)) {
+            cache[id] = RenderType.create(
+                "mmd_dbg",
+                DefaultVertexFormat.POSITION_TEX,
+                VertexFormat.Mode.TRIANGLES,
+                0x200000,
+                false,
+                true,
+                CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                    .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
+                    .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false)
+            )
+        }
+        return cache[id]?: RenderType.cutout()
     }
 }

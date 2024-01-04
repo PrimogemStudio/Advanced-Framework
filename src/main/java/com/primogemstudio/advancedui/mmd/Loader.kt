@@ -11,8 +11,8 @@ import java.nio.file.Path
 object Loader {
     @JvmStatic
     fun load(): Pair<ModelDataInputStream, PMXFile> {
-        val root = "D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\"
-        val name = "lumine.pmx"
+        val root = "D:\\Windows 文件夹\\下载\\miku\\"
+        val name = "model.pmx"
         val model = ModelDataInputStream(Files.newInputStream(Path.of(root + name)))
         val pmx = model.readPMXFile()
         var sum = 0
