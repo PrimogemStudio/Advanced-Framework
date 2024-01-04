@@ -13,7 +13,7 @@ object Loader {
     fun load(): Pair<ModelDataInputStream, PMXFile> {
         val root = "D:\\Windows 文件夹\\下载\\miku\\"
         val name = "model.pmx"
-        val model = ModelDataInputStream(Files.newInputStream(Path.of(root + name)))
+        val model = ModelDataInputStream(Files.newInputStream(Path.of(root, name)))
         val pmx = model.readPMXFile()
         var sum = 0
         var i = 0
