@@ -16,14 +16,11 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.Tuple
 import java.io.File
 
-class MMDTexture(private val file: File) : AbstractTexture() {
+class MMDTexture(private val file: File?) : AbstractTexture() {
     override fun load(resourceManager: ResourceManager) {
-        val img = NativeImage.read(file.inputStream())
-        if (!RenderSystem.isOnRenderThreadOrInit()) {
-            RenderSystem.recordRenderCall { upload(img) }
-        } else {
-            upload(img)
-        }
+        val img = file?.let { NativeImage.read(it.inputStream()) } ?: NativeImage(1, 1, true)
+        if (!RenderSystem.isOnRenderThreadOrInit()) RenderSystem.recordRenderCall { upload(img) }
+        else upload(img)
     }
 
     private fun upload(image: NativeImage) {
