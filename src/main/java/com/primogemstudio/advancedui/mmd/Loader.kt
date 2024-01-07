@@ -1,9 +1,9 @@
 package com.primogemstudio.advancedui.mmd
 
-import com.primogemstudio.advancedui.mmd.io.ModelDataInputStream
-import com.primogemstudio.advancedui.mmd.io.PMXFile
+import com.primogemstudio.mmdbase.io.ModelDataInputStream
+import com.primogemstudio.mmdbase.io.PMXFile
 import com.primogemstudio.advancedui.mmd.renderer.MMDTexture
-import net.minecraft.util.Tuple
+import com.primogemstudio.advancedui.mmd.renderer.TextureManager
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -11,20 +11,21 @@ import java.nio.file.Path
 object Loader {
     @JvmStatic
     fun load(): Pair<ModelDataInputStream, PMXFile> {
-        val root = "D:\\Windows 文件夹\\下载\\miku\\"
-        val name = "model.pmx"
+        val root = "D:\\Windows 文件夹\\下载\\lumine module"
+        val name = "lumine.pmx"
         val model = ModelDataInputStream(Files.newInputStream(Path.of(root, name)))
         val pmx = model.readPMXFile()
         var sum = 0
         var i = 0
+        pmx.textureManager = TextureManager()
         pmx.m_materials.forEach {
             val tmp = it.m_numFaceVertices / 3
-            pmx.textureManager.ranges[i] = sum until sum + tmp
-            pmx.textureManager.textures[i] = MMDTexture(if (it.m_textureIndex < 0) null else File(root, pmx.m_textures[it.m_textureIndex]))
+            (pmx.textureManager as TextureManager).ranges[i] = sum until sum + tmp
+            (pmx.textureManager as TextureManager).textures[i] = MMDTexture(if (it.m_textureIndex < 0) null else File(root, pmx.m_textures[it.m_textureIndex]))
             sum += tmp
             i++
         }
-        pmx.textureManager.register("mmd_lumine")
+        (pmx.textureManager as TextureManager).register("mmd_lumine")
         return Pair(model, pmx)
     }
 

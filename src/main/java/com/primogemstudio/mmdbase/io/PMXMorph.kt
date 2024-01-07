@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedui.mmd.io
+package com.primogemstudio.mmdbase.io
 
 import org.joml.Quaternionf
 import org.joml.Vector3f

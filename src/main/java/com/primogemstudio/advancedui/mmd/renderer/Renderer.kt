@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedui.AdvancedUI.MOD_ID
+import com.primogemstudio.mmdbase.abstraction.ITextureManager
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
 import net.minecraft.client.renderer.RenderType
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.RenderType.CompositeState
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.util.Tuple
 import java.io.File
 
 class MMDTexture(private val file: File?) : AbstractTexture() {
@@ -29,12 +29,12 @@ class MMDTexture(private val file: File?) : AbstractTexture() {
     }
 }
 
-class TextureManager {
+class TextureManager: ITextureManager {
     val ranges = HashMap<Int, IntRange>()
     val textures = HashMap<Int, MMDTexture>()
     val ids = HashMap<Int, ResourceLocation>()
 
-    fun register(prefix: String) {
+    override fun register(prefix: String) {
         textures.forEach {
             val id = ResourceLocation(MOD_ID, "${prefix}_${it.key}")
             ids[it.key] = id
@@ -42,7 +42,7 @@ class TextureManager {
         }
     }
 
-    fun release() {
+    override fun release() {
         ids.forEach { Minecraft.getInstance().textureManager.release(it.value) }
         ids.clear()
     }

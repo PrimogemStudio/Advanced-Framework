@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedui.mmd.io
+package com.primogemstudio.mmdbase.io
 
-import com.primogemstudio.advancedui.mmd.io.PMXVertexWeight.*
+import com.primogemstudio.mmdbase.io.PMXVertexWeight.*
 import org.joml.Quaternionf
 import org.joml.Vector2f
 import org.joml.Vector3f

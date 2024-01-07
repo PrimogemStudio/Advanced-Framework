@@ -3,8 +3,9 @@ package com.primogemstudio.advancedui.mmd.entity
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.primogemstudio.advancedui.mmd.Loader
-import com.primogemstudio.advancedui.mmd.io.PMXFile
+import com.primogemstudio.mmdbase.io.PMXFile
 import com.primogemstudio.advancedui.mmd.renderer.CustomRenderType
+import com.primogemstudio.advancedui.mmd.renderer.TextureManager
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.culling.Frustum
 import net.minecraft.client.renderer.entity.EntityRenderer
@@ -36,7 +37,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         poseStack.pushPose()
-        with(model.textureManager) {
+        with(model.textureManager as TextureManager) {
             ids.forEach { i ->
                 val buf = buffer.getBuffer(CustomRenderType.mmd(i.value))
                 model.m_faces.slice(ranges[i.key] ?: IntRange.EMPTY).forEach{ f ->
