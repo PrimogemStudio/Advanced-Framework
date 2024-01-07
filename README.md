@@ -1,2 +1,4 @@
-# Advanced-UI
-A mod targeted on improving Minecraft in-game ui
+English | [中文](README_cn.md)
+
+# Advanced Framework
+A modern render framework for rendering ui and 3d models & shaders

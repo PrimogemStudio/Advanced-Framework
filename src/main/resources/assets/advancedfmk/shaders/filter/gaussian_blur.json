@@ -1,0 +1,27 @@
+{
+  "targets": [
+    "temp",
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "advancedfmk:gaussian_blur",
+      "intarget": "minecraft:main",
+      "outtarget": "temp",
+      "uniforms": [
+      ]
+    },
+    {
+      "name": "advancedfmk:gaussian_blur",
+      "intarget": "temp",
+      "outtarget": "swap",
+      "uniforms": [
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

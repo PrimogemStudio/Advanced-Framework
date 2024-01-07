@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "advancedui",
+  "id": "advancedfmk",
   "version": "0.1",
   "name": "Advanced Framework",
   "description": "A modern render framework for rendering ui and 3d models & shaders",
@@ -9,26 +9,26 @@
     "hackermdch"
   ],
   "contact": {
-    "repo": "https://github.com/Primogem-Craft-Development/Advanced-UI",
-    "sources": "https://github.com/Primogem-Craft-Development/Advanced-UI",
-    "issues": "https://github.com/Primogem-Craft-Development/Advanced-UI/issues"
+    "repo": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
+    "sources": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
+    "issues": "https://github.com/Primogem-Craft-Development/Advanced-Framework/issues"
   },
   "license": "GPLv3",
-  "icon": "assets/advancedui/icon.png",
+  "icon": "assets/advancedfmk/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.primogemstudio.advancedui.client.AdvancedUIClient"
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkClient"
     ],
     "main": [
-      "com.primogemstudio.advancedui.AdvancedUI"
+      "com.primogemstudio.advancedfmk.AdvancedFramework"
     ],
     "preLaunch": [
-      "com.primogemstudio.advancedui.EarlyInitializer"
+      "com.primogemstudio.advancedfmk.EarlyInitializer"
     ]
   },
   "mixins": [
-    "advancedui.mixins.json"
+    "advancedfmk.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.0",
