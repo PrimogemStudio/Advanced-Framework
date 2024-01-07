@@ -39,8 +39,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         with(model.textureManager) {
             ids.forEach { i ->
                 val buf = buffer.getBuffer(CustomRenderType.mmd(i.value))
-                val range = ranges[i.key]!!
-                model.m_faces.slice(range.a until range.b).forEach{ f ->
+                model.m_faces.slice(ranges[i.key] ?: IntRange.EMPTY).forEach{ f ->
                     f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).endVertex() }
                 }
             }

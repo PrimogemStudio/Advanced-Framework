@@ -30,7 +30,7 @@ class MMDTexture(private val file: File?) : AbstractTexture() {
 }
 
 class TextureManager {
-    val ranges = HashMap<Int, Tuple<Int, Int>>()
+    val ranges = HashMap<Int, IntRange>()
     val textures = HashMap<Int, MMDTexture>()
     val ids = HashMap<Int, ResourceLocation>()
 

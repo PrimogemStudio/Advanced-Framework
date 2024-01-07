@@ -19,7 +19,7 @@ object Loader {
         var i = 0
         pmx.m_materials.forEach {
             val tmp = it.m_numFaceVertices / 3
-            pmx.textureManager.ranges[i] = Tuple(sum, sum + tmp)
+            pmx.textureManager.ranges[i] = sum until sum + tmp
             pmx.textureManager.textures[i] = MMDTexture(if (it.m_textureIndex < 0) null else File(root, pmx.m_textures[it.m_textureIndex]))
             sum += tmp
             i++
