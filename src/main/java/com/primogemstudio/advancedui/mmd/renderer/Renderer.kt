@@ -43,9 +43,7 @@ class TextureManager {
     }
 
     fun release() {
-        ids.forEach {
-            Minecraft.getInstance().textureManager.release(it.value)
-        }
+        ids.forEach { Minecraft.getInstance().textureManager.release(it.value) }
         ids.clear()
     }
 }
@@ -55,7 +53,7 @@ object CustomRenderType {
     fun mmd(id: ResourceLocation): RenderType {
         if (!cache.containsKey(id)) {
             cache[id] = RenderType.create(
-                "mmd_dbg",
+                "mmd_dbg_$id",
                 DefaultVertexFormat.POSITION_TEX,
                 VertexFormat.Mode.TRIANGLES,
                 0x200000,

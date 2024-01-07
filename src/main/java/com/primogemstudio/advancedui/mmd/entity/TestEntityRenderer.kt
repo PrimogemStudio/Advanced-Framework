@@ -37,13 +37,11 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
     ) {
         poseStack.pushPose()
         with(model.textureManager) {
-            ids.forEach {
-                val buf = buffer.getBuffer(CustomRenderType.mmd(it.value))
-                val range = ranges[it.key]!!
-                for (i in range.a until range.b) {
-                    model.m_faces[i].m_vertices.forEach { v ->
-                        buf.pmxVertex(poseStack.last().pose(), model, v).endVertex()
-                    }
+            ids.forEach { i ->
+                val buf = buffer.getBuffer(CustomRenderType.mmd(i.value))
+                val range = ranges[i.key]!!
+                model.m_faces.slice(range.a until range.b).forEach{ f ->
+                    f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).endVertex() }
                 }
             }
         }
@@ -51,7 +49,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
     }
 }
 
-fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
+inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
     return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
