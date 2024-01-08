@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "advancedfmk",
-  "version": "0.1",
+  "version": "0.0.1-alpha1",
   "name": "Advanced Framework",
   "description": "A modern render framework for rendering ui and 3d models & shaders",
   "authors": [

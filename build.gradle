@@ -3,6 +3,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'maven-publish'
 }
 
 version = project.mod_version
@@ -68,7 +69,7 @@ dependencies {
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
-    include(implementation("com.primogemstudio:mmdbase:0.0.1-alpha1"))
+    include(implementation("com.github.primogemstudio:mmdbase:0.0.1-alpha1"))
 }
 
 processResources {
@@ -108,5 +109,24 @@ kotlin {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'advancedfmk'
+            version = version + "-" + minecraft_version
+
+            from components.kotlin
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.projectDirectory.dir("../maven")
+        }
     }
 }
