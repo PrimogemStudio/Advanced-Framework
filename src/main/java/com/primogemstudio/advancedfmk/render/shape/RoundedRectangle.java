@@ -6,12 +6,11 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.render.RenderResource;
+import com.primogemstudio.advancedfmk.render.Shaders;
 import net.minecraft.network.chat.Component;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-
-import static com.primogemstudio.advancedfmk.render.Shaders.ROUNDED_RECT;
 
 public class RoundedRectangle extends AbstractBackdropableShape {
     private Matrix4f matrix = new Matrix4f();
@@ -57,13 +56,13 @@ public class RoundedRectangle extends AbstractBackdropableShape {
 
     @Override
     public void render(RenderResource res) {
-        RenderSystem.setShader(ROUNDED_RECT::getProgram);
-        ROUNDED_RECT.findUniform2f("Resolution").set(res.screenWidth, res.screenHeight);
-        ROUNDED_RECT.findUniform2f("Center").set(center);
-        ROUNDED_RECT.findUniform1f("Radius").set(radius);
-        ROUNDED_RECT.findUniform1f("Thickness").set(thickness);
-        ROUNDED_RECT.findUniform1f("SmoothEdge").set(smoothedge);
-        ROUNDED_RECT.findUniform2f("Size").set(size);
+        RenderSystem.setShader(Shaders.ROUNDED_RECT::getProgram);
+        Shaders.ROUNDED_RECT.findUniform2f("Resolution").set(res.getWidth(), res.getHeight());
+        Shaders.ROUNDED_RECT.findUniform2f("Center").set(center);
+        Shaders.ROUNDED_RECT.findUniform1f("Radius").set(radius);
+        Shaders.ROUNDED_RECT.findUniform1f("Thickness").set(thickness);
+        Shaders.ROUNDED_RECT.findUniform1f("SmoothEdge").set(smoothedge);
+        Shaders.ROUNDED_RECT.findUniform2f("Size").set(size);
         var x1 = center.x - size.x / 2;
         var x2 = center.x + size.x / 2;
         var y1 = center.y - size.y / 2;
