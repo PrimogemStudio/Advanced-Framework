@@ -1,0 +1,6 @@
+{
+  "modmenu.nameTranslation.advancedfmk": "Advanced Framework",
+  "modmenu.descriptionTranslation.advancedfmk": "A modern render framework for rendering ui and 3d models & shaders",
+  "modmenu.nameTranslation.mmdbase": "MMD Base (MMD Loader)",
+  "modmenu.descriptionTranslation.mmdbase": "An independent module from Advanced-Framework mod, be used to praise and load MMD models"
+}

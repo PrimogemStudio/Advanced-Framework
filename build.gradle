@@ -61,9 +61,9 @@ dependencies {
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
     ext.imguiVersion = "1.89.7-1"
     ["gl", "glfw", "core"].each {
-        include(implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
+        implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
             exclude group: "org.lwjgl"
-        })
+        }
     }
     include(implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20"))
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
