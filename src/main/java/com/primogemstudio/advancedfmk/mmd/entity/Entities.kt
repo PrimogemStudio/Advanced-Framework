@@ -1,6 +1,6 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
-import com.primogemstudio.advancedfmk.AdvancedFramework.MOD_ID
+import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.fabricmc.loader.api.FabricLoader

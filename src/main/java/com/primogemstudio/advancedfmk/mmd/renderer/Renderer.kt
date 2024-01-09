@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.TextureUtil
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
-import com.primogemstudio.advancedfmk.AdvancedFramework.MOD_ID
+import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.mmdbase.abstraction.ITextureManager
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
