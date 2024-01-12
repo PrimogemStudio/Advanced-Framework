@@ -14,11 +14,20 @@ loom {
 }
 
 repositories {
+    mavenCentral() {
+        content {
+            includeGroup "io.github.primogemstudio"
+        }
+    }
     maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
     maven { url = "https://raw.fastgit.org/kotlin-graphics/mary/master" }
     maven { url = 'https://www.jitpack.io' }
-    maven { url = 'https://maven.aliyun.com/repository/central' }
-    maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven {
+        url = 'https://maven.aliyun.com/repository/central'
+        content {
+            excludeGroup "io.github.primogemstudio"
+        }
+    }
     maven {
         url = 'https://api.modrinth.com/maven'
         content {
@@ -69,6 +78,7 @@ dependencies {
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
     include(implementation("io.github.primogemstudio:mmdbase:0.0.1-alpha2"))
+    include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
 }
 
 processResources {

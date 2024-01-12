@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager
 class RenderDocHook : PreLaunchEntrypoint {
     override fun onPreLaunch() {
         try {
-            System.load("D:/Program Files/RenderDoc/renderdoc.dll")
+            System.load("C:/Program Files/RenderDoc/renderdoc.dll")
         } catch (e: Throwable) {
             LogManager.getLogger().error(e.message, e)
         }
