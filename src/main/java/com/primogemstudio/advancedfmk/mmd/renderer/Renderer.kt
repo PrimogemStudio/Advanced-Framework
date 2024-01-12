@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.mmdbase.abstraction.ITextureManager
+import glm_.highestOneBit
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
 import net.minecraft.client.renderer.RenderType
@@ -14,57 +15,167 @@ import net.minecraft.client.renderer.RenderType.CompositeState
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
-import java.io.File
+import net.minecraft.util.Mth
+import org.joml.Vector2f
+import kotlin.math.ceil
+import kotlin.math.sqrt
 
-class MMDTexture(private val file: File?) : AbstractTexture() {
+class MMDTexture(tes: List<NativeImage>) : AbstractTexture() {
+    private var texture: NativeImage
+    private val map = HashMap<Int, Range>()
+
+    @JvmRecord
+    data class Range(
+        val left: Int = 0, val top: Int = 0, val right: Int = 0, val bottom: Int = 0
+    )
+
+    private class Area(private val size: Int) {
+        class Rect(val img: NativeImage) {
+            var x = 0
+            var y = 0
+            var width = 0
+            var height = 0
+
+            fun containsX(other: Int): Boolean {
+                return other >= x && other <= x + width
+            }
+
+            fun containsY(other: Int): Boolean {
+                return other >= y && other <= y + height
+            }
+        }
+
+        private val rects = arrayListOf<Rect>()
+
+        private fun valid(x: Int, y: Int, img: NativeImage): Boolean {
+            return x <= size && y <= size && x + img.width <= size && y + img.height <= size
+        }
+
+        fun join(img: NativeImage): Boolean {
+            var x = 0
+            var y = 0
+            for (r in rects) {
+                if (r.height == size && r.containsX(x)) {
+                    x = r.x + r.width
+                }
+                if (r.width == size && r.containsY(y)) {
+                    y = r.y + r.height
+                }
+                if (r.containsX(x) && r.containsY(y)) {
+                    x = r.x + r.width
+                    y = r.y
+                    if (valid(x, y, img)) continue
+                    x = r.x
+                    y = r.y + r.height
+                    if (!valid(x, y, img)) return false
+                }
+            }
+            if (valid(x, y, img)) {
+                val r1 = Rect(img)
+                r1.x = x
+                r1.y = y
+                r1.width = img.width
+                r1.height = img.height
+                rects.add(r1)
+                return true
+            }
+            return false
+        }
+
+        fun load(img: NativeImage, i: Int, j: Int, tes: List<NativeImage>, map: HashMap<Int, Range>) {
+            val x = i * size
+            val y = j * size
+            rects.forEach {
+                map[tes.indexOf(it.img)] = Range(x + it.x, y + it.y, x + it.x + it.width, y + it.y + it.height)
+                it.img.copyRect(img, 0, 0, x + it.x, y + it.y, it.width, it.height, false, false)
+            }
+        }
+    }
+
+    init {
+        var a = 0
+        tes.forEach {
+            if (it.width > a) a = it.width
+            if (it.height > a) a = it.height
+        }
+        a = ((a - 1) shl 1).highestOneBit
+        val tmp = tes.sortedBy { -it.width * it.height }
+        val ars = arrayListOf(Area(a))
+        tmp.forEach {
+            val la = ars.last()
+            if (!la.join(it)) {
+                ars.add(Area(a))
+                ars.last().join(it)
+            }
+        }
+        val wh = NativeImage(4, 4, false)
+        wh.fillRect(0, 0, 4, 4, 0xffffffff.toInt())
+        var flag = false
+        for (it in ars) {
+            if (it.join(wh)) {
+                flag = true
+                break
+            }
+        }
+        if (!flag) {
+            ars.add(Area(a))
+            ars.last().join(wh)
+        }
+        val b = ceil(sqrt(ars.size.toDouble())).toInt()
+        texture = NativeImage(a * b, a * b, false)
+        l@ for (i in 0 until b) {
+            for (j in 0 until b) {
+                val k = i * b + j
+                if (k >= ars.size) break@l
+                val ar = ars[k]
+                ar.load(texture, i, j, tes, map)
+            }
+        }
+    }
+
     override fun load(resourceManager: ResourceManager) {
-        val img = file?.let { NativeImage.read(it.inputStream()) } ?: NativeImage(1, 1, true)
-        if (!RenderSystem.isOnRenderThreadOrInit()) RenderSystem.recordRenderCall { upload(img) }
-        else upload(img)
+        if (!RenderSystem.isOnRenderThreadOrInit()) RenderSystem.recordRenderCall { upload(texture) }
+        else upload(texture)
     }
 
     private fun upload(image: NativeImage) {
         TextureUtil.prepareImage(getId(), image.width, image.height)
         image.upload(0, 0, 0, true)
     }
+
+    fun mapping(uv: Vector2f, ti: Int) {
+        val r = map[ti]!!
+        uv.x = Mth.lerp(uv.x.toDouble(), r.left.toDouble(), r.right.toDouble()).toFloat() / texture.width
+        uv.y = Mth.lerp(uv.y.toDouble(), r.top.toDouble(), r.bottom.toDouble()).toFloat() / texture.height
+    }
 }
 
-class TextureManager: ITextureManager {
-    val ranges = HashMap<Int, IntRange>()
-    val textures = HashMap<Int, MMDTexture>()
-    val ids = HashMap<Int, ResourceLocation>()
+class TextureManager(private val texture: MMDTexture) : ITextureManager {
+    var id = ResourceLocation(MOD_ID, "")
 
     override fun register(prefix: String) {
-        textures.forEach {
-            val id = ResourceLocation(MOD_ID, "${prefix}_${it.key}")
-            ids[it.key] = id
-            Minecraft.getInstance().textureManager.register(id, it.value)
-        }
+        id = ResourceLocation(MOD_ID, prefix)
+        Minecraft.getInstance().textureManager.register(id, texture)
     }
 
     override fun release() {
-        ids.forEach { Minecraft.getInstance().textureManager.release(it.value) }
-        ids.clear()
+        Minecraft.getInstance().textureManager.release(id)
     }
 }
 
 object CustomRenderType {
-    private val cache = mutableMapOf<ResourceLocation, RenderType>()
     fun mmd(id: ResourceLocation): RenderType {
-        if (!cache.containsKey(id)) {
-            cache[id] = RenderType.create(
-                "mmd_dbg_$id",
-                DefaultVertexFormat.POSITION_TEX,
-                VertexFormat.Mode.TRIANGLES,
-                0x200000,
-                false,
-                true,
-                CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
-                    .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                    .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
-                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false)
-            )
-        }
-        return cache[id]?: RenderType.cutout()
+        return RenderType.create(
+            "mmd_dbg_$id",
+            DefaultVertexFormat.POSITION_TEX,
+            VertexFormat.Mode.TRIANGLES,
+            0x200000,
+            false,
+            true,
+            CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
+                .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY).createCompositeState(false)
+        )
     }
 }

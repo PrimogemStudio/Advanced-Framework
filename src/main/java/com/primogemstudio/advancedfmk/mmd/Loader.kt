@@ -1,9 +1,10 @@
 package com.primogemstudio.advancedfmk.mmd
 
-import com.primogemstudio.mmdbase.io.ModelDataInputStream
-import com.primogemstudio.mmdbase.io.PMXFile
+import com.mojang.blaze3d.platform.NativeImage
 import com.primogemstudio.advancedfmk.mmd.renderer.MMDTexture
 import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager
+import com.primogemstudio.mmdbase.io.ModelDataInputStream
+import com.primogemstudio.mmdbase.io.PMXFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -11,21 +12,23 @@ import java.nio.file.Path
 object Loader {
     @JvmStatic
     fun load(): Pair<ModelDataInputStream, PMXFile> {
-        val root = "D:\\Windows 文件夹\\下载\\lumine module"
+        val root = "D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5"
         val name = "lumine.pmx"
         val model = ModelDataInputStream(Files.newInputStream(Path.of(root, name)))
         val pmx = model.readPMXFile()
         var sum = 0
-        var i = 0
-        pmx.textureManager = TextureManager()
+        val tex = MMDTexture(pmx.m_textures.map { NativeImage.read(File(root, it).inputStream()) })
+        pmx.textureManager = TextureManager(tex)
         pmx.m_materials.forEach {
             val tmp = it.m_numFaceVertices / 3
-            (pmx.textureManager as TextureManager).ranges[i] = sum until sum + tmp
-            (pmx.textureManager as TextureManager).textures[i] = MMDTexture(if (it.m_textureIndex < 0) null else File(root, pmx.m_textures[it.m_textureIndex]))
+            for (i in sum until sum + tmp) {
+                pmx.m_faces[i].m_vertices.forEach { vi ->
+                    tex.mapping(pmx.m_vertices[vi].m_uv, it.m_textureIndex)
+                }
+            }
             sum += tmp
-            i++
         }
-        (pmx.textureManager as TextureManager).register("mmd_lumine")
+        pmx.textureManager!!.register("mmd_lumine")
         return Pair(model, pmx)
     }
 

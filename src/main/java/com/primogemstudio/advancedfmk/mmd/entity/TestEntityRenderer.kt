@@ -2,10 +2,10 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.Loader
-import com.primogemstudio.mmdbase.io.PMXFile
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
-import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager
+import com.primogemstudio.mmdbase.io.PMXFile
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.culling.Frustum
 import net.minecraft.client.renderer.entity.EntityRenderer
@@ -16,6 +16,7 @@ import org.joml.Matrix4f
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
         private val model = Loader.load().second
+        private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"))
     }
 
     override fun getTextureLocation(entity: TestEntity): ResourceLocation {
@@ -36,20 +37,17 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         buffer: MultiBufferSource,
         packedLight: Int
     ) {
+        val buf = buffer.getBuffer(renderType)
         poseStack.pushPose()
-        with(model.textureManager as TextureManager) {
-            ids.forEach { i ->
-                val buf = buffer.getBuffer(CustomRenderType.mmd(i.value))
-                model.m_faces.slice(ranges[i.key] ?: IntRange.EMPTY).forEach{ f ->
-                    f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).endVertex() }
-                }
-            }
+        model.m_faces.forEach { f ->
+            f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).endVertex() }
         }
         poseStack.popPose()
     }
 }
 
-inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
+@Suppress("NOTHING_TO_INLINE")
+private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
     return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
