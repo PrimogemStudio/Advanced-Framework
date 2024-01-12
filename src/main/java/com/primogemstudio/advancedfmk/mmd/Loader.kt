@@ -12,18 +12,22 @@ import java.nio.file.Path
 object Loader {
     @JvmStatic
     fun load(): Pair<ModelDataInputStream, PMXFile> {
-        val root = "D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5"
+        val root = "D:\\Windows 文件夹\\下载\\lumine module"
         val name = "lumine.pmx"
         val model = ModelDataInputStream(Files.newInputStream(Path.of(root, name)))
         val pmx = model.readPMXFile()
         var sum = 0
         val tex = MMDTexture(pmx.m_textures.map { NativeImage.read(File(root, it).inputStream()) })
         pmx.textureManager = TextureManager(tex)
+        val vertex_cache = Array(pmx.m_vertices.size) { false }
         pmx.m_materials.forEach {
             val tmp = it.m_numFaceVertices / 3
             for (i in sum until sum + tmp) {
                 pmx.m_faces[i].m_vertices.forEach { vi ->
-                    tex.mapping(pmx.m_vertices[vi].m_uv, it.m_textureIndex)
+                    if (!vertex_cache[vi]) {
+                        tex.mapping(pmx.m_vertices[vi].m_uv, it.m_textureIndex)
+                        vertex_cache[vi] = true
+                    }
                 }
             }
             sum += tmp

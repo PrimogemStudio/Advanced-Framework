@@ -14,8 +14,6 @@ loom {
 }
 
 repositories {
-    maven { url = 'https://raw.githubusercontent.com/Primogem-Craft-Development/maven/snapshot' }
-    maven { url = "https://raw.fastgit.org/Primogem-Craft-Development/maven/snapshot" }
     maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
     maven { url = "https://raw.fastgit.org/kotlin-graphics/mary/master" }
     maven { url = 'https://www.jitpack.io' }
@@ -43,6 +41,7 @@ repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
     maven { url = 'https://maven.parchmentmc.org' }
     maven { url = 'https://maven.shedaniel.me' }
+    mavenCentral()
 }
 
 dependencies {
