@@ -167,16 +167,19 @@ object CustomRenderType {
     fun mmd(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_$id",
-            DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+            DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
             true,
-            CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER)
+            CompositeState.builder().setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
-                .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
-                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false)
+                .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                .setLightmapState(RenderStateShard.LIGHTMAP)
+                .setOverlayState(RenderStateShard.OVERLAY)
+                .createCompositeState(true)
+
         )
     }
 }
