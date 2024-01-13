@@ -8,6 +8,7 @@ import com.primogemstudio.advancedfmk.mmd.Loader
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import com.primogemstudio.mmdbase.io.PMXFile
 import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.resources.ResourceLocation
@@ -36,7 +37,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
         model.m_faces.forEach { f ->
-            f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).endVertex() }
+            f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), model, it).uv2(packedLight).endVertex() }
         }
         poseStack.popPose()
     }
@@ -46,5 +47,5 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
 private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
-    return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
+    return this.vertex(mat, v.x, v.y, v.z).color(255, 255, 255, 255).uv(uv.x, uv.y)
 }
