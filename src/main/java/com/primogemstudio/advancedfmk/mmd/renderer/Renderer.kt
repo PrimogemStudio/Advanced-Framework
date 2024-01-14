@@ -1,15 +1,19 @@
 package com.primogemstudio.advancedfmk.mmd.renderer
 
+import com.google.common.collect.ImmutableMap
 import com.mojang.blaze3d.platform.NativeImage
 import com.mojang.blaze3d.platform.TextureUtil
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormatElement
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
+import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.mmdbase.abstraction.ITextureManager
 import glm_.highestOneBit
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
+import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderType.CompositeState
 import net.minecraft.client.renderer.texture.AbstractTexture
@@ -164,20 +168,28 @@ class TextureManager(private val texture: MMDTexture) : ITextureManager {
 }
 
 object CustomRenderType {
+    val ENTITY = VertexFormat(
+        ImmutableMap.builder<String, VertexFormatElement>()
+            .put("Position", DefaultVertexFormat.ELEMENT_POSITION)
+            .put("UV0", DefaultVertexFormat.ELEMENT_UV0)
+            .put("UV2", DefaultVertexFormat.ELEMENT_UV2)
+            .put("Padding", DefaultVertexFormat.ELEMENT_PADDING)
+            .build()
+    )
+    val SHADER = ShaderStateShard { Shaders.MMD_SHADER.program }
     fun mmd(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_$id",
-            DefaultVertexFormat.NEW_ENTITY,
+            ENTITY,
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
             true,
-            CompositeState.builder().setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+            CompositeState.builder().setShaderState(SHADER)
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
                 .setLightmapState(RenderStateShard.LIGHTMAP)
-                .setOverlayState(RenderStateShard.OVERLAY)
                 .createCompositeState(true)
 
         )

@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.render
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.primogemstudio.advancedfmk.AdvancedFramework
+import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import ladysnake.satin.api.managed.ManagedCoreShader
 import ladysnake.satin.api.managed.ManagedShaderEffect
 import ladysnake.satin.api.managed.ShaderEffectManager
@@ -13,6 +14,11 @@ object Shaders {
     val ROUNDED_RECT: ManagedCoreShader = ShaderEffectManager.getInstance().manageCoreShader(
         ResourceLocation(AdvancedFramework.MOD_ID, "rounded_rect"),
         DefaultVertexFormat.POSITION_COLOR
+    )
+    @JvmField
+    val MMD_SHADER: ManagedCoreShader = ShaderEffectManager.getInstance().manageCoreShader(
+        ResourceLocation(AdvancedFramework.MOD_ID, "mmd_entity"),
+        CustomRenderType.ENTITY
     )
     @JvmField
     val FAST_GAUSSIAN_BLUR: ManagedShaderEffect = ShaderEffectManager.getInstance()

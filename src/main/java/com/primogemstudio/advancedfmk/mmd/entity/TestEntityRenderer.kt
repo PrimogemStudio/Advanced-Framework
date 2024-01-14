@@ -39,15 +39,19 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
         model.m_faces.forEach { f ->
-            f.m_vertices.forEach { buf.pmxVertex(poseStack.last().pose(), poseStack.last().normal(), model, it, packedLight).endVertex() }
+            f.m_vertices.forEach {
+                buf.pmxVertex(poseStack.last().pose(), model, it)
+                    .uv2(packedLight)
+                    .endVertex()
+            }
         }
         poseStack.popPose()
     }
 }
 
 @Suppress("NOTHING_TO_INLINE")
-private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, mtn: Matrix3f, m: PMXFile, i: Int, lit: Int): VertexConsumer {
+private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
-    return this.vertex(mat, v.x, v.y, v.z).color(255, 255, 255, 255).uv(uv.x, uv.y).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lit).normal(mtn, v.x / 16f, v.y / 16f, v.z / 16f)
+    return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
 }
