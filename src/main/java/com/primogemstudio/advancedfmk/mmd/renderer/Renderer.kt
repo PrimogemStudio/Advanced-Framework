@@ -180,15 +180,18 @@ object CustomRenderType {
     fun mmd(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_$id",
-            ENTITY,
+//            ENTITY,
+            DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
             true,
-            CompositeState.builder().setShaderState(SHADER)
+            CompositeState.builder()
+//                .setShaderState(SHADER)
+                .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
-                .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                 .setLightmapState(RenderStateShard.LIGHTMAP)
                 .createCompositeState(true)
 

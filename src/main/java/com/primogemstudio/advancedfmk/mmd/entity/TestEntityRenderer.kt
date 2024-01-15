@@ -8,7 +8,6 @@ import com.primogemstudio.advancedfmk.mmd.Loader
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import com.primogemstudio.mmdbase.io.PMXFile
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -40,8 +39,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
         model.m_faces.forEach { f ->
             f.m_vertices.forEach {
-                buf.pmxVertex(poseStack.last().pose(), model, it)
-                    .uv2(packedLight)
+                buf.pmxVertex(poseStack.last().pose(), poseStack.last().normal(), model, it, packedLight)
                     .endVertex()
             }
         }
@@ -50,8 +48,13 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
 }
 
 @Suppress("NOTHING_TO_INLINE")
-private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, m: PMXFile, i: Int): VertexConsumer {
+private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, nom: Matrix3f, m: PMXFile, i: Int, l: Int): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
-    return this.vertex(mat, v.x, v.y, v.z).uv(uv.x, uv.y)
+    return this.vertex(mat, v.x, v.y, v.z)
+        .color(255, 255, 255, 255)
+        .uv(uv.x, uv.y)
+        .overlayCoords(OverlayTexture.NO_OVERLAY)
+        .uv2(l)
+        .normal(nom, v.x / 16, v.y / 16, v.z / 16)
 }
