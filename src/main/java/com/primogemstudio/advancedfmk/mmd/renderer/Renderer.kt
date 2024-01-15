@@ -177,18 +177,16 @@ object CustomRenderType {
             .build()
     )
     val SHADER = ShaderStateShard { Shaders.MMD_SHADER.program }
-    fun mmd(id: ResourceLocation): RenderType {
+    fun mmd(id: ResourceLocation, enable_direct: Boolean = false): RenderType {
         return RenderType.create(
             "mmd_dbg_$id",
-//            ENTITY,
-            DefaultVertexFormat.NEW_ENTITY,
+            if (enable_direct) ENTITY else DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
             true,
             CompositeState.builder()
-//                .setShaderState(SHADER)
-                .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                .setShaderState(if (enable_direct) SHADER else RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)

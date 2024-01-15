@@ -17,8 +17,9 @@ import org.joml.Matrix4f
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
+        private val enable_pipeline = false
         private val model = Loader.load().second
-        private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"))
+        private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
     }
 
     override fun getTextureLocation(entity: TestEntity): ResourceLocation {
@@ -39,7 +40,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
         model.m_faces.forEach { f ->
             f.m_vertices.forEach {
-                buf.pmxVertex(poseStack.last().pose(), poseStack.last().normal(), model, it, packedLight)
+                buf.pmxVertex(poseStack.last().pose(), poseStack.last().normal(), model, it, packedLight, enable_pipeline)
                     .endVertex()
             }
         }
@@ -48,13 +49,13 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
 }
 
 @Suppress("NOTHING_TO_INLINE")
-private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, nom: Matrix3f, m: PMXFile, i: Int, l: Int): VertexConsumer {
+private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, nom: Matrix3f, m: PMXFile, i: Int, l: Int, b: Boolean): VertexConsumer {
     val v = m.m_vertices[i].m_position
     val uv = m.m_vertices[i].m_uv
     return this.vertex(mat, v.x, v.y, v.z)
-        .color(255, 255, 255, 255)
+        .apply { if (!b) this.color(0xFFFFFFFF.toInt()) }
         .uv(uv.x, uv.y)
-        .overlayCoords(OverlayTexture.NO_OVERLAY)
+        .apply { if (!b) this.overlayCoords(OverlayTexture.NO_OVERLAY) }
         .uv2(l)
-        .normal(nom, v.x / 16, v.y / 16, v.z / 16)
+        .apply { if (!b) this.normal(nom, v.x / 16, v.y / 16, v.z / 16) }
 }
