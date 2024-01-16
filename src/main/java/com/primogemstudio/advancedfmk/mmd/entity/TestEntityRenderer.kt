@@ -1,23 +1,19 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.Loader
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
-import com.primogemstudio.mmdbase.io.PMXFile
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
-import org.joml.Matrix3f
-import org.joml.Matrix4f
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
-        private val enable_pipeline = false
+        private const val enable_pipeline = false
         private val model = Loader.load().second
         private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
     }
@@ -38,24 +34,21 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
+        val pstk = poseStack.last().pose()
+        val nom = poseStack.last().normal()
         model.m_faces.forEach { f ->
             f.m_vertices.forEach {
-                buf.pmxVertex(poseStack.last().pose(), poseStack.last().normal(), model, it, packedLight, enable_pipeline)
+                val v = model.m_vertices[it].m_position
+                val uv = model.m_vertices[it].m_uv
+                buf.vertex(pstk, v.x, v.y, v.z)
+                    .apply { if (!enable_pipeline) this.color(0xFFFFFFFF.toInt()) }
+                    .uv(uv.x, uv.y)
+                    .apply { if (!enable_pipeline) this.overlayCoords(OverlayTexture.NO_OVERLAY) }
+                    .uv2(packedLight)
+                    .apply { if (!enable_pipeline) this.normal(nom, v.x / 16, v.y / 16, v.z / 16) }
                     .endVertex()
             }
         }
         poseStack.popPose()
     }
-}
-
-@Suppress("NOTHING_TO_INLINE")
-private inline fun VertexConsumer.pmxVertex(mat: Matrix4f, nom: Matrix3f, m: PMXFile, i: Int, l: Int, b: Boolean): VertexConsumer {
-    val v = m.m_vertices[i].m_position
-    val uv = m.m_vertices[i].m_uv
-    return this.vertex(mat, v.x, v.y, v.z)
-        .apply { if (!b) this.color(0xFFFFFFFF.toInt()) }
-        .uv(uv.x, uv.y)
-        .apply { if (!b) this.overlayCoords(OverlayTexture.NO_OVERLAY) }
-        .uv2(l)
-        .apply { if (!b) this.normal(nom, v.x / 16, v.y / 16, v.z / 16) }
 }
