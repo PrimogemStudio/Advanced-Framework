@@ -33,15 +33,16 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val buf = buffer.getBuffer(renderType)
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
-        poseStack.mulPose(Axis.YN.rotationDegrees(entity.tickCount % 360 * 2f))
+        poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
+        val clr = 0xFFFFFFFF.toInt()
         model.m_faces.forEach { f ->
             f.m_vertices.forEach {
                 val v = model.m_vertices[it].m_position
                 val uv = model.m_vertices[it].m_uv
                 buf.vertex(pstk, v.x, v.y, v.z)
-                    .apply { if (!enable_pipeline) this.color(0xFFFFFFFF.toInt()) }
+                    .apply { if (!enable_pipeline) this.color(clr) }
                     .uv(uv.x, uv.y)
                     .apply { if (!enable_pipeline) this.overlayCoords(OverlayTexture.NO_OVERLAY) }
                     .uv2(packedLight)
