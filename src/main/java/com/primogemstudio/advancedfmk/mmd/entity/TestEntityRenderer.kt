@@ -37,19 +37,32 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val clr = 0xFFFFFFFF.toInt()
-        model.m_faces.forEach { f ->
+        val sttick = System.currentTimeMillis()
+        if (!enable_pipeline) model.m_faces.forEach { f ->
             f.m_vertices.forEach {
                 val v = model.m_vertices[it].m_position
                 val uv = model.m_vertices[it].m_uv
                 buf.vertex(pstk, v.x, v.y, v.z)
-                    .apply { if (!enable_pipeline) this.color(clr) }
+                    .color(clr)
                     .uv(uv.x, uv.y)
-                    .apply { if (!enable_pipeline) this.overlayCoords(OverlayTexture.NO_OVERLAY) }
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(packedLight)
-                    .apply { if (!enable_pipeline) this.normal(nom, v.x / 16, v.y / 16, v.z / 16) }
+                    .normal(nom, v.x / 16, v.y / 16, v.z / 16)
                     .endVertex()
             }
         }
+        else model.m_faces.forEach { f ->
+            f.m_vertices.forEach {
+                val v = model.m_vertices[it].m_position
+                val uv = model.m_vertices[it].m_uv
+                buf.vertex(pstk, v.x, v.y, v.z)
+                    .uv(uv.x, uv.y)
+                    .uv2(packedLight)
+                    .endVertex()
+            }
+        }
+        val edtick = System.currentTimeMillis()
+        println("Submit call: ${edtick - sttick} ms")
         poseStack.popPose()
     }
 }
