@@ -37,7 +37,6 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val clr = 0xFFFFFFFF.toInt()
-        val sttick = System.currentTimeMillis()
         if (!enable_pipeline) model.m_faces.forEach { f ->
             f.m_vertices.forEach {
                 val v = model.m_vertices[it].m_position
@@ -61,8 +60,6 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
                     .endVertex()
             }
         }
-        val edtick = System.currentTimeMillis()
-        println("Submit call: ${edtick - sttick} ms")
         poseStack.popPose()
     }
 }
