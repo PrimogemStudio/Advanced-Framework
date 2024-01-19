@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component
 import org.joml.Matrix4f
 
 abstract class AbstractBackdropableShape(x: Int, y: Int, width: Int, height: Int, message: Component?) :
-    AbstractWidget(x, y, width, height, message), Renderable {
+    AbstractWidget(x, y, width, height, message?: Component.literal("")), Renderable {
     private var type: FilterType? = null
     private val data: MutableMap<String, Any> = HashMap()
     fun setType(type: FilterType?): AbstractBackdropableShape {

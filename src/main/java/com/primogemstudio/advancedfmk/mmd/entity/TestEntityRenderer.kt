@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
         private const val enable_pipeline = true
-        private val model = Loader.load().second
+        var model = Loader.load("E:\\mmd\\furina", "furina.pmx").second
         private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
     }
 
