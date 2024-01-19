@@ -13,9 +13,14 @@ import net.minecraft.resources.ResourceLocation
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
-        private const val enable_pipeline = true
+        private var enable_pipeline = true
         var model = Loader.load("E:\\mmd\\furina", "furina.pmx").second
-        private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
+        private var renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
+
+        fun switchPipeline(vanilla: Boolean) {
+            enable_pipeline = !vanilla
+            renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
+        }
     }
 
     override fun getTextureLocation(entity: TestEntity): ResourceLocation {
