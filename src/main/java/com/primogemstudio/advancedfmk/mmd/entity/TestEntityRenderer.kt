@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
-        private const val enable_pipeline = false
+        private const val enable_pipeline = true
         private val model = Loader.load().second
         private val renderType = CustomRenderType.mmd(ResourceLocation(MOD_ID, "mmd_lumine"), enable_pipeline)
     }
@@ -51,16 +51,17 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
                     .endVertex()
             }
         }
-        /*else model.m_faces.forEach { f ->
-            f.m_vertices.forEach {
-                val v = model.m_vertices[it].m_position
-                val uv = model.m_vertices[it].m_uv
+        else for (i in model.m_faces.indices) {
+            for (it in model.m_faces[i].m_vertices.indices) {
+                val vtx = model.m_vertices[model.m_faces[i].m_vertices[it]]
+                val v = vtx.m_position
+                val uv = vtx.m_uv
                 buf.vertex(pstk, v.x, v.y, v.z)
                     .uv(uv.x, uv.y)
                     .uv2(packedLight)
                     .endVertex()
             }
-        }*/
+        }
         poseStack.popPose()
     }
 }
