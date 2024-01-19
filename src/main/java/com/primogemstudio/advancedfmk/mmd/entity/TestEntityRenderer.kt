@@ -37,10 +37,11 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val clr = 0xFFFFFFFF.toInt()
-        if (!enable_pipeline) model.m_faces.forEach { f ->
-            f.m_vertices.forEach {
-                val v = model.m_vertices[it].m_position
-                val uv = model.m_vertices[it].m_uv
+        if (!enable_pipeline) for (i in model.m_faces.indices) {
+            for (it in model.m_faces[i].m_vertices.indices) {
+                val vtx = model.m_vertices[model.m_faces[i].m_vertices[it]]
+                val v = vtx.m_position
+                val uv = vtx.m_uv
                 buf.vertex(pstk, v.x, v.y, v.z)
                     .color(clr)
                     .uv(uv.x, uv.y)
@@ -50,7 +51,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
                     .endVertex()
             }
         }
-        else model.m_faces.forEach { f ->
+        /*else model.m_faces.forEach { f ->
             f.m_vertices.forEach {
                 val v = model.m_vertices[it].m_position
                 val uv = model.m_vertices[it].m_uv
@@ -59,7 +60,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
                     .uv2(packedLight)
                     .endVertex()
             }
-        }
+        }*/
         poseStack.popPose()
     }
 }
