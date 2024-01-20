@@ -8,6 +8,7 @@ import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntityRenderer
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import com.primogemstudio.advancedfmk.render.Shaders
+import com.primogemstudio.advancedfmk.util.NativeFileDialog
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal
@@ -27,20 +28,23 @@ class AdvancedFrameworkClient : ClientModInitializer {
         TestEntity.registerPacket()
         Shaders.init()
         ClientCommandRegistrationCallback.EVENT.register { dis, cxt ->
-            dis.register(
-                literal("advancedfmk").then(
-                    literal("pipeline").then(argument(
-                        "vanilla", bool()
-                    ).executes { c ->
-                        try {
-                            TestEntityRenderer.switchPipeline(getBool(c, "vanilla"))
-                        } catch (e: Throwable) {
-                            e.fullMsg(c)
-                            return@executes 1
-                        }
-                        0
-                    })
-                ).then(literal("flush").executes { UpdatePacket.flush();0 })
+            dis.register(literal("advancedfmk").then(
+                literal("pipeline").then(argument(
+                    "vanilla", bool()
+                ).executes { c ->
+                    try {
+                        TestEntityRenderer.switchPipeline(getBool(c, "vanilla"))
+                    } catch (e: Throwable) {
+                        e.fullMsg(c)
+                        return@executes 1
+                    }
+                    0
+                })
+            ).then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
+                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
+                it.source.player.sendSystemMessage(Component.literal(model.absolutePath))
+                0
+            })
             )
         }
     }
