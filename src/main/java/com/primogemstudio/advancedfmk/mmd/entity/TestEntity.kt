@@ -33,7 +33,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
 
     @Environment(EnvType.CLIENT)
     @JvmField
-    var enable_pipeline = TestEntityRenderer.enable_pipeline
+    var enable_pipeline = false
 
     @Environment(EnvType.CLIENT)
     private var modelName = ""
@@ -115,8 +115,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
 
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
         val buf = PacketByteBufs.create()
-        val op = super.getAddEntityPacket()
-        op.write(buf)
+        ClientboundAddEntityPacket(this).write(buf)
         buf.writeUtf(mp)
         return ServerPlayNetworking.createS2CPacket(ResourceLocation(MOD_ID, "test_entity_add"), buf)
     }
