@@ -173,7 +173,6 @@ object CustomRenderType {
             .put("Position", DefaultVertexFormat.ELEMENT_POSITION)
             .put("UV0", DefaultVertexFormat.ELEMENT_UV0)
             .put("UV2", DefaultVertexFormat.ELEMENT_UV2)
-            .put("Padding", DefaultVertexFormat.ELEMENT_PADDING)
             .build()
     )
     val SHADER = ShaderStateShard { Shaders.MMD_SHADER.program }
