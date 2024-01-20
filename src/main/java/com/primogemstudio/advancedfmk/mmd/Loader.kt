@@ -6,17 +6,18 @@ import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager
 import com.primogemstudio.mmdbase.io.ModelDataInputStream
 import com.primogemstudio.mmdbase.io.PMXFile
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.jvm.Throws
+import kotlin.io.path.pathString
 
 object Loader {
     @JvmStatic
     @Throws(FileNotFoundException::class)
-    fun load(root: String, name: String): Pair<ModelDataInputStream, PMXFile> {
-        val model = ModelDataInputStream(Files.newInputStream(Path.of(root, name)))
+    fun load(root: String, filename: String, name: String): PMXFile {
+        val model = ModelDataInputStream(FileInputStream(Path.of(root, filename).pathString))
         val pmx = model.readPMXFile()
+        model.close()
         var sum = 0
         val tex = MMDTexture(pmx.m_textures.map { NativeImage.read(File(root, it).inputStream()) })
         pmx.textureManager = TextureManager(tex)
@@ -33,7 +34,7 @@ object Loader {
             }
             sum += tmp
         }
-        pmx.textureManager!!.register("mmd_lumine")
-        return Pair(model, pmx)
+        pmx.textureManager!!.register("mmd_$name")
+        return pmx
     }
 }
