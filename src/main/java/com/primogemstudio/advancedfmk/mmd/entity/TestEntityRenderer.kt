@@ -61,31 +61,6 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val clr = 0xFFFFFFFF.toInt()
-        /*if (!enable_pipeline) for (i in model.m_faces.indices) {
-            for (it in model.m_faces[i].m_vertices.indices) {
-                val vtx = model.m_vertices[model.m_faces[i].m_vertices[it]]
-                val v = vtx.m_position
-                val uv = vtx.m_uv
-                buf.vertex(pstk, v.x, v.y, v.z)
-                    .color(clr)
-                    .uv(uv.x, uv.y)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(packedLight)
-                    .normal(nom, v.x / 16, v.y / 16, v.z / 16)
-                    .endVertex()
-            }
-        }
-        else for (i in model.m_faces.indices) {
-            for (it in model.m_faces[i].m_vertices.indices) {
-                val vtx = model.m_vertices[model.m_faces[i].m_vertices[it]]
-                val v = vtx.m_position
-                val uv = vtx.m_uv
-                buf.vertex(pstk, v.x, v.y, v.z)
-                    .uv(uv.x, uv.y)
-                    .uv2(packedLight)
-                    .endVertex()
-            }
-        }*/
         if (processed == null) rebuildBuffer()
         if (!enable_pipeline) for (i in processed!!.indices) {
             val r = processed!![i]
