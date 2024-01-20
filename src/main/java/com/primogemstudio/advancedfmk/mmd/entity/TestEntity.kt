@@ -32,7 +32,8 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     private var mp = ""
 
     @Environment(EnvType.CLIENT)
-    public var enable_pipeline = TestEntityRenderer.enable_pipeline
+    @JvmField
+    var enable_pipeline = TestEntityRenderer.enable_pipeline
 
     @Environment(EnvType.CLIENT)
     private var modelName = ""
@@ -70,6 +71,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
 
     @Environment(EnvType.CLIENT)
     fun reinitRenderLayer() {
+        enable_pipeline = TestEntityRenderer.enable_pipeline
         renderType = CustomRenderType.mmd(
             ResourceLocation(MOD_ID, "mmd_$modelName"), enable_pipeline
         )
@@ -78,11 +80,6 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     override fun defineSynchedData() {
     }
 
-    /**
-     * Use command
-     * /summon advancedfmk:test_entity ~ ~ ~ {Model:"<.pmx path>"}
-     * (Use '/' or '\\' instead of '\' in path)
-     */
     override fun readAdditionalSaveData(compound: CompoundTag) {
         val path = compound.getString("Model")
         mp = path

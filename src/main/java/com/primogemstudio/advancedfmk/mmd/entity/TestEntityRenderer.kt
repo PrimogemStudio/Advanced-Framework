@@ -8,7 +8,6 @@ import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
-import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix3f
 import org.joml.Matrix4f
@@ -74,7 +73,19 @@ fun VertexConsumer.directCommit(mat: Matrix4f, x: Float, y: Float, z: Float, u: 
     }
 }
 
-fun VertexConsumer.directCommit(mat: Matrix4f, nom: Matrix3f, x: Float, y: Float, z: Float, u: Float, v: Float, light: Int, nx: Float, ny: Float, nz: Float) {
+fun VertexConsumer.directCommit(
+    mat: Matrix4f,
+    nom: Matrix3f,
+    x: Float,
+    y: Float,
+    z: Float,
+    u: Float,
+    v: Float,
+    light: Int,
+    nx: Float,
+    ny: Float,
+    nz: Float
+) {
     with(this as BufferBuilder) {
         val p = mat.transform(Vector4f(x, y, z, 1.0f))
         val n = nom.transform(Vector3f(nx, ny, nz))
