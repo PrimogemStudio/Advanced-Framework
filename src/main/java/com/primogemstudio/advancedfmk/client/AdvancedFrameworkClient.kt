@@ -28,7 +28,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
                         try {
                             val st = System.currentTimeMillis()
                             val fdst = File(getString(c, "path"))
-                            TestEntityRenderer.model = Loader.load(fdst.absoluteFile.parent, fdst.name).second
+                            TestEntityRenderer.switchModel(Loader.load(fdst.absoluteFile.parent, fdst.name).second)
                             val ed = System.currentTimeMillis()
                             println("Model loading complete, time: ${ed - st} ms")
                         }
