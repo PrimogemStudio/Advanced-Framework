@@ -37,13 +37,13 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         if (entity.model == null) return
+        if (entity.enable_pipeline != enable_pipeline) entity.reinitRenderLayer()
         val buf = buffer.getBuffer(entity.renderType!!)
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
-        val clr = 0xFFFFFFFF.toInt()
         val processed = entity.getProcessed()
         if (!enable_pipeline) for (i in processed.indices) {
             val r = processed[i]

@@ -32,7 +32,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     private var mp = ""
 
     @Environment(EnvType.CLIENT)
-    private var enable_pipeline = TestEntityRenderer.enable_pipeline
+    public var enable_pipeline = TestEntityRenderer.enable_pipeline
 
     @Environment(EnvType.CLIENT)
     private var modelName = ""
@@ -62,27 +62,17 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
         if (Files.exists(Path(path))) {
             val file = File(path)
             modelName = file.name.replace(Regex("[^a-zA-Z0-9]+"), "_")
-            renderType = CustomRenderType.mmd(
-                ResourceLocation(MOD_ID, "mmd_$modelName"), enable_pipeline
-            )
+            reinitRenderLayer()
             model = Loader.load(file.absoluteFile.parent, file.name, modelName)
             processed = null
         }
     }
 
     @Environment(EnvType.CLIENT)
-    fun clientTick() {
-        if (enable_pipeline != TestEntityRenderer.enable_pipeline) {
-            enable_pipeline = TestEntityRenderer.enable_pipeline
-            renderType = CustomRenderType.mmd(
-                ResourceLocation(MOD_ID, "mmd_$modelName"), enable_pipeline
-            )
-        }
-    }
-
-    override fun tick() {
-        super.tick()
-        if (level().isClientSide) clientTick()
+    fun reinitRenderLayer() {
+        renderType = CustomRenderType.mmd(
+            ResourceLocation(MOD_ID, "mmd_$modelName"), enable_pipeline
+        )
     }
 
     override fun defineSynchedData() {
