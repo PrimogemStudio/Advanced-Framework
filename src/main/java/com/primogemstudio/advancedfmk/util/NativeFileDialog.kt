@@ -19,7 +19,7 @@ object NativeFileDialog {
         else {
             defaultPath.replace("\\", "/")
         }
-        if (!filters.isNullOrEmpty()) {
+        if (filters.isNotEmpty()) {
             MemoryStack.stackPush().use { stack ->
                 val pointerBuffer = stack.mallocPointer(filters.size)
                 filters.forEach { pointerBuffer.put(stack.UTF8(it)) }
@@ -30,6 +30,6 @@ object NativeFileDialog {
         else {
             result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultPath, null, filterDescription, false)
         }
-        return if (result != null) File(result) else null
+        return result?.let { File(it) }
     }
 }
