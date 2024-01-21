@@ -42,7 +42,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
                 })
             ).then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
-                it.source.player.sendSystemMessage(Component.literal(model.absolutePath))
+                it.source.player.sendSystemMessage(Component.literal(model?.absolutePath?: "<path not selected>"))
                 0
             })
             )
