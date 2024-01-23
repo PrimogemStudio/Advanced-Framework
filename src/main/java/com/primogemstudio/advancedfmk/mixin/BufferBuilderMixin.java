@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.mixin;
 
 import com.mojang.blaze3d.vertex.*;
+import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.nio.ByteBuffer;
 
 @Mixin(BufferBuilder.class)
-public abstract class BufferBuilderMixin extends DefaultedVertexConsumer implements BufferVertexConsumer {
+public abstract class BufferBuilderMixin extends DefaultedVertexConsumer implements BufferVertexConsumer, BufferBuilderExt {
     @Shadow public abstract void putFloat(int var1, float var2);
 
     @Shadow private int vertices;
@@ -67,14 +68,19 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
     }
 
     @Override
+    public ByteBuffer accessBuffer() {
+        return buffer;
+    }
+
+    @Override
     public void endVertex() {
         ++this.vertices;
-        if (this.mode == VertexFormat.Mode.LINES || this.mode == VertexFormat.Mode.LINE_STRIP) {
+        /*if (this.mode.primitiveLength == 2) {
             int i = this.format.getVertexSize();
             this.buffer.put(this.nextElementByte, this.buffer, this.nextElementByte - i, i);
             this.nextElementByte += i;
             ++this.vertices;
-        }
+        }*/
     }
 
     public void nextElement() {
