@@ -66,32 +66,4 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
         this.nextElement();
         return this;
     }
-
-    @Override
-    public ByteBuffer accessBuffer() {
-        return buffer;
-    }
-
-    @Override
-    public void endVertex() {
-        ++this.vertices;
-        /*if (this.mode.primitiveLength == 2) {
-            int i = this.format.getVertexSize();
-            this.buffer.put(this.nextElementByte, this.buffer, this.nextElementByte - i, i);
-            this.nextElementByte += i;
-            ++this.vertices;
-        }*/
-    }
-
-    public void nextElement() {
-        this.elementIndex = (this.elementIndex + 1) % this.format.getElements().size();
-        this.nextElementByte += this.currentElement.getByteSize();
-        this.currentElement = this.format.getElements().get(this.elementIndex);
-        if (this.currentElement.getUsage() == VertexFormatElement.Usage.PADDING) {
-            this.nextElement();
-        }
-        else if (this.defaultColorSet && this.currentElement.getUsage() == VertexFormatElement.Usage.COLOR) {
-            color(this.defaultR, this.defaultG, this.defaultB, this.defaultA);
-        }
-    }
 }
