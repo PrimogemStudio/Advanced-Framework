@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.BufferVertexConsumer.normalIntValue
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
+import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -19,9 +20,12 @@ import org.joml.Vector4f
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
         var enable_pipeline = true
-        private val logger = LogManager.getLogger(Companion)
+        var compatibility = false
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
+        }
+        fun switchCompatibility(a: Boolean) {
+            compatibility = a
         }
     }
 
@@ -46,13 +50,17 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val processed = entity.getProcessed()
-        if (!enable_pipeline) for (i in processed.indices) {
+        if (enable_pipeline) for (i in processed.indices) {
+            val r = processed[i]
+            buf.directCommit(pstk, r[0], r[1], r[2], r[3], r[4], packedLight)
+        }
+        else if (compatibility) for (i in processed.indices) {
             val r = processed[i]
             buf.directCommit(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
         }
         else for (i in processed.indices) {
             val r = processed[i]
-            buf.directCommit(pstk, r[0], r[1], r[2], r[3], r[4], packedLight)
+            buf.directCommitB(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
         }
         poseStack.popPose()
     }
@@ -64,14 +72,53 @@ fun VertexConsumer.directCommit(mat: Matrix4f, x: Float, y: Float, z: Float, u: 
         putFloat(0, p.x)
         putFloat(4, p.y)
         putFloat(8, p.z)
-        nextElement()
-        putFloat(0, u)
-        putFloat(4, v)
-        nextElement()
-        putShort(0, (light and 0xFFFF).toShort())
-        putShort(2, (light shr 16 and 0xFFFF).toShort())
-        nextElement()
+        putFloat(12, u)
+        putFloat(16, v)
+        putShort(20, (light and 0xFFFF).toShort())
+        putShort(22, (light shr 16 and 0xFFFF).toShort())
+        (this as BufferBuilderExt).bumpNxt(24)
         endVertex()
+    }
+}
+
+fun VertexConsumer.directCommitB(
+    mat: Matrix4f,
+    nom: Matrix3f,
+    x: Float,
+    y: Float,
+    z: Float,
+    u: Float,
+    v: Float,
+    light: Int,
+    nx: Float,
+    ny: Float,
+    nz: Float
+) {
+    with(this as BufferBuilder) {
+        val p = mat.transform(Vector4f(x, y, z, 1.0f))
+        val n = nom.transform(Vector3f(nx, ny, nz))
+        putFloat(0, p.x)
+        putFloat(4, p.y)
+        putFloat(8, p.z)
+        putByte(12, 255.toByte())
+        putByte(13, 255.toByte())
+        putByte(14, 255.toByte())
+        putByte(15, 255.toByte())
+        putFloat(16, u)
+        putFloat(20, v)
+        val i: Int = if ((this as BufferBuilderExt).fullFormat()) {
+            putShort(24, 0.toShort())
+            putShort(26, 10.toShort())
+            28
+        }
+        else 24
+        putShort(i + 0, (light and 0xFFFF).toShort())
+        putShort(i + 2, (light shr 16 and 0xFFFF).toShort())
+        putByte(i + 4, normalIntValue(n.x))
+        putByte(i + 5, normalIntValue(n.y))
+        putByte(i + 6, normalIntValue(n.z))
+        (this as BufferBuilderExt).bumpNxt(i + 8)
+        this.endVertex()
     }
 }
 
@@ -92,28 +139,5 @@ fun VertexConsumer.directCommit(
         val p = mat.transform(Vector4f(x, y, z, 1.0f))
         val n = nom.transform(Vector3f(nx, ny, nz))
         this.vertex(p.x, p.y, p.z, 1f, 1f, 1f, 1f, u, v, OverlayTexture.NO_OVERLAY, light, n.x, n.y, n.z)
-        /*putFloat(0, p.x)
-        putFloat(4, p.y)
-        putFloat(8, p.z)
-        nextElement()
-        putByte(0, 0xFF.toByte())
-        putByte(1, 0xFF.toByte())
-        putByte(2, 0xFF.toByte())
-        putByte(3, 0xFF.toByte())
-        nextElement()
-        putFloat(0, u)
-        putFloat(4, v)
-        nextElement()
-        putShort(0, 0)
-        putShort(0, 10)
-        nextElement()
-        putShort(0, (light and 0xFFFF).toShort())
-        putShort(2, (light shr 16 and 0xFFFF).toShort())
-        nextElement()
-        putByte(0, normalIntValue(n.x))
-        putByte(1, normalIntValue(n.y))
-        putByte(2, normalIntValue(n.z))
-        nextElement()
-        endVertex()*/
     }
 }

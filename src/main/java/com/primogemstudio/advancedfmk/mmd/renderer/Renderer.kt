@@ -24,7 +24,7 @@ import org.joml.Vector2f
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
-class MMDTexture(tes: List<NativeImage>) : AbstractTexture() {
+class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
     private var texture: NativeImage
     private val map = HashMap<Int, Range>()
 
@@ -154,7 +154,7 @@ class MMDTexture(tes: List<NativeImage>) : AbstractTexture() {
     }
 }
 
-class TextureManager(private val texture: MMDTexture) : ITextureManager {
+class TextureManager(private val texture: MMDTextureAtlas) : ITextureManager {
     var id = ResourceLocation(MOD_ID, "")
 
     override fun register(prefix: String) {

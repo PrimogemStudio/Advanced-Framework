@@ -40,6 +40,18 @@ class AdvancedFrameworkClient : ClientModInitializer {
                     }
                     0
                 })
+            ).then(
+                literal("compat").then(argument(
+                    "enable", bool()
+                ).executes { c ->
+                    try {
+                        TestEntityRenderer.switchCompatibility(getBool(c, "enable"))
+                    } catch (e: Throwable) {
+                        e.fullMsg(c)
+                        return@executes 1
+                    }
+                    0
+                })
             ).then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
                 it.source.player.sendSystemMessage(Component.literal(model?.absolutePath?: "<path not selected>"))

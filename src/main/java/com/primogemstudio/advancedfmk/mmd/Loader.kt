@@ -1,7 +1,7 @@
 package com.primogemstudio.advancedfmk.mmd
 
 import com.mojang.blaze3d.platform.NativeImage
-import com.primogemstudio.advancedfmk.mmd.renderer.MMDTexture
+import com.primogemstudio.advancedfmk.mmd.renderer.MMDTextureAtlas
 import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager
 import com.primogemstudio.mmdbase.io.ModelDataInputStream
 import com.primogemstudio.mmdbase.io.PMXFile
@@ -19,7 +19,7 @@ object Loader {
         val pmx = model.readPMXFile()
         model.close()
         var sum = 0
-        val tex = MMDTexture(pmx.m_textures.map { NativeImage.read(File(root, it).inputStream()) })
+        val tex = MMDTextureAtlas(pmx.m_textures.map { NativeImage.read(File(root, it).inputStream()) })
         pmx.textureManager = TextureManager(tex)
         val vertex_cache = Array(pmx.m_vertices.size) { false }
         pmx.m_materials.forEach {

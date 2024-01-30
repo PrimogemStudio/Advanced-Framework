@@ -26,6 +26,8 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
 
     @Shadow @Nullable private VertexFormatElement currentElement;
 
+    @Shadow private boolean fullFormat;
+
     public VertexConsumer uv(float u, float v) {
         this.putFloat(0, u);
         this.putFloat(4, v);
@@ -65,5 +67,15 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
         this.putByte(2, BufferVertexConsumer.normalIntValue(z));
         this.nextElement();
         return this;
+    }
+
+    @Override
+    public boolean fullFormat() {
+        return fullFormat;
+    }
+
+    @Override
+    public void bumpNxt(int val) {
+        nextElementByte += val;
     }
 }

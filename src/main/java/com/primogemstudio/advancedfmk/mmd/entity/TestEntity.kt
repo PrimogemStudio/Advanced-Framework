@@ -27,6 +27,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     @Environment(EnvType.CLIENT)
     @JvmField
     var model: PMXFile? = null
+    @Environment(EnvType.CLIENT)
     var renderType: RenderType? = null
     private var processed: Array<FloatArray>? = null
     private var mp = ""
