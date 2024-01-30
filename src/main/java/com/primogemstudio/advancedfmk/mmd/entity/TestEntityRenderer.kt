@@ -8,7 +8,9 @@ import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
+import org.apache.logging.log4j.LogManager
 import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -17,7 +19,7 @@ import org.joml.Vector4f
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
         var enable_pipeline = true
-
+        private val logger = LogManager.getLogger(Companion)
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
         }
@@ -89,7 +91,8 @@ fun VertexConsumer.directCommit(
     with(this as BufferBuilder) {
         val p = mat.transform(Vector4f(x, y, z, 1.0f))
         val n = nom.transform(Vector3f(nx, ny, nz))
-        putFloat(0, p.x)
+        this.vertex(p.x, p.y, p.z, 1f, 1f, 1f, 1f, u, v, OverlayTexture.NO_OVERLAY, light, n.x, n.y, n.z)
+        /*putFloat(0, p.x)
         putFloat(4, p.y)
         putFloat(8, p.z)
         nextElement()
@@ -111,6 +114,6 @@ fun VertexConsumer.directCommit(
         putByte(1, normalIntValue(n.y))
         putByte(2, normalIntValue(n.z))
         nextElement()
-        endVertex()
+        endVertex()*/
     }
 }
