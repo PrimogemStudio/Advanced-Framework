@@ -19,7 +19,7 @@ import org.joml.Vector4f
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
-        var enable_pipeline = true
+        var enable_pipeline = false
         var compatibility = false
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
