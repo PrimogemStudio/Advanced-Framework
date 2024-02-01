@@ -1,13 +1,11 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
-import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.BufferVertexConsumer.normalIntValue
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
-import gln.draw.glDrawElements
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
@@ -23,6 +21,9 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
     companion object {
         var enable_pipeline = false
         var compatibility = false
+        var render_model = true
+        var render_bone_link = true
+        var render_bone_parent = true
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
         }
@@ -52,39 +53,56 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pstk = poseStack.last().pose()
         val nom = poseStack.last().normal()
         val processed = entity.getProcessed()
-        if (enable_pipeline) for (i in processed.indices) {
-            val r = processed[i]
-            buf.directCommit(pstk, r[0], r[1], r[2], r[3], r[4], packedLight)
-        }
-        else if (compatibility) for (i in processed.indices) {
-            val r = processed[i]
-            buf.directCommit(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
-        }
-        else for (i in processed.indices) {
-            val r = processed[i]
-            buf.directCommitB(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
+        if (render_model) {
+            if (enable_pipeline) for (i in processed.indices) {
+                val r = processed[i]
+                buf.directCommit(pstk, r[0], r[1], r[2], r[3], r[4], packedLight)
+            }
+            else if (compatibility) for (i in processed.indices) {
+                val r = processed[i]
+                buf.directCommit(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
+            }
+            else for (i in processed.indices) {
+                val r = processed[i]
+                buf.directCommitB(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
+            }
         }
 
-        val dbg = buffer.getBuffer(RenderType.LINES)
+        val dbg = buffer.getBuffer(RenderType.lineStrip())
+        val siz = entity.model!!.m_bones.indices
         entity.model!!.m_bones.forEach {
-            dbg.vertex(pstk, it.m_position.x, it.m_position.y, it.m_position.z).color(1f, 1f, 1f, 1f).normal(it.m_position.x / 16f, it.m_position.y / 16f, it.m_position.z / 16f).endVertex()
+            if (it.m_linkBoneIndex in siz && render_bone_link) {
+                dbg.directCommit(pstk, it.m_position, 255)
+                dbg.directCommit(pstk, entity.model!!.m_bones[it.m_linkBoneIndex].m_position, 255)
+            }
+            if (it.m_parentBoneIndex in siz && render_bone_parent) {
+                dbg.directCommit(pstk, it.m_position, 0)
+                dbg.directCommit(pstk, entity.model!!.m_bones[it.m_parentBoneIndex].m_position, 0)
+            }
         }
 
         poseStack.popPose()
     }
 }
 
-fun VertexConsumer.directCommit(mat: Matrix4f, pos: Vector3f) {
+fun VertexConsumer.directCommit(mat: Matrix4f, pos: Vector3f, b: Int) {
     with(this as BufferBuilder) {
-        val p = mat.transform(Vector4f(pos, 1.0f))
+        /*val p = mat.transform(Vector4f(pos, 1.0f))
         putFloat(0, p.x)
         putFloat(4, p.y)
         putFloat(8, p.z)
-        putByte(12, 255.toByte())
-        putByte(13, 255.toByte())
-        putByte(14, 255.toByte())
+        nextElement()
+        putByte(12, b.toByte())
+        putByte(13, b.toByte())
+        putByte(14, b.toByte())
         putByte(15, 255.toByte())
-        (this as BufferBuilderExt).bumpNxt(16)
+        nextElement()
+        putByte(16, normalIntValue(p.x / 16f))
+        putByte(17, normalIntValue(p.x / 16f))
+        putByte(18, normalIntValue(p.x / 16f))
+        nextElement()*/
+        vertex(mat, pos.x, pos.y, pos.z).color(b, b, b, 255).normal(pos.x / 16f, pos.y / 16f, pos.z / 16f)
+        // (this as BufferBuilderExt).bumpNxt(19)
         endVertex()
     }
 }

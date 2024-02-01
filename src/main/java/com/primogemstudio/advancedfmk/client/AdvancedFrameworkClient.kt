@@ -56,7 +56,16 @@ class AdvancedFrameworkClient : ClientModInitializer {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
                 it.source.player.sendSystemMessage(Component.literal(model?.absolutePath?: "<path not selected>"))
                 0
-            })
+            }).then(literal("opt").then(literal("render_model").then(argument("enable", bool()).executes { c ->
+                TestEntityRenderer.render_model = getBool(c, "enable")
+                0
+            })).then(literal("render_bone_link").then(argument("enable", bool()).executes { c ->
+                TestEntityRenderer.render_bone_link = getBool(c, "enable")
+                0
+            })).then(literal("render_bone_parent").then(argument("enable", bool()).executes { c ->
+                TestEntityRenderer.render_bone_parent = getBool(c, "enable")
+                0
+            })))
             )
         }
     }
