@@ -58,13 +58,13 @@ class RoundedRectangle(x: Float, y: Float, w: Float, h: Float, message: Componen
     }
 
     override fun render(res: RenderResource?) {
-        RenderSystem.setShader { Shaders.ROUNDED_RECT.program }
-        Shaders.ROUNDED_RECT.findUniform2f("Resolution")[res!!.width.toFloat()] = res.height.toFloat()
-        Shaders.ROUNDED_RECT.findUniform2f("Center").set(center)
-        Shaders.ROUNDED_RECT.findUniform1f("Radius").set(radius)
-        Shaders.ROUNDED_RECT.findUniform1f("Thickness").set(thickness)
-        Shaders.ROUNDED_RECT.findUniform1f("SmoothEdge").set(smoothedge)
-        Shaders.ROUNDED_RECT.findUniform2f("Size").set(size)
+        RenderSystem.setShader { Shaders.ROUNDED_RECT }
+        Shaders.ROUNDED_RECT.getUniform("Resolution")!!.set(floatArrayOf(res!!.width.toFloat(), res.height.toFloat()))
+        Shaders.ROUNDED_RECT.getUniform("Center")!!.set(floatArrayOf(center.x, center.y))
+        Shaders.ROUNDED_RECT.getUniform("Radius")!!.set(radius)
+        Shaders.ROUNDED_RECT.getUniform("Thickness")!!.set(thickness)
+        Shaders.ROUNDED_RECT.getUniform("SmoothEdge")!!.set(smoothedge)
+        Shaders.ROUNDED_RECT.getUniform("Size")!!.set(floatArrayOf(size.x, size.y))
         val x1 = center.x - size.x / 2
         val x2 = center.x + size.x / 2
         val y1 = center.y - size.y / 2

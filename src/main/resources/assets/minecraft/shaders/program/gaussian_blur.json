@@ -1,0 +1,90 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "gaussian_blur",
+  "fragment": "gaussian_blur",
+  "attributes": [
+    "Position"
+  ],
+  "samplers": [
+    {
+      "name": "DiffuseSampler"
+    },
+    {
+      "name": "InputSampler"
+    }
+  ],
+  "uniforms": [
+    {
+      "name": "ProjMat",
+      "type": "matrix4x4",
+      "count": 16,
+      "values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "name": "InSize",
+      "type": "float",
+      "count": 2,
+      "values": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "OutSize",
+      "type": "float",
+      "count": 2,
+      "values": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "ColorModulate",
+      "type": "float",
+      "count": 4,
+      "values": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "Radius",
+      "type": "int",
+      "count": 1,
+      "values": [
+        5
+      ]
+    },
+    {
+      "name": "DigType",
+      "type": "int",
+      "count": 1,
+      "values": [
+        0
+      ]
+    }
+  ]
+}

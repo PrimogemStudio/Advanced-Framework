@@ -26,7 +26,6 @@ class AdvancedFrameworkClient : ClientModInitializer {
     override fun onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(ResourceLocation(MOD_ID, "update"), UpdatePacket())
         TestEntity.registerPacket()
-        Shaders.init()
         ClientCommandRegistrationCallback.EVENT.register { dis, cxt ->
             dis.register(literal("advancedfmk").then(
                 literal("pipeline").then(argument(

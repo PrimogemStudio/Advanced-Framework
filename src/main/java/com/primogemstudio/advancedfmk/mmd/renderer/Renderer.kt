@@ -175,7 +175,7 @@ object CustomRenderType {
             .put("UV2", DefaultVertexFormat.ELEMENT_UV2)
             .build()
     )
-    val SHADER = ShaderStateShard { Shaders.MMD_SHADER.program }
+    val SHADER = ShaderStateShard { Shaders.MMD_SHADER }
     fun mmd(id: ResourceLocation, enable_direct: Boolean = false): RenderType {
         return RenderType.create(
             "mmd_dbg_$id",
