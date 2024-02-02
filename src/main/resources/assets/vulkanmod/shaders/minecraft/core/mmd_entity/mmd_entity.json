@@ -4,8 +4,8 @@
         "srcrgb": "srcalpha",
         "dstrgb": "1-srcalpha"
     },
-    "vertex": "advancedfmk:mmd_entity",
-    "fragment": "advancedfmk:mmd_entity",
+    "vertex": "mmd_entity",
+    "fragment": "mmd_entity",
     "attributes": [
         "Position",
         "UV0",

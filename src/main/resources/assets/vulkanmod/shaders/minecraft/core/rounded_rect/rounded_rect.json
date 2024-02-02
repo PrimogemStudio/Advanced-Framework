@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "advancedfmk:rounded_rect",
-  "fragment": "advancedfmk:rounded_rect",
+  "vertex": "rounded_rect",
+  "fragment": "rounded_rect",
   "attributes": [
     "Color"
   ],
