@@ -29,14 +29,13 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     var model: PMXFile? = null
     @Environment(EnvType.CLIENT)
     var renderType: RenderType? = null
+    @Environment(EnvType.CLIENT)
     private var processed: Array<FloatArray>? = null
     private var mp = ""
 
     @Environment(EnvType.CLIENT)
     @JvmField
     var enable_pipeline = false
-
-    @Environment(EnvType.CLIENT)
     private var modelName = ""
 
     @Environment(EnvType.CLIENT)
