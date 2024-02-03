@@ -52,6 +52,12 @@ vec4 blur_dig2(int samples) {
     return color / count;
 }
 
+float random(vec2 st) {
+    return fract(sin(dot(st.xy,
+    vec2(12.9898,78.233)))*
+    43758.5453123);
+}
+
 void main() {
     vec4 col = texture(InputSampler, texCoord);
     vec4 dst = texture(DiffuseSampler, texCoord);
@@ -62,4 +68,7 @@ void main() {
     }
 
     fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a);
+    fragColor.x += random(texCoord) / 200;
+    fragColor.y += random(texCoord) / 200;
+    fragColor.z += random(texCoord) / 200;
 }

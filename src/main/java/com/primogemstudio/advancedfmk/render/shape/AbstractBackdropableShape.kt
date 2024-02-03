@@ -26,7 +26,7 @@ abstract class AbstractBackdropableShape(x: Int, y: Int, width: Int, height: Int
         return this
     }
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    public override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         updateStack(guiGraphics.pose().last().pose())
         if (type == null) draw(this) else {
             data.forEach { (s: String?, o: Any?) ->

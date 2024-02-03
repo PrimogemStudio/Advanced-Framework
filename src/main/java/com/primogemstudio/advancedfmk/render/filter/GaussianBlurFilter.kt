@@ -16,7 +16,7 @@ class GaussianBlurFilter : Filter {
 
     override fun setArg(name: String?, value: Any?) {
         when (name) {
-            "Radius" -> radius = value as Int
+            "Radius" -> radius = (value as Number).toInt()
             "EnableFrostGrass" -> enableFrostedGrass = value as Boolean
         }
     }
