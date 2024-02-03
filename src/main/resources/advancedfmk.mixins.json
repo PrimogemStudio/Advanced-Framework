@@ -6,7 +6,8 @@
   "client": [
     "BufferBuilderMixin",
     "GameRendererMixin",
-    "chat.ChatScreenMixin"
+    "chat.ChatScreenMixin",
+    "chat.TooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1
