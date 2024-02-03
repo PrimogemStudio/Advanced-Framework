@@ -19,8 +19,6 @@ repositories {
             includeGroup "io.github.primogemstudio"
         }
     }
-    maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
-    maven { url = "https://raw.fastgit.org/kotlin-graphics/mary/master" }
     maven { url = 'https://www.jitpack.io' }
     maven {
         url = 'https://maven.aliyun.com/repository/central'
@@ -67,18 +65,11 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
-    ext.imguiVersion = "1.89.7-1"
-    ["gl", "glfw", "core"].each {
-        implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
-            exclude group: "org.lwjgl"
-        }
-    }
     include(implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20"))
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
     include(implementation("io.github.primogemstudio:mmdbase:0.0.2-alpha1"))
-    include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
 
     if (isEnable("$enable_sodium")) modRuntimeOnly "maven.modrinth:sodium:$sodium_version"
     if (isEnable("$enable_iris")) modRuntimeOnly "maven.modrinth:iris:$iris_version"
