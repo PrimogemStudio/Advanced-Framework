@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.VertexFormatElement
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.mmdbase.abstraction.ITextureManager
-import glm_.highestOneBit
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
 import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard
@@ -102,7 +101,8 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
             if (it.width > a) a = it.width
             if (it.height > a) a = it.height
         }
-        a = ((a - 1) shl 1).highestOneBit
+
+        a = Integer.highestOneBit((a - 1) shl 1)
         val tmp = tes.sortedBy { -it.width * it.height }
         val ars = arrayListOf(Area(a))
         tmp.forEach {
