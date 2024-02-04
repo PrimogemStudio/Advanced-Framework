@@ -2,7 +2,7 @@
 //file:noinspection GroovyAccessibility
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.5.7'
     id 'maven-publish'
 }
 
@@ -20,7 +20,6 @@ repositories {
         }
     }
     maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
-    maven { url = "https://raw.fastgit.org/kotlin-graphics/mary/master" }
     maven { url = 'https://www.jitpack.io' }
     maven {
         url = 'https://maven.aliyun.com/repository/central'

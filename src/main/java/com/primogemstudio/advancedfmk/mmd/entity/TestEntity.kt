@@ -53,7 +53,8 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
                 val vtx = model!!.m_vertices[model!!.m_faces[i].m_vertices[it]]
                 val v = vtx.m_position
                 val uv = vtx.m_uv
-                processed!![i * 3 + it] = floatArrayOf(v.x, v.y, v.z, uv.x, uv.y, v.x / 16, v.y / 16, v.z / 16)
+                val n = vtx.m_normal
+                processed!![i * 3 + it] = floatArrayOf(v.x, v.y, v.z, uv.x, uv.y, n.x, n.y, n.z)
             }
         }
     }
