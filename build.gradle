@@ -73,8 +73,12 @@ dependencies {
     include(implementation("io.github.primogemstudio:mmdbase:0.0.2-alpha1"))
     include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
 
+
     if (isEnable("$enable_sodium")) modRuntimeOnly "maven.modrinth:sodium:$sodium_version"
-    if (isEnable("$enable_iris")) modRuntimeOnly "maven.modrinth:iris:$iris_version"
+    if (isEnable("$enable_iris")) {
+        modRuntimeOnly "maven.modrinth:iris:$iris_version"
+        implementation "org.anarres:jcpp:1.4.14"
+    }
     if (isEnable("$enable_vulkanmod")) modRuntimeOnly "maven.modrinth:vulkanmod:$vulkanmod_version"
 }
 
