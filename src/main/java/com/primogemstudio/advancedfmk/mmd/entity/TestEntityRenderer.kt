@@ -20,7 +20,7 @@ import org.joml.Vector4f
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
         var enable_pipeline = false
-        var compatibility = false
+        var compatibility = true
         var render_model = true
         var render_bone_link = true
         var render_bone_parent = true
@@ -87,22 +87,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
 
 fun VertexConsumer.directCommit(mat: Matrix4f, pos: Vector3f, b: Int) {
     with(this as BufferBuilder) {
-        /*val p = mat.transform(Vector4f(pos, 1.0f))
-        putFloat(0, p.x)
-        putFloat(4, p.y)
-        putFloat(8, p.z)
-        nextElement()
-        putByte(12, b.toByte())
-        putByte(13, b.toByte())
-        putByte(14, b.toByte())
-        putByte(15, 255.toByte())
-        nextElement()
-        putByte(16, normalIntValue(p.x / 16f))
-        putByte(17, normalIntValue(p.x / 16f))
-        putByte(18, normalIntValue(p.x / 16f))
-        nextElement()*/
         vertex(mat, pos.x, pos.y, pos.z).color(b, b, b, 255).normal(pos.x / 16f, pos.y / 16f, pos.z / 16f)
-        // (this as BufferBuilderExt).bumpNxt(19)
         endVertex()
     }
 }
