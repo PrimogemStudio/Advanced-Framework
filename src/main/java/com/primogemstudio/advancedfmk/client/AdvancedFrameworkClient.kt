@@ -64,6 +64,9 @@ class AdvancedFrameworkClient : ClientModInitializer {
             })).then(literal("render_bone_parent").then(argument("enable", bool()).executes { c ->
                 TestEntityRenderer.render_bone_parent = getBool(c, "enable")
                 0
+            })).then(literal("render_normals").then(argument("enable", bool()).executes { c ->
+                TestEntityRenderer.render_normals = getBool(c, "enable")
+                0
             })))
             )
         }

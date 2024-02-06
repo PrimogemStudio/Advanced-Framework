@@ -25,6 +25,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         var render_model = true
         var render_bone_link = false
         var render_bone_parent = false
+        var render_normals = false
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
         }
@@ -80,6 +81,10 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
                 dbg.directCommit(pstk, it.m_position, 0)
                 dbg.directCommit(pstk, entity.model!!.m_bones[it.m_parentBoneIndex].m_position, 0)
             }
+        }
+        if (render_normals) entity.model!!.m_vertices.forEach {
+            dbg.directCommit(pstk, it.m_position, 125)
+            dbg.directCommit(pstk, it.m_normal, 125)
         }
 
         poseStack.popPose()
