@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
+import glm_.vec3.Vec3
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
@@ -22,8 +23,8 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         var enable_pipeline = false
         var compatibility = true
         var render_model = true
-        var render_bone_link = true
-        var render_bone_parent = true
+        var render_bone_link = false
+        var render_bone_parent = false
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
         }
@@ -85,7 +86,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
     }
 }
 
-fun VertexConsumer.directCommit(mat: Matrix4f, pos: Vector3f, b: Int) {
+fun VertexConsumer.directCommit(mat: Matrix4f, pos: Vec3, b: Int) {
     with(this as BufferBuilder) {
         vertex(mat, pos.x, pos.y, pos.z).color(b, b, b, 255).normal(pos.x / 16f, pos.y / 16f, pos.z / 16f)
         endVertex()

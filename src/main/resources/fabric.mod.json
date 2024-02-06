@@ -16,6 +16,7 @@
   "license": "GPLv3",
   "icon": "assets/advancedfmk/icon.png",
   "environment": "*",
+  "accessWidener" : "META-INF/aw.accesswidener",
   "entrypoints": {
     "client": [
       "com.primogemstudio.advancedfmk.client.AdvancedFrameworkClient"

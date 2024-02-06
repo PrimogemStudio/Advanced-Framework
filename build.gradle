@@ -10,7 +10,7 @@ version = project.mod_version
 group = project.maven_group
 
 loom {
-    // accessWidenerPath = file("src/main/resources/META-INF/aw.accesswidener")
+    accessWidenerPath = file("src/main/resources/META-INF/aw.accesswidener")
 }
 
 repositories {
@@ -70,12 +70,8 @@ dependencies {
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"))
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
-    include(implementation("io.github.primogemstudio:mmdbase:0.0.2-alpha1"))
+    include(implementation("io.github.primogemstudio:mmdbase:0.0.3"))
     include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
-}
-
-static boolean isEnable(String s) {
-    return s == "true"
 }
 
 processResources {
