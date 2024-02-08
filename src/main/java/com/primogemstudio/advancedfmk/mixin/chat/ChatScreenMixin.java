@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.awt.*;
-
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     @Unique
