@@ -2,13 +2,15 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.BufferVertexConsumer.normalIntValue
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
+import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
+import com.primogemstudio.mmdbase.io.PMXFile
 import glm_.vec3.Vec3
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -17,6 +19,7 @@ import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
+import java.nio.ByteBuffer
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
@@ -26,9 +29,12 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         var render_bone_link = false
         var render_bone_parent = false
         var render_normals = false
+        val matrix_buffer: ByteBuffer = ByteBuffer.allocateDirect(64)
+
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
         }
+
         fun switchCompatibility(a: Boolean) {
             compatibility = a
         }
@@ -47,46 +53,13 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         if (entity.model == null) return
-        if (entity.enable_pipeline != enable_pipeline) entity.reinitRenderLayer()
-        val buf = buffer.getBuffer(entity.renderType!!)
+        val buf = buffer.getBuffer(CustomRenderType.saba(entity.model!!.textureManager.id)) as BufferBuilder
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
-        val pstk = poseStack.last().pose()
-        val nom = poseStack.last().normal()
-        val processed = entity.getProcessed()
-        if (render_model) {
-            if (enable_pipeline) for (i in processed.indices) {
-                val r = processed[i]
-                buf.directCommit(pstk, r[0], r[1], r[2], r[3], r[4], packedLight)
-            }
-            else if (compatibility) for (i in processed.indices) {
-                val r = processed[i]
-                buf.directCommit(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
-            }
-            else for (i in processed.indices) {
-                val r = processed[i]
-                buf.directCommitB(pstk, nom, r[0], r[1], r[2], r[3], r[4], packedLight, r[5], r[6], r[7])
-            }
-        }
-
-        val dbg = buffer.getBuffer(RenderType.lineStrip())
-        val siz = entity.model!!.m_bones.indices
-        entity.model!!.m_bones.forEach {
-            if (it.m_linkBoneIndex in siz && render_bone_link) {
-                dbg.directCommit(pstk, it.m_position, 255)
-                dbg.directCommit(pstk, entity.model!!.m_bones[it.m_linkBoneIndex].m_position, 255)
-            }
-            if (it.m_parentBoneIndex in siz && render_bone_parent) {
-                dbg.directCommit(pstk, it.m_position, 0)
-                dbg.directCommit(pstk, entity.model!!.m_bones[it.m_parentBoneIndex].m_position, 0)
-            }
-        }
-        if (render_normals) entity.model!!.m_vertices.forEach {
-            dbg.directCommit(pstk, it.m_position, 125)
-            dbg.directCommit(pstk, it.m_normal, 125)
-        }
-
+        buf.vertices = entity.model!!.render(
+            buf.buffer, poseStack.last().pose().get(matrix_buffer)
+        )
         poseStack.popPose()
     }
 }
@@ -142,8 +115,7 @@ fun VertexConsumer.directCommitB(
             putShort(24, 0.toShort())
             putShort(26, 10.toShort())
             28
-        }
-        else 24
+        } else 24
         putShort(i + 0, (light and 0xFFFF).toShort())
         putShort(i + 2, (light shr 16 and 0xFFFF).toShort())
         putByte(i + 4, normalIntValue(n.x))

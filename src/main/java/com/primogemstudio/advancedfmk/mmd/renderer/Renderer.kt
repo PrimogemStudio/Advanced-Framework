@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.blaze3d.vertex.VertexFormatElement
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
+import com.primogemstudio.advancedfmk.interfaces.AccessFromNative
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.mmdbase.abstraction.ITextureManager
 import glm_.vec2.Vec2
@@ -20,6 +21,8 @@ import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.Mth
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -152,6 +155,18 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
         uv.x = Mth.lerp(uv.x.toDouble(), r.left.toDouble(), r.right.toDouble()).toFloat() / texture.width
         uv.y = Mth.lerp(uv.y.toDouble(), r.top.toDouble(), r.bottom.toDouble()).toFloat() / texture.height
     }
+
+    @AccessFromNative
+    private val buff = ByteBuffer.allocateDirect(8).order(ByteOrder.LITTLE_ENDIAN)
+
+    @AccessFromNative
+    fun mapping(ti: Int) {
+        val r = map[ti]!!
+        val x = buff.getFloat(0).toDouble()
+        val y = buff.getFloat(4).toDouble()
+        buff.putFloat(0, Mth.lerp(x, r.left.toDouble(), r.right.toDouble()).toFloat() / texture.width)
+        buff.putFloat(4, Mth.lerp(y, r.bottom.toDouble(), r.top.toDouble()).toFloat() / texture.height)
+    }
 }
 
 class TextureManager(private val texture: MMDTextureAtlas) : ITextureManager {
@@ -169,11 +184,8 @@ class TextureManager(private val texture: MMDTextureAtlas) : ITextureManager {
 
 object CustomRenderType {
     val ENTITY = VertexFormat(
-        ImmutableMap.builder<String, VertexFormatElement>()
-            .put("Position", DefaultVertexFormat.ELEMENT_POSITION)
-            .put("UV0", DefaultVertexFormat.ELEMENT_UV0)
-            .put("UV2", DefaultVertexFormat.ELEMENT_UV2)
-            .build()
+        ImmutableMap.builder<String, VertexFormatElement>().put("Position", DefaultVertexFormat.ELEMENT_POSITION)
+            .put("UV0", DefaultVertexFormat.ELEMENT_UV0).put("UV2", DefaultVertexFormat.ELEMENT_UV2).build()
     )
     val SHADER = ShaderStateShard { Shaders.MMD_SHADER }
     fun mmd(id: ResourceLocation, enable_direct: Boolean = false): RenderType {
@@ -189,9 +201,20 @@ object CustomRenderType {
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setLightmapState(RenderStateShard.LIGHTMAP)
-                .createCompositeState(true)
+                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
+        )
+    }
 
+    fun saba(id: ResourceLocation): RenderType {
+        return RenderType.create(
+            "mmd_dbg_saba",
+            DefaultVertexFormat.POSITION_COLOR_TEX,
+            VertexFormat.Mode.TRIANGLES,
+            0x200000,
+            false,
+            true,
+            CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                .setTextureState(RenderStateShard.TextureStateShard(id, false, false)).createCompositeState(true)
         )
     }
 }

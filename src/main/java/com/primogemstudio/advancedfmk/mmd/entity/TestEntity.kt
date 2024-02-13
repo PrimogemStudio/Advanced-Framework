@@ -1,10 +1,9 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
-import com.primogemstudio.advancedfmk.mmd.Loader
+import com.primogemstudio.advancedfmk.mmd.PMXModel
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import com.primogemstudio.advancedfmk.network.UpdatePacket
-import com.primogemstudio.mmdbase.io.PMXFile
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -26,9 +25,11 @@ import kotlin.io.path.Path
 class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(entityType, level) {
     @Environment(EnvType.CLIENT)
     @JvmField
-    var model: PMXFile? = null
+    var model: PMXModel? = null
+
     @Environment(EnvType.CLIENT)
     var renderType: RenderType? = null
+
     @Environment(EnvType.CLIENT)
     private var processed: Array<FloatArray>? = null
     private var mp = ""
@@ -39,33 +40,12 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     private var modelName = ""
 
     @Environment(EnvType.CLIENT)
-    fun getProcessed(): Array<FloatArray> {
-        if (processed == null) rebuildBuffer()
-        return processed!!
-    }
-
-    @Environment(EnvType.CLIENT)
-    private fun rebuildBuffer() {
-        if (model == null) return
-        processed = Array(model!!.m_faces.size * 3) { floatArrayOf() }
-        for (i in model!!.m_faces.indices) {
-            for (it in model!!.m_faces[i].m_vertices.indices) {
-                val vtx = model!!.m_vertices[model!!.m_faces[i].m_vertices[it]]
-                val v = vtx.m_position
-                val uv = vtx.m_uv
-                val n = vtx.m_normal
-                processed!![i * 3 + it] = floatArrayOf(v.x, v.y, v.z, uv.x, uv.y, n.x, n.y, n.z)
-            }
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
     fun setModel(path: String) {
         if (Files.exists(Path(path))) {
             val file = File(path)
             modelName = file.name.replace(Regex("[^a-zA-Z0-9]+"), "_")
             reinitRenderLayer()
-            model = Loader.load(file.absoluteFile.parent, file.name, modelName)
+            model = PMXModel(file)
             processed = null
         }
     }

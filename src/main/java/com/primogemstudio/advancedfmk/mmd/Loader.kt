@@ -37,4 +37,9 @@ object Loader {
         pmx.textureManager!!.register("mmd_$name")
         return pmx
     }
+
+    @JvmStatic
+    fun createAtlas(ts: List<File>): MMDTextureAtlas {
+        return MMDTextureAtlas(ts.map { NativeImage.read(it.inputStream()) })
+    }
 }

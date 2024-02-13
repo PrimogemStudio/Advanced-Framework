@@ -4,10 +4,10 @@ import com.mojang.brigadier.arguments.BoolArgumentType.bool
 import com.mojang.brigadier.arguments.BoolArgumentType.getBool
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
+import com.primogemstudio.advancedfmk.mmd.SabaNative
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntityRenderer
 import com.primogemstudio.advancedfmk.network.UpdatePacket
-import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.util.NativeFileDialog
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument
@@ -53,7 +53,13 @@ class AdvancedFrameworkClient : ClientModInitializer {
                 })
             ).then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
-                it.source.player.sendSystemMessage(Component.literal(model?.absolutePath?: "<path not selected>"))
+                it.source.player.connection.sendCommand(
+                    "summon ${MOD_ID}:test_entity ~ ~ ~ {Model:\"${
+                        model?.absolutePath?.replace(
+                            '\\', '/'
+                        )
+                    }\"}"
+                )
                 0
             }).then(literal("opt").then(literal("render_model").then(argument("enable", bool()).executes { c ->
                 TestEntityRenderer.render_model = getBool(c, "enable")
@@ -70,6 +76,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
             })))
             )
         }
+        SabaNative.init()
     }
 }
 
