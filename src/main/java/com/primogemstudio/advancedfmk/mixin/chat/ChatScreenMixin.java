@@ -53,6 +53,6 @@ public class ChatScreenMixin {
                 .radius(Math.min(maxX - minX, maxY - minY) / 2f)
                 .renderWidget(instance, 0, 0, 0f);
 
-        RenderQueue.draw(micro$oftLogo);
+        // RenderQueue.draw(micro$oftLogo);
     }
 }
