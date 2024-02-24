@@ -25,14 +25,14 @@ import java.nio.file.Path;
 public class ChatScreenMixin {
     @Unique
     private AbstractBackdropableShape rect;
-    @Unique
+    /*@Unique
     private AbstractBackdropableShape micro$oftLogo = new RoundedRectangleTex(
             30, 30, 32, 32, Component.empty(), new BaseTexture(NativeImage.read(Files.newInputStream(Path.of("D:\\mods\\Advanced-UI\\out.png"))))
     )
             .thickness(0f)
             .smoothedge(0.001f)
             .color(1f, 1f, 1f, 1f)
-            .radius(10f);
+            .radius(10f);*/
 
     public ChatScreenMixin() throws IOException {}
 
