@@ -12,15 +12,15 @@ import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector4f
 
-class RoundedRectangle(x: Float, y: Float, w: Float, h: Float, message: Component?) :
+open class RoundedRectangle(x: Float, y: Float, w: Float, h: Float, message: Component?) :
     AbstractBackdropableShape(x.toInt(), y.toInt(), w.toInt(), h.toInt(), message) {
-    private var matrix = Matrix4f()
-    private val center = Vector2f()
-    private val size = Vector2f()
-    private val color = Vector4f()
-    private var radius = 10f
-    private var thickness = 0.00f
-    private var smoothedge = 0.001f
+    protected var matrix = Matrix4f()
+    protected val center = Vector2f()
+    protected val size = Vector2f()
+    protected val color = Vector4f()
+    protected var radius = 10f
+    protected var thickness = 0.00f
+    protected var smoothedge = 0.001f
 
     init {
         resize(x, y, w, h)

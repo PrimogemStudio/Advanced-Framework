@@ -17,6 +17,11 @@ object Shaders {
         DefaultVertexFormat.POSITION_COLOR
     )
     @JvmField
+    val ROUNDED_RECT_TEX = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rounded_rect_tex",
+        DefaultVertexFormat.POSITION_COLOR_TEX
+    )
+    @JvmField
     val MMD_SHADER = ShaderInstance(
         Minecraft.getInstance().resourceManager, "mmd_entity",
         CustomRenderType.ENTITY
