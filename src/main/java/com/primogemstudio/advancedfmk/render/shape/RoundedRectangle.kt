@@ -26,7 +26,7 @@ open class RoundedRectangle(x: Float, y: Float, w: Float, h: Float, message: Com
         resize(x, y, w, h)
     }
 
-    fun resize(x: Float, y: Float, w: Float, h: Float): RoundedRectangle {
+    final override fun resize(x: Float, y: Float, w: Float, h: Float): RoundedRectangle {
         size[w] = h
         center[x + w / 2] = y + h / 2
         return this

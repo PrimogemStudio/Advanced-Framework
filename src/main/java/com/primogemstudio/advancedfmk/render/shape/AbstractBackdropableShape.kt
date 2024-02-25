@@ -16,6 +16,7 @@ abstract class AbstractBackdropableShape(x: Int, y: Int, width: Int, height: Int
     AbstractWidget(x, y, width, height, message?: Component.literal("")), Renderable {
     private var type: FilterType? = null
     private val data: MutableMap<String, Any> = HashMap()
+    abstract fun resize(x: Float, y: Float, w: Float, h: Float): AbstractBackdropableShape
     fun setType(type: FilterType?): AbstractBackdropableShape {
         this.type = type
         return this
