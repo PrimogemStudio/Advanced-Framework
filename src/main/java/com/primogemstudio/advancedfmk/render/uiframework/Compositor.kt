@@ -4,9 +4,6 @@ import com.google.gson.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import com.primogemstudio.advancedfmk.render.FilterTypes
-import com.primogemstudio.advancedfmk.render.shape.AbstractBackdropableShape
-import com.primogemstudio.advancedfmk.render.shape.RoundedRectangle
 import glm_.vec4.Vec4
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -74,39 +71,6 @@ object Compositor {
             val a = fromJson(json, Map::class.java).mapKeys { ResourceLocation(it.key.toString()) }
             return a.mapValues { fromJson(toJson(it.value), CompositeObject::class.java) }
         }
-    }
-
-    fun compose(v: Map<ResourceLocation, CompositeObject>): Pair<ComposedShape, Consumer<Map<String, Float>>> {
-        val c = ComposedShape(0f, 0f, 0f, 0f, Component.empty())
-        v.forEach {
-            when ("${it.value.type}") {
-                "advancedfmk:rectangle" -> {
-                    c.registerShape(it.key, RoundedRectangle(0f, 0f, 0f, 0f, Component.empty())
-                        .thickness(it.value.thickness)
-                        .smoothedge(it.value.smoothedge)
-                        .radius(it.value.radius)
-                        .color(it.value.color.r, it.value.color.g, it.value.color.b, it.value.color.a))
-                    c.fetchShape(it.key, RoundedRectangle::class.java).setType(
-                        when ("${it.value.filter?.type}") {
-                            "${FilterTypes.GAUSSIAN_BLUR.id}" -> FilterTypes.GAUSSIAN_BLUR
-                            "${FilterTypes.FAST_GAUSSIAN_BLUR.id}" -> FilterTypes.FAST_GAUSSIAN_BLUR
-                            else -> null
-                        }
-                    )
-                    with(c.fetchShape(it.key, RoundedRectangle::class.java)) {
-                        it.value.filter?.args?.forEach { (t, u) -> addData(t, u) }
-                    }
-                }
-            }
-        }
-        val cons: Consumer<Map<String, Float>> = Consumer { w ->
-            v.keys.forEach {
-                val r = { t: String -> v[it]!!.location[t]!!(w) }
-                c.fetchShape(it, AbstractBackdropableShape::class.java).resize(r("x"), r("y"), r("w"), r("h"))
-            }
-        }
-
-        return Pair(c, cons)
     }
 }
 

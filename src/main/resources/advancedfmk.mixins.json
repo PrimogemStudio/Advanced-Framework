@@ -5,10 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BufferBuilderMixin",
-    "ButtonMixin",
-    "GameRendererMixin",
-    "chat.ChatScreenMixin",
-    "chat.TooltipMixin"
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
