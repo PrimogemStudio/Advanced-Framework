@@ -4,11 +4,12 @@ import com.google.gson.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
+import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound
+import com.primogemstudio.advancedfmk.render.uiframework.ui.UIObject
+import com.primogemstudio.advancedfmk.render.uiframework.ui.UIRect
 import glm_.vec4.Vec4
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import java.lang.reflect.Type
-import java.util.function.Consumer
 import java.util.function.Function
 import java.util.regex.Pattern
 
@@ -62,30 +63,19 @@ class ValueGsonParser: JsonDeserializer<Function<Map<String, Float>, Float>> {
 
 operator fun <T, R> Function<T, R>.invoke(a: T): R = this.apply(a)
 object Compositor {
-    fun parse(json: String): Map<ResourceLocation, CompositeObject> {
+    fun parse(json: String): UICompound {
         with(GsonBuilder()
             .registerTypeAdapter(ResourceLocation::class.java, RLGsonParser())
             .registerTypeAdapter(Vec4::class.java, Vec4GsonParser())
             .registerTypeAdapter(Function::class.java, ValueGsonParser())
             .create()) {
             val a = fromJson(json, Map::class.java).mapKeys { ResourceLocation(it.key.toString()) }
-            return a.mapValues { fromJson(toJson(it.value), CompositeObject::class.java) }
+            return UICompound(a.mapValues {
+                when ((it.value as Map<*, *>)["type"]) {
+                    "advancedfmk:rectangle" -> fromJson(toJson(it.value), UIRect::class.java)
+                    else -> UICompound()
+                }
+            })
         }
     }
 }
-
-data class CompositeObject(
-    var type: ResourceLocation,
-    var thickness: Float = 0f,
-    var smoothedge: Float = 0.0005f,
-    var radius: Float = 25f,
-    var color: Vec4 = Vec4(0f),
-    var filter: CompositeFilter? = null,
-    var location: Map<String, ValueFetcher>
-) {
-    data class CompositeFilter(
-        var type: ResourceLocation,
-        var args: Map<String, Any> = mutableMapOf()
-    )
-}
-
