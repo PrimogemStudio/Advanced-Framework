@@ -2,14 +2,13 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.BufferVertexConsumer.normalIntValue
-import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
-import com.primogemstudio.mmdbase.io.PMXFile
 import glm_.vec3.Vec3
+import me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -44,6 +43,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         return ResourceLocation("")
     }
 
+    @Suppress("KotlinConstantConditions")
     override fun render(
         entity: TestEntity,
         entityYaw: Float,
@@ -53,7 +53,13 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         if (entity.model == null) return
-        val buf = buffer.getBuffer(CustomRenderType.saba(entity.model!!.textureManager.id)) as BufferBuilder
+        val vc = buffer.getBuffer(CustomRenderType.saba(entity.model!!.textureManager.id))
+        val buf = try {
+            if (vc is SodiumBufferBuilder) vc.originalBufferBuilder
+            else vc as BufferBuilder
+        } catch (e: NoClassDefFoundError) {
+            vc as BufferBuilder
+        }
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))

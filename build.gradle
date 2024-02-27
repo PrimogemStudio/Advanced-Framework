@@ -72,6 +72,8 @@ dependencies {
     include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
     include(implementation("io.github.primogemstudio:mmdbase:0.1.1-alpha1"))
     include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
+
+    modImplementation "maven.modrinth:sodium:mc1.20.1-0.5.8"
 }
 
 processResources {
