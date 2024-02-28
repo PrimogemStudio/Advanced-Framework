@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
+import com.primogemstudio.advancedfmk.interfaces.SodiumBufferBuilderExt
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import glm_.vec3.Vec3
 import me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder
@@ -14,11 +15,9 @@ import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
-import org.joml.Matrix3f
-import org.joml.Matrix4f
-import org.joml.Vector3f
-import org.joml.Vector4f
+import org.joml.*
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     companion object {
@@ -28,7 +27,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         var render_bone_link = false
         var render_bone_parent = false
         var render_normals = false
-        val matrix_buffer: ByteBuffer = ByteBuffer.allocateDirect(64)
+        val constant_buffer: ByteBuffer = ByteBuffer.allocateDirect(128).order(ByteOrder.nativeOrder())
 
         fun switchPipeline(vanilla: Boolean) {
             enable_pipeline = !vanilla
@@ -60,12 +59,27 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         } catch (e: NoClassDefFoundError) {
             vc as BufferBuilder
         }
+        buf as BufferBuilderExt
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
-        buf.vertices = entity.model!!.render(
-            buf.buffer, poseStack.last().pose().get(matrix_buffer)
-        )
+        with(poseStack.last()) {
+            pose().get(0, constant_buffer)
+            normal().get(64, constant_buffer)
+            Vector2i(OverlayTexture.NO_OVERLAY, packedLight).get(100, constant_buffer)
+            constant_buffer.putInt(108, buf.padding())
+        }
+        buf.vertices = entity.model!!.vertexCount
+        buf.resize()
+        entity.model!!.render(buf.buffer, constant_buffer)
+        if (buf.padding() != 0) {
+            buf.vertices = 0
+            vc as SodiumBufferBuilderExt
+            vc.mark()
+            for (i in 0 until entity.model!!.vertexCount) vc.endVertex()
+            vc.unmark()
+        }
+        buf.submit()
         poseStack.popPose()
     }
 }

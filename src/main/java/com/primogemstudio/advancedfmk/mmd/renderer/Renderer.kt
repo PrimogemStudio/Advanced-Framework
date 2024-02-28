@@ -157,7 +157,7 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
     }
 
     @AccessFromNative
-    private val buff = ByteBuffer.allocateDirect(8).order(ByteOrder.LITTLE_ENDIAN)
+    private val buff = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder())
 
     @AccessFromNative
     fun mapping(ti: Int) {
@@ -208,13 +208,16 @@ object CustomRenderType {
     fun saba(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_saba",
-            DefaultVertexFormat.POSITION_COLOR_TEX,
+            DefaultVertexFormat.NEW_ENTITY,
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
             true,
-            CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
-                .setTextureState(RenderStateShard.TextureStateShard(id, false, false)).createCompositeState(true)
+            CompositeState.builder().setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
+                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
         )
     }
 }

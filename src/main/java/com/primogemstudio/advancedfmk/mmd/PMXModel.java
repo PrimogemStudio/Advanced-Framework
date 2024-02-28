@@ -19,9 +19,11 @@ public class PMXModel implements AutoCloseable {
     private final String texture = "mmd_texture" + id;
     private final MMDTextureAtlas atlas;
     public final TextureManager textureManager;
+    public final int vertexCount;
 
     public PMXModel(File file) {
         load(file);
+        vertexCount = getVertexCount();
         atlas = Loader.createAtlas(getTextures());
         textureManager = new TextureManager(atlas);
         textureManager.register(texture);
@@ -30,7 +32,9 @@ public class PMXModel implements AutoCloseable {
 
     private native void load(File file);
 
-    public native int render(ByteBuffer buff, ByteBuffer matrix);
+    public native void render(ByteBuffer buff, ByteBuffer constants);
+
+    private native int getVertexCount();
 
     private native List<File> getTextures();
 
