@@ -22,6 +22,7 @@ abstract class UIObject(
     )
 
     abstract fun render(vars: GlobalVars, matrix: Matrix4f)
+    abstract var disableAlpha: Boolean
 }
 
 data class UIRect(
@@ -31,6 +32,7 @@ data class UIRect(
     var color: Vec4 = Vec4(0f)
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
+        val alp = if (disableAlpha) 1f else color.w
         val s = Vec4(
             location["x"]!!(vars.toMap()),
             location["y"]!!(vars.toMap()),
@@ -46,14 +48,16 @@ data class UIRect(
         Shaders.ROUNDED_RECT.getUniform("Size")!!.set(floatArrayOf(s[2], s[3]))
         val buff = Tesselator.getInstance().builder
         buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR)
-        buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, color.w).endVertex()
-        buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, color.w).endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1] + s[3], 0f).color(color.x, color.y, color.z, color.w).endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1], 0f).color(color.x, color.y, color.z, color.w).endVertex()
+        buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp).endVertex()
+        buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp).endVertex()
+        buff.vertex(matrix, s[0] + s[2], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp).endVertex()
+        buff.vertex(matrix, s[0] + s[2], s[1], 0f).color(color.x, color.y, color.z, alp).endVertex()
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.end())
         RenderSystem.disableBlend()
     }
+
+    override var disableAlpha: Boolean = false
 }
 
 data class UICompound(
@@ -63,4 +67,6 @@ data class UICompound(
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
 
     }
+
+    override var disableAlpha: Boolean = false
 }

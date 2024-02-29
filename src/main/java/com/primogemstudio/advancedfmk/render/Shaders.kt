@@ -32,5 +32,8 @@ object Shaders {
     @JvmField
     val GAUSSIAN_BLUR: ManagedShaderEffect = ShaderEffectManager.getInstance()
         .manage(ResourceLocation("shaders/filter/gaussian_blur.json"))
+    @JvmField
+    val GAUSSIAN_BLUR_CLIP: ManagedShaderEffect = ShaderEffectManager.getInstance()
+        .manage(ResourceLocation("shaders/filter/gaussian_blur_clip.json"))
 }
 
