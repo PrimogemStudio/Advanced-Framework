@@ -61,7 +61,24 @@ class AdvancedFrameworkClient : ClientModInitializer {
                     }\"}"
                 )
                 0
-            }).then(literal("opt").then(literal("render_model").then(argument("enable", bool()).executes { c ->
+            }).then(literal("animation").then(literal("load").executes {
+                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                it.source.world.entitiesForRendering().forEach { e ->
+                    if (e is TestEntity && e.model != null) {
+                        e.model!!.animation.add(model)
+                        e.model!!.animation.setupAnimation()
+                    }
+                }
+                0
+            }).then(literal("clear").executes {
+                it.source.world.entitiesForRendering().forEach { e ->
+                    if (e is TestEntity && e.model != null) {
+                        e.model!!.animation.clear()
+                        e.model!!.animation.setupAnimation()
+                    }
+                }
+                0
+            })).then(literal("opt").then(literal("render_model").then(argument("enable", bool()).executes { c ->
                 TestEntityRenderer.render_model = getBool(c, "enable")
                 0
             })).then(literal("render_bone_link").then(argument("enable", bool()).executes { c ->

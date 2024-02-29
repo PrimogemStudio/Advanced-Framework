@@ -1,7 +1,5 @@
 package com.primogemstudio.advancedfmk.mmd;
 
-import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
-
 import java.io.FileOutputStream;
 import java.lang.ref.Cleaner;
 import java.util.Objects;
@@ -30,15 +28,9 @@ public final class SabaNative {
         }
     }
 
-    private static final Cleaner cleaner = Cleaner.create();
+    static final Cleaner cleaner = Cleaner.create();
 
-    private static native void release(Class<?> cls, long ptr);
-
-    @AccessFromNative
-    public static Cleaner.Cleanable createCleaner(Object obj, long ptr) {
-        var cls = obj.getClass();
-        return cleaner.register(obj, () -> release(cls, ptr)); // Don't write ()->release(obj.getClass(), ptr) !!!
-    }
+    static native void release(Class<?> cls, long ptr);
 
     public static void init() {
     }

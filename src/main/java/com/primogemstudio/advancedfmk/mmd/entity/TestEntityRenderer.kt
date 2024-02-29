@@ -71,6 +71,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         }
         buf.vertices = entity.model!!.vertexCount
         buf.resize()
+        entity.model!!.updateAnimation()
         entity.model!!.render(buf.buffer, constant_buffer)
         if (buf.padding() != 0) {
             buf.vertices = 0
