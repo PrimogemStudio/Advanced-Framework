@@ -61,12 +61,14 @@ data class UIRect(
 }
 
 data class UICompound(
-    var subComponents: Map<ResourceLocation, UIObject> = mutableMapOf(),
+    var components: Map<ResourceLocation, UIObject> = mutableMapOf(),
     var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
 
     }
+
+    fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
 
     override var disableAlpha: Boolean = false
 }

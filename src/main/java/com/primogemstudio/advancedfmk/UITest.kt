@@ -11,7 +11,13 @@ fun load(): UICompound {
     )
 }
 
+fun loadNew(): UICompound {
+    return Compositor.parseNew(
+        InputStreamReader(Compositor::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/starrail_chat_v1.json")).readLines().stream().collect(Collectors.joining("\n"))
+    )
+}
+
 fun main() {
-    val a = load()
-    print(a.subComponents.values.stream().toList()[0].location)
+    val a = loadNew()
+    println(a.findTop())
 }
