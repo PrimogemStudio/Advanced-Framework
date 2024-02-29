@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.client
 
 import com.mojang.brigadier.arguments.BoolArgumentType.bool
 import com.mojang.brigadier.arguments.BoolArgumentType.getBool
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.SabaNative
@@ -18,6 +19,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
+import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -70,7 +72,15 @@ class AdvancedFrameworkClient : ClientModInitializer {
                     }
                 }
                 0
-            }).then(literal("clear").executes {
+            }.then(argument("path", StringArgumentType.string()).executes {
+                it.source.world.entitiesForRendering().forEach { e ->
+                    if (e is TestEntity && e.model != null) {
+                        e.model!!.animation.add(File(StringArgumentType.getString(it, "path")))
+                        e.model!!.animation.setupAnimation()
+                    }
+                }
+                0
+            })).then(literal("clear").executes {
                 it.source.world.entitiesForRendering().forEach { e ->
                     if (e is TestEntity && e.model != null) {
                         e.model!!.animation.clear()
