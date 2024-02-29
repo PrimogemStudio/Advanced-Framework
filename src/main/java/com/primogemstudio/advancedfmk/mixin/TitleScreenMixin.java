@@ -49,7 +49,7 @@ public class TitleScreenMixin extends Screen {
 
 
         var b = new TextureTarget(width, height, true, Minecraft.ON_OSX);
-        b.setClearColor(0, 0, 0, 0.5f);
+        b.setClearColor(0, 0, 0, 0f);
         b.clear(Minecraft.ON_OSX);
         b.bindWrite(true);
         var temp = ui.component1().values().stream().toList().get(0).getLocation().get("x");

@@ -62,13 +62,14 @@ float random(vec2 st) {
 void main() {
     vec4 col = texture(InputSampler, texCoord);
     vec4 dst = texture(DiffuseSampler, texCoord);
-    if (col.a <= 0.01 || texture(ClipSampler, texCoord).a <= 0.01)
+    float alp = texture(ClipSampler, texCoord).a;
+    if (col.a <= 0.01 || alp <= 0.01)
     {
         fragColor = dst * ColorModulate;
         return;
     }
 
-    fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a * texture(ClipSampler, texCoord).a);
+    fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a * alp);
     fragColor.x += random(texCoord) / 200;
     fragColor.y += random(texCoord) / 200;
     fragColor.z += random(texCoord) / 200;
