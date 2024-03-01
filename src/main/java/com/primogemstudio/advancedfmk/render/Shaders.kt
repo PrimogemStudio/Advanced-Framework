@@ -17,6 +17,11 @@ object Shaders {
         DefaultVertexFormat.POSITION_COLOR
     )
     @JvmField
+    val ROUNDED_RECT_CLIP = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rounded_rect_clip",
+        DefaultVertexFormat.POSITION_COLOR
+    )
+    @JvmField
     val ROUNDED_RECT_TEX = ShaderInstance(
         Minecraft.getInstance().resourceManager, "rounded_rect_tex",
         DefaultVertexFormat.POSITION_COLOR_TEX
@@ -32,8 +37,5 @@ object Shaders {
     @JvmField
     val GAUSSIAN_BLUR: ManagedShaderEffect = ShaderEffectManager.getInstance()
         .manage(ResourceLocation("shaders/filter/gaussian_blur.json"))
-    @JvmField
-    val GAUSSIAN_BLUR_CLIP: ManagedShaderEffect = ShaderEffectManager.getInstance()
-        .manage(ResourceLocation("shaders/filter/gaussian_blur_clip.json"))
 }
 

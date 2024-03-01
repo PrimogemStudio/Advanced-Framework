@@ -9,9 +9,12 @@ uniform vec2 Resolution;
 
 out vec4 vertexColor;
 out vec2 vertexUV;
+out vec2 texCoord;
 
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
     vertexColor = Color;
     vertexUV = Position.xy;
+
+    texCoord = Position.xy / Resolution;
 }

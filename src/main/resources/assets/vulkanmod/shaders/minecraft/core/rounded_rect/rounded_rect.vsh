@@ -5,6 +5,7 @@ in vec4 Color;
 
 uniform mat4 ModelViewMat;
 uniform mat4 ProjMat;
+uniform vec2 Resolution;
 
 out vec4 vertexColor;
 out vec2 vertexUV;

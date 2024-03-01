@@ -80,19 +80,4 @@ object Compositor {
             }, ResourceLocation(a["topComponent"].toString()))
         }
     }
-    fun parse(json: String): UICompound {
-        with(GsonBuilder()
-            .registerTypeAdapter(ResourceLocation::class.java, RLGsonParser())
-            .registerTypeAdapter(Vec4::class.java, Vec4GsonParser())
-            .registerTypeAdapter(Function::class.java, ValueGsonParser())
-            .create()) {
-            val a = fromJson(json, Map::class.java).mapKeys { ResourceLocation(it.key.toString()) }
-            return UICompound(a.mapValues {
-                when ((it.value as Map<*, *>)["type"]) {
-                    "advancedfmk:rectangle" -> fromJson(toJson(it.value), UIRect::class.java)
-                    else -> UICompound()
-                }
-            })
-        }
-    }
 }

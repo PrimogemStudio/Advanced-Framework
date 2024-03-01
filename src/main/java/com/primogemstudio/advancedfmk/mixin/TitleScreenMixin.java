@@ -11,6 +11,7 @@ import com.primogemstudio.advancedfmk.UITestKt;
 import com.primogemstudio.advancedfmk.render.Shaders;
 import com.primogemstudio.advancedfmk.render.uiframework.ui.GlobalVars;
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound;
+import com.primogemstudio.advancedfmk.render.uiframework.ui.UIObject;
 import glm_.vec2.Vec2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,7 +35,7 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(at = @At("RETURN"), method = "init")
     public void init(CallbackInfo ci) {
-        ui = UITestKt.load();
+        ui = UITestKt.loadNew();
     }
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
@@ -52,21 +53,26 @@ public class TitleScreenMixin extends Screen {
         b.setClearColor(0, 0, 0, 0f);
         b.clear(Minecraft.ON_OSX);
         b.bindWrite(true);
-        var temp = ui.component1().values().stream().toList().get(0).getLocation().get("x");
-        ui.component1().values().stream().toList().get(0).getLocation().put("x", bb -> 35f);
-        ui.component1().values().stream().toList().get(0).setDisableAlpha(true);
-        ui.component1().values().stream().toList().get(0).render(
-                new GlobalVars(new Vec2(width, height)),
-                guiGraphics.pose().last().pose()
-        );
-        ui.component1().values().stream().toList().get(0).getLocation().put("x", temp);
-        ui.component1().values().stream().toList().get(0).setDisableAlpha(false);
+
+        new Object() {
+            public void apply(UIObject o) {
+                var temp = o.getLocation().get("x");
+                o.getLocation().put("x", bb -> 35f);
+                o.setDisableAlpha(true);
+                o.render(
+                        new GlobalVars(new Vec2(width, height)),
+                        guiGraphics.pose().last().pose()
+                );
+                o.getLocation().put("x", temp);
+                o.setDisableAlpha(false);
+                // o.setClip(b);
+            }
+        }.apply(ui.component1().values().stream().toList().get(0));
 
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
-        Shaders.GAUSSIAN_BLUR_CLIP.setSamplerUniform("InputSampler", a);
-        Shaders.GAUSSIAN_BLUR_CLIP.setSamplerUniform("ClipSampler", b);
-        Shaders.GAUSSIAN_BLUR_CLIP.setUniformValue("DigType", 0);
-        Shaders.GAUSSIAN_BLUR_CLIP.setUniformValue("Radius", 16);
-        Shaders.GAUSSIAN_BLUR_CLIP.render(partialTick);
+        Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a);
+        Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0);
+        Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16);
+        Shaders.GAUSSIAN_BLUR.render(partialTick);
     }
 }

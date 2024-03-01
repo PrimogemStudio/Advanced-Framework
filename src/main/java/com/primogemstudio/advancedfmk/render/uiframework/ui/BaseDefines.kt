@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.render.uiframework.ui
 
+import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -23,6 +24,7 @@ abstract class UIObject(
 
     abstract fun render(vars: GlobalVars, matrix: Matrix4f)
     abstract var disableAlpha: Boolean
+    abstract var clip: RenderTarget?
 }
 
 data class UIRect(
@@ -39,13 +41,17 @@ data class UIRect(
             location["w"]!!(vars.toMap()),
             location["h"]!!(vars.toMap())
         )
-        RenderSystem.setShader { Shaders.ROUNDED_RECT }
-        Shaders.ROUNDED_RECT.getUniform("Resolution")!!.set(floatArrayOf(vars.screen_size.x, vars.screen_size.y))
-        Shaders.ROUNDED_RECT.getUniform("Center")!!.set(floatArrayOf(s[0] + s[2] / 2f, s[1] + s[3] / 2f))
-        Shaders.ROUNDED_RECT.getUniform("Radius")!!.set(radius)
-        Shaders.ROUNDED_RECT.getUniform("Thickness")!!.set(thickness)
-        Shaders.ROUNDED_RECT.getUniform("SmoothEdge")!!.set(smoothedge)
-        Shaders.ROUNDED_RECT.getUniform("Size")!!.set(floatArrayOf(s[2], s[3]))
+        (if (clip == null) Shaders.ROUNDED_RECT else Shaders.ROUNDED_RECT_CLIP).apply {
+            RenderSystem.setShader { this }
+            getUniform("Resolution")!!.set(floatArrayOf(vars.screen_size.x, vars.screen_size.y))
+            getUniform("Center")!!.set(floatArrayOf(s[0] + s[2] / 2f, s[1] + s[3] / 2f))
+            getUniform("Radius")!!.set(radius)
+            getUniform("Thickness")!!.set(thickness)
+            getUniform("SmoothEdge")!!.set(smoothedge)
+            getUniform("Size")!!.set(floatArrayOf(s[2], s[3]))
+            if (clip != null) setSampler("ClipSampler", clip!!)
+        }
+
         val buff = Tesselator.getInstance().builder
         buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR)
         buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp).endVertex()
@@ -58,6 +64,7 @@ data class UIRect(
     }
 
     override var disableAlpha: Boolean = false
+    override var clip: RenderTarget? = null
 }
 
 data class UICompound(
@@ -71,4 +78,5 @@ data class UICompound(
     fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
 
     override var disableAlpha: Boolean = false
+    override var clip: RenderTarget? = null
 }
