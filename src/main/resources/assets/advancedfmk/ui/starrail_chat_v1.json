@@ -11,12 +11,32 @@
         "type": "advancedfmk:gaussian_blur",
         "args": {
           "Radius": 8,
-          "EnableFrostGrass": false
+          "DigType": 0
         }
       },
       "location": {
         "x": { "calc": "fetch_pos(screen_width, 150)" },
         "y": { "calc": "fetch_pos(screen_height, 200)" },
+        "w": 150,
+        "h": 200
+      }
+    },
+    "advancedfmk:starrail_style_temp": {
+      "type": "advancedfmk:rectangle",
+      "thickness": 0,
+      "smoothedge": 0.012,
+      "radius": 25,
+      "color": [0.5, 0.5, 0.5, 0.5],
+      "filter": {
+        "type": "advancedfmk:gaussian_blur",
+        "args": {
+          "Radius": 8,
+          "DigType": 0
+        }
+      },
+      "location": {
+        "x": { "calc": "fetch_pos(screen_width, 200)" },
+        "y": { "calc": "fetch_pos(screen_height, 250)" },
         "w": 150,
         "h": 200
       }

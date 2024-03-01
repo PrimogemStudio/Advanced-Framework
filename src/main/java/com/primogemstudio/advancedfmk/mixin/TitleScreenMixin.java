@@ -39,40 +39,9 @@ public class TitleScreenMixin extends Screen {
     }
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        var a = new TextureTarget(width, height, true, Minecraft.ON_OSX);
-        a.setClearColor(0, 0, 0, 0);
-        a.clear(Minecraft.ON_OSX);
-        a.bindWrite(true);
-        ui.component1().values().stream().toList().get(0).render(
-                new GlobalVars(new Vec2(width, height)),
+        ui.render(
+                new GlobalVars(new Vec2(width, height), partialTick),
                 guiGraphics.pose().last().pose()
         );
-
-
-        var b = new TextureTarget(width, height, true, Minecraft.ON_OSX);
-        b.setClearColor(0, 0, 0, 0f);
-        b.clear(Minecraft.ON_OSX);
-        b.bindWrite(true);
-
-        new Object() {
-            public void apply(UIObject o) {
-                var temp = o.getLocation().get("x");
-                o.getLocation().put("x", bb -> 35f);
-                o.setDisableAlpha(true);
-                o.render(
-                        new GlobalVars(new Vec2(width, height)),
-                        guiGraphics.pose().last().pose()
-                );
-                o.getLocation().put("x", temp);
-                o.setDisableAlpha(false);
-                // o.setClip(b);
-            }
-        }.apply(ui.component1().values().stream().toList().get(0));
-
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
-        Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a);
-        Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0);
-        Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16);
-        Shaders.GAUSSIAN_BLUR.render(partialTick);
     }
 }

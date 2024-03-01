@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.render.uiframework.ui
 
 import com.mojang.blaze3d.pipeline.RenderTarget
+import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -10,6 +11,7 @@ import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import glm_.vec4.Vec4
+import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix4f
 
@@ -72,11 +74,45 @@ data class UICompound(
     var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
+        clip?.setClearColor(0f, 0f, 0f, 0f)
+        clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+        clip?.clear(Minecraft.ON_OSX)
+        clip?.bindWrite(true)
 
+        findTop()?.apply {
+            disableAlpha = true
+            render(vars, matrix)
+            disableAlpha = false
+        }
+
+        if (findTop() != null) components.forEach { (_, u) -> if (u != findTop()) u.clip = this.clip }
+
+        Minecraft.getInstance().mainRenderTarget.bindWrite(true)
+
+        val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
+        a.setClearColor(0f, 0f, 0f, 0f)
+        a.clear(Minecraft.ON_OSX)
+        a.bindWrite(true)
+        findTop()?.render(vars, matrix)
+        Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
+        Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
+        Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
+        Shaders.GAUSSIAN_BLUR.render(vars.tick)
+        components.forEach { (_, u) ->
+            val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
+            a.setClearColor(0f, 0f, 0f, 0f)
+            a.clear(Minecraft.ON_OSX)
+            a.bindWrite(true)
+            if (u != findTop()) u.render(vars, matrix)
+            Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
+            Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
+            Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
+            Shaders.GAUSSIAN_BLUR.render(vars.tick)
+        }
     }
 
     fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
 
     override var disableAlpha: Boolean = false
-    override var clip: RenderTarget? = null
+    override var clip: RenderTarget? = TextureTarget(1, 1, true, Minecraft.ON_OSX)
 }
