@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "advancedfmk",
-  "version": "0.0.1-alpha1",
+  "version": "${version}",
   "name": "Advanced Framework",
   "description": "A modern render framework for rendering ui and 3d models & shaders",
   "authors": [
@@ -16,7 +16,7 @@
   "license": "GPLv3",
   "icon": "assets/advancedfmk/icon.png",
   "environment": "*",
-  "accessWidener" : "META-INF/aw.accesswidener",
+  "accessWidener": "META-INF/aw.accesswidener",
   "entrypoints": {
     "client": [
       "com.primogemstudio.advancedfmk.client.AdvancedFrameworkClient"
