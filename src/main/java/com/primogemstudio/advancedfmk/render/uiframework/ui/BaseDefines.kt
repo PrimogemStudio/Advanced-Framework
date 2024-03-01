@@ -20,9 +20,31 @@ abstract class UIObject(
     var filter: CompositeFilter? = null
 ) {
     data class CompositeFilter(
-        var type: ResourceLocation,
+        var type: String,
         var args: Map<String, Any> = mutableMapOf()
-    )
+    ) {
+        private val internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+        fun init(vars: GlobalVars) {
+            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+            internalTarget.setClearColor(0f, 0f, 0f, 0f)
+            internalTarget.clear(Minecraft.ON_OSX)
+            internalTarget.bindWrite(true)
+        }
+        fun render(input: RenderTarget, vars: GlobalVars) {
+            val shader = when (type) {
+                "advancedfmk:gaussian_blur" -> Shaders.GAUSSIAN_BLUR
+                else -> null
+            }
+
+            shader?.setSamplerUniform("InputSampler", input)
+            args.forEach { (t, u) ->
+                if (u is Int) shader?.setUniformValue(t, u)
+                if (u is Float) shader?.setUniformValue(t, u)
+                if (u is Boolean) shader?.setUniformValue(t, if (u) 1 else 0)
+            }
+            shader?.render(vars.tick)
+        }
+    }
 
     abstract fun render(vars: GlobalVars, matrix: Matrix4f)
     abstract var disableAlpha: Boolean
