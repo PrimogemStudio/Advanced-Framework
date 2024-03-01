@@ -74,36 +74,34 @@ data class UICompound(
     var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
+        val top = findTop()
+        assert(top != null) { "Top component not found or invalid. " }
+        val subc = components.values.toMutableList().apply {
+            if (indexOf(top) == 0) return@apply
+            remove(top)
+            add(0, top!!)
+        }
+
         clip?.setClearColor(0f, 0f, 0f, 0f)
         clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
         clip?.clear(Minecraft.ON_OSX)
         clip?.bindWrite(true)
 
-        findTop()?.apply {
+        top!!.apply {
             disableAlpha = true
             render(vars, matrix)
             disableAlpha = false
         }
 
-        if (findTop() != null) components.forEach { (_, u) -> if (u != findTop()) u.clip = this.clip }
+        subc.forEach { u -> if (u != top) u.clip = this.clip }
 
         Minecraft.getInstance().mainRenderTarget.bindWrite(true)
-
-        val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
-        a.setClearColor(0f, 0f, 0f, 0f)
-        a.clear(Minecraft.ON_OSX)
-        a.bindWrite(true)
-        findTop()?.render(vars, matrix)
-        Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
-        Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
-        Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
-        Shaders.GAUSSIAN_BLUR.render(vars.tick)
-        components.forEach { (_, u) ->
+        subc.forEach { u ->
             val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
             a.setClearColor(0f, 0f, 0f, 0f)
             a.clear(Minecraft.ON_OSX)
             a.bindWrite(true)
-            if (u != findTop()) u.render(vars, matrix)
+            u.render(vars, matrix)
             Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
             Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
             Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
