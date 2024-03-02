@@ -18,6 +18,7 @@ public class PMXModel implements AutoCloseable {
     private static int ID = 0;
     private final int id = ++ID;
     private final String texture = "mmd_texture" + id;
+    @AccessFromNative
     private final MMDTextureAtlas atlas;
     public final TextureManager textureManager;
     public final int vertexCount;
@@ -33,8 +34,8 @@ public class PMXModel implements AutoCloseable {
         mappingVertices();
         var p = ptr;
         var tm = textureManager;
-        cleaner = SabaNative.INSTANCE.getCleaner().register(this, () -> {
-            SabaNative.INSTANCE.releaseWrap(PMXModel.class, p);
+        cleaner = SabaNative.cleaner.register(this, () -> {
+            SabaNative.release(PMXModel.class, p);
             tm.release();
         });
     }
@@ -50,6 +51,7 @@ public class PMXModel implements AutoCloseable {
     private native void mappingVertices();
 
     private float lastTime = System.nanoTime() / 1000000000f;
+    @AccessFromNative
     private float animationTime = 0;
     private static final float RefreshRate = 1 / 30f;
 

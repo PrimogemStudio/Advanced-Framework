@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.VertexFormatElement
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative
 import com.primogemstudio.advancedfmk.render.Shaders
-import com.primogemstudio.mmdbase.abstraction.ITextureManager
 import glm_.vec2.Vec2
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
@@ -169,15 +168,15 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
     }
 }
 
-class TextureManager(private val texture: MMDTextureAtlas) : ITextureManager {
+class TextureManager(private val texture: MMDTextureAtlas) {
     var id = ResourceLocation(MOD_ID, "")
 
-    override fun register(prefix: String) {
+    fun register(prefix: String) {
         id = ResourceLocation(MOD_ID, prefix)
         Minecraft.getInstance().textureManager.register(id, texture)
     }
 
-    override fun release() {
+    fun release() {
         Minecraft.getInstance().textureManager.release(id)
     }
 }

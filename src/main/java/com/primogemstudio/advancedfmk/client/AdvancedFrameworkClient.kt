@@ -65,6 +65,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
                 0
             }).then(literal("animation").then(literal("load").executes {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                model ?: return@executes 0
                 it.source.world.entitiesForRendering().forEach { e ->
                     if (e is TestEntity && e.model != null) {
                         e.model!!.animation.add(model)
