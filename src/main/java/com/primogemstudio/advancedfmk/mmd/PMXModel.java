@@ -34,7 +34,7 @@ public class PMXModel implements AutoCloseable {
         var p = ptr;
         var tm = textureManager;
         cleaner = SabaNative.INSTANCE.getCleaner().register(this, () -> {
-            SabaNative.INSTANCE.release(PMXModel.class, p);
+            SabaNative.INSTANCE.releaseWrap(PMXModel.class, p);
             tm.release();
         });
     }

@@ -40,7 +40,11 @@ object SabaNative {
     }
 
     val cleaner = Cleaner.create()
-    external fun release(cls: Class<*>?, ptr: Long)
+    fun releaseWrap(cls: Class<*>?, ptr: Long) {
+        if (StackWalker.getInstance().callerClass != PMXModel::class.java) throw IllegalStateException("invalid access")
+        release(cls, ptr)
+    }
+    private external fun release(cls: Class<*>?, ptr: Long)
     fun init() {}
 }
 
