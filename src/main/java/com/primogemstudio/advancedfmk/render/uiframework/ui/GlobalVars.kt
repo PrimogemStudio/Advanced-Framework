@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.render.uiframework.ui
 
 import glm_.vec2.Vec2
 
+val data = GlobalVars()
 data class GlobalVars(
     var screen_size: Vec2 = Vec2(),
     var tick: Float = 0f
@@ -9,7 +10,8 @@ data class GlobalVars(
     fun toMap(): Map<String, Float> {
         return mapOf(
             Pair("screen_width", screen_size.x),
-            Pair("screen_height", screen_size.y)
+            Pair("screen_height", screen_size.y),
+            Pair("tick", tick)
         )
     }
 }

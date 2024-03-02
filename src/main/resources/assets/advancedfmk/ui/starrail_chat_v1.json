@@ -26,14 +26,7 @@
       "thickness": 0,
       "smoothedge": 0.012,
       "radius": 25,
-      "color": [0.5, 0.5, 0.5, 0.5],
-      "filter": {
-        "type": "advancedfmk:gaussian_blur",
-        "args": {
-          "Radius": 8,
-          "DigType": 0
-        }
-      },
+      "color": [1.0, 0.0, 1.0, 1.0],
       "location": {
         "x": { "calc": "fetch_pos(screen_width, 200)" },
         "y": { "calc": "fetch_pos(screen_height, 250)" },

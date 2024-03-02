@@ -59,7 +59,6 @@ data class UIRect(
     var color: Vec4 = Vec4(0f)
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
-        // filter?.init(vars)
         val alp = if (disableAlpha) 1f else color.w
         val s = Vec4(
             location["x"]!!(vars.toMap()),
@@ -87,7 +86,6 @@ data class UIRect(
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.end())
         RenderSystem.disableBlend()
-        // filter?.render(vars)
     }
 
     override var disableAlpha: Boolean = false
@@ -119,20 +117,11 @@ data class UICompound(
         }
 
         subc.forEach { u -> if (u != top) u.clip = this.clip }
-
-        Minecraft.getInstance().mainRenderTarget.bindWrite(true)
         subc.forEach { u ->
-            /*val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
-            a.setClearColor(0f, 0f, 0f, 0f)
-            a.clear(Minecraft.ON_OSX)
-            a.bindWrite(true)*/
+            Minecraft.getInstance().mainRenderTarget.bindWrite(true)
             u.filter?.init(vars)
             u.render(vars, matrix)
             u.filter?.render(vars)
-            /*Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
-            Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
-            Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
-            Shaders.GAUSSIAN_BLUR.render(vars.tick)*/
         }
     }
 
