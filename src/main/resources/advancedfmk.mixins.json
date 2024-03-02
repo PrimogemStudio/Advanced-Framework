@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BufferBuilderMixin",
-    "GameRendererMixin",
-    "TitleScreenMixin"
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
