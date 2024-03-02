@@ -50,7 +50,6 @@ public class PMXModel implements AutoCloseable {
     private native void mappingVertices();
 
     private float lastTime = System.nanoTime() / 1000000000f;
-    @AccessFromNative
     private float animationTime = 0;
     private static final float RefreshRate = 1 / 30f;
 
