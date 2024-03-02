@@ -23,20 +23,21 @@ abstract class UIObject(
         var type: String,
         var args: Map<String, Any> = mutableMapOf()
     ) {
-        private val internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+        private var internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
         fun init(vars: GlobalVars) {
+            internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
             internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
             internalTarget.setClearColor(0f, 0f, 0f, 0f)
             internalTarget.clear(Minecraft.ON_OSX)
             internalTarget.bindWrite(true)
         }
-        fun render(input: RenderTarget, vars: GlobalVars) {
+        fun render(vars: GlobalVars) {
             val shader = when (type) {
                 "advancedfmk:gaussian_blur" -> Shaders.GAUSSIAN_BLUR
                 else -> null
             }
 
-            shader?.setSamplerUniform("InputSampler", input)
+            shader?.setSamplerUniform("InputSampler", internalTarget)
             args.forEach { (t, u) ->
                 if (u is Int) shader?.setUniformValue(t, u)
                 if (u is Float) shader?.setUniformValue(t, u)
@@ -58,6 +59,7 @@ data class UIRect(
     var color: Vec4 = Vec4(0f)
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
+        // filter?.init(vars)
         val alp = if (disableAlpha) 1f else color.w
         val s = Vec4(
             location["x"]!!(vars.toMap()),
@@ -85,6 +87,7 @@ data class UIRect(
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.end())
         RenderSystem.disableBlend()
+        // filter?.render(vars)
     }
 
     override var disableAlpha: Boolean = false
@@ -119,15 +122,17 @@ data class UICompound(
 
         Minecraft.getInstance().mainRenderTarget.bindWrite(true)
         subc.forEach { u ->
-            val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
+            /*val a = TextureTarget(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), true, Minecraft.ON_OSX)
             a.setClearColor(0f, 0f, 0f, 0f)
             a.clear(Minecraft.ON_OSX)
-            a.bindWrite(true)
+            a.bindWrite(true)*/
+            u.filter?.init(vars)
             u.render(vars, matrix)
-            Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
+            u.filter?.render(vars)
+            /*Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", a)
             Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
             Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
-            Shaders.GAUSSIAN_BLUR.render(vars.tick)
+            Shaders.GAUSSIAN_BLUR.render(vars.tick)*/
         }
     }
 
