@@ -22,7 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Setup Environment (PR)
         if: ${{ github.event_name == 'pull_request' }}

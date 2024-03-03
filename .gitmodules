@@ -1,0 +1,3 @@
+[submodule "src/main/resources/natives"]
+	path = src/main/resources/natives
+	url = https://github.com/PrimogemStudio/saba-native-binary
