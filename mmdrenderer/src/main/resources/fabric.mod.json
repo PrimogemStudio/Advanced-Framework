@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "advancedfmk_mmdrenderer",
+  "version": "${version}",
+  "name": "mmdrenderer (Advanced Framework)",
+  "description": "MMD renderer for Advanced Framework",
+  "authors": [
+    "Jack253-png",
+    "hackermdch"
+  ],
+  "contact": {
+    "repo": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
+    "sources": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
+    "issues": "https://github.com/Primogem-Craft-Development/Advanced-Framework/issues"
+  },
+  "license": "GPLv3",
+  "icon": "assets/advancedfmk_mmdrenderer/icon.png",
+  "environment": "*",
+  "accessWidener": "META-INF/aw2.accesswidener",
+  "entrypoints": {},
+  "mixins": [
+    "advancedfmk.mmdrenderer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.0",
+    "fabric": "*",
+    "minecraft": "1.20.1",
+    "advancedfmk": "*"
+  }
+}

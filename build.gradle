@@ -53,6 +53,7 @@ repositories {
 }
 
 dependencies {
+    include(implementation(project(path: ':mmdrenderer')))
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()

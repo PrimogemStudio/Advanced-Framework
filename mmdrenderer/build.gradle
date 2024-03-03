@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+}
+
+group = project.rootProject.maven_group
+version = project.rootProject.mod_version
+
+repositories {
+    mavenCentral()
+}
+
+kotlin {
+    jvmToolchain(17)
+    compilerOptions {
+        verbose = true
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+
+}
+
+processResources {
+    inputs.property "version", project.rootProject.version
+    inputs.property "minecraft_version", project.rootProject.minecraft_version
+    inputs.property "loader_version", project.rootProject.loader_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.rootProject.version,
+                "minecraft_version": project.rootProject.minecraft_version,
+                "loader_version": project.rootProject.loader_version
+    }
+}
