@@ -171,6 +171,7 @@ class TextureManager(private val texture: MMDTextureAtlas) {
 }
 
 object CustomRenderType {
+    @Suppress("INACCESSIBLE_TYPE")
     fun saba(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_saba",
