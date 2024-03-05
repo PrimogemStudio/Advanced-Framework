@@ -2,14 +2,12 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.PMXModel
-import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.client.renderer.RenderType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -41,15 +39,9 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
         if (Files.exists(Path(path))) {
             val file = File(path)
             modelName = file.name.replace(Regex("[^a-zA-Z0-9]+"), "_")
-            reinitRenderLayer()
             model = PMXModel(file)
             processed = null
         }
-    }
-
-    @Environment(EnvType.CLIENT)
-    fun reinitRenderLayer() {
-        enable_pipeline = TestEntityRenderer.enable_pipeline
     }
 
     override fun defineSynchedData() {

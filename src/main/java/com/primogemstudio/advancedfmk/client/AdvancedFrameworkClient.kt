@@ -29,31 +29,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ResourceLocation(MOD_ID, "update"), UpdatePacket())
         TestEntity.registerPacket()
         ClientCommandRegistrationCallback.EVENT.register { dis, _ ->
-            dis.register(literal("advancedfmk").then(
-                literal("pipeline").then(argument(
-                    "vanilla", bool()
-                ).executes { c ->
-                    try {
-                        TestEntityRenderer.switchPipeline(getBool(c, "vanilla"))
-                    } catch (e: Throwable) {
-                        e.fullMsg(c)
-                        return@executes 1
-                    }
-                    0
-                })
-            ).then(
-                literal("compat").then(argument(
-                    "enable", bool()
-                ).executes { c ->
-                    try {
-                        TestEntityRenderer.switchCompatibility(getBool(c, "enable"))
-                    } catch (e: Throwable) {
-                        e.fullMsg(c)
-                        return@executes 1
-                    }
-                    0
-                })
-            ).then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
+            dis.register(literal("advancedfmk").then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
                 val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
                 it.source.player.connection.sendCommand(
                     "summon ${MOD_ID}:test_entity ~ ~ ~ {Model:\"${
@@ -89,19 +65,7 @@ class AdvancedFrameworkClient : ClientModInitializer {
                     }
                 }
                 0
-            })).then(literal("opt").then(literal("render_model").then(argument("enable", bool()).executes { c ->
-                TestEntityRenderer.render_model = getBool(c, "enable")
-                0
-            })).then(literal("render_bone_link").then(argument("enable", bool()).executes { c ->
-                TestEntityRenderer.render_bone_link = getBool(c, "enable")
-                0
-            })).then(literal("render_bone_parent").then(argument("enable", bool()).executes { c ->
-                TestEntityRenderer.render_bone_parent = getBool(c, "enable")
-                0
-            })).then(literal("render_normals").then(argument("enable", bool()).executes { c ->
-                TestEntityRenderer.render_normals = getBool(c, "enable")
-                0
-            })))
+            }))
             )
         }
         SabaNative.init()

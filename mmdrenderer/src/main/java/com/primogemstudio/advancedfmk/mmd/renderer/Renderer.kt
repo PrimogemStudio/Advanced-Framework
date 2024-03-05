@@ -1,19 +1,14 @@
 package com.primogemstudio.advancedfmk.mmd.renderer
 
-import com.google.common.collect.ImmutableMap
 import com.mojang.blaze3d.platform.NativeImage
 import com.mojang.blaze3d.platform.TextureUtil
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
-import com.mojang.blaze3d.vertex.VertexFormatElement
-import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
+import com.primogemstudio.advancedfmk.client.MOD_ID
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative
-import com.primogemstudio.advancedfmk.render.Shaders
-import glm_.vec2.Vec2
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard
-import net.minecraft.client.renderer.RenderStateShard.ShaderStateShard
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderType.CompositeState
 import net.minecraft.client.renderer.texture.AbstractTexture
@@ -147,12 +142,6 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
     private fun upload(image: NativeImage) {
         TextureUtil.prepareImage(getId(), image.width, image.height)
         image.upload(0, 0, 0, true)
-    }
-
-    fun mapping(uv: Vec2, ti: Int) {
-        val r = map[ti]!!
-        uv.x = Mth.lerp(uv.x.toDouble(), r.left.toDouble(), r.right.toDouble()).toFloat() / texture.width
-        uv.y = Mth.lerp(uv.y.toDouble(), r.top.toDouble(), r.bottom.toDouble()).toFloat() / texture.height
     }
 
     @AccessFromNative

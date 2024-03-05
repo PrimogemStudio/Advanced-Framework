@@ -1,8 +1,6 @@
 package com.primogemstudio.advancedfmk.render
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
-import ladysnake.satin.api.managed.ManagedCoreShader
 import ladysnake.satin.api.managed.ManagedShaderEffect
 import ladysnake.satin.api.managed.ShaderEffectManager
 import net.minecraft.client.Minecraft
