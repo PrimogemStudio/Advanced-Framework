@@ -28,9 +28,6 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     var model: PMXModel? = null
 
     @Environment(EnvType.CLIENT)
-    var renderType: RenderType? = null
-
-    @Environment(EnvType.CLIENT)
     private var processed: Array<FloatArray>? = null
     private var mp = ""
 
@@ -53,9 +50,6 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     @Environment(EnvType.CLIENT)
     fun reinitRenderLayer() {
         enable_pipeline = TestEntityRenderer.enable_pipeline
-        renderType = CustomRenderType.mmd(
-            ResourceLocation(MOD_ID, "mmd_$modelName"), enable_pipeline
-        )
     }
 
     override fun defineSynchedData() {

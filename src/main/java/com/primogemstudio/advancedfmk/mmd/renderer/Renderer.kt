@@ -182,28 +182,6 @@ class TextureManager(private val texture: MMDTextureAtlas) {
 }
 
 object CustomRenderType {
-    val ENTITY = VertexFormat(
-        ImmutableMap.builder<String, VertexFormatElement>().put("Position", DefaultVertexFormat.ELEMENT_POSITION)
-            .put("UV0", DefaultVertexFormat.ELEMENT_UV0).put("UV2", DefaultVertexFormat.ELEMENT_UV2).build()
-    )
-    val SHADER = ShaderStateShard { Shaders.MMD_SHADER }
-    fun mmd(id: ResourceLocation, enable_direct: Boolean = false): RenderType {
-        return RenderType.create(
-            "mmd_dbg_$id",
-            if (enable_direct) ENTITY else DefaultVertexFormat.NEW_ENTITY,
-            VertexFormat.Mode.TRIANGLES,
-            0x200000,
-            false,
-            true,
-            CompositeState.builder()
-                .setShaderState(if (enable_direct) SHADER else RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
-                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
-        )
-    }
-
     fun saba(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_saba",

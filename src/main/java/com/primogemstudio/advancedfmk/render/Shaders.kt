@@ -27,11 +27,6 @@ object Shaders {
         DefaultVertexFormat.POSITION_COLOR_TEX
     )
     @JvmField
-    val MMD_SHADER = ShaderInstance(
-        Minecraft.getInstance().resourceManager, "mmd_entity",
-        CustomRenderType.ENTITY
-    )
-    @JvmField
     val FAST_GAUSSIAN_BLUR: ManagedShaderEffect = ShaderEffectManager.getInstance()
         .manage(ResourceLocation("shaders/filter/fast_gaussian_blur.json"))
     @JvmField

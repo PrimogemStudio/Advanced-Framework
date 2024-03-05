@@ -17,7 +17,11 @@
   "icon": "assets/advancedfmk_mmdrenderer/icon.png",
   "environment": "*",
   "accessWidener": "META-INF/aw2.accesswidener",
-  "entrypoints": {},
+  "entrypoints": {
+    "client": [
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkMMDClient"
+    ]
+  },
   "mixins": [
     "advancedfmk.mmdrenderer.mixins.json"
   ],
