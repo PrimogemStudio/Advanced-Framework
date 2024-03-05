@@ -4,13 +4,11 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "BufferBuilderMixin",
     "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "SodiumBufferBuilderMixin"
   ]
 }

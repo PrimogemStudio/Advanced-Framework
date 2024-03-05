@@ -86,3 +86,7 @@ processResources {
                 "loader_version": project.rootProject.loader_version
     }
 }
+
+jar {
+    archiveBaseName = "advancedfmk-mmdrenderer"
+}

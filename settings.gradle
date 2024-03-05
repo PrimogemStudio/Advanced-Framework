@@ -8,4 +8,5 @@ pluginManagement {
     }
 }
 include 'mmdrenderer'
+include 'commonutils'
 

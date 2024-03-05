@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "advancedfmk_mmdrenderer",
+  "id": "advancedfmk_commonutils",
   "version": "${version}",
-  "name": "mmdrenderer (Advanced Framework)",
-  "description": "MMD renderer for Advanced Framework",
+  "name": "commonutils (Advanced Framework)",
+  "description": "Util functions for Advanced Framework",
   "authors": [
     "Jack253-png",
     "hackermdch"
@@ -14,12 +14,10 @@
     "issues": "https://github.com/Primogem-Craft-Development/Advanced-Framework/issues"
   },
   "license": "GPLv3",
-  "icon": "assets/advancedfmk_mmdrenderer/icon.png",
+  "icon": "assets/advancedfmk_commonutils/icon.png",
   "environment": "*",
-  "accessWidener": "META-INF/aw2.accesswidener",
   "entrypoints": {},
   "mixins": [
-    "advancedfmk.mmdrenderer.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.0",
