@@ -54,6 +54,7 @@ repositories {
 
 dependencies {
     include(implementation(project(path: ':mmdrenderer', configuration: "namedElements")))
+    include(implementation(project(path: ':uicompositor', configuration: "namedElements")))
     include(implementation(project(path: ':commonutils')))
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {

@@ -9,4 +9,5 @@ pluginManagement {
 }
 include 'mmdrenderer'
 include 'commonutils'
+include 'uicompositor'
 

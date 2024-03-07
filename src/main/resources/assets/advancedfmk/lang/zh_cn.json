@@ -4,5 +4,7 @@
   "modmenu.nameTranslation.advancedfmk_mmdrenderer": "mmdrenderer (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_mmdrenderer": "Advanced Framework 的 MMD 渲染器",
   "modmenu.nameTranslation.advancedfmk_commonutils": "commonutils (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_commonutils": "Advanced Framework 使用的工具函数"
+  "modmenu.descriptionTranslation.advancedfmk_commonutils": "Advanced Framework 使用的工具函数",
+  "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_uicompositor": "Advanced Framework 的 UI 解析器 & 渲染器"
 }
