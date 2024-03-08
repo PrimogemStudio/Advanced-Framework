@@ -23,13 +23,13 @@ abstract class UIObject(
         var type: String,
         var args: Map<String, Any> = mutableMapOf()
     ) {
-        private var internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+        private var internalTarget: TextureTarget? = null
         fun init(vars: GlobalVars) {
-            internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
-            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
-            internalTarget.setClearColor(0f, 0f, 0f, 0f)
-            internalTarget.clear(Minecraft.ON_OSX)
-            internalTarget.bindWrite(true)
+            if (internalTarget == null) internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+            internalTarget?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+            internalTarget?.setClearColor(0f, 0f, 0f, 0f)
+            internalTarget?.clear(Minecraft.ON_OSX)
+            internalTarget?.bindWrite(true)
         }
         fun render(vars: GlobalVars) {
             val shader = when (type) {
