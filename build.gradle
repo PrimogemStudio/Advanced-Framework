@@ -64,28 +64,22 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    include(modImplementation("org.ladysnake:satin:1.14.0"))
+
     modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
-    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version").exclude(group: "net.fabricmc.fabric-api")
-    include(implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20"))
-    include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
-    include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"))
-    include(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"))
-    include(implementation("org.luaj:luaj-jse:3.0.1"))
-    include(implementation("org.apache.bcel:bcel:6.8.2"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2")
+    implementation("org.luaj:luaj-jse:3.0.1")
+    implementation("org.apache.bcel:bcel:6.8.2")
     implementation("kotlin.graphics:glm:0.9.9.1-11")
+    modImplementation("org.ladysnake:satin:1.14.0")
 
     modImplementation "maven.modrinth:sodium:mc1.20.1-0.5.8"
     modImplementation "maven.modrinth:iris:1.6.17+1.20.1"
     implementation "org.anarres:jcpp:1.+"
     implementation "io.github.douira:glsl-transformer:2.0.0-pre13"
     implementation "org.antlr:antlr4-runtime:4.11.1"
-
-    /*configurations.named("compileClasspath").configure {
-        it.forEach { println it }
-    }*/
 }
 
 processResources {

@@ -1,21 +1,18 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.BufferBuilder
-import com.mojang.blaze3d.vertex.BufferVertexConsumer.normalIntValue
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt
 import com.primogemstudio.advancedfmk.interfaces.SodiumBufferBuilderExt
 import com.primogemstudio.advancedfmk.mmd.renderer.CustomRenderType
-import glm_.vec3.Vec3
 import me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
-import org.joml.*
+import org.joml.Vector2i
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

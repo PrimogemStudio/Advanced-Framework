@@ -71,6 +71,7 @@ dependencies {
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
     include(implementation("org.luaj:luaj-jse:3.0.1"))
     include(implementation("org.apache.bcel:bcel:6.8.2"))
+    include(modImplementation("org.ladysnake:satin:1.14.0"))
 }
 
 test {
@@ -91,5 +92,9 @@ processResources {
 }
 
 jar {
+    archiveBaseName = "advancedfmk-uicompositor"
+}
+
+remapJar {
     archiveBaseName = "advancedfmk-uicompositor"
 }

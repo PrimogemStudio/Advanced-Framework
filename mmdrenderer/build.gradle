@@ -72,7 +72,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "maven.modrinth:sodium:mc1.20.1-0.5.8"
-    include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
 }
 
@@ -94,5 +93,9 @@ processResources {
 }
 
 jar {
+    archiveBaseName = "advancedfmk-mmdrenderer"
+}
+
+remapJar {
     archiveBaseName = "advancedfmk-mmdrenderer"
 }

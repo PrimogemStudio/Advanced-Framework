@@ -1,13 +1,10 @@
 package com.primogemstudio.advancedfmk.client
 
-import com.mojang.brigadier.arguments.BoolArgumentType.bool
-import com.mojang.brigadier.arguments.BoolArgumentType.getBool
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.SabaNative
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
-import com.primogemstudio.advancedfmk.mmd.entity.TestEntityRenderer
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import com.primogemstudio.advancedfmk.util.NativeFileDialog
 import net.fabricmc.api.ClientModInitializer
@@ -65,8 +62,17 @@ class AdvancedFrameworkClient : ClientModInitializer {
                     }
                 }
                 0
+            })).then(literal("attach").executes {
+                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                model ?: return@executes 0
+                try {
+                    System.load(model.absolutePath)
+                }
+                catch (e: Exception) {
+                    e.fullMsg(it)
+                }
+                0
             }))
-            )
         }
         SabaNative.init()
     }
