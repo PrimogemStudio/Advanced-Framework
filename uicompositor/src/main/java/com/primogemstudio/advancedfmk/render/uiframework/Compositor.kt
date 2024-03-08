@@ -8,6 +8,7 @@ import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UIRect
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector4f
+import org.luaj.vm2.LuaDouble
 import java.lang.reflect.Type
 import java.util.function.Function
 import java.util.regex.Pattern
@@ -43,22 +44,14 @@ class Vector4fGsonParser: TypeAdapter<Vector4f>() {
     }
 }
 class ValueGsonParser: JsonDeserializer<Function<Map<String, Float>, Float>> {
-    private val pattern = Pattern.compile("(?<func>.*)\\((?<a>.*),(?<b>.*)\\)")
     override fun deserialize(p0: JsonElement?, p1: Type?, p2: JsonDeserializationContext?): Function<Map<String, Float>, Float> {
         return Function { w ->
+            LuaVM.globals["screen_width"] = LuaDouble.valueOf(w["screen_width"]?.toDouble()?: 0.0)
+            LuaVM.globals["screen_height"] = LuaDouble.valueOf(w["screen_height"]?.toDouble()?: 0.0)
+            LuaVM.globals["tick"] = LuaDouble.valueOf(w["tick"]?.toDouble()?: 0.0)
+
             if (p0!!.isJsonPrimitive) return@Function p0.asFloat
-            val matcher = pattern.matcher(p0.asJsonObject["calc"].asString)
-            if (!matcher.find()) 0f
-            else {
-                val func = matcher.group("func")
-                val f = { i: String -> i.let { w[it]?: try { it.toFloat() } catch (e: Exception) { 0 } }.toFloat() }
-                val v0 = f(matcher.group("a"))
-                val v1 = f(matcher.group("b"))
-                return@Function when (func) {
-                    "fetch_pos" -> (v0 - v1) / 2
-                    else -> 0f
-                }
-            }
+            else LuaVM.globals.load("return ${p0.asJsonObject["calc"].asString}")().arg1().tonumber().tofloat()
         }
     }
 }

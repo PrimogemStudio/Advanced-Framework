@@ -17,6 +17,9 @@
   "icon": "assets/advancedfmk_uicompositor/icon.png",
   "environment": "*",
   "entrypoints": {
+    "client": [
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkUICompositorClient"
+    ]
   },
   "mixins": [
     "advancedfmk.uicompositor.mixins.json"
