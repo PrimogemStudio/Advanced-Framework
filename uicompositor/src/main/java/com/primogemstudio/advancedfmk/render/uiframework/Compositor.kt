@@ -5,10 +5,9 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound
-import com.primogemstudio.advancedfmk.render.uiframework.ui.UIObject
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UIRect
-import glm_.vec4.Vec4
 import net.minecraft.resources.ResourceLocation
+import org.joml.Vector4f
 import java.lang.reflect.Type
 import java.util.function.Function
 import java.util.regex.Pattern
@@ -19,8 +18,8 @@ class RLGsonParser: TypeAdapter<ResourceLocation>() {
     override fun write(p0: JsonWriter?, p1: ResourceLocation?) { p0?.value("$p1") }
     override fun read(p0: JsonReader?): ResourceLocation = ResourceLocation(p0?.nextString()!!)
 }
-class Vec4GsonParser: TypeAdapter<Vec4>() {
-    override fun write(p0: JsonWriter?, p1: Vec4?) {
+class Vector4fGsonParser: TypeAdapter<Vector4f>() {
+    override fun write(p0: JsonWriter?, p1: Vector4f?) {
         p0?.beginArray()
             ?.value(p1?.get(0))
             ?.value(p1?.get(1))
@@ -28,15 +27,18 @@ class Vec4GsonParser: TypeAdapter<Vec4>() {
             ?.value(p1?.get(3))
         ?.endArray()
     }
-    override fun read(p0: JsonReader?): Vec4 {
-        val v = Vec4()
+    override fun read(p0: JsonReader?): Vector4f {
+        val v = Vector4f()
         p0!!.beginArray()
         var i = 0
+        val lst = FloatArray(4)
         while (p0.peek() != JsonToken.END_ARRAY) {
-            v[i] = p0.nextDouble().toFloat()
+            lst[i] = p0.nextDouble().toFloat()
             i++
+            if (i >= 4) break
         }
         p0.endArray()
+        v.set(lst)
         return v
     }
 }
@@ -66,7 +68,7 @@ object Compositor {
     fun parseNew(json: String): UICompound {
         with(GsonBuilder()
             .registerTypeAdapter(ResourceLocation::class.java, RLGsonParser())
-            .registerTypeAdapter(Vec4::class.java, Vec4GsonParser())
+            .registerTypeAdapter(Vector4f::class.java, Vector4fGsonParser())
             .registerTypeAdapter(Function::class.java, ValueGsonParser())
             .create()) {
             val a = fromJson(json, Map::class.java)

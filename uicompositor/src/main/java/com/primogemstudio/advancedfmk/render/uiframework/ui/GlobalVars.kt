@@ -1,10 +1,10 @@
 package com.primogemstudio.advancedfmk.render.uiframework.ui
 
-import glm_.vec2.Vec2
+import org.joml.Vector2f
 
 val data = GlobalVars()
 data class GlobalVars(
-    var screen_size: Vec2 = Vec2(),
+    var screen_size: Vector2f = Vector2f(),
     var tick: Float = 0f
 ) {
     fun toMap(): Map<String, Float> {

@@ -20,7 +20,7 @@ fun loadNew(): UICompound {
 }
 
 fun main() {
-    val luastr = "return uibase_test_func(5,4)"
+    val luastr = "uibase_test_func(5,4)"
     val globals = JsePlatform.standardGlobals()
     globals["uibase_test_func"] = object: TwoArgFunction() {
         override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue = arg1.sub(arg2).div(2)
@@ -28,6 +28,6 @@ fun main() {
     // LuaC.install(globals)
     LuaJC.install(globals)
     LoadState.install(globals)
-    val chunk = globals.load(luastr)
+    val chunk = globals.load("return $luastr")
     println(chunk().arg1().tonumber())
 }

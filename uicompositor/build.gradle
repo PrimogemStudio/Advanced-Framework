@@ -67,7 +67,6 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    include(implementation("kotlin.graphics:glm:0.9.9.1-11"))
     include(implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20"))
     include(implementation("org.luaj:luaj-jse:3.0.1"))
     include(implementation("org.apache.bcel:bcel:6.8.2"))

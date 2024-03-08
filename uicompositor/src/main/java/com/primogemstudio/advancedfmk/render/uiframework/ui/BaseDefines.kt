@@ -10,10 +10,10 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
-import glm_.vec4.Vec4
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix4f
+import org.joml.Vector4f
 
 abstract class UIObject(
     var location: MutableMap<String, ValueFetcher> = mutableMapOf(),
@@ -56,11 +56,11 @@ data class UIRect(
     var thickness: Float = 0f,
     var smoothedge: Float = 0.0005f,
     var radius: Float = 25f,
-    var color: Vec4 = Vec4(0f)
+    var color: Vector4f = Vector4f(0f)
 ): UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
         val alp = if (disableAlpha) 1f else color.w
-        val s = Vec4(
+        val s = Vector4f(
             location["x"]!!(vars.toMap()),
             location["y"]!!(vars.toMap()),
             location["w"]!!(vars.toMap()),
@@ -125,7 +125,7 @@ data class UICompound(
         }
     }
 
-    fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
+    private fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
 
     override var disableAlpha: Boolean = false
     override var clip: RenderTarget? = TextureTarget(1, 1, true, Minecraft.ON_OSX)
