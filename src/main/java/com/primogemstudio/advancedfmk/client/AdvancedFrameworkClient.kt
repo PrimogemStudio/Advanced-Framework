@@ -26,53 +26,64 @@ class AdvancedFrameworkClient : ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ResourceLocation(MOD_ID, "update"), UpdatePacket())
         TestEntity.registerPacket()
         ClientCommandRegistrationCallback.EVENT.register { dis, _ ->
-            dis.register(literal("advancedfmk").then(literal("flush").executes { UpdatePacket.flush();0 }).then(literal("open").executes {
-                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
-                it.source.player.connection.sendCommand(
-                    "summon ${MOD_ID}:test_entity ~ ~ ~ {Model:\"${
-                        model?.absolutePath?.replace(
-                            '\\', '/'
+            dis.register(
+                literal("advancedfmk").then(literal("flush").executes { UpdatePacket.flush();0 })
+                    .then(literal("open").executes {
+                        val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.pmx"), "PMX Model")
+                        it.source.player.connection.sendCommand(
+                            "summon ${MOD_ID}:test_entity ~ ~ ~ {Model:\"${
+                                model?.absolutePath?.replace(
+                                    '\\', '/'
+                                )
+                            }\"}"
                         )
-                    }\"}"
-                )
-                0
-            }).then(literal("animation").then(literal("load").executes {
-                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
-                model ?: return@executes 0
-                it.source.world.entitiesForRendering().forEach { e ->
-                    if (e is TestEntity && e.model != null) {
-                        e.model!!.animation.add(model)
-                        e.model!!.animation.setupAnimation()
-                    }
-                }
-                0
-            }.then(argument("path", StringArgumentType.string()).executes {
-                it.source.world.entitiesForRendering().forEach { e ->
-                    if (e is TestEntity && e.model != null) {
-                        e.model!!.animation.add(File(StringArgumentType.getString(it, "path")))
-                        e.model!!.animation.setupAnimation()
-                    }
-                }
-                0
-            })).then(literal("clear").executes {
-                it.source.world.entitiesForRendering().forEach { e ->
-                    if (e is TestEntity && e.model != null) {
-                        e.model!!.animation.clear()
-                        e.model!!.animation.setupAnimation()
-                    }
-                }
-                0
-            })).then(literal("attach").executes {
-                val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
-                model ?: return@executes 0
-                try {
-                    System.load(model.absolutePath)
-                }
-                catch (e: Exception) {
-                    e.fullMsg(it)
-                }
-                0
-            }))
+                        0
+                    }.then(argument("path", StringArgumentType.string()).executes {
+                        it.source.player.connection.sendCommand(
+                            "summon ${MOD_ID}:test_entity ~ ~ ~ {Model:\"${
+                                File(StringArgumentType.getString(it, "path")).absolutePath.replace(
+                                    '\\', '/'
+                                )
+                            }\"}"
+                        )
+                        0
+                    })).then(literal("animation").then(literal("load").executes {
+                        val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                        model ?: return@executes 0
+                        it.source.world.entitiesForRendering().forEach { e ->
+                            if (e is TestEntity && e.model != null) {
+                                e.model!!.animation.add(model)
+                                e.model!!.animation.setupAnimation()
+                            }
+                        }
+                        0
+                    }.then(argument("path", StringArgumentType.string()).executes {
+                        it.source.world.entitiesForRendering().forEach { e ->
+                            if (e is TestEntity && e.model != null) {
+                                e.model!!.animation.add(File(StringArgumentType.getString(it, "path")))
+                                e.model!!.animation.setupAnimation()
+                            }
+                        }
+                        0
+                    })).then(literal("clear").executes {
+                        it.source.world.entitiesForRendering().forEach { e ->
+                            if (e is TestEntity && e.model != null) {
+                                e.model!!.animation.clear()
+                                e.model!!.animation.setupAnimation()
+                            }
+                        }
+                        0
+                    })).then(literal("attach").executes {
+                        val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                        model ?: return@executes 0
+                        try {
+                            System.load(model.absolutePath)
+                        } catch (e: Exception) {
+                            e.fullMsg(it)
+                        }
+                        0
+                    })
+            )
         }
         SabaNative.init()
     }
