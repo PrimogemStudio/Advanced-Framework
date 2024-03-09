@@ -1,6 +1,9 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id 'maven-publish'
+    id 'signing'
+    id 'org.jetbrains.dokka' version '1.9.10'
 }
 
 group = project.rootProject.maven_group
@@ -18,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.lwjgl:lwjgl-tinyfd:3.3.1"
+    api implementation("org.lwjgl:lwjgl-tinyfd:3.3.1")
 }
 
 test {
@@ -40,4 +43,93 @@ processResources {
 
 jar {
     archiveBaseName = "advancedfmk-commonutils"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    java.withSourcesJar()
+    archiveClassifier = "sources"
+}
+
+task javadocJar(type: Jar) {
+    dependsOn(javadoc)
+    from("build/dokka/javadoc")
+    archiveClassifier = "javadoc"
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+var publish = new Properties()
+rootProject.file('.gradle/publish.cfg').withInputStream { publish.load(it) }
+
+def ossrhUserName = publish.getProperty('ossrhUserName')
+def ossrhPassword = publish.getProperty('ossrhPassword')
+def signKey = new String(publish.getProperty('signing.key').decodeBase64())
+def signPassword = publish.getProperty('signing.password')
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'advancedfmk-commonutils'
+            version = version
+
+            from components.kotlin
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = 'commonutils (Advanced Framework)'
+                description = 'Util functions for Advanced Framework'
+                url = 'http://github.com/PrimogemStudio/Advanced-Framework'
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE Version 3'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'hackermdch'
+                        name = 'hackermdch'
+                    }
+
+
+                    developer {
+                        id = 'Jack253-png'
+                        name = 'Coder 2'
+                        email = 'guoxiuchen20170402@163.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/PrimogemStudio/Advanced-Framework.git'
+                    developerConnection = 'scm:git:ssh://github.com/PrimogemStudio/Advanced-Framework.git'
+                    url = 'https://github.com/PrimogemStudio/Advanced-Framework'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "LocalMaven"
+            url = rootProject.layout.projectDirectory.dir("../maven")
+        }
+
+        maven {
+            name = "MavenCentral"
+            credentials {
+                username = ossrhUserName
+                password = ossrhPassword
+            }
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(signKey, signPassword)
+    sign publishing.publications.maven
 }

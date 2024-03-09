@@ -3,7 +3,10 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'fabric-loom' version '1.5.7'
-    id 'maven-publish'
+}
+
+allprojects {
+    tasks.withType(Javadoc).all { enabled = false }
 }
 
 version = project.mod_version
@@ -53,8 +56,8 @@ repositories {
 }
 
 dependencies {
-    include(implementation(project(path: ':mmdrenderer', configuration: "namedElements")))
-    include(implementation(project(path: ':uicompositor', configuration: "namedElements")))
+    include(implementation(project(path: ':mmdrenderer', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
+    include(implementation(project(path: ':uicompositor', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
@@ -62,24 +65,16 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
     }
 
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modApi "net.fabricmc:fabric-loader:${project.loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
 
     modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2")
-    implementation("org.luaj:luaj-jse:3.0.1")
-    implementation("org.apache.bcel:bcel:6.8.2")
-    implementation("kotlin.graphics:glm:0.9.9.1-11")
-    modImplementation("org.ladysnake:satin:1.14.0")
 
-    modImplementation "maven.modrinth:sodium:mc1.20.1-0.5.8"
-    modImplementation "maven.modrinth:iris:1.6.17+1.20.1"
-    implementation "org.anarres:jcpp:1.+"
-    implementation "io.github.douira:glsl-transformer:2.0.0-pre13"
-    implementation "org.antlr:antlr4-runtime:4.11.1"
+    include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
+    include "org.luaj:luaj-jse:3.0.1"
+    include "org.apache.bcel:bcel:6.8.2"
 }
 
 processResources {
@@ -124,24 +119,5 @@ kotlin {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'advancedfmk'
-            version = version + "-" + minecraft_version
-
-            from components.kotlin
-            artifact sourcesJar
-        }
-    }
-
-    repositories {
-        maven {
-            url = layout.projectDirectory.dir("../maven")
-        }
     }
 }

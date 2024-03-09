@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.nio.ByteBuffer;
 
+
 @Mixin(BufferBuilder.class)
 public abstract class BufferBuilderMixin extends DefaultedVertexConsumer implements BufferVertexConsumer, BufferBuilderExt {
     @Shadow
