@@ -12,6 +12,13 @@ allprojects {
 version = project.mod_version
 group = project.maven_group
 
+var f = file(".gradle/publish.cfg")
+if (!f.exists()) {
+    var fo = new FileWriter(f)
+    fo.write("ossrhUserName=''\n" + "ossrhPassword=''\n" + "signing.key=MQ==\n" + "signing.password=''")
+    fo.close()
+}
+
 loom {
     accessWidenerPath = file("src/main/resources/META-INF/aw.accesswidener")
 }
