@@ -10,10 +10,15 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix4f
 import org.joml.Vector4f
+
+object RendererConstraints {
+    val internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+}
 
 abstract class UIObject(
     var location: MutableMap<String, ValueFetcher> = mutableMapOf(),
@@ -23,13 +28,11 @@ abstract class UIObject(
         var type: String,
         var args: Map<String, Any> = mutableMapOf()
     ) {
-        private var internalTarget: TextureTarget? = null
         fun init(vars: GlobalVars) {
-            if (internalTarget == null) internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
-            internalTarget?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
-            internalTarget?.setClearColor(0f, 0f, 0f, 0f)
-            internalTarget?.clear(Minecraft.ON_OSX)
-            internalTarget?.bindWrite(true)
+            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+            internalTarget.setClearColor(0f, 0f, 0f, 0f)
+            internalTarget.clear(Minecraft.ON_OSX)
+            internalTarget.bindWrite(true)
         }
         fun render(vars: GlobalVars) {
             val shader = when (type) {
