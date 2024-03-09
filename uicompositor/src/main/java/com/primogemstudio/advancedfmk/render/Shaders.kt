@@ -25,6 +25,11 @@ object Shaders {
         DefaultVertexFormat.POSITION_COLOR_TEX
     )
     @JvmField
+    val ROUNDED_RECT_TEX_CLIP = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rounded_rect_tex_clip",
+        DefaultVertexFormat.POSITION_COLOR_TEX
+    )
+    @JvmField
     val FAST_GAUSSIAN_BLUR: ManagedShaderEffect = ShaderEffectManager.getInstance()
         .manage(ResourceLocation("shaders/filter/fast_gaussian_blur.json"))
     @JvmField

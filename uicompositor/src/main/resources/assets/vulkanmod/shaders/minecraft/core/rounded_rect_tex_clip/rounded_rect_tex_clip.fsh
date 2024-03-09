@@ -3,6 +3,7 @@
 in vec4 vertexColor;
 in vec2 vertexUV;
 in vec2 texCoord0;
+in vec2 texCoord;
 
 uniform vec2 Resolution;
 uniform vec2 Center;
