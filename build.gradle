@@ -78,6 +78,10 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
 
     modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
+    modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.1"
+    runtimeOnly "org.anarres:jcpp:1.+"
+    runtimeOnly "io.github.douira:glsl-transformer:2.0.0-pre13"
+    runtimeOnly "org.antlr:antlr4-runtime:4.11.1"
 
     include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
     include "org.luaj:luaj-jse:3.0.1"
