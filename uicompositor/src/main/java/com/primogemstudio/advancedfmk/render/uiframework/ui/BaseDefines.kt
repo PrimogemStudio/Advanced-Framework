@@ -13,13 +13,14 @@ import com.primogemstudio.advancedfmk.render.uiframework.BaseTexture
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
+import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix4f
 import org.joml.Vector4f
 
 object RendererConstraints {
-    val internalTarget = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+    val internalTarget = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
 }
 
 abstract class UIObject(

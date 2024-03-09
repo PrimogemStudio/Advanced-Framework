@@ -85,7 +85,7 @@ dependencies {
 
     include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
     include "org.luaj:luaj-jse:3.0.1"
-    include "org.apache.bcel:bcel:6.8.2"
+    include "org.ladysnake:satin:1.14.0"
 }
 
 processResources {

@@ -6,7 +6,7 @@
       "thickness": 0,
       "smoothedge": 0.012,
       "radius": 25,
-      "color": [0.97, 0.97, 0.97, 0.012],
+      "color": [0.97, 0.97, 0.97, 0.512],
       "filter": {
         "type": "advancedfmk:gaussian_blur",
         "args": {
