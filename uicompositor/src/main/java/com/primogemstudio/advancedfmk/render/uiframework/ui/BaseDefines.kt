@@ -23,12 +23,10 @@ object RendererConstraints {
 }
 
 abstract class UIObject(
-    var location: MutableMap<String, ValueFetcher> = mutableMapOf(),
-    var filter: CompositeFilter? = null
+    var location: MutableMap<String, ValueFetcher> = mutableMapOf(), var filter: CompositeFilter? = null
 ) {
     data class CompositeFilter(
-        var type: String,
-        var args: Map<String, Any> = mutableMapOf()
+        var type: String, var args: Map<String, Any> = mutableMapOf()
     ) {
         fun init(vars: GlobalVars) {
             internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
@@ -36,6 +34,7 @@ abstract class UIObject(
             internalTarget.clear(Minecraft.ON_OSX)
             internalTarget.bindWrite(true)
         }
+
         fun render(vars: GlobalVars) {
             val shader = when (type) {
                 "advancedfmk:gaussian_blur" -> Shaders.GAUSSIAN_BLUR
@@ -64,7 +63,7 @@ data class UIRect(
     var radius: Float = 25f,
     var color: Vector4f = Vector4f(0f),
     var texture: ResourceLocation? = null
-): UIObject() {
+) : UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
         val alp = if (disableAlpha) 1f else color.w
         val s = Vector4f(
@@ -87,18 +86,27 @@ data class UIRect(
         }
 
         val buff = Tesselator.getInstance().builder
-        buff.begin(VertexFormat.Mode.QUADS, if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX)
-        buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp).apply { if (texture != null) uv(0f, 0f) }.endVertex()
-        buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp).apply { if (texture != null) uv(0f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp).apply { if (texture != null) uv(1f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1], 0f).color(color.x, color.y, color.z, alp).apply { if (texture != null) uv(1f, 0f) }.endVertex()
+        buff.begin(
+            VertexFormat.Mode.QUADS,
+            if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX
+        )
+        buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) uv(0f, 0f) }.endVertex()
+        buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) uv(0f, 1f) }.endVertex()
+        buff.vertex(matrix, s[0] + s[2], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) uv(1f, 1f) }.endVertex()
+        buff.vertex(matrix, s[0] + s[2], s[1], 0f).color(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) uv(1f, 0f) }.endVertex()
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.end())
         RenderSystem.disableBlend()
     }
 
     override fun registerTex() {
-        Minecraft.getInstance().textureManager.register(texture!!, BaseTexture(NativeImage.read(UIRect::class.java.classLoader.getResourceAsStream("assets/${texture!!.namespace}/${texture!!.path}"))))
+        Minecraft.getInstance().textureManager.register(
+            texture!!, BaseTexture(NativeImage.read(Minecraft.getInstance().resourceManager.open(texture!!)))
+        )
     }
 
     override var disableAlpha: Boolean = false
@@ -106,11 +114,10 @@ data class UIRect(
 }
 
 
-
 data class UICompound(
     var components: Map<ResourceLocation, UIObject> = mutableMapOf(),
     var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
-): UIObject() {
+) : UIObject() {
     override fun render(vars: GlobalVars, matrix: Matrix4f) {
         val top = findTop()
         assert(top != null) { "Top component not found or invalid. " }
@@ -140,7 +147,9 @@ data class UICompound(
         }
     }
 
-    private fun findTop(): UIObject? = components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
+    private fun findTop(): UIObject? =
+        components.filter { it.key == topComponent }.values.toList().let { if (it.isNotEmpty()) it[0] else null }
+
     override fun registerTex() = components.values.forEach { it.registerTex() }
 
     override var disableAlpha: Boolean = false
