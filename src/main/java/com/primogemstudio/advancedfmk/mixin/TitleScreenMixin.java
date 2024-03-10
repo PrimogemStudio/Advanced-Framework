@@ -17,6 +17,6 @@ public class TitleScreenMixin {
     private final UICompound ui = UITestKt.loadNew();
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        ui.render(GlobalVarsKt.getData(), guiGraphics.pose().last().pose());
+        ui.render(GlobalVarsKt.getData(), guiGraphics);
     }
 }

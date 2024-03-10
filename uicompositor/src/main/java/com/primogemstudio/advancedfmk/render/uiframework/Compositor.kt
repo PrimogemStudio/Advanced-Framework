@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UIRect
+import com.primogemstudio.advancedfmk.render.uiframework.ui.UITextLegacy
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector4f
 import org.luaj.vm2.LuaDouble
@@ -70,6 +71,7 @@ object Compositor {
                 when ((it.value as Map<*, *>)["type"]) {
                     "advancedfmk:rectangle" -> fromJson(toJson(it.value), UIRect::class.java)
                     "advancedfmk:compound" -> parseNew(toJson(it.value))
+                    "advancedfmk:text_legacy" -> fromJson(toJson(it.value), UITextLegacy::class.java)
                     else -> UICompound()
                 }
             }, ResourceLocation(a["topComponent"].toString()))

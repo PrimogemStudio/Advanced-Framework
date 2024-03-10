@@ -10,8 +10,8 @@
       "filter": {
         "type": "advancedfmk:gaussian_blur",
         "args": {
-          "Radius": 8,
-          "DigType": 0
+          "Radius": 32,
+          "DigType": 1
         }
       },
       "location": {
@@ -28,6 +28,17 @@
       "radius": 32,
       "color": [1.0, 1.0, 1.0, 1.0],
       "texture": "advancedfmk:ui/textures/microsoft.png",
+      "location": {
+        "x": { "calc": "fetch_pos(screen_width, 32)" },
+        "y": { "calc": "fetch_pos(screen_height, 32)" },
+        "w": 32,
+        "h": 32
+      }
+    },
+    "advancedfmk:starrail_style_temp_text": {
+      "type": "advancedfmk:text_legacy",
+      "color": [1.0, 1.0, 1.0, 1.0],
+      "text": "Test! Hello world from UICompositor!",
       "location": {
         "x": { "calc": "fetch_pos(screen_width, 32)" },
         "y": { "calc": "fetch_pos(screen_height, 32)" },

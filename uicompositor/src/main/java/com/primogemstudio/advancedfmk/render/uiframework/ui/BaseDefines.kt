@@ -15,8 +15,9 @@ import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
-import org.joml.Matrix4f
+import org.apache.logging.log4j.LogManager
 import org.joml.Vector4f
 
 object RendererConstraints {
@@ -44,18 +45,47 @@ abstract class UIObject(
 
             shader?.setSamplerUniform("InputSampler", internalTarget)
             args.forEach { (t, u) ->
-                if (u is Int) shader?.setUniformValue(t, u)
-                if (u is Float) shader?.setUniformValue(t, u)
+                if (u is Number) {
+                    if (u.toFloat() - u.toInt().toFloat() == 0f) shader?.setUniformValue(t, u.toInt())
+                    else shader?.setUniformValue(t, u.toFloat())
+                }
                 if (u is Boolean) shader?.setUniformValue(t, if (u) 1 else 0)
             }
             shader?.render(vars.tick)
         }
     }
 
-    abstract fun render(vars: GlobalVars, matrix: Matrix4f)
+    abstract fun render(vars: GlobalVars, guiGraphics: GuiGraphics)
     abstract fun registerTex()
     abstract var disableAlpha: Boolean
     abstract var clip: RenderTarget?
+}
+
+data class UITextLegacy(
+    var text: String = "",
+    var color: Vector4f = Vector4f(1f)
+): UIObject() {
+    override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
+        val a = (color[3] * 255f).toInt()
+        val r = (color[0] * 255f).toInt()
+        val g = (color[1] * 255f).toInt()
+        val b = (color[2] * 255f).toInt()
+        guiGraphics.drawString(
+            Minecraft.getInstance().font,
+            text,
+            location["x"]!!(vars.toMap()).toInt(),
+            location["y"]!!(vars.toMap()).toInt(),
+            a and 0xFF shl 24 or
+                    (r and 0xFF shl 16) or
+                    (g and 0xFF shl 8) or
+                    (b and 0xFF shl 0)
+        )
+    }
+
+    override fun registerTex() {}
+
+    override var disableAlpha: Boolean = false
+    override var clip: RenderTarget? = null
 }
 
 data class UIRect(
@@ -65,7 +95,7 @@ data class UIRect(
     var color: Vector4f = Vector4f(0f),
     var texture: ResourceLocation? = null
 ) : UIObject() {
-    override fun render(vars: GlobalVars, matrix: Matrix4f) {
+    override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
         val alp = if (disableAlpha) 1f else color.w
         val s = Vector4f(
             location["x"]!!(vars.toMap()),
@@ -91,6 +121,7 @@ data class UIRect(
             VertexFormat.Mode.QUADS,
             if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX
         )
+        val matrix = guiGraphics.pose().last().pose()
         buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp)
             .apply { if (texture != null) uv(0f, 0f) }.endVertex()
         buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp)
@@ -114,12 +145,11 @@ data class UIRect(
     override var clip: RenderTarget? = null
 }
 
-
 data class UICompound(
     var components: Map<ResourceLocation, UIObject> = mutableMapOf(),
     var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
 ) : UIObject() {
-    override fun render(vars: GlobalVars, matrix: Matrix4f) {
+    override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
         val top = findTop()
         assert(top != null) { "Top component not found or invalid. " }
         val subc = components.values.toMutableList().apply {
@@ -135,7 +165,7 @@ data class UICompound(
 
         top!!.apply {
             disableAlpha = true
-            render(vars, matrix)
+            render(vars, guiGraphics)
             disableAlpha = false
         }
 
@@ -143,7 +173,7 @@ data class UICompound(
         subc.forEach { u ->
             Minecraft.getInstance().mainRenderTarget.bindWrite(true)
             u.filter?.init(vars)
-            u.render(vars, matrix)
+            u.render(vars, guiGraphics)
             u.filter?.render(vars)
         }
     }
