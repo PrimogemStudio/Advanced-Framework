@@ -16,10 +16,6 @@ kotlin {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api implementation("org.lwjgl:lwjgl-tinyfd:3.3.1")
 }
