@@ -9,9 +9,10 @@
     "hackermdch"
   ],
   "contact": {
-    "repo": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
-    "sources": "https://github.com/Primogem-Craft-Development/Advanced-Framework",
-    "issues": "https://github.com/Primogem-Craft-Development/Advanced-Framework/issues"
+    "repo": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "sources": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "issues": "https://github.com/PrimogemStudio/Advanced-Framework/issues",
+    "homepage": "https://primogemstudio.github.io/advancedfmk-wiki"
   },
   "license": "GPLv3",
   "icon": "assets/advancedfmk_mmdrenderer/icon.png",
@@ -33,7 +34,9 @@
   },
   "custom": {
     "modmenu": {
-      "badges": [ "library" ],
+      "badges": [
+        "library"
+      ],
       "parent": "advancedfmk"
     }
   }
