@@ -184,7 +184,8 @@ object CustomRenderType {
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
+                .setOverlayState(RenderStateShard.OVERLAY).setLightmapState(RenderStateShard.LIGHTMAP)
+                .createCompositeState(true)
         )
     }
 }
