@@ -16,3 +16,5 @@ And use
 /advancedfmk animation load
 ```
 to load vmd file.
+### Development
+Open [Wiki](https://primogemstudio.github.io/advancedfmk-wiki) for further demos

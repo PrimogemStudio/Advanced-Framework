@@ -16,3 +16,5 @@
 /advancedfmk animation load
 ```
 加载 VMD 文件
+### 开发
+打开 [Wiki](https://primogemstudio.github.io/advancedfmk-wiki) 查看更多的示例
