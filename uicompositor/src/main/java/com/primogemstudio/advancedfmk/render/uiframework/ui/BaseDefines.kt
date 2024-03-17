@@ -122,13 +122,14 @@ data class UIRect(
             if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX
         )
         val matrix = guiGraphics.pose().last().pose()
-        buff.vertex(matrix, s[0], s[1], 0f).color(color.x, color.y, color.z, alp)
+        val bdsize = 8
+        buff.vertex(matrix, s[0] - bdsize, s[1] - bdsize, 0f).color(color.x, color.y, color.z, alp)
             .apply { if (texture != null) uv(0f, 0f) }.endVertex()
-        buff.vertex(matrix, s[0], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp)
+        buff.vertex(matrix, s[0] - bdsize, s[1] + s[3] + bdsize, 0f).color(color.x, color.y, color.z, alp)
             .apply { if (texture != null) uv(0f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1] + s[3], 0f).color(color.x, color.y, color.z, alp)
+        buff.vertex(matrix, s[0] + s[2] + bdsize, s[1] + s[3] + bdsize, 0f).color(color.x, color.y, color.z, alp)
             .apply { if (texture != null) uv(1f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2], s[1], 0f).color(color.x, color.y, color.z, alp)
+        buff.vertex(matrix, s[0] + s[2] + bdsize, s[1] - bdsize, 0f).color(color.x, color.y, color.z, alp)
             .apply { if (texture != null) uv(1f, 0f) }.endVertex()
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.end())

@@ -24,8 +24,8 @@
     "advancedfmk:starrail_style_temp": {
       "type": "advancedfmk:rectangle",
       "thickness": 0,
-      "smoothedge": 0.006,
-      "radius": 34,
+      "smoothedge": 0.012,
+      "radius": 32,
       "color": [1.0, 1.0, 1.0, 1.0],
       "texture": "advancedfmk:ui/textures/microsoft.png",
       "location": {
