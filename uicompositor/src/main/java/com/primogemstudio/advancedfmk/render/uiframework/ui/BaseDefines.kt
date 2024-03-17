@@ -3,6 +3,7 @@ package com.primogemstudio.advancedfmk.render.uiframework.ui
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.platform.NativeImage
+import com.mojang.blaze3d.shaders.Shader
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -13,6 +14,7 @@ import com.primogemstudio.advancedfmk.render.uiframework.BaseTexture
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.textSwap
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -22,6 +24,7 @@ import org.joml.Vector4f
 
 object RendererConstraints {
     val internalTarget = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
+    val textSwap = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
 }
 
 abstract class UIObject(
@@ -66,6 +69,11 @@ data class UITextLegacy(
     var color: Vector4f = Vector4f(1f)
 ): UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
+        textSwap.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+        textSwap.setClearColor(0f, 0f, 0f, 0f)
+        textSwap.clear(Minecraft.ON_OSX)
+        textSwap.bindWrite(true)
+
         val a = (color[3] * 255f).toInt()
         val r = (color[0] * 255f).toInt()
         val g = (color[1] * 255f).toInt()
@@ -80,6 +88,9 @@ data class UITextLegacy(
                     (g and 0xFF shl 8) or
                     (b and 0xFF shl 0)
         )
+
+        Shaders.TEXTSWAP.setSamplerUniform("TextSwapSampler", textSwap)
+        Shaders.TEXTSWAP.render(vars.tick)
     }
 
     override fun registerTex() {}
