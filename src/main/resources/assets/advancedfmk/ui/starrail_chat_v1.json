@@ -4,7 +4,7 @@
     "advancedfmk:starrail_style_main": {
       "type": "advancedfmk:rectangle",
       "thickness": 0,
-      "smoothedge": 0.012,
+      "smoothedge": 0.006,
       "radius": 25,
       "color": [0.97, 0.97, 0.97, 0.512],
       "filter": {
