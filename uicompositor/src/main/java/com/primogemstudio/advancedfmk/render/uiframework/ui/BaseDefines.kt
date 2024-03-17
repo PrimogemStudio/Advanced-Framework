@@ -3,7 +3,6 @@ package com.primogemstudio.advancedfmk.render.uiframework.ui
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.platform.NativeImage
-import com.mojang.blaze3d.shaders.Shader
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -19,7 +18,6 @@ import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
-import org.apache.logging.log4j.LogManager
 import org.joml.Vector4f
 
 object RendererConstraints {
@@ -74,7 +72,7 @@ data class UITextLegacy(
         textSwap.clear(Minecraft.ON_OSX)
         textSwap.bindWrite(true)
 
-        val a = (color[3] * 255f).toInt()
+        val a = if (disableAlpha) 255 else (color[3] * 255f).toInt()
         val r = (color[0] * 255f).toInt()
         val g = (color[1] * 255f).toInt()
         val b = (color[2] * 255f).toInt()
@@ -89,8 +87,10 @@ data class UITextLegacy(
                     (b and 0xFF shl 0)
         )
 
-        Shaders.TEXTSWAP.setSamplerUniform("TextSwapSampler", textSwap)
-        Shaders.TEXTSWAP.render(vars.tick)
+        val shaderIns = if (clip != null) Shaders.TEXTSWAP_CLIP else Shaders.TEXTSWAP
+        shaderIns.setSamplerUniform("TextSwapSampler", textSwap)
+        shaderIns.setSamplerUniform("ClipSampler", clip!!)
+        shaderIns.render(vars.tick)
     }
 
     override fun registerTex() {}

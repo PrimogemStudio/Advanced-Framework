@@ -38,5 +38,8 @@ object Shaders {
     @JvmField
     val TEXTSWAP: ManagedShaderEffect = ShaderEffectManager.getInstance()
             .manage(ResourceLocation("shaders/filter/textswap.json"))
+    @JvmField
+    val TEXTSWAP_CLIP: ManagedShaderEffect = ShaderEffectManager.getInstance()
+            .manage(ResourceLocation("shaders/filter/textswap_clip.json"))
 }
 
