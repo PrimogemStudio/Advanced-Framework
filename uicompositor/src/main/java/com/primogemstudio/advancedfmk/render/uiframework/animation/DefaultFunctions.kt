@@ -1,9 +1,6 @@
 package com.primogemstudio.advancedfmk.render.uiframework.animation
 
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
+import kotlin.math.*
 
 typealias DG = DataGenerator
 
@@ -14,12 +11,12 @@ val QuadraticInOut: DG = DG {
     val i1 = it * 2
     if (i1 < 1) return@DG i1 * i1
     val i2 = i1 - 1
-    -(i2 * (i2 - 2) - 1) / 2
+    -(i2 * (i2 - 2) - 1) * 0.5
 }
 
-val SinusoidalIn: DG = DG { 1 - cos(it * PI / 2) }
-val SinusoidalOut: DG = DG { sin(it * PI / 2) }
-val SinusoidalInOut: DG = DG { -(cos(PI * it) - 1) / 2 }
+val SinusoidalIn: DG = DG { 1 - cos(it * PI * 0.5) }
+val SinusoidalOut: DG = DG { sin(it * PI * 0.5) }
+val SinusoidalInOut: DG = DG { -(cos(PI * it) - 1) * 0.5 }
 
 val ExponentialIn: DG = DG {
     if (it == 0.0) return@DG 0.0
@@ -33,6 +30,18 @@ val ExponentialInOut: DG = DG {
     if (it == 0.0) return@DG 0.0
     if (it == 1.0) return@DG 1.0
     val i1 = it * 2
-    if (i1 < 1) return@DG 2.0.pow(10 * (i1 - 1)) / 2
-    (2 - 2.0.pow(-10 * it)) / 2
+    if (i1 < 1) return@DG 2.0.pow(10 * (i1 - 1)) * 0.5
+    (2 - 2.0.pow(-10 * it)) * 0.5
+}
+
+val CircularIn: DG = DG { -(sqrt(1 - it * it) - 1) }
+val CircularOut: DG = DG {
+    val i1 = it - 1
+    sqrt(1 - i1 * i1)
+}
+val CircularInOut: DG = DG {
+    val i1 = it * 2
+    if (i1 < 1) return@DG -(sqrt(1 - i1 * i1) - 1) * 0.5
+    val i2 = i1 - 2
+    (sqrt(1 - i2 * i2) + 1) * 0.5
 }
