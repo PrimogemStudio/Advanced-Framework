@@ -3,7 +3,7 @@ package com.primogemstudio.advancedfmk
 import com.primogemstudio.advancedfmk.render.uiframework.animation.*
 
 fun main() {
-    listOf(Linear, QuadraticIn, QuadraticOut, QuadraticInOut, SinusoidalIn, SinusoidalOut, SinusoidalInOut, ExponentialIn, ExponentialOut, ExponentialInOut, CircularIn, CircularOut, CircularInOut).forEach {
+    listOf(Linear, QuadraticIn, QuadraticOut, QuadraticInOut, SinusoidalIn, SinusoidalOut, SinusoidalInOut, ExponentialIn, ExponentialOut, ExponentialInOut, CircularIn, CircularOut, CircularInOut, CubicIn, CubicOut, CubicInOut, QuarticIn, QuarticOut, QuarticInOut, QuinticIn, QuinticOut, QuinticInOut).forEach {
         println(it::class)
 
         for (i in 0 .. 100) {

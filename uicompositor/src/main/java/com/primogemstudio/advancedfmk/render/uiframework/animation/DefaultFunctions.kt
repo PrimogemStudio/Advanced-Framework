@@ -45,3 +45,39 @@ val CircularInOut: DG = DG {
     val i2 = i1 - 2
     (sqrt(1 - i2 * i2) + 1) * 0.5
 }
+
+val CubicIn: DG = DG { it * it * it }
+val CubicOut: DG = DG {
+    val i1 = it - 1
+    i1 * i1 * i1 + 1
+}
+val CubicInOut: DG = DG {
+    val i1 = it * 2
+    if (i1 < 1) return@DG i1 * i1 * i1 / 2
+    val i2 = i1 - 2
+    i2 * i2 * i2 / 2 + 1
+}
+
+val QuarticIn: DG = DG { it * it * it * it }
+val QuarticOut: DG = DG {
+    val i1 = it - 1
+    1 - i1 * i1 * i1 * i1
+}
+val QuarticInOut: DG = DG {
+    val i1 = it * 2
+    if (i1 < 1) return@DG i1 * i1 * i1 * i1 / 2
+    val i2 = i1 - 2
+    1 - i2 * i2 * i2 * i2 / 2
+}
+
+val QuinticIn: DG = DG { it * it * it * it * it }
+val QuinticOut: DG = DG {
+    val i1 = it - 1
+    i1 * i1 * i1 * i1 * i1 + 1
+}
+val QuinticInOut: DG = DG {
+    val i1 = it * 2
+    if (i1 < 1) return@DG i1 * i1 * i1 * i1 * i1 / 2
+    val i2 = i1 - 2
+    i2 * i2 * i2 * i2 * i2 / 2 + 1
+}
