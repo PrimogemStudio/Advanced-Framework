@@ -7,11 +7,11 @@ import java.io.File
 object NativeFileDialog {
     fun openFileDialog(
         title: String,
-        defaultPath: String,
+        path: String,
         filters: Array<String>,
         filterDescription: String
     ): File? {
-        var defaultPath = defaultPath
+        var defaultPath = path
         var result: String?
         defaultPath = if (System.getProperty("os.name").startsWith("Windows")) {
             defaultPath.replace("/", "\\")
