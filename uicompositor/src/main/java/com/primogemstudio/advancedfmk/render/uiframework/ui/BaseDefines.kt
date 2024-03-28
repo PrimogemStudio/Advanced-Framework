@@ -13,6 +13,7 @@ import com.primogemstudio.advancedfmk.render.uiframework.BaseTexture
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.onosx
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.textSwap
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
@@ -23,6 +24,7 @@ import org.joml.Vector4f
 object RendererConstraints {
     val internalTarget = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
     val textSwap = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
+    val onosx = Util.getPlatform() == Util.OS.OSX
 }
 
 abstract class UIObject(
@@ -32,9 +34,9 @@ abstract class UIObject(
         var type: String, var args: Map<String, Any> = mutableMapOf()
     ) {
         fun init(vars: GlobalVars) {
-            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
             internalTarget.setClearColor(0f, 0f, 0f, 0f)
-            internalTarget.clear(Minecraft.ON_OSX)
+            internalTarget.clear(onosx)
             internalTarget.bindWrite(true)
         }
 
@@ -67,9 +69,9 @@ data class UITextLegacy(
     var color: Vector4f = Vector4f(1f)
 ): UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
-        textSwap.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
+        textSwap.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
         textSwap.setClearColor(0f, 0f, 0f, 0f)
-        textSwap.clear(Minecraft.ON_OSX)
+        textSwap.clear(onosx)
         textSwap.bindWrite(true)
 
         val a = if (disableAlpha) 255 else (color[3] * 255f).toInt()
@@ -171,8 +173,8 @@ data class UICompound(
         }
 
         clip?.setClearColor(0f, 0f, 0f, 0f)
-        clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), Minecraft.ON_OSX)
-        clip?.clear(Minecraft.ON_OSX)
+        clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
+        clip?.clear(onosx)
         clip?.bindWrite(true)
 
         top!!.apply {
@@ -196,5 +198,5 @@ data class UICompound(
     override fun registerTex() = components.values.forEach { it.registerTex() }
 
     override var disableAlpha: Boolean = false
-    override var clip: RenderTarget? = TextureTarget(1, 1, true, Minecraft.ON_OSX)
+    override var clip: RenderTarget? = TextureTarget(1, 1, true, onosx)
 }
