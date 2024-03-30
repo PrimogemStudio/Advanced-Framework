@@ -38,7 +38,7 @@
     "advancedfmk:starrail_style_temp_text": {
       "type": "advancedfmk:text_legacy",
       "color": [1.0, 1.0, 1.0, 1.0],
-      "text": "Test! Hello world from UICompositor!",
+      "text": "测试! Hello world from UICompositor!",
       "location": {
         "x": { "calc": "fetch_pos(screen_width, 32)" },
         "y": { "calc": "fetch_pos(screen_height, 32)" },

@@ -69,7 +69,7 @@ data class UITextLegacy(
     var color: Vector4f = Vector4f(1f)
 ): UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
-        textSwap.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
+        textSwap.resize(vars.screen_size.x.toInt() * 2, vars.screen_size.y.toInt() * 2, onosx)
         textSwap.setClearColor(0f, 0f, 0f, 0f)
         textSwap.clear(onosx)
         textSwap.bindWrite(true)
