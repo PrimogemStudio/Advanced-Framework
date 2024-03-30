@@ -39,12 +39,13 @@ dependencies {
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
     include(implementation "org.lwjgl:lwjgl-freetype:$lwjglVersion")
     include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows-arm64"))
-    // include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux-arm64"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos-arm64"))
 }
 
