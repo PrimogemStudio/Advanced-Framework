@@ -18,6 +18,9 @@
   "icon": "assets/advancedfmk_fontengine/icon.png",
   "environment": "*",
   "entrypoints": {
+    "client": [
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkFontEngineClient"
+    ]
   },
   "mixins": [
   ],
