@@ -11,7 +11,6 @@ group = project.rootProject.maven_group
 version = project.rootProject.mod_version
 
 project.ext.lwjglVersion = "3.3.3"
-project.ext.lwjglNatives = "natives-linux"
 
 loom {
     // accessWidenerPath = file("src/main/resources/META-INF/aw2.accesswidener")
@@ -36,8 +35,13 @@ dependencies {
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    implementation "org.lwjgl:lwjgl-freetype"
-    implementation "org.lwjgl:lwjgl-freetype::$lwjglNatives"
+    include(implementation "org.lwjgl:lwjgl-freetype")
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos-arm64"))
 }
 
 test {
