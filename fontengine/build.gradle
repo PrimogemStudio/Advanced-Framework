@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.5.7'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'maven-publish'
     id 'signing'
@@ -11,6 +11,27 @@ group = project.rootProject.maven_group
 version = project.rootProject.mod_version
 
 project.ext.lwjglVersion = "3.3.3"
+
+repositories {
+    var a = toList()
+    removeAll { true }
+    mavenCentral() {
+        content {
+            includeGroup "org.lwjgl"
+        }
+    }
+    addAll(a)
+}
+
+dependencies {
+    include(implementation "org.lwjgl:lwjgl-freetype:$lwjglVersion")
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-windows"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-linux"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-macos"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-windows-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-linux-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-macos-arm64"))
+}
 
 loom {
     // accessWidenerPath = file("src/main/resources/META-INF/aw2.accesswidener")
@@ -23,10 +44,6 @@ kotlin {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
@@ -37,16 +54,6 @@ dependencies {
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
-
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
-    include(implementation "org.lwjgl:lwjgl-freetype:$lwjglVersion")
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-windows-arm64"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-linux-arm64"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype::natives-macos-arm64"))
 }
 
 test {

@@ -22,7 +22,7 @@ class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRender
         packedLight: Int
     ) {
         if (entity.model == null) return
-        else if (wrap.model == null) {
+        if (wrap.model == null) {
             wrap.model = entity.model
             wrap.updateRenderType()
         }
