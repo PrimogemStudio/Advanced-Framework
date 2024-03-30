@@ -10,6 +10,9 @@ plugins {
 group = project.rootProject.maven_group
 version = project.rootProject.mod_version
 
+project.ext.lwjglVersion = "3.3.3"
+project.ext.lwjglNatives = "natives-linux"
+
 loom {
     // accessWidenerPath = file("src/main/resources/META-INF/aw2.accesswidener")
 }
@@ -30,8 +33,11 @@ dependencies {
 
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    modApi modImplementation("maven.modrinth:sodium:mc1.20.1-0.5.8")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation "org.lwjgl:lwjgl-freetype"
+    implementation "org.lwjgl:lwjgl-freetype::$lwjglNatives"
 }
 
 test {
