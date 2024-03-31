@@ -25,12 +25,12 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-${project.parchment_version}@zip")
     }
 
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    modApi modImplementation("maven.modrinth:sodium:mc1.20.1-0.5.8")
+    modApi modImplementation("maven.modrinth:sodium:mc1.20.4-0.5.8")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
 }
 

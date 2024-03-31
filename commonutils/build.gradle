@@ -17,7 +17,7 @@ kotlin {
 }
 
 dependencies {
-    api implementation("org.lwjgl:lwjgl-tinyfd:3.3.1")
+    api implementation("org.lwjgl:lwjgl-tinyfd:3.3.2")
 }
 
 test {

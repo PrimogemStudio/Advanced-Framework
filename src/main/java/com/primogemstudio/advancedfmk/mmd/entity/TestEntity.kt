@@ -80,10 +80,13 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
         val buf = PacketByteBufs.create()
         ClientboundAddEntityPacket(this).write(buf)
         buf.writeUtf(mp)
-        return ServerPlayNetworking.createS2CPacket(ResourceLocation(MOD_ID, "test_entity_add"), buf)
+        return ServerPlayNetworking.createS2CPacket(
+            ResourceLocation(MOD_ID, "test_entity_add"), buf
+        ) as Packet<ClientGamePacketListener>
     }
 }

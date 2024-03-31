@@ -33,9 +33,7 @@ dependencies {
     include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-macos-arm64"))
 }
 
-loom {
-    // accessWidenerPath = file("src/main/resources/META-INF/aw2.accesswidener")
-}
+loom {}
 
 kotlin {
     jvmToolchain(17)
@@ -48,7 +46,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-${project.parchment_version}@zip")
     }
 
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")

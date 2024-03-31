@@ -69,7 +69,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-${project.parchment_version}@zip")
     }
 
     modApi "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -77,8 +77,8 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
 
-    modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
-    modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.1"
+    modRuntimeOnly "com.terraformersmc:modmenu:9.0.0"
+    modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.4"
     runtimeOnly "org.anarres:jcpp:1.+"
     runtimeOnly "io.github.douira:glsl-transformer:2.0.0-pre13"
     runtimeOnly "org.antlr:antlr4-runtime:4.11.1"
@@ -86,10 +86,15 @@ dependencies {
 
     implementation platform("org.lwjgl:lwjgl-bom:3.3.3")
     implementation "org.lwjgl:lwjgl-freetype:3.3.3"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows-arm64"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos-arm64"
 
     include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
     include "org.luaj:luaj-jse:3.0.1"
-    include "org.ladysnake:satin:1.14.0"
+    include "org.ladysnake:satin:1.16.0"
 }
 
 processResources {
