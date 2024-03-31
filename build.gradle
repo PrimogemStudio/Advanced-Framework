@@ -82,7 +82,7 @@ dependencies {
     runtimeOnly "org.anarres:jcpp:1.+"
     runtimeOnly "io.github.douira:glsl-transformer:2.0.0-pre13"
     runtimeOnly "org.antlr:antlr4-runtime:4.11.1"
-    modRuntimeOnly "maven.modrinth:fpsdisplay:3.1.0+1.20.x"
+    modRuntimeOnly "maven.modrinth:fpsdisplay:4.0.0+1.20.4"
 
     implementation platform("org.lwjgl:lwjgl-bom:3.3.3")
     implementation "org.lwjgl:lwjgl-freetype:3.3.3"
