@@ -4,17 +4,20 @@ import org.lwjgl.system.MemoryStack
 import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
+import java.awt.BasicStroke
+import java.awt.Color
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.geom.Ellipse2D
 import java.io.File
 import java.io.PrintStream
-import java.nio.file.Files
+import javax.swing.JFrame
+import javax.swing.JPanel
 import kotlin.math.pow
 
 fun main() {
-    fun int26p6_to_float(i: Int): Float {
-        return i.toFloat() / (2.0.pow(6).toFloat())
-    }
-    fun int12p12_to_float(i: Int): Float {
-        return i.toFloat() / (2.0.pow(12).toFloat())
+    fun i26p6tof(i: Int): Float {
+        return i.toFloat() * (2.0.pow(-6).toFloat())
     }
 
     var pLib: Long
@@ -23,7 +26,12 @@ fun main() {
         val ptrBuff = stack.mallocPointer(1)
         FT_Init_FreeType(ptrBuff)
         pLib = ptrBuff.get(0)
-        FT_New_Face(pLib, "/usr/share/fonts/StarRailFont.ttf", 0, ptrBuff)
+        FT_New_Face(
+            pLib,
+            "G:\\Star Rail\\Game\\StarRail_Data\\StreamingAssets\\MiHoYoSDKRes\\HttpServerResources\\font\\zh-cn.ttf",
+            0,
+            ptrBuff
+        )
         pFace = ptrBuff.get(0)
     }
     val fce = FT_Face.create(pFace)
@@ -32,6 +40,26 @@ fun main() {
     FT_Load_Glyph(fce, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
     val outline = fce.glyph()?.outline()!!
     println(outline.n_points())
+
+    val frame = JFrame()
+    frame.setLocation(200, 200)
+    frame.setSize(500, 500)
+    frame.add(object : JPanel() {
+        override fun paint(g: Graphics?) {
+            g as Graphics2D
+            val stroke = BasicStroke(10f);
+            g.stroke = stroke
+            g.color = Color.BLACK
+            for (it in outline.points()) {
+                g.fill(
+                    Ellipse2D.Float(
+                        i26p6tof(it.x().toInt()) * 10 + 100, i26p6tof(it.y().toInt()) * 10 + 200, 10f, 10f
+                    )
+                )
+            }
+        }
+    })
+    frame.isVisible = true
 
     val f = File("output.csv")
     f.delete()
@@ -48,7 +76,7 @@ fun main() {
 
     var point = 0
     var first = 0
-    for (i in 0 ..< outline.n_contours()) {
+    for (i in 0..<outline.n_contours()) {
         val last = outline.contours()[i].toInt()
         limit = i
 
@@ -60,8 +88,8 @@ fun main() {
         val tags = outline.tags()[first]
         var tag = FT_CURVE_TAG(tags.toInt())
 
-        val fpriX = int26p6_to_float(v_control.x().toInt())
-        val fpriY = -int26p6_to_float(v_control.y().toInt())
+        val fpriX = i26p6tof(v_control.x().toInt())
+        val fpriY = -i26p6tof(v_control.y().toInt())
 
         var startX = fpriX
         var startY = fpriY
@@ -75,8 +103,8 @@ fun main() {
             when (tag) {
                 FT_CURVE_TAG_ON -> {
                     val pointd = outline.points()[point]
-                    val fEndX = int26p6_to_float(pointd.x().toInt())
-                    val fEndY = -int26p6_to_float(pointd.y().toInt())
+                    val fEndX = i26p6tof(pointd.x().toInt())
+                    val fEndY = -i26p6tof(pointd.y().toInt())
 
                     println("lineto: $startX, $startY, $fEndX, $fEndY")
 
