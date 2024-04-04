@@ -19,7 +19,7 @@ data class Polygon(val vertices: List<Vector2f>) {
         var i = 0
         var j = 1
         var k = 2
-        while (s > 4) {
+        while (s > 3) {
             val a1 = cpy[j].x - cpy[i].x
             val a2 = cpy[j].y - cpy[i].y
             val b1 = cpy[k].x - cpy[i].x
@@ -37,17 +37,16 @@ data class Polygon(val vertices: List<Vector2f>) {
                 }
             }
 
-            if (cond1 && cond2) {
+            if (cond1 && cond2 && (i != j && i != k && j != k)) {
                 r.add(arrayOf(cpy[i], cpy[j], cpy[k]))
-                for (t in j until s - 1) {
-                    cpy[t] = cpy[t + 1]
-                }
+                cpy.removeAt(j)
 
                 s--
                 i = 0
                 j = 1
                 k = 2
-            } else {
+            }
+            else {
                 i++
                 j = i + 1
                 k = j + 1

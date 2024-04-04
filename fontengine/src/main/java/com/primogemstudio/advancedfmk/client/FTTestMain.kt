@@ -7,6 +7,7 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.io.FileInputStream
+import java.util.Scanner
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
@@ -21,7 +22,7 @@ inline fun <T> timed(func: () -> T): T {
 
 fun main() {
     val fnt =
-        FreeTypeFont(FileInputStream("G:\\Star Rail\\Game\\StarRail_Data\\StreamingAssets\\MiHoYoSDKRes\\HttpServerResources\\font\\zh-cn.ttf"))
+        FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
 
     val oplist = fnt.fetchGlyphOutline('测'.code.toLong())
     val oplist2 = fnt.fetchGlyphOutline('j'.code.toLong())
@@ -33,13 +34,8 @@ fun main() {
     val r = oplist.split(30)
     val r2 = oplist2.split(30)
 
-    val rb0 = r[0].toTriangles()
-    val rb1 = r[1].toTriangles()
-    val rb2 = r[2].toTriangles()
-    val rb3 = r[3].toTriangles()
-    val rb4 = r[4].toTriangles()
-    val rb5 = r[5].toTriangles()
-    val rb6 = r[6].toTriangles()
+    val tri2 = r.map { it.toTriangles() }
+    val tri = r2.map { it.toTriangles() }
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -58,77 +54,41 @@ fun main() {
             g.fillRect(st.x.toInt(), st.y.toInt(), sr.x.toInt(), sr.y.toInt())
 
             g.color = Color.BLACK
-
-            rb0.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb1.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb2.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb3.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb4.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb5.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-            }
-            rb6.forEach {
-                val a = Vector2f(sr).mul(it[0]).add(st)
-                val b = Vector2f(sr).mul(it[1]).add(st)
-                val c = Vector2f(sr).mul(it[2]).add(st)
-                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
+            tri2.forEach { t ->
+                t.forEach {
+                    val a = Vector2f(sr).mul(it[0]).add(st)
+                    val b = Vector2f(sr).mul(it[1]).add(st)
+                    val c = Vector2f(sr).mul(it[2]).add(st)
+                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                    g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
+                    g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
+                }
             }
 
-            val sr2 = Vector2f(s2).mul(100 / s2.y)
+            val sr2 = Vector2f(s2).mul(400 / s2.y)
             val st2 = Vector2f(0f, 100f)
 
             g.color = Color.CYAN
             g.fillRect(st2.x.toInt(), st2.y.toInt(), sr2.x.toInt(), sr2.y.toInt())
 
             g.color = Color.BLACK
-            r2.forEach {
+            /*r2.forEach {
                 for (i in 0 until it.vertices.size) {
                     val a = Vector2f(sr2).mul(it.vertices[i]).add(st2)
                     val b = Vector2f(sr2).mul(it.vertices[(i + 1) % it.vertices.size]).add(st2)
 
                     g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                }
+            }*/
+
+            tri.forEach { t ->
+                t.forEach {
+                    val a = Vector2f(sr2).mul(it[0]).add(st2)
+                    val b = Vector2f(sr2).mul(it[1]).add(st2)
+                    val c = Vector2f(sr2).mul(it[2]).add(st2)
+                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                    g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
+                    g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
                 }
             }
         }
