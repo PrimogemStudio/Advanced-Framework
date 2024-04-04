@@ -1,22 +1,18 @@
 package com.primogemstudio.advancedfmk.client
 
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
-import com.primogemstudio.advancedfmk.ftwrap.SVGOperation.OpType
-import com.primogemstudio.advancedfmk.util.conic
-import com.primogemstudio.advancedfmk.util.cubic
 import com.primogemstudio.advancedfmk.util.f26p6toi
-import com.primogemstudio.advancedfmk.util.i26p6tof
-import org.joml.Matrix4f
 import org.joml.Vector2f
-import org.joml.Vector3f
-import org.joml.Vector4f
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
+import java.nio.file.Files
+import java.nio.file.Path
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
+
 inline fun <T> timed(func: () -> T): T {
     val start = System.currentTimeMillis()
     val t = func()
@@ -25,14 +21,14 @@ inline fun <T> timed(func: () -> T): T {
     return t
 }
 fun main() {
-    val fnt = FreeTypeFont("/usr/share/fonts/MonacoLigaturizedNerdFont-Regular.ttf")
-    var te = 0
+    val fnt = FreeTypeFont(Files.newInputStream(Path.of("/usr/share/fonts/StarRailFont.ttf")))
+    /*var te = 0
     timed {
         fnt.getAllChars().forEach {
             te += fnt.fetchGlyphOutline(it).size
         }
     }
-    println("glyphs: ${fnt.getAllChars().size}")
+    println("glyphs: ${fnt.getAllChars().size}")*/
 
     val oplist = fnt.fetchGlyphOutline('测'.code.toLong())
     val oplist2 = fnt.fetchGlyphOutline('j'.code.toLong())
@@ -56,8 +52,8 @@ fun main() {
             g.color = Color.RED
             // g.translate(400.0, 400.0)
 
-            val sr = Vector2f(s1).mul(40f)
-            val st = Vector2f(200f, 200f)
+            val sr = Vector2f(s1).mul(100 / s1.y)
+            val st = Vector2f(200f, 300f)
 
             g.fillRect(st.x.toInt(), st.y.toInt(), sr.x.toInt(), sr.y.toInt())
 
@@ -71,8 +67,8 @@ fun main() {
                 }
             }
 
-            val sr2 = Vector2f(s2).mul(40f)
-            val st2 = Vector2f(0f, 0f)
+            val sr2 = Vector2f(s2).mul(100 / s2.y)
+            val st2 = Vector2f(0f, 100f)
 
             g.color = Color.RED
             g.fillRect(st2.x.toInt(), st2.y.toInt(), sr2.x.toInt(), sr2.y.toInt())

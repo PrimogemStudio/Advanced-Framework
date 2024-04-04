@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.ftwrap
 
+import com.primogemstudio.advancedfmk.util.f26p6toi
 import com.primogemstudio.advancedfmk.util.i26p6tof
 import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
@@ -10,7 +11,6 @@ import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import java.io.Closeable
 import java.io.InputStream
-import java.nio.ByteBuffer
 
 fun addrToVec(addr: Long): Vector2f {
     val vec = FT_Vector.create(addr)
@@ -18,7 +18,6 @@ fun addrToVec(addr: Long): Vector2f {
 }
 class FreeTypeFont: Closeable {
     companion object {
-        const val multiplier = 65535L
         val funcs = { oplist: MutableList<SVGOperation> ->
             FT_Outline_Funcs.create()
                 .move_to { to, _ ->
@@ -68,7 +67,7 @@ class FreeTypeFont: Closeable {
             pLib = ptrBuff.get(0)
 
             val br = `in`.readAllBytes()
-            val bf = ByteBuffer.allocateDirect(br.size)
+            val bf = stack.malloc(br.size)
             bf.put(br)
 
             FT_New_Memory_Face(pLib, bf, 0, ptrBuff)
@@ -85,7 +84,7 @@ class FreeTypeFont: Closeable {
             pLib = ptrBuff.get(0)
             FT_New_Face(
                 pLib,
-                "/usr/share/fonts/StarRailFont.ttf",
+                path,
                 0,
                 ptrBuff
             )
@@ -97,18 +96,6 @@ class FreeTypeFont: Closeable {
 
     private fun initFontState() {
         FT_Set_Pixel_Sizes(face!!, 0, 12)
-        FT_Set_Transform(
-            face!!,
-            FT_Matrix.create()
-                .xx(1L * multiplier)
-                .xy(0L * multiplier)
-                .yx(0L * multiplier)
-                .yy(-1L * multiplier),
-
-            FT_Vector.create()
-                .x(0L)
-                .y(0L)
-        )
     }
 
     fun getAllChars(): List<Long> {
@@ -138,9 +125,9 @@ class FreeTypeFont: Closeable {
         val border = fetchGlyphBorder(charcode)
 
         target.forEach {
-            it.target.div(border).add(Vector2f(0f, 0.8f))
-            it.control1?.div(border)?.add(Vector2f(0f, 0.8f))
-            it.control2?.div(border)?.add(Vector2f(0f, 0.8f))
+            it.target.div(border).apply { y = 1 - y }
+            it.control1?.div(border)?.apply { y = 1 - y }
+            it.control2?.div(border)?.apply { y = 1 - y }
         }
 
         return target
