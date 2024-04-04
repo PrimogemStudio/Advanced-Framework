@@ -24,10 +24,10 @@ fun main() {
     val fnt =
         FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
 
-    val oplist = fnt.fetchGlyphOutline('测'.code.toLong())
-    val oplist2 = fnt.fetchGlyphOutline('j'.code.toLong())
-    val s1 = fnt.fetchGlyphBorder('测'.code.toLong())
-    val s2 = fnt.fetchGlyphBorder('j'.code.toLong())
+    val oplist = fnt.fetchGlyphOutline('间'.code.toLong())
+    val oplist2 = fnt.fetchGlyphOutline('a'.code.toLong())
+    val s1 = fnt.fetchGlyphBorder('间'.code.toLong())
+    val s2 = fnt.fetchGlyphBorder('a'.code.toLong())
 
     fnt.close()
 

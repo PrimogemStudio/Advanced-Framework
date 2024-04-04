@@ -6,7 +6,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-data class Polygon(val vertices: List<Vector2f>) {
+data class Polygon(val vertices: MutableList<Vector2f>) {
     fun toTriangles(): List<Array<Vector2f>> {
         val r = mutableListOf<Array<Vector2f>>()
         val cpy = Vector(vertices)
