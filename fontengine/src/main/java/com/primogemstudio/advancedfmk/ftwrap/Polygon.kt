@@ -6,9 +6,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-data class Polygon(
-    val vertices: List<Vector2f>
-) {
+data class Polygon(val vertices: List<Vector2f>) {
     fun toTriangles(): List<Array<Vector2f>> {
         val r = mutableListOf<Array<Vector2f>>()
         val cpy = Vector(vertices)
@@ -26,11 +24,11 @@ data class Polygon(
             val a2 = cpy[j].y - cpy[i].y
             val b1 = cpy[k].x - cpy[i].x
             val b2 = cpy[k].y - cpy[i].y
-            val cond1 = a1*b2 <= a2*b1
+            val cond1 = a1 * b2 <= a2 * b1
 
             var cond2 = true
 
-            for (p in 0 ..< s) {
+            for (p in 0 until s) {
                 if (p != i && p != j && p != k) {
                     if (inTri(cpy[i], cpy[j], cpy[k], cpy[p])) {
                         cond2 = false
@@ -41,7 +39,7 @@ data class Polygon(
 
             if (cond1 && cond2) {
                 r.add(arrayOf(cpy[i], cpy[j], cpy[k]))
-                for (t in j ..< s - 1) {
+                for (t in j until s - 1) {
                     cpy[t] = cpy[t + 1]
                 }
 
@@ -49,8 +47,7 @@ data class Polygon(
                 i = 0
                 j = 1
                 k = 2
-            }
-            else {
+            } else {
                 i++
                 j = i + 1
                 k = j + 1
@@ -70,7 +67,9 @@ data class Polygon(
     }
 }
 
-fun inTri(a: Vector2f, b: Vector2f, c: Vector2f, p: Vector2f): Boolean = getArea(a, b, c) >= getArea(a, b, p) + getArea(a, c, p) + getArea(b, c, p)
+fun inTri(a: Vector2f, b: Vector2f, c: Vector2f, p: Vector2f): Boolean =
+    getArea(a, b, c) >= getArea(a, b, p) + getArea(a, c, p) + getArea(b, c, p)
+
 fun getArea(a: Vector2f, b: Vector2f, c: Vector2f): Float {
     val A = getLength(a, b)
     val B = getLength(a, c)
@@ -78,4 +77,5 @@ fun getArea(a: Vector2f, b: Vector2f, c: Vector2f): Float {
     val p = (A + B + C) / 2
     return sqrt(p * (p - A) * (p - B) * (p - C))
 }
+
 fun getLength(a: Vector2f, b: Vector2f): Float = sqrt(abs(b.x - a.x).pow(2) + abs(b.y - a.y).pow(2))

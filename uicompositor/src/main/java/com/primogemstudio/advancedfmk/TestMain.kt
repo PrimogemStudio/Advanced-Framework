@@ -23,7 +23,7 @@ class FuncPanel: JPanel() {
         val points = 1000
         val xarr = IntArray(points)
         val yarr = IntArray(points)
-        for (i in 0 ..< points) {
+        for (i in 0  until  points) {
             xarr[i] = ((i / points.toDouble()) * 500.0 + 50).toInt()
             yarr[i] = 500 - (BackIn.gen(i / points.toDouble()) * 500.0).toInt() + 50
         }

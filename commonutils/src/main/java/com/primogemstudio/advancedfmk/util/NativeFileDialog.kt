@@ -6,17 +6,13 @@ import java.io.File
 
 object NativeFileDialog {
     fun openFileDialog(
-        title: String,
-        path: String,
-        filters: Array<String>,
-        filterDescription: String
+        title: String, path: String, filters: Array<String>, filterDescription: String
     ): File? {
         var defaultPath = path
         var result: String?
         defaultPath = if (System.getProperty("os.name").startsWith("Windows")) {
             defaultPath.replace("/", "\\")
-        }
-        else {
+        } else {
             defaultPath.replace("\\", "/")
         }
         if (filters.isNotEmpty()) {
@@ -24,10 +20,10 @@ object NativeFileDialog {
                 val pointerBuffer = stack.mallocPointer(filters.size)
                 filters.forEach { pointerBuffer.put(stack.UTF8(it)) }
                 pointerBuffer.flip()
-                result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultPath, pointerBuffer, filterDescription, false)
+                result =
+                    TinyFileDialogs.tinyfd_openFileDialog(title, defaultPath, pointerBuffer, filterDescription, false)
             }
-        }
-        else {
+        } else {
             result = TinyFileDialogs.tinyfd_openFileDialog(title, defaultPath, null, filterDescription, false)
         }
         return result?.let { File(it) }
