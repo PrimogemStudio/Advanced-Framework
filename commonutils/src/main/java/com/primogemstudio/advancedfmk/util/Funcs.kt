@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.util
 
 import org.joml.Vector2f
 import kotlin.math.pow

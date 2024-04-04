@@ -31,6 +31,7 @@ dependencies {
     include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-windows-arm64"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-linux-arm64"))
     include(runtimeOnly("org.lwjgl:lwjgl-freetype:$lwjglVersion:natives-macos-arm64"))
+    implementation(project(path: ':commonutils'))
 }
 
 loom {}
