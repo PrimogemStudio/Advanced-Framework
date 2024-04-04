@@ -1,8 +1,10 @@
 package com.primogemstudio.advancedfmk.client
 
-import com.primogemstudio.advancedfmk.ftwrap.OpType
-import com.primogemstudio.advancedfmk.ftwrap.Operation
+import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
+import com.primogemstudio.advancedfmk.ftwrap.SVGOperation.OpType
+import com.primogemstudio.advancedfmk.ftwrap.SVGOperation
 import com.primogemstudio.advancedfmk.util.conic
+import com.primogemstudio.advancedfmk.util.cubic
 import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.util.freetype.FT_Face
@@ -14,20 +16,25 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
-import java.util.HexFormat
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import javax.swing.JFrame
 import javax.swing.JPanel
 import kotlin.math.pow
 
-@OptIn(ExperimentalStdlibApi::class)
+typealias Operation = SVGOperation
+
 fun main() {
     fun i26p6tof(i: Int): Float {
         return i.toFloat() * (2.0.pow(-6).toFloat())
     }
     fun addrToVec(addr: Long): Vector2f {
-        val ft_vec = FT_Vector.create(addr)
-        return Vector2f(i26p6tof(ft_vec.x().toInt()), i26p6tof(ft_vec.y().toInt()))
+        val vec = FT_Vector.create(addr)
+        return Vector2f(i26p6tof(vec.x().toInt()), i26p6tof(vec.y().toInt()))
     }
+
+    println(FreeTypeFont(Files.newInputStream(Path.of("/usr/share/fonts/StarRailFont.ttf"))))
 
     val start = System.currentTimeMillis()
 
@@ -65,7 +72,7 @@ fun main() {
     )
 
     MemoryStack.stackPush().use {
-        var s = it.mallocInt(1)
+        val s = it.mallocInt(1)
         var l = FT_Get_First_Char(fce, s)
         while (s.get(0) != 0) {
             println("0x${java.lang.Long.toHexString(l)} -> ${l.toInt().toChar()}")
@@ -73,24 +80,24 @@ fun main() {
         }
     }
 
-    val glyphIndex = FT_Get_Char_Index(fce, 0x3064)
+    val glyphIndex = FT_Get_Char_Index(fce, '我'.code.toLong())
     FT_Load_Glyph(fce, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
     val outline = fce.glyph()?.outline()!!
     val funcs = FT_Outline_Funcs.create()
-        .move_to { to, user -> oplist.add(Operation(
+        .move_to { to, _ -> oplist.add(Operation(
             type = OpType.MOVE,
             target = addrToVec(to)
         )); 0}
-        .line_to { to, user -> oplist.add(Operation(
+        .line_to { to, _ -> oplist.add(Operation(
             type = OpType.LINE,
             target = addrToVec(to)
         )); 0 }
-        .conic_to { ct, to, user -> oplist.add(Operation(
+        .conic_to { ct, to, _ -> oplist.add(Operation(
             type = OpType.CONIC,
             target = addrToVec(to),
             control1 = addrToVec(ct)
         )); 0 }
-        .cubic_to { ct1, ct2, to, user -> oplist.add(Operation(
+        .cubic_to { ct1, ct2, to, _ -> oplist.add(Operation(
             type = OpType.CONIC,
             target = addrToVec(to),
             control1 = addrToVec(ct1),
@@ -127,11 +134,17 @@ fun main() {
                 when (it.type) {
                     OpType.MOVE -> {}
                     OpType.LINE -> g.drawLine(pos.x.toInt(), pos.y.toInt(), it.target.x.toInt(), it.target.y.toInt())
-                    OpType.CUBIC -> g.drawLine(pos.x.toInt(), pos.y.toInt(), it.target.x.toInt(), it.target.y.toInt())
                     OpType.CONIC -> {
                         for (i in 1 ..< pri) {
                             val t = conic(pos, it.control1!!, it.target, i.toFloat() / pri)
                             val t2 = conic(pos, it.control1, it.target, (i - 1).toFloat() / pri)
+                            g.drawLine(t.x.toInt(), t.y.toInt(), t2.x.toInt(), t2.y.toInt())
+                        }
+                    }
+                    OpType.CUBIC -> {
+                        for (i in 1 ..< pri) {
+                            val t = cubic(pos, it.control1!!, it.control2!!, it.target, i.toFloat() / pri)
+                            val t2 = cubic(pos, it.control1, it.control2, it.target, (i - 1).toFloat() / pri)
                             g.drawLine(t.x.toInt(), t.y.toInt(), t2.x.toInt(), t2.y.toInt())
                         }
                     }
