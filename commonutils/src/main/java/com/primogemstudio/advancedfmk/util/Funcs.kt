@@ -19,3 +19,7 @@ fun cubic(st: Vec2, ct1: Vec2, ct2: Vec2, end: Vec2, add: Float): Vec2 {
     val d = Vec2(end)
     return a.mul((1 - add).pow(3)).add(b.mul(3 * add * (1 - add).pow(2))).add(c.mul(3 * add.pow(2) * (1 - add))).add(d.mul(add.pow(3)))
 }
+
+fun i26p6tof(i: Int): Float {
+    return i.toFloat() * (2.0.pow(-6).toFloat())
+}
