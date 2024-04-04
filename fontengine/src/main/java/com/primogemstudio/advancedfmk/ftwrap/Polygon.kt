@@ -53,7 +53,8 @@ data class Polygon(
                 j = i + 1
                 k = j + 1
                 if (k > s - 1) {
-                    cpy.removeAt(j)
+                    r.add(arrayOf(cpy[i - 1], cpy[j - 1], cpy[k - 1]))
+                    cpy.removeAt(j - 1)
 
                     s--
                     i = 0
@@ -66,46 +67,6 @@ data class Polygon(
         return r
     }
 }
-/*
-		for (int p = 0; p < pNumbers; p++) {
-			if (p != i && p != j && p != k) {/// 判断其他点是否在当前三角形内
-				if (JudgeIn(MPOlygon[p].x, MPOlygon[p].y, tempx, tempy, 3 + 1)) {
-					cond2 = FALSE;
-					break;
-				}
-			}
-		}
-		///cond1 = true;
-		if (cond1 && cond2) {/// 如果同时满足条件一和条件二
-			pDC->MoveTo(MPOlygon[i]);/// 从i点到k点画线
-			pDC->LineTo(MPOlygon[k]);
-			for (int t = j; t < pNumbers - 1; t++) {/// 更新当前多边形
-				MPOlygon[t] = MPOlygon[t + 1];
-			}
-			pNumbers--;/// 更新多边形的边数
-			i = 0;/// 重新赋值i，j，k
-			j = 1;
-			k = 2;
-		}
-		else {/// 否则
-			i ++;/// i下移一点
-			j = i + 1;
-			k = j + 1;
-		}
-	}
-
-	pDC->SelectObject(poldPen);/// 跟新pDC
-
-	DWORD dwStop = GetTickCount();/// 获得结束时间
-	DWORD dwInterval = dwStop - dwStart;/// 获得运行时间
-	CcgSXQFillPolyDoc* pDoc = (CcgSXQFillPolyDoc*)GetDocument();/// 获得Doc指针
-	pDoc->polygonalTriangualtionRuntime = (double)dwInterval;/// 将数据写入Doc类中
-	CString str;/// 将数据写入polygonalTriangulationInformation，并将其格式化
-	str.Format(_T("%.2lf"), pDoc->polygonalTriangualtionRuntime);
-	pDoc->polygonalTriangulationInformation += _T("Runtime Consuming : ") + str + _T("ms\r\n");
-
-	pDoc->UpdateAllViews(this);/// 更新视图
-	return TRUE;*/
 
 fun inTri(a: Vector2f, b: Vector2f, c: Vector2f, p: Vector2f): Boolean = getArea(a, b, c) >= getArea(a, b, p) + getArea(a, c, p) + getArea(b, c, p)
 fun getArea(a: Vector2f, b: Vector2f, c: Vector2f): Float {
