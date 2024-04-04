@@ -21,7 +21,7 @@ inline fun <T> timed(func: () -> T): T {
     return t
 }
 fun main() {
-    val fnt = FreeTypeFont(Files.newInputStream(Path.of("/usr/share/fonts/StarRailFont.ttf")))
+    val fnt = FreeTypeFont("/usr/share/fonts/StarRailFont.ttf")
     /*var te = 0
     timed {
         fnt.getAllChars().forEach {
@@ -39,6 +39,8 @@ fun main() {
 
     val r = oplist.split(30)
     val r2 = oplist2.split(30)
+
+    val rb = r[1].toTriangles()
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -65,6 +67,15 @@ fun main() {
 
                     g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
                 }
+            }
+
+            rb.forEach {
+                val a = Vector2f(sr).mul(it[0]).add(st)
+                val b = Vector2f(sr).mul(it[1]).add(st)
+                val c = Vector2f(sr).mul(it[2]).add(st)
+                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
+                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
             }
 
             val sr2 = Vector2f(s2).mul(100 / s2.y)
