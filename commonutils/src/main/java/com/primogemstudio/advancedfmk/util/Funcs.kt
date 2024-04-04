@@ -23,3 +23,7 @@ fun cubic(st: Vec2, ct1: Vec2, ct2: Vec2, end: Vec2, add: Float): Vec2 {
 fun i26p6tof(i: Int): Float {
     return i.toFloat() * (2.0.pow(-6).toFloat())
 }
+
+fun f26p6toi(i: Float): Int {
+    return (i * (2.0.pow(6).toFloat())).toInt()
+}

@@ -18,7 +18,7 @@ fun addrToVec(addr: Long): Vector2f {
 }
 class FreeTypeFont: Closeable {
     companion object {
-        const val multiplier = 65536L
+        const val multiplier = 65535L
         val funcs = { oplist: MutableList<SVGOperation> ->
             FT_Outline_Funcs.create()
                 .move_to { to, _ ->
@@ -135,7 +135,22 @@ class FreeTypeFont: Closeable {
         FT_Load_Glyph(face!!, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val outline = face!!.glyph()?.outline()!!
         FT_Outline_Decompose(outline, funcs(target), 1)
+        val border = fetchGlyphBorder(charcode)
+
+        target.forEach {
+            it.target.div(border).add(Vector2f(0f, 0.8f))
+            it.control1?.div(border)?.add(Vector2f(0f, 0.8f))
+            it.control2?.div(border)?.add(Vector2f(0f, 0.8f))
+        }
 
         return target
+    }
+
+    fun fetchGlyphBorder(charcode: Long): Vector2f {
+        val glyphIndex = FT_Get_Char_Index(face!!, charcode)
+        FT_Load_Glyph(face!!, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
+        val metrics = face!!.glyph()?.metrics()!!
+
+        return Vector2f(i26p6tof(metrics.width().toInt()), i26p6tof(metrics.height().toInt()))
     }
 }
