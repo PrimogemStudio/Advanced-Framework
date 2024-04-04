@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.ftwrap
 
+import com.google.common.collect.ImmutableMap
 import com.primogemstudio.advancedfmk.util.i26p6tof
 import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
@@ -95,17 +96,17 @@ class FreeTypeFont : Closeable {
         FT_Set_Pixel_Sizes(face, 0, 12)
     }
 
-    fun getAllChars(): List<Long> {
-        val result = mutableListOf<Long>()
+    fun getAllChars(): Map<Char, Int> {
+        val map = ImmutableMap.builder<Char, Int>()
         MemoryStack.stackPush().use {
-            val s = it.mallocInt(1)
-            var l = FT_Get_First_Char(face, s)
-            while (s.get(0) != 0) {
-                result.add(l)
-                l = FT_Get_Next_Char(face, l, s)
+            val index = it.mallocInt(1)
+            var chr = FT_Get_First_Char(face, index).toInt().toChar()
+            while (index.get(0) != 0) {
+                map.put(chr, index.get(0))
+                chr = FT_Get_Next_Char(face, chr.code.toLong(), index).toInt().toChar()
             }
         }
-        return result
+        return map.build()
     }
 
     override fun close() {

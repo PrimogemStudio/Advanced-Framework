@@ -50,7 +50,7 @@ fun main() {
             g as Graphics2D
             val stroke = BasicStroke(0.1f)
             g.stroke = stroke
-            g.color = Color.RED
+            g.color = Color.CYAN
 
             val sr = Vector2f(s1).mul(400 / s1.y)
             val st = Vector2f(200f, 300f)
@@ -119,7 +119,7 @@ fun main() {
             val sr2 = Vector2f(s2).mul(100 / s2.y)
             val st2 = Vector2f(0f, 100f)
 
-            g.color = Color.RED
+            g.color = Color.CYAN
             g.fillRect(st2.x.toInt(), st2.y.toInt(), sr2.x.toInt(), sr2.y.toInt())
 
             g.color = Color.BLACK
