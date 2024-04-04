@@ -5,16 +5,17 @@ import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Matrix
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
+import java.io.Closeable
 import java.io.InputStream
 import java.nio.ByteBuffer
 
-class FreeTypeFont {
+class FreeTypeFont: Closeable {
     companion object {
-        val multiplier = 65536L
+        const val multiplier = 65536L
     }
     var face: FT_Face?
+    var pLib: Long = 0L
     constructor(`in`: InputStream) {
-        var pLib: Long
         var pFace: Long
         MemoryStack.stackPush().use { stack ->
             val ptrBuff = stack.mallocPointer(1)
@@ -32,7 +33,6 @@ class FreeTypeFont {
         initFontState()
     }
     constructor(path: String) {
-        var pLib: Long
         var pFace: Long
         MemoryStack.stackPush().use { stack ->
             val ptrBuff = stack.mallocPointer(1)
@@ -64,5 +64,23 @@ class FreeTypeFont {
                 .x(0L)
                 .y(0L)
         )
+    }
+
+    fun getAllChars(): List<Long> {
+        val result = mutableListOf<Long>()
+        MemoryStack.stackPush().use {
+            val s = it.mallocInt(1)
+            var l = FT_Get_First_Char(face!!, s)
+            while (s.get(0) != 0) {
+                result.add(l)
+                l = FT_Get_Next_Char(face!!, l, s)
+            }
+        }
+        return result
+    }
+
+    override fun close() {
+        FT_Done_Face(face!!)
+        FT_Done_FreeType(pLib)
     }
 }
