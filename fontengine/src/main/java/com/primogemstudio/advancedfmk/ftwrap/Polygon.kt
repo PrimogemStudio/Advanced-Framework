@@ -41,7 +41,9 @@ data class Polygon(
 
             if (cond1 && cond2) {
                 r.add(arrayOf(cpy[i], cpy[j], cpy[k]))
-                cpy.removeAt(j)
+                for (t in j ..< s - 1) {
+                    cpy[t] = cpy[t + 1]
+                }
 
                 s--
                 i = 0
