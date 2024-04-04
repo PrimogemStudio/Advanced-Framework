@@ -22,21 +22,30 @@ inline fun <T> timed(func: () -> T): T {
 fun main() {
     val fnt = FreeTypeFont("/usr/share/fonts/StarRailFont.ttf")
     var te = 0
-    /*timed {
+    timed {
         fnt.getAllChars().forEach {
             te += fnt.fetchGlyphOutline(it).size
         }
-    }*/
+    }
+    println("glyphs: ${fnt.getAllChars().size}")
 
-    val oplist = timed { fnt.fetchGlyphOutline('我'.code.toLong()) }
+    val oplist = fnt.fetchGlyphOutline('我'.code.toLong())
+    val oplist2 = fnt.fetchGlyphOutline('i'.code.toLong())
 
     fnt.close()
 
     oplist.forEach {
-        it.target.mul(10f)
-        it.control1?.mul(10f)
-        it.control2?.mul(10f)
+        it.target.mul(40f)
+        it.control1?.mul(40f)
+        it.control2?.mul(40f)
     }
+    oplist2.forEach {
+        it.target.mul(40f)
+        it.control1?.mul(40f)
+        it.control2?.mul(40f)
+    }
+    val r = oplist.split(30)
+    val r2 = oplist2.split(30)
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -50,7 +59,7 @@ fun main() {
             g.color = Color.BLACK
             g.translate(400.0, 400.0)
 
-            var pos = Vector2f()
+            /*var pos = Vector2f()
             val pri = 100
             oplist.forEach {
                 when (it.type) {
@@ -72,6 +81,24 @@ fun main() {
                     }
                 }
                 pos = Vector2f(it.target.x, it.target.y)
+            }*/
+
+            r.forEach {
+                for (i in 0 ..< it.vertices.size) {
+                    val a = it.vertices[i]
+                    val b = it.vertices[(i + 1) % it.vertices.size]
+
+                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                }
+            }
+
+            r2.forEach {
+                for (i in 0 ..< it.vertices.size) {
+                    val a = it.vertices[i]
+                    val b = it.vertices[(i + 1) % it.vertices.size]
+
+                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                }
             }
         }
     })

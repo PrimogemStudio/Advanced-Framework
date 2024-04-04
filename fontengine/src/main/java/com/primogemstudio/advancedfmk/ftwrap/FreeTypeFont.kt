@@ -129,8 +129,8 @@ class FreeTypeFont: Closeable {
         FT_Done_FreeType(pLib)
     }
 
-    fun fetchGlyphOutline(charcode: Long): List<SVGOperation> {
-        val target = mutableListOf<SVGOperation>()
+    fun fetchGlyphOutline(charcode: Long): SVGQueue {
+        val target = SVGQueue()
         val glyphIndex = FT_Get_Char_Index(face!!, charcode)
         FT_Load_Glyph(face!!, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val outline = face!!.glyph()?.outline()!!
