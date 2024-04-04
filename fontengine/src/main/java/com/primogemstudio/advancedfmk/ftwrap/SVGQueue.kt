@@ -7,6 +7,10 @@ import java.util.Vector
 
 class SVGQueue: Vector<SVGOperation>() {
     fun split(precision: Int): List<Polygon> {
+        fun MutableList<Vector2f>.addN(d: Vector2f) {
+            if (isEmpty()) add(d)
+            if (get(size - 1) != d) add(d)
+        }
         val polygons = mutableListOf<Polygon>()
 
         val vertices = mutableListOf<Vector2f>()
@@ -21,19 +25,19 @@ class SVGQueue: Vector<SVGOperation>() {
                     if (trig) spl()
                     else trig = true
 
-                    vertices.add(it.target)
+                    vertices.addN(it.target)
                 }
-                SVGOperation.OpType.LINE -> vertices.add(it.target)
+                SVGOperation.OpType.LINE -> vertices.addN(it.target)
                 SVGOperation.OpType.CONIC -> {
                     val pos = vertices[vertices.size - 1]
                     for (i in 0 ..< precision) {
-                        vertices.add(conic(pos, it.control1!!, it.target, i.toFloat() / precision))
+                        vertices.addN(conic(pos, it.control1!!, it.target, i.toFloat() / precision))
                     }
                 }
                 SVGOperation.OpType.CUBIC -> {
                     val pos = vertices[vertices.size - 1]
                     for (i in 0 ..< precision) {
-                        vertices.add(cubic(pos, it.control1!!, it.control2!!, it.target, i.toFloat() / precision))
+                        vertices.addN(cubic(pos, it.control1!!, it.control2!!, it.target, i.toFloat() / precision))
                     }
                 }
             }
