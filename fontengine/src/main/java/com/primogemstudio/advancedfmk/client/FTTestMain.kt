@@ -40,7 +40,7 @@ fun main() {
     val r = oplist.split(30)
     val r2 = oplist2.split(30)
 
-    val rb = r[1].toTriangles()
+    val rb = r[2].toTriangles()
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -54,7 +54,7 @@ fun main() {
             g.color = Color.RED
             // g.translate(400.0, 400.0)
 
-            val sr = Vector2f(s1).mul(100 / s1.y)
+            val sr = Vector2f(s1).mul(400 / s1.y)
             val st = Vector2f(200f, 300f)
 
             g.fillRect(st.x.toInt(), st.y.toInt(), sr.x.toInt(), sr.y.toInt())
