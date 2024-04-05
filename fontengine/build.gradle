@@ -53,6 +53,7 @@ dependencies {
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    api implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2")
 }
 
 test {

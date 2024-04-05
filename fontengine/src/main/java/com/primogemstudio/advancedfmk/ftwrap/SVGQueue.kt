@@ -6,7 +6,7 @@ import org.joml.Vector2f
 import java.util.*
 
 class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
-    fun split(precision: Int): MultiPolygon {
+    fun toVertices(precision: Int): MultiPolygon {
         fun MutableList<Vector2f>.addN(d: Vector2f) {
             if (isEmpty()) add(d)
             if (get(size - 1) != d) add(d)
@@ -86,6 +86,18 @@ class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
     }
 }
 
-class MultiPolygon(private val whscale: Float) : Vector<Polygon>() {
-    fun bake(): FreeTypeGlyph = FreeTypeGlyph(whscale, map { it.toTriangles() }.flatten())
+class MultiPolygon(private val whscale: Float): Vector<Polygon>() {
+    fun bake(): FreeTypeGlyph {
+        val vertices = mutableListOf<Vector2f>()
+        val indices = mutableListOf<Int>()
+        var base = 0
+
+        forEach {
+            vertices.addAll(it.vertices)
+            indices.addAll(it.toTriangles().map { it + base })
+            base = vertices.size
+        }
+
+        return FreeTypeGlyph(whscale, vertices, indices)
+    }
 }
