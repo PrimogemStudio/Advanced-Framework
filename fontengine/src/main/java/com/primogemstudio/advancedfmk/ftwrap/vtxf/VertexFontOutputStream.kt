@@ -9,7 +9,7 @@ import java.io.DataOutputStream
 import java.io.OutputStream
 import java.lang.Thread.sleep
 
-class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont) : DataOutputStream(out) {
+class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) : DataOutputStream(out) {
     @OptIn(DelicateCoroutinesApi::class)
     fun write() {
         writeUTF("VTXF")

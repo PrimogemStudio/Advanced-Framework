@@ -1,8 +1,10 @@
 package com.primogemstudio.advancedfmk.util
 
 import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.zip.Deflater
+import java.util.zip.DeflaterOutputStream
 import java.util.zip.Inflater
 
 object Compressor {
@@ -34,6 +36,10 @@ object Compressor {
         }
         bo.close()
         return bo.toByteArray()
+    }
+
+    fun encode(output: OutputStream, level: Int): DeflaterOutputStream {
+        return DeflaterOutputStream(output, Deflater(level))
     }
 
     @Suppress("DuplicatedCode")
