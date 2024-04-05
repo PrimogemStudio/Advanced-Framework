@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.client
 
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
+import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
 import java.awt.BasicStroke
 import java.awt.Color
@@ -11,11 +12,13 @@ import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
 
-inline fun <T> timed(func: () -> T): T {
+val LOGGER = LogManager.getLogger("FontGlyphViewer")
+
+inline fun <T> timed(a: Any, func: () -> T): T {
     val start = System.currentTimeMillis()
     val t = func()
     val end = System.currentTimeMillis()
-    println("time passed: ${end - start} ms")
+    LOGGER.info("time passed: ${end - start} ms ($a)")
     return t
 }
 
@@ -30,11 +33,11 @@ fun main() {
 
     fnt.close()
 
-    val r = timed { plist.split(50) }
-    val r2 = timed { plist2.split(50) }
+    val r = timed("Split ascii char") { plist.split(50) }
+    val r2 = timed("Split unicode char") { plist2.split(50) }
 
-    val tri2 = timed { r.map { it.toTriangles() }.flatten() }
-    val tri = timed { r2.map { it.toTriangles() }.flatten() }
+    val tri2 = timed("Triangulate ascii char") { r.map { it.toTriangles() }.flatten() }
+    val tri = timed("Triangulate unicode char") { r2.map { it.toTriangles() }.flatten() }
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -43,7 +46,7 @@ fun main() {
     frame.add(object : JPanel() {
         override fun paint(g: Graphics?) {
             g as Graphics2D
-            val stroke = BasicStroke(0.1f)
+            val stroke = BasicStroke(0.001f)
             g.stroke = stroke
             g.color = Color.CYAN
 
@@ -63,7 +66,7 @@ fun main() {
             }
 
             val sr2 = Vector2f(s2 * 400, 400f)
-            val st2 = Vector2f(0f, 100f)
+            val st2 = Vector2f(0f, 0f)
 
             g.color = Color.CYAN
             g.fillRect(st2.x.toInt(), st2.y.toInt(), sr2.x.toInt(), sr2.y.toInt())
