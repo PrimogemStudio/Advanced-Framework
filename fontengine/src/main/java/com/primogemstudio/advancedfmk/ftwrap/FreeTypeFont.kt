@@ -138,4 +138,8 @@ class FreeTypeFont : Closeable {
 
         return Vector2f(i26p6tof(metrics.width().toInt()), i26p6tof(metrics.height().toInt()))
     }
+
+    fun fetchGlyphBorderf(chr: Long): Float {
+        return fetchGlyphBorder(chr).let { it.x / it.y }
+    }
 }

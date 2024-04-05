@@ -23,18 +23,18 @@ fun main() {
     val fnt =
         FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
 
-    val plist = fnt.fetchGlyphOutline('间'.code.toLong())
-    val plist2 = fnt.fetchGlyphOutline('j'.code.toLong())
-    val s1 = fnt.fetchGlyphBorder('间'.code.toLong())
-    val s2 = fnt.fetchGlyphBorder('j'.code.toLong())
+    val plist = fnt.fetchGlyphOutline('o'.code.toLong())
+    val plist2 = fnt.fetchGlyphOutline('间'.code.toLong())
+    val s1 = fnt.fetchGlyphBorderf('o'.code.toLong())
+    val s2 = fnt.fetchGlyphBorderf('间'.code.toLong())
 
     fnt.close()
 
-    val r = timed { plist.split(10) }
-    val r2 = timed { plist2.split(10) }
+    val r = timed { plist.split(50) }
+    val r2 = timed { plist2.split(50) }
 
-    val tri2 = timed { r.map { it.toTriangles() } }
-    val tri = timed { r2.map { it.toTriangles() } }
+    val tri2 = timed { r.map { it.toTriangles() }.flatten() }
+    val tri = timed { r2.map { it.toTriangles() }.flatten() }
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -47,48 +47,36 @@ fun main() {
             g.stroke = stroke
             g.color = Color.CYAN
 
-            val sr = Vector2f(s1).mul(400 / s1.y)
-            val st = Vector2f(200f, 300f)
+            val sr = Vector2f(s1 * 400, 400f)
+            val st = Vector2f(400f, 400f)
 
             g.fillRect(st.x.toInt(), st.y.toInt(), sr.x.toInt(), sr.y.toInt())
 
             g.color = Color.BLACK
-            tri2.forEach { t ->
-                t.forEach {
-                    val a = Vector2f(sr).mul(it[0]).add(st)
-                    val b = Vector2f(sr).mul(it[1]).add(st)
-                    val c = Vector2f(sr).mul(it[2]).add(st)
-                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                    g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                    g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-                }
+            tri2.forEach {
+                val a = Vector2f(sr).mul(it[0]).add(st)
+                val b = Vector2f(sr).mul(it[1]).add(st)
+                val c = Vector2f(sr).mul(it[2]).add(st)
+                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
+                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
             }
 
-            val sr2 = Vector2f(s2).mul(400 / s2.y)
+            val sr2 = Vector2f(s2 * 400, 400f)
             val st2 = Vector2f(0f, 100f)
 
             g.color = Color.CYAN
             g.fillRect(st2.x.toInt(), st2.y.toInt(), sr2.x.toInt(), sr2.y.toInt())
 
             g.color = Color.BLACK
-            /*r2.forEach {
-                for (i in 0 until it.vertices.size) {
-                    val a = Vector2f(sr2).mul(it.vertices[i]).add(st2)
-                    val b = Vector2f(sr2).mul(it.vertices[(i + 1) % it.vertices.size]).add(st2)
 
-                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                }
-            }*/
-
-            tri.forEach { t ->
-                t.forEach {
-                    val a = Vector2f(sr2).mul(it[0]).add(st2)
-                    val b = Vector2f(sr2).mul(it[1]).add(st2)
-                    val c = Vector2f(sr2).mul(it[2]).add(st2)
-                    g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
-                    g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
-                    g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
-                }
+            tri.forEach {
+                val a = Vector2f(sr2).mul(it[0]).add(st2)
+                val b = Vector2f(sr2).mul(it[1]).add(st2)
+                val c = Vector2f(sr2).mul(it[2]).add(st2)
+                g.drawLine(a.x.toInt(), a.y.toInt(), b.x.toInt(), b.y.toInt())
+                g.drawLine(a.x.toInt(), a.y.toInt(), c.x.toInt(), c.y.toInt())
+                g.drawLine(c.x.toInt(), c.y.toInt(), b.x.toInt(), b.y.toInt())
             }
         }
     })

@@ -16,7 +16,6 @@ data class Polygon(
             holeSize -= holes[i].vertices.size
             arr.add(vertices.size - holeSize - 0)
         }
-        println(arr)
 
         val re = EarCut.earcut(vertices.flatMap { listOf(it.x, it.y) }.toFloatArray(), if (holes.isNotEmpty()) arr.toIntArray() else IntArray(0), 2)
         for (i in 0 ..< re.size / 3) {
