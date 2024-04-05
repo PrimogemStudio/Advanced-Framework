@@ -28,7 +28,7 @@ inline fun <T> timed(a: Any, func: () -> T): T {
 
 fun main() {
     val fnt =
-        FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
+        FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf").readAllBytes())
 
     val out = VertexFontOutputStream(Files.newOutputStream(Path.of("/mnt/StarRailFont.vtxf")), fnt)
     timed("Process ttf and write") { out.write() }
