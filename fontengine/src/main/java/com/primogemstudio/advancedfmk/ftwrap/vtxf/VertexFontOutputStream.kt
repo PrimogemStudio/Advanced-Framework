@@ -1,17 +1,15 @@
 package com.primogemstudio.advancedfmk.ftwrap.vtxf
 
+import com.primogemstudio.advancedfmk.client.LOGGER
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeGlyph
+import com.primogemstudio.advancedfmk.ftwrap.SVGQueue
 import kotlinx.coroutines.*
 import java.io.DataOutputStream
 import java.io.OutputStream
-import com.primogemstudio.advancedfmk.client.LOGGER
-import com.primogemstudio.advancedfmk.ftwrap.SVGQueue
 import java.lang.Thread.sleep
-import java.nio.ByteBuffer
-import java.nio.FloatBuffer
 
-class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont): DataOutputStream(out) {
+class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont) : DataOutputStream(out) {
     @OptIn(DelicateCoroutinesApi::class)
     fun write() {
         writeUTF("VTXF")
@@ -26,21 +24,20 @@ class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont): DataOutp
             indeterminate[it] = ttf.fetchGlyphOutline(it.code.toLong())
         }
 
-
         runBlocking {
             val jobs = mutableListOf<Job>()
             indeterminate.forEach { (t, u) ->
-                jobs.add(
-                    GlobalScope.launch(context = Dispatchers.IO) {
-                        map[t] = u.toVertices(25).bake()
-                        le++
-                    }
-                )
+                jobs.add(GlobalScope.launch(context = Dispatchers.IO) {
+                    map[t] = u.toVertices(25).bake()
+                    le++
+                })
             }
-            jobs.forEach { while (!it.isCompleted) {
-                sleep(1000)
-                LOGGER.info("${le.toFloat() / l.toFloat() * 100} % complete")
-            } }
+            jobs.forEach {
+                while (!it.isCompleted) {
+                    sleep(1000)
+                    LOGGER.info("${le.toFloat() / l.toFloat() * 100} % complete")
+                }
+            }
         }
 
         le = 0

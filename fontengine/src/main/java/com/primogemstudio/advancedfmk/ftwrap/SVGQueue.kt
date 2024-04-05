@@ -86,7 +86,7 @@ class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
     }
 }
 
-class MultiPolygon(private val whscale: Float): Vector<Polygon>() {
+class MultiPolygon(private val whscale: Float) : Vector<Polygon>() {
     fun bake(): FreeTypeGlyph {
         val vertices = mutableListOf<Vector2f>()
         val indices = mutableListOf<Int>()
