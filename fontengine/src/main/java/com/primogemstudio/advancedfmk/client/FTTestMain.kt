@@ -1,13 +1,14 @@
 package com.primogemstudio.advancedfmk.client
 
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
+import com.primogemstudio.advancedfmk.ftwrap.FreeTypeLibrary
+import com.primogemstudio.advancedfmk.util.Compressor
 import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
-import java.io.FileInputStream
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
@@ -22,17 +23,17 @@ inline fun <T> timed(a: Any, func: () -> T): T {
     return t
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun main() {
-    val fnt =
-        FreeTypeFont(FileInputStream("/usr/share/fonts/MonacoLigaturizedNerdFont-Regular.ttf"))
+    val fnt = FreeTypeFont(
+        Compressor.decode(
+            FreeTypeLibrary.javaClass.getResourceAsStream("/star_rail.res")!!.readAllBytes()
+        )
+    )
 
     val plist = fnt.fetchGlyphOutline('o'.code.toLong())
     val plist2 = fnt.fetchGlyphOutline('蘒'.code.toLong())
     val s1 = fnt.fetchGlyphBorderF('o'.code.toLong())
     val s2 = fnt.fetchGlyphBorderF('蘒'.code.toLong())
-    // fnt.getAllChars().forEach { t, u -> println("$t -> 0x${Integer.toHexString(u)}") }
-    println(fnt.getAllChars())
 
     fnt.close()
 

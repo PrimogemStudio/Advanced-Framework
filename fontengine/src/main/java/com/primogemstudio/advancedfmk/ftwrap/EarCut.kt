@@ -8,13 +8,6 @@ import kotlin.math.min
 
 class EarCut {
     internal class Node(var i: Int, var x: Float, var y: Float) {
-        // vertex index in coordinates array
-
-        // vertex coordinates
-
-        // previous and next vertex nodes in a polygon ring
-
-        // z-order curve value
         var z: Float = -1f
         var steiner: Boolean = false
         var prev: Node? = null
@@ -42,7 +35,6 @@ class EarCut {
 
             if (hasHoles) outerNode = eliminateHoles(data, holeIndices, outerNode, dim)
 
-            // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
             if (data.size > 80 * dim) {
                 maxX = data[0]
                 minX = maxX
@@ -60,7 +52,6 @@ class EarCut {
                     i += dim
                 }
 
-                // minX, minY and invSize are later used to transform coords into integers for z-order calculation
                 invSize = max((maxX - minX).toDouble(), (maxY - minY).toDouble()).toFloat()
                 invSize = if (invSize != 0f) (1 / invSize) else 0f
             }
@@ -70,7 +61,6 @@ class EarCut {
             return triangles
         }
 
-        // create a circular doubly linked list from polygon points in the specified winding order
         private fun linkedList(data: FloatArray, start: Int, end: Int, dim: Int, clockwise: Boolean): Node? {
             var i: Int
             var last: Node? = null
@@ -97,7 +87,6 @@ class EarCut {
             return last
         }
 
-        // eliminate collinear or duplicate points
         private fun filterPoints(start: Node?, endI: Node?): Node? {
             var end = endI
             if (start == null) return null
@@ -122,39 +111,28 @@ class EarCut {
             return end
         }
 
-        // main ear slicing loop which triangulates a polygon (given as a linked list)
         private fun earcutLinked(
-            earI: Node?,
-            triangles: MutableList<Int>,
-            dim: Int,
-            minX: Float,
-            minY: Float,
-            invSize: Float,
-            pass: Int
+            earI: Node?, triangles: MutableList<Int>, dim: Int, minX: Float, minY: Float, invSize: Float, pass: Int
         ) {
-            var ear: Node = earI?: return
+            var ear: Node = earI ?: return
 
-            // interlink polygon nodes in z-order
             if (pass == 0 && invSize != 0f) indexCurve(ear, minX, minY, invSize)
 
             var stop = ear
             var prev: Node?
             var next: Node?
 
-            // iterate through ears, slicing them one by one
             while (ear.prev !== ear.next) {
                 prev = ear.prev
                 next = ear.next
 
                 if (if (invSize != 0f) isEarHashed(ear, minX, minY, invSize) else isEar(ear)) {
-                    // cut off the triangle
                     triangles.add(prev!!.i / dim)
                     triangles.add(ear.i / dim)
                     triangles.add(next!!.i / dim)
 
                     removeNode(ear)
 
-                    // skipping the next vertex leads to less sliver triangles
                     ear = next.next!!
                     stop = next.next!!
 
@@ -163,45 +141,38 @@ class EarCut {
 
                 ear = next!!
 
-                // if we looped through the whole remaining polygon and can't find any more ears
                 if (ear === stop) {
-                    // try filtering points and slicing again
                     when (pass) {
                         0 -> {
                             earcutLinked(filterPoints(ear, null), triangles, dim, minX, minY, invSize, 1)
-
-                            // if this didn't work, try curing all small self-intersections locally
                         }
+
                         1 -> {
                             ear = cureLocalIntersections(filterPoints(ear, null), triangles, dim)!!
                             earcutLinked(ear, triangles, dim, minX, minY, invSize, 2)
-
-                            // as a last resort, try splitting the remaining polygon into two
                         }
+
                         2 -> {
                             splitEarcut(ear, triangles, dim, minX, minY, invSize)
                         }
                     }
-
                     break
                 }
             }
         }
 
-        // check whether a polygon node forms a valid ear with adjacent nodes
         private fun isEar(ear: Node?): Boolean {
             val a = ear!!.prev
             val c = ear.next
 
-            if (area(a, ear, c) >= 0) return false // reflex, can't be an ear
+            if (area(a, ear, c) >= 0) return false
 
-
-            // now make sure we don't have other points inside the potential ear
             var p = ear.next!!.next
 
             while (p !== ear.prev) {
-                if (pointInTriangle(a!!.x, a.y, ear.x, ear.y, c!!.x, c.y, p!!.x, p.y) &&
-                    area(p.prev, p, p.next) >= 0
+                if (pointInTriangle(a!!.x, a.y, ear.x, ear.y, c!!.x, c.y, p!!.x, p.y) && area(
+                        p.prev, p, p.next
+                    ) >= 0
                 ) return false
                 p = p.next
             }
@@ -213,82 +184,44 @@ class EarCut {
             val a = ear!!.prev
             val c = ear.next
 
-            if (area(a, ear, c) >= 0) return false // reflex, can't be an ear
+            if (area(a, ear, c) >= 0) return false
 
-
-            // triangle bbox; min & max are calculated like this for speed
             val minTX = if (a!!.x < ear.x) (if (a.x < c!!.x) a.x else c.x) else (if (ear.x < c!!.x) ear.x else c.x)
             val minTY = if (a.y < ear.y) (if (a.y < c.y) a.y else c.y) else (if (ear.y < c.y) ear.y else c.y)
             val maxTX = if (a.x > ear.x) (if (a.x > c.x) a.x else c.x) else (if (ear.x > c.x) ear.x else c.x)
             val maxTY = if (a.y > ear.y) (if (a.y > c.y) a.y else c.y) else (if (ear.y > c.y) ear.y else c.y)
 
-            // z-order range for the current triangle bbox;
             val minZ = zOrder(minTX, minTY, minX, minY, invSize)
             val maxZ = zOrder(maxTX, maxTY, minX, minY, invSize)
 
             var p = ear.prevZ
             var n = ear.nextZ
 
-            // look for points inside the triangle in both directions
             while (p != null && p.z >= minZ && n != null && n.z <= maxZ) {
-                if (p !== ear.prev && p !== ear.next &&
-                    pointInTriangle(
-                        a.x,
-                        a.y,
-                        ear.x,
-                        ear.y,
-                        c.x,
-                        c.y,
-                        p.x,
-                        p.y
+                if (p !== ear.prev && p !== ear.next && pointInTriangle(
+                        a.x, a.y, ear.x, ear.y, c.x, c.y, p.x, p.y
                     ) && area(p.prev, p, p.next) >= 0
                 ) return false
                 p = p.prevZ
 
-                if (n !== ear.prev && n !== ear.next &&
-                    pointInTriangle(
-                        a.x,
-                        a.y,
-                        ear.x,
-                        ear.y,
-                        c.x,
-                        c.y,
-                        n.x,
-                        n.y
+                if (n !== ear.prev && n !== ear.next && pointInTriangle(
+                        a.x, a.y, ear.x, ear.y, c.x, c.y, n.x, n.y
                     ) && area(n.prev, n, n.next) >= 0
                 ) return false
                 n = n.nextZ
             }
 
-            // look for remaining points in decreasing z-order
             while (p != null && p.z >= minZ) {
-                if (p !== ear.prev && p !== ear.next &&
-                    pointInTriangle(
-                        a.x,
-                        a.y,
-                        ear.x,
-                        ear.y,
-                        c.x,
-                        c.y,
-                        p.x,
-                        p.y
+                if (p !== ear.prev && p !== ear.next && pointInTriangle(
+                        a.x, a.y, ear.x, ear.y, c.x, c.y, p.x, p.y
                     ) && area(p.prev, p, p.next) >= 0
                 ) return false
                 p = p.prevZ
             }
 
-            // look for remaining points in increasing z-order
             while (n != null && n.z <= maxZ) {
-                if (n !== ear.prev && n !== ear.next &&
-                    pointInTriangle(
-                        a.x,
-                        a.y,
-                        ear.x,
-                        ear.y,
-                        c.x,
-                        c.y,
-                        n.x,
-                        n.y
+                if (n !== ear.prev && n !== ear.next && pointInTriangle(
+                        a.x, a.y, ear.x, ear.y, c.x, c.y, n.x, n.y
                     ) && area(n.prev, n, n.next) >= 0
                 ) return false
                 n = n.nextZ
@@ -297,7 +230,6 @@ class EarCut {
             return true
         }
 
-        // go through all polygon nodes and cure small local self-intersections
         private fun cureLocalIntersections(startI: Node?, triangles: MutableList<Int>, dim: Int): Node? {
             var start = startI
             var p = start
@@ -310,7 +242,6 @@ class EarCut {
                     triangles.add(p.i / dim)
                     triangles.add(b!!.i / dim)
 
-                    // remove two nodes involved
                     removeNode(p)
                     removeNode(p.next)
 
@@ -323,29 +254,17 @@ class EarCut {
             return filterPoints(p, null)
         }
 
-        // try splitting polygon into two and triangulate them independently
         private fun splitEarcut(
-            start: Node?,
-            triangles: MutableList<Int>,
-            dim: Int,
-            minX: Float,
-            minY: Float,
-            invSize: Float
+            start: Node?, triangles: MutableList<Int>, dim: Int, minX: Float, minY: Float, invSize: Float
         ) {
-            // look for a valid diagonal that divides the polygon into two
             var a = start
             do {
                 var b = a!!.next!!.next
                 while (b !== a!!.prev) {
                     if (a!!.i != b!!.i && isValidDiagonal(a, b)) {
-                        // split the polygon in two by the diagonal
                         var c: Node? = splitPolygon(a, b)
-
-                        // filter collinear points around the cuts
                         a = filterPoints(a, a.next)
                         c = filterPoints(c, c!!.next)
-
-                        // run earcut on each half
                         earcutLinked(a, triangles, dim, minX, minY, invSize, 0)
                         earcutLinked(c, triangles, dim, minX, minY, invSize, 0)
                         return
@@ -356,7 +275,6 @@ class EarCut {
             } while (a !== start)
         }
 
-        // link every hole into the outer loop, producing a single-ring polygon without holes
         private fun eliminateHoles(data: FloatArray, holeIndices: IntArray?, outerNodeI: Node, dim: Int): Node {
             var outerNode: Node? = outerNodeI
             val queue: MutableList<Node?> = ArrayList()
@@ -377,7 +295,6 @@ class EarCut {
 
             Collections.sort(queue, compareX())
 
-            // process holes from left to right
             i = 0
             while (i < queue.size) {
                 eliminateHole(queue[i], outerNode)
@@ -392,20 +309,17 @@ class EarCut {
             return Comparator { a, b -> a!!.x.compareTo(b!!.x) }
         }
 
-        // find a bridge between vertices that connects hole with an outer ring and link it
         private fun eliminateHole(hole: Node?, outerNodeI: Node?) {
             var outerNode = outerNodeI
             outerNode = findHoleBridge(hole, outerNode)
             if (outerNode != null) {
                 val b = splitPolygon(outerNode, hole)
 
-                // filter collinear points around the cuts
                 filterPoints(outerNode, outerNode.next)
                 filterPoints(b, b.next)
             }
         }
 
-        // David Eberly's algorithm for finding a bridge between hole and outer polygon
         private fun findHoleBridge(hole: Node?, outerNode: Node?): Node? {
             var p = outerNode
             val hx = hole!!.x
@@ -413,8 +327,6 @@ class EarCut {
             var qx = -Float.MAX_VALUE
             var m: Node? = null
 
-            // find a segment intersected by a ray from the hole's leftmost point to the left;
-            // segment's endpoint with lesser x will be potential connection point
             do {
                 if (hy <= p!!.y && hy >= p.next!!.y && p.next!!.y != p.y) {
                     val x = p.x + (hy - p.y) * (p.next!!.x - p.x) / (p.next!!.y - p.y)
@@ -432,12 +344,8 @@ class EarCut {
 
             if (m == null) return null
 
-            if (hx == qx) return m // hole touches outer segment; pick leftmost endpoint
+            if (hx == qx) return m
 
-
-            // look for points inside the triangle of hole point, segment intersection and endpoint;
-            // if there are no points found, we have a valid connection;
-            // otherwise choose the point of the minimum angle with the ray as connection point
             val stop: Node = m
             val mx = m.x
             val my = m.y
@@ -447,14 +355,17 @@ class EarCut {
             p = m
 
             do {
-                if (hx >= p!!.x && p.x >= mx && hx != p.x &&
-                    pointInTriangle(if (hy < my) hx else qx, hy, mx, my, if (hy < my) qx else hx, hy, p.x, p.y)
+                if (hx >= p!!.x && p.x >= mx && hx != p.x && pointInTriangle(
+                        if (hy < my) hx else qx, hy, mx, my, if (hy < my) qx else hx, hy, p.x, p.y
+                    )
                 ) {
-                    tan =
-                        (abs((hy - p.y).toDouble()) / (hx - p.x)).toFloat() // tangential
+                    tan = (abs((hy - p.y).toDouble()) / (hx - p.x)).toFloat()
 
-                    if (locallyInside(p, hole) &&
-                        (tan < tanMin || (tan == tanMin && (p.x > m!!.x || (p.x == m.x && sectorContainsSector(m, p)))))
+                    if (locallyInside(
+                            p, hole
+                        ) && (tan < tanMin || (tan == tanMin && (p.x > m!!.x || (p.x == m.x && sectorContainsSector(
+                            m, p
+                        )))))
                     ) {
                         m = p
                         tanMin = tan
@@ -467,12 +378,10 @@ class EarCut {
             return m
         }
 
-        // whether sector in vertex m contains sector in vertex p in the same coordinates
         private fun sectorContainsSector(m: Node?, p: Node?): Boolean {
             return area(m!!.prev, m, p!!.prev) < 0 && area(p.next, m, m.next) < 0
         }
 
-        // interlink polygon nodes in z-order
         private fun indexCurve(start: Node, minX: Float, minY: Float, invSize: Float) {
             var p: Node? = start
             do {
@@ -488,8 +397,6 @@ class EarCut {
             sortLinked(p)
         }
 
-        // Simon Tatham's linked list merge sort algorithm
-        // http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.html
         private fun sortLinked(listI: Node?): Node? {
             var list = listI
             var i: Int
@@ -549,9 +456,7 @@ class EarCut {
             return list
         }
 
-        // z-order of a point given coords and inverse of the longer side of data bbox
         private fun zOrder(x0: Float, y0: Float, minX: Float, minY: Float, invSize: Float): Float {
-            // coords are transformed into non-negative 15-bit integer range
             var x = (32767 * (x0 - minX) * invSize).toInt()
             var y = (32767 * (y0 - minY) * invSize).toInt()
 
@@ -568,7 +473,6 @@ class EarCut {
             return (x or (y shl 1)).toFloat()
         }
 
-        // find the leftmost node of a polygon ring
         private fun getLeftmost(start: Node?): Node? {
             var p = start
             var leftmost = start
@@ -580,80 +484,52 @@ class EarCut {
             return leftmost
         }
 
-        // check if a point lies within a convex triangle
         private fun pointInTriangle(
-            ax: Float,
-            ay: Float,
-            bx: Float,
-            by: Float,
-            cx: Float,
-            cy: Float,
-            px: Float,
-            py: Float
+            ax: Float, ay: Float, bx: Float, by: Float, cx: Float, cy: Float, px: Float, py: Float
         ): Boolean {
-            return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && (
-                    (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0) && (
-                    (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0)
+            return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && ((ax - px) * (by - py) - (bx - px) * (ay - py) >= 0) && ((bx - px) * (cy - py) - (cx - px) * (by - py) >= 0)
         }
 
-        // check if a diagonal between two polygon nodes is valid (lies in polygon interior)
         private fun isValidDiagonal(a: Node?, b: Node?): Boolean {
-            return a!!.next!!.i != b!!.i && a.prev!!.i != b.i && !intersectsPolygon(
-                a,
-                b
-            ) &&  // doesn't intersect other edges
-                    (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) &&  // locally visible
-                            (area(a.prev, a, b.prev) != 0f || area(
-                                a,
-                                b.prev,
-                                b
-                            ) != 0f) ||  // does not create opposite-facing sectors
-                            equals(a, b) && area(
-                        a.prev,
-                        a,
-                        a.next
-                    ) > 0 && area(
-                        b.prev, b, b.next
-                    ) > 0) // special zero-length case
+            return a!!.next!!.i != b!!.i && a.prev!!.i != b.i && !intersectsPolygon(a, b) && (locallyInside(
+                a, b
+            ) && locallyInside(b, a) && middleInside(a, b) && (area(a.prev, a, b.prev) != 0f || area(
+                a, b.prev, b
+            ) != 0f) || equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0)
         }
 
-        // signed area of a triangle
         private fun area(p: Node?, q: Node?, r: Node?): Float {
             return (q!!.y - p!!.y) * (r!!.x - q.x) - (q.x - p.x) * (r.y - q.y)
         }
 
-        // check if two points are equal
         private fun equals(p1: Node?, p2: Node?): Boolean {
             return p1!!.x == p2!!.x && p1.y == p2.y
         }
 
-        // check if two segments intersect
         private fun intersects(p1: Node?, q1: Node?, p2: Node?, q2: Node?): Boolean {
             val o1 = sign(area(p1, q1, p2))
             val o2 = sign(area(p1, q1, q2))
             val o3 = sign(area(p2, q2, p1))
             val o4 = sign(area(p2, q2, q1))
 
-            if (o1 != o2 && o3 != o4) return true // general case
+            if (o1 != o2 && o3 != o4) return true
 
 
-            if (o1 == 0 && onSegment(p1, p2, q1)) return true // p1, q1 and p2 are collinear and p2 lies on p1q1
+            if (o1 == 0 && onSegment(p1, p2, q1)) return true
 
-            if (o2 == 0 && onSegment(p1, q2, q1)) return true // p1, q1 and q2 are collinear and q2 lies on p1q1
+            if (o2 == 0 && onSegment(p1, q2, q1)) return true
 
-            if (o3 == 0 && onSegment(p2, p1, q2)) return true // p2, q2 and p1 are collinear and p1 lies on p2q2
+            if (o3 == 0 && onSegment(p2, p1, q2)) return true
 
-            if (o4 == 0 && onSegment(p2, q1, q2)) return true // p2, q2 and q1 are collinear and q1 lies on p2q2
+            if (o4 == 0 && onSegment(p2, q1, q2)) return true
 
 
             return false
         }
 
-        // for collinear points p, q, r, check if point q lies on segment pr
         private fun onSegment(p: Node?, q: Node?, r: Node?): Boolean {
             return q!!.x <= max(
-                p!!.x.toDouble(),
-                r!!.x.toDouble()
+                p!!.x.toDouble(), r!!.x.toDouble()
             ) && q.x >= min(p.x.toDouble(), r.x.toDouble()) && q.y <= max(
                 p.y.toDouble(), r.y.toDouble()
             ) && q.y >= min(p.y.toDouble(), r.y.toDouble())
@@ -663,12 +539,12 @@ class EarCut {
             return if (num > 0) 1 else if (num < 0) -1 else 0
         }
 
-        // check if a polygon diagonal intersects any polygon segments
         private fun intersectsPolygon(a: Node?, b: Node?): Boolean {
             var p = a
             do {
-                if (p!!.i != a!!.i && p.next!!.i != a.i && p.i != b!!.i && p.next!!.i != b.i &&
-                    intersects(p, p.next, a, b)
+                if (p!!.i != a!!.i && p.next!!.i != a.i && p.i != b!!.i && p.next!!.i != b.i && intersects(
+                        p, p.next, a, b
+                    )
                 ) return true
                 p = p.next
             } while (p !== a)
@@ -676,33 +552,26 @@ class EarCut {
             return false
         }
 
-        // check if a polygon diagonal is locally inside the polygon
         private fun locallyInside(a: Node?, b: Node?): Boolean {
             return if (area(a!!.prev, a, a.next) < 0) area(a, b, a.next) >= 0 && area(a, a.prev, b) >= 0 else area(
-                a,
-                b,
-                a.prev
+                a, b, a.prev
             ) < 0 || area(a, a.next, b) < 0
         }
 
-        // check if the middle point of a polygon diagonal is inside the polygon
         private fun middleInside(a: Node?, b: Node?): Boolean {
             var p = a
             var inside = false
             val px = (a!!.x + b!!.x) / 2
             val py = (a.y + b.y) / 2
             do {
-                if (((p!!.y > py) != (p.next!!.y > py)) && (p.next!!.y != p.y) &&
-                    (px < (p.next!!.x - p.x) * (py - p.y) / (p.next!!.y - p.y) + p.x)
-                ) inside = !inside
+                if (((p!!.y > py) != (p.next!!.y > py)) && (p.next!!.y != p.y) && (px < (p.next!!.x - p.x) * (py - p.y) / (p.next!!.y - p.y) + p.x)) inside =
+                    !inside
                 p = p.next
             } while (p !== a)
 
             return inside
         }
 
-        // link two polygon vertices with a bridge; if the vertices belong to the same ring, it splits polygon into two;
-        // if one belongs to the outer ring and another to a hole, it merges it into a single ring
         private fun splitPolygon(a: Node?, b: Node?): Node {
             val a2 = Node(a!!.i, a.x, a.y)
             val b2 = Node(b!!.i, b.x, b.y)
@@ -724,7 +593,6 @@ class EarCut {
             return b2
         }
 
-        // create a node and optionally link it with previous one (in a circular doubly linked list)
         private fun insertNode(i: Int, x: Float, y: Float, last: Node?): Node {
             val p = Node(i, x, y)
 

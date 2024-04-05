@@ -9,7 +9,6 @@ import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import java.io.Closeable
-import java.io.InputStream
 import java.nio.ByteBuffer
 
 fun addrToVec(addr: Long): Vector2f {
@@ -66,12 +65,10 @@ class FreeTypeFont : Closeable {
     private var face: FT_Face
     private var buff: ByteBuffer? = null
 
-    constructor(ins: InputStream) {
-        val br = ins.readAllBytes()
-        ins.close()
-        buff = MemoryUtil.memAlloc(br.size)
-        buff!!.put(br)
-        buff!!.position(0)
+    constructor(data: ByteArray) {
+        buff = MemoryUtil.memAlloc(data.size)
+        buff!!.put(data)
+        buff!!.rewind()
         MemoryStack.stackPush().use { stack ->
             val ptrBuff = stack.mallocPointer(1)
             FT_New_Memory_Face(

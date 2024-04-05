@@ -86,6 +86,6 @@ class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
     }
 }
 
-class MultiPolygon(private val whscale: Float): Vector<Polygon>() {
+class MultiPolygon(private val whscale: Float) : Vector<Polygon>() {
     fun bake(): FreeTypeGlyph = FreeTypeGlyph(whscale, map { it.toTriangles() }.flatten())
 }
