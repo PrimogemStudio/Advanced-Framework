@@ -12,7 +12,7 @@ import java.lang.Thread.sleep
 class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) : DataOutputStream(out) {
     @OptIn(DelicateCoroutinesApi::class)
     fun write() {
-        writeUTF("VTXF")
+        writeShort(0x0307)
         writeByte(0)
 
         var l: Int
@@ -41,6 +41,7 @@ class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) :
         }
 
         le = 0
+        writeInt(l)
         for (a in map.indices) {
             val r = map[a]
             val c = r.first
@@ -57,10 +58,9 @@ class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) :
             glyph.indices.forEach { writeInt(it) }
 
             le++
-            LOGGER.info("$c 0x${Integer.toHexString(c.code)} ${le.toFloat() / l.toFloat() * 100} % complete")
+            if (le % 250 == 0) LOGGER.info("$c 0x${Integer.toHexString(c.code)} ${le.toFloat() / l.toFloat() * 100} % complete")
         }
 
         writeLong(0x20230426 * l.toLong())
-        writeShort(0x0307)
     }
 }
