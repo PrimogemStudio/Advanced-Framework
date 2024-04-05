@@ -17,7 +17,7 @@ class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont) : DataOut
 
         var l: Int
         var le = 0
-        val map = mutableMapOf<Char, FreeTypeGlyph>()
+        val map = mutableListOf<Pair<Char, FreeTypeGlyph>>()
         val indeterminate = mutableMapOf<Char, SVGQueue>()
 
         ttf.getAllChars().apply { l = this.size }.forEach {
@@ -28,7 +28,7 @@ class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont) : DataOut
             val jobs = mutableListOf<Job>()
             indeterminate.forEach { (t, u) ->
                 jobs.add(GlobalScope.launch(context = Dispatchers.IO) {
-                    map[t] = u.toVertices(25).bake()
+                    map.add(Pair(t, u.toVertices(25).bake()))
                     le++
                 })
             }
@@ -41,7 +41,10 @@ class VertexFontOutputStream(out: OutputStream, val ttf: FreeTypeFont) : DataOut
         }
 
         le = 0
-        map.forEach { (c, glyph) ->
+        for (a in map.indices) {
+            val r = map[a]
+            val c = r.first
+            val glyph = r.second
             writeInt(c.code)
             writeFloat(glyph.whscale)
 
