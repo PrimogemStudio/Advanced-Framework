@@ -33,7 +33,7 @@ fun main() {
 
     File("./StarRailFont.vtxf").delete()
     val out = VertexFontOutputStream(
-        GZIPOutputStream(
+        Compressor.encode(
             Files.newOutputStream(Path.of("./StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
         ), fnt
     )
@@ -41,9 +41,7 @@ fun main() {
     out.close()
 
     val i = VertexFontInputStream(
-        GZIPInputStream(
-            Files.newInputStream(Path.of("./StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
-        )
+        Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf")))
     )
     i.parse()
     i.close()

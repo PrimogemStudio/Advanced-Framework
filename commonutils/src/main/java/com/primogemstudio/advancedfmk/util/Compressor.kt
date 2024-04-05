@@ -8,6 +8,7 @@ import java.util.zip.Deflater
 import java.util.zip.DeflaterInputStream
 import java.util.zip.DeflaterOutputStream
 import java.util.zip.Inflater
+import java.util.zip.InflaterInputStream
 
 object Compressor {
     @Suppress("DuplicatedCode")
@@ -44,8 +45,8 @@ object Compressor {
         return DeflaterOutputStream(output, Deflater(level))
     }
 
-    fun decode(input: InputStream, level: Int): DeflaterInputStream {
-        return DeflaterInputStream(input, Deflater(level))
+    fun decode(input: InputStream): InflaterInputStream {
+        return InflaterInputStream(input)
     }
 
     @Suppress("DuplicatedCode")
