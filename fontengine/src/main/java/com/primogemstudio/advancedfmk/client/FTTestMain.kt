@@ -22,22 +22,22 @@ inline fun <T> timed(a: Any, func: () -> T): T {
     return t
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 fun main() {
     val fnt =
-        FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
+        FreeTypeFont(FileInputStream("/usr/share/fonts/MonacoLigaturizedNerdFont-Regular.ttf"))
 
     val plist = fnt.fetchGlyphOutline('o'.code.toLong())
-    val plist2 = fnt.fetchGlyphOutline('间'.code.toLong())
+    val plist2 = fnt.fetchGlyphOutline('蘒'.code.toLong())
     val s1 = fnt.fetchGlyphBorderf('o'.code.toLong())
-    val s2 = fnt.fetchGlyphBorderf('间'.code.toLong())
+    val s2 = fnt.fetchGlyphBorderf('蘒'.code.toLong())
+    // fnt.getAllChars().forEach { t, u -> println("$t -> 0x${Integer.toHexString(u)}") }
+    println(fnt.getAllChars())
 
     fnt.close()
 
-    val r = timed("Split ascii char") { plist.split(50) }
-    val r2 = timed("Split unicode char") { plist2.split(50) }
-
-    val tri2 = timed("Triangulate ascii char") { r.map { it.toTriangles() }.flatten() }
-    val tri = timed("Triangulate unicode char") { r2.map { it.toTriangles() }.flatten() }
+    val r = timed("Split ascii char") { plist.split(50).bake() }
+    val r2 = timed("Split unicode char") { plist2.split(50).bake() }
 
     val frame = JFrame()
     frame.setLocation(200, 200)
@@ -56,7 +56,7 @@ fun main() {
             g.fillRect(st.x.toInt(), st.y.toInt(), sr.x.toInt(), sr.y.toInt())
 
             g.color = Color.BLACK
-            tri2.forEach {
+            r.vertices.forEach {
                 val a = Vector2f(sr).mul(it[0]).add(st)
                 val b = Vector2f(sr).mul(it[1]).add(st)
                 val c = Vector2f(sr).mul(it[2]).add(st)
@@ -73,7 +73,7 @@ fun main() {
 
             g.color = Color.BLACK
 
-            tri.forEach {
+            r2.vertices.forEach {
                 val a = Vector2f(sr2).mul(it[0]).add(st2)
                 val b = Vector2f(sr2).mul(it[1]).add(st2)
                 val c = Vector2f(sr2).mul(it[2]).add(st2)

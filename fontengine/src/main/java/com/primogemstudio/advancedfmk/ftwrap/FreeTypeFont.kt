@@ -96,17 +96,18 @@ class FreeTypeFont : Closeable {
         FT_Set_Pixel_Sizes(face, 0, 12)
     }
 
-    fun getAllChars(): Map<Char, Int> {
-        val map = ImmutableMap.builder<Char, Int>()
+    fun getAllChars(): List<Char> {
+        val map = mutableListOf<Char>()
         MemoryStack.stackPush().use {
             val index = it.mallocInt(1)
             var chr = FT_Get_First_Char(face, index).toInt().toChar()
             while (index.get(0) != 0) {
-                map.put(chr, index.get(0))
+                map.add(chr)
                 chr = FT_Get_Next_Char(face, chr.code.toLong(), index).toInt().toChar()
+                if (map.contains(chr)) break
             }
         }
-        return map.build()
+        return map
     }
 
     override fun close() {

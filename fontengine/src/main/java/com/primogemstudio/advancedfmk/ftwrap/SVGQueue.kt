@@ -6,13 +6,13 @@ import org.joml.Vector2f
 import java.util.*
 
 class SVGQueue : Vector<SVGOperation>() {
-    fun split(precision: Int): List<Polygon> {
+    fun split(precision: Int): MultiPolygon {
         fun MutableList<Vector2f>.addN(d: Vector2f) {
             if (isEmpty()) add(d)
             if (get(size - 1) != d) add(d)
         }
 
-        val polygons = mutableListOf<Polygon>()
+        val polygons = MultiPolygon()
 
         val vertices = mutableListOf<Vector2f>()
         val spl = {
@@ -84,4 +84,8 @@ class SVGQueue : Vector<SVGOperation>() {
 
         return count % 2 == 1
     }
+}
+
+class MultiPolygon: Vector<Polygon>() {
+    fun bake(): FreeTypeGlyph = FreeTypeGlyph(map { it.toTriangles() }.flatten())
 }
