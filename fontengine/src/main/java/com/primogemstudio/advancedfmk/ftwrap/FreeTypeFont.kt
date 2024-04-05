@@ -1,6 +1,5 @@
 package com.primogemstudio.advancedfmk.ftwrap
 
-import com.google.common.collect.ImmutableMap
 import com.primogemstudio.advancedfmk.util.i26p6tof
 import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
@@ -116,12 +115,12 @@ class FreeTypeFont : Closeable {
     }
 
     fun fetchGlyphOutline(chr: Long): SVGQueue {
-        val target = SVGQueue()
         val glyphIndex = FT_Get_Char_Index(face, chr)
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val outline = face.glyph()?.outline()!!
-        FT_Outline_Decompose(outline, functions(target), 1)
         val border = fetchGlyphBorder(chr)
+        val target = SVGQueue(fetchGlyphBorderF(chr))
+        FT_Outline_Decompose(outline, functions(target), 1)
 
         target.forEach {
             it.target.div(border).apply { y = 1 - y }
@@ -140,7 +139,7 @@ class FreeTypeFont : Closeable {
         return Vector2f(i26p6tof(metrics.width().toInt()), i26p6tof(metrics.height().toInt()))
     }
 
-    fun fetchGlyphBorderf(chr: Long): Float {
+    fun fetchGlyphBorderF(chr: Long): Float {
         return fetchGlyphBorder(chr).let { it.x / it.y }
     }
 }

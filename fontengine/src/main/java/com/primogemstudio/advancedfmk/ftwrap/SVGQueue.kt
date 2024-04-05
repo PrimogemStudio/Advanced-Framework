@@ -5,14 +5,14 @@ import com.primogemstudio.advancedfmk.util.cubic
 import org.joml.Vector2f
 import java.util.*
 
-class SVGQueue : Vector<SVGOperation>() {
+class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
     fun split(precision: Int): MultiPolygon {
         fun MutableList<Vector2f>.addN(d: Vector2f) {
             if (isEmpty()) add(d)
             if (get(size - 1) != d) add(d)
         }
 
-        val polygons = MultiPolygon()
+        val polygons = MultiPolygon(whscale)
 
         val vertices = mutableListOf<Vector2f>()
         val spl = {
@@ -86,6 +86,6 @@ class SVGQueue : Vector<SVGOperation>() {
     }
 }
 
-class MultiPolygon: Vector<Polygon>() {
-    fun bake(): FreeTypeGlyph = FreeTypeGlyph(map { it.toTriangles() }.flatten())
+class MultiPolygon(private val whscale: Float): Vector<Polygon>() {
+    fun bake(): FreeTypeGlyph = FreeTypeGlyph(whscale, map { it.toTriangles() }.flatten())
 }

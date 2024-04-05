@@ -29,8 +29,8 @@ fun main() {
 
     val plist = fnt.fetchGlyphOutline('o'.code.toLong())
     val plist2 = fnt.fetchGlyphOutline('蘒'.code.toLong())
-    val s1 = fnt.fetchGlyphBorderf('o'.code.toLong())
-    val s2 = fnt.fetchGlyphBorderf('蘒'.code.toLong())
+    val s1 = fnt.fetchGlyphBorderF('o'.code.toLong())
+    val s2 = fnt.fetchGlyphBorderF('蘒'.code.toLong())
     // fnt.getAllChars().forEach { t, u -> println("$t -> 0x${Integer.toHexString(u)}") }
     println(fnt.getAllChars())
 
