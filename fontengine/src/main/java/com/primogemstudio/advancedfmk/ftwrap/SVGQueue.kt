@@ -68,12 +68,13 @@ class SVGQueue : Vector<SVGOperation>() {
         contained.forEach { (t, u) ->
             t.vertices.addAll(u.vertices)
             polygons.remove(u)
+            t.holes.add(u)
         }
 
         return polygons
     }
 
-    fun isInPoly(point: Vector2f, polygon: Polygon): Boolean {
+    private fun isInPoly(point: Vector2f, polygon: Polygon): Boolean {
         var count = 0
         for (i in polygon.vertices.indices) {
             val p1 = polygon.vertices[i]
@@ -84,15 +85,3 @@ class SVGQueue : Vector<SVGOperation>() {
         return count % 2 == 1
     }
 }
-
-
-
-/*
-count = 0
-    for i in range(len(polygon)):
-        p1 = polygon[i]
-        p2 = polygon[(i + 1) % len(polygon)]
-        if ((p1.y > point.y) != (p2.y > point.y)) and \
-                (point.x < (p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x):
-            count += 1
-    return count % 2 == 1*/

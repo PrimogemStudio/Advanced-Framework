@@ -7,7 +7,6 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.io.FileInputStream
-import java.util.Scanner
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
@@ -24,18 +23,18 @@ fun main() {
     val fnt =
         FreeTypeFont(FileInputStream("/usr/share/fonts/StarRailFont.ttf"))
 
-    val oplist = fnt.fetchGlyphOutline('间'.code.toLong())
-    val oplist2 = fnt.fetchGlyphOutline('a'.code.toLong())
+    val plist = fnt.fetchGlyphOutline('间'.code.toLong())
+    val plist2 = fnt.fetchGlyphOutline('j'.code.toLong())
     val s1 = fnt.fetchGlyphBorder('间'.code.toLong())
-    val s2 = fnt.fetchGlyphBorder('a'.code.toLong())
+    val s2 = fnt.fetchGlyphBorder('j'.code.toLong())
 
     fnt.close()
 
-    val r = oplist.split(30)
-    val r2 = oplist2.split(30)
+    val r = timed { plist.split(10) }
+    val r2 = timed { plist2.split(10) }
 
-    val tri2 = r.map { it.toTriangles() }
-    val tri = r2.map { it.toTriangles() }
+    val tri2 = timed { r.map { it.toTriangles() } }
+    val tri = timed { r2.map { it.toTriangles() } }
 
     val frame = JFrame()
     frame.setLocation(200, 200)
