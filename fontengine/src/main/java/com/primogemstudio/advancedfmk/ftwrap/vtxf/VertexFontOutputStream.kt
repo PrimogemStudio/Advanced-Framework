@@ -18,43 +18,16 @@ class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) :
 
         var l: Int
         var le = 0
-        var lc = 0
-        // val map = mutableListOf<Pair<Char, FreeTypeGlyph>>()
         val indeterminate = mutableMapOf<Char, SVGQueue>()
 
         ttf.getAllChars().apply { l = size }.forEach {
             indeterminate[it] = ttf.fetchGlyphOutline(it.code.toLong())
         }
 
-        /*runBlocking {
-            val jobs = mutableListOf<Job>()
-            indeterminate.forEach { (t, u) ->
-                jobs.add(GlobalScope.launch(context = Dispatchers.IO) {
-                    map.add(Pair(t, u.toVertices(25).bake()))
-                    le++
-                })
-                sleep(1)
-                lc++
-                if (lc % 100 == 0) LOGGER.info("${lc.toFloat() / l.toFloat() * 100} % committed")
-            }
-
-            while (le < l) {
-                val let = mutableListOf<Job>()
-                jobs.forEach {
-                    if (it.isCompleted) let.add(it)
-                }
-                jobs.removeAll(let)
-
-                sleep(1000)
-                LOGGER.info("${le.toFloat() / l.toFloat() * 100} % complete")
-            }
-        }*/
-
-        le = 0
         writeInt(l)
 
         for (a in indeterminate.entries) {
-            val glyph = a.value.toVertices(25).bake()
+            val glyph = a.value.toVertices(15).bake()
             writeInt(a.key.code)
             writeFloat(glyph.whscale)
 

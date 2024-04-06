@@ -21,30 +21,18 @@ class VertexFontInputStream(`in`: InputStream): DataInputStream(`in`) {
             val code = readInt()
             val whscale = readFloat()
 
-            val verticesSize = try {
-                readInt()
-            }
-            catch (e: Exception) {
-                println(i)
-                break
-            }
             val vertices = mutableListOf<Vector2f>()
 
-            for (j in 0 ..< verticesSize) {
-                vertices.add(Vector2f(readFloat(), readFloat()))
-            }
+            for (j in 0 ..< readInt()) vertices.add(Vector2f(readFloat(), readFloat()))
 
-            val indicesSize = readInt()
             val indices = mutableListOf<Int>()
-            if (indicesSize % 3 != 0) throw IllegalStateException("Wrong indices size")
-
-            for (k in 0 ..< indicesSize) {
+            for (k in 0 ..< readInt().apply { if (this % 3 != 0) throw IllegalStateException("Wrong indices size") }) {
                 indices.add(readInt())
             }
 
             map.add(Pair(code.toChar(), FreeTypeGlyph(whscale, vertices, indices)))
             le++
-            if (le % 250 == 0) LOGGER.info("${code.toChar()} 0x${Integer.toHexString(code)} ${le.toFloat() / glyph.toFloat() * 100} % complete")
+            if (le % 500 == 0) LOGGER.info("${code.toChar()} 0x${Integer.toHexString(code)} ${le.toFloat() / glyph.toFloat() * 100} % complete")
         }
         if (readLong() / glyph.toLong() != 0x20230426L) throw IllegalStateException("Wrong file end")
 

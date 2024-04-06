@@ -23,7 +23,7 @@ inline fun <T> timed(a: Any, func: () -> T): T {
 }
 
 fun main() {
-    val fnt = FreeTypeFont(
+    /*val fnt = FreeTypeFont(
         Compressor.decode(
             FreeTypeLibrary.javaClass.getResourceAsStream("/star_rail.res")!!.readAllBytes()
         )
@@ -36,7 +36,7 @@ fun main() {
         ), fnt
     )
     timed("Process ttf and write") { out.write() }
-    out.close()
+    out.close()*/
 
     val i = VertexFontInputStream(
         Compressor.decode(Files.newInputStream(Path.of("/mnt/StarRailFont.vtxf")))
