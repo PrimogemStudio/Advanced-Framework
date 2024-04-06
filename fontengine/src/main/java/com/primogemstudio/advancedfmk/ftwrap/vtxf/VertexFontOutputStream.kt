@@ -12,15 +12,17 @@ import java.lang.Thread.sleep
 class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) : DataOutputStream(out) {
     @OptIn(DelicateCoroutinesApi::class)
     fun write() {
+        writeUTF("VTXF")
         writeShort(0x0307)
         writeByte(0)
 
         var l: Int
         var le = 0
+        var lc = 0
         val map = mutableListOf<Pair<Char, FreeTypeGlyph>>()
         val indeterminate = mutableMapOf<Char, SVGQueue>()
 
-        ttf.getAllChars().apply { l = this.size }.forEach {
+        ttf.getAllChars().apply { l = size }.forEach {
             indeterminate[it] = ttf.fetchGlyphOutline(it.code.toLong())
         }
 
@@ -31,12 +33,14 @@ class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) :
                     map.add(Pair(t, u.toVertices(25).bake()))
                     le++
                 })
+                sleep(1)
+                lc++
+                if (lc % 100 == 0) LOGGER.info("${lc.toFloat() / l.toFloat() * 100} % committed")
             }
-            jobs.forEach {
-                while (!it.isCompleted) {
-                    sleep(1000)
-                    LOGGER.info("${le.toFloat() / l.toFloat() * 100} % complete")
-                }
+
+            while (le < l) {
+                sleep(1000)
+                LOGGER.info("${le.toFloat() / l.toFloat() * 100} % complete")
             }
         }
 

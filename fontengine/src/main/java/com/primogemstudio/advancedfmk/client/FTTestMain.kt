@@ -11,8 +11,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.Deflater
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 
 val LOGGER: Logger = LogManager.getLogger("FontGlyphViewer")
 
@@ -31,17 +29,17 @@ fun main() {
         )
     )
 
-    File("./StarRailFont.vtxf").delete()
+    File("/mnt/StarRailFont.vtxf").delete()
     val out = VertexFontOutputStream(
         Compressor.encode(
-            Files.newOutputStream(Path.of("./StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
+            Files.newOutputStream(Path.of("/mnt/StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
         ), fnt
     )
     timed("Process ttf and write") { out.write() }
     out.close()
 
     val i = VertexFontInputStream(
-        Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf")))
+        Compressor.decode(Files.newInputStream(Path.of("/mnt/StarRailFont.vtxf")))
     )
     i.parse()
     i.close()
