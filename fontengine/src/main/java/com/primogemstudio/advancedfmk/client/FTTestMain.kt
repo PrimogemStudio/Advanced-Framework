@@ -41,6 +41,6 @@ fun main() {
     val i = VertexFontInputStream(
         Compressor.decode(Files.newInputStream(Path.of("/mnt/StarRailFont.vtxf")))
     )
-    i.parse()
+    timed("Read file") { i.parse() }
     i.close()
 }
