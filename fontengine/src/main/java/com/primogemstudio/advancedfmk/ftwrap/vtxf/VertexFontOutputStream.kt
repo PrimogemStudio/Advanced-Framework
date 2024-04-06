@@ -2,15 +2,11 @@ package com.primogemstudio.advancedfmk.ftwrap.vtxf
 
 import com.primogemstudio.advancedfmk.client.LOGGER
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
-import com.primogemstudio.advancedfmk.ftwrap.FreeTypeGlyph
 import com.primogemstudio.advancedfmk.ftwrap.SVGQueue
-import kotlinx.coroutines.*
 import java.io.DataOutputStream
 import java.io.OutputStream
-import java.lang.Thread.sleep
 
 class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) : DataOutputStream(out) {
-    @OptIn(DelicateCoroutinesApi::class)
     fun write() {
         writeUTF("VTXF")
         writeShort(0x0307)

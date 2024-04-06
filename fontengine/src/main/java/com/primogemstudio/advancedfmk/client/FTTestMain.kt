@@ -7,7 +7,6 @@ import com.primogemstudio.advancedfmk.ftwrap.vtxf.VertexFontOutputStream
 import com.primogemstudio.advancedfmk.util.Compressor
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.Deflater
@@ -23,23 +22,22 @@ inline fun <T> timed(a: Any, func: () -> T): T {
 }
 
 fun main() {
-    /*val fnt = FreeTypeFont(
+    val fnt = FreeTypeFont(
         Compressor.decode(
             FreeTypeLibrary.javaClass.getResourceAsStream("/star_rail.res")!!.readAllBytes()
         )
     )
 
-    File("/mnt/StarRailFont.vtxf").delete()
     val out = VertexFontOutputStream(
         Compressor.encode(
-            Files.newOutputStream(Path.of("/mnt/StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
+            Files.newOutputStream(Path.of("./StarRailFont.vtxf")), Deflater.BEST_COMPRESSION
         ), fnt
     )
     timed("Process ttf and write") { out.write() }
-    out.close()*/
+    out.close()
 
     val i = VertexFontInputStream(
-        Compressor.decode(Files.newInputStream(Path.of("/mnt/StarRailFont.vtxf")))
+        Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf")))
     )
     timed("Read file") { i.parse() }
     i.close()

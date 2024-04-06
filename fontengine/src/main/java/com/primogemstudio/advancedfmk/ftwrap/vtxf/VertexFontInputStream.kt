@@ -4,10 +4,9 @@ import com.primogemstudio.advancedfmk.client.LOGGER
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeGlyph
 import org.joml.Vector2f
 import java.io.DataInputStream
-import java.io.EOFException
 import java.io.InputStream
 
-class VertexFontInputStream(`in`: InputStream): DataInputStream(`in`) {
+class VertexFontInputStream(`in`: InputStream) : DataInputStream(`in`) {
     fun parse(): List<Pair<Char, FreeTypeGlyph>> {
         if (readUTF() != "VTXF") throw IllegalStateException("Font header wrong")
         if (readShort() != 0x0307.toShort()) throw IllegalStateException("Magic number wrong")
@@ -17,16 +16,16 @@ class VertexFontInputStream(`in`: InputStream): DataInputStream(`in`) {
 
         val map = mutableListOf<Pair<Char, FreeTypeGlyph>>()
         var le = 0
-        for (i in 0 ..< glyph) {
+        for (i in 0..<glyph) {
             val code = readInt()
             val whscale = readFloat()
 
             val vertices = mutableListOf<Vector2f>()
 
-            for (j in 0 ..< readInt()) vertices.add(Vector2f(readFloat(), readFloat()))
+            for (j in 0..<readInt()) vertices.add(Vector2f(readFloat(), readFloat()))
 
             val indices = mutableListOf<Int>()
-            for (k in 0 ..< readInt().apply { if (this % 3 != 0) throw IllegalStateException("Wrong indices size") }) {
+            for (k in 0..<readInt().apply { if (this % 3 != 0) throw IllegalStateException("Wrong indices size") }) {
                 indices.add(readInt())
             }
 

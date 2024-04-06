@@ -7,12 +7,11 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.ftwrap.FreeTypeGlyph;
 import com.primogemstudio.advancedfmk.ftwrap.vtxf.VertexFontInputStream;
+import com.primogemstudio.advancedfmk.util.Compressor;
 import kotlin.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.OptionsScreen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import com.primogemstudio.advancedfmk.util.Compressor;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,25 +27,20 @@ import java.util.stream.Collectors;
 @Mixin(OptionsScreen.class)
 public class TitleScreen2Mixin {
     @Unique
-    private static Map<Character, FreeTypeGlyph> fontProcessed;
+    private static final Map<Character, FreeTypeGlyph> fontProcessed;
+
     static {
-        try (VertexFontInputStream i =  new VertexFontInputStream(
-                Compressor.INSTANCE.decode(Files.newInputStream(Path.of("/mnt/StarRailFont.vtxf")))
-        )) {
-            fontProcessed = i.parse().stream().collect(Collectors.toMap(
-                    Pair::getFirst,
-                    Pair::getSecond
-            ));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        try (VertexFontInputStream i = new VertexFontInputStream(Compressor.INSTANCE.decode(Files.newInputStream(Path.of("../StarRailFont.vtxf"))))) {
+            fontProcessed = i.parse().stream().collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
-        RenderSystem.setShader(GameRenderer::getPositionShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         var glyph = fontProcessed.get('测');
         var tess = Tesselator.getInstance().getBuilder();
 
