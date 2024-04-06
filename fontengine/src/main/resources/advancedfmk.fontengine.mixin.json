@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.primogemstudio.advancedfmk.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "TitleScreen2Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
