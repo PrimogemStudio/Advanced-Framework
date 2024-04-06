@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.mixin;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -44,17 +45,20 @@ public class TitleScreen2Mixin {
         var glyph = fontProcessed.get('测');
         var tess = Tesselator.getInstance().getBuilder();
 
+        var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
         var stk = guiGraphics.pose();
         stk.pushPose();
-        stk.scale(100 * glyph.getWhscale(), 100, 0);
-        stk.translate(100, 100, 0);
+        stk.scale(100 * glyph.getWhscale() / s, 100 / s, 0);
+        stk.translate(1.5, 1.5, 0);
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         glyph.getIndices().forEach(integer -> {
             var f = glyph.getVertices().get(integer);
-            tess.vertex((f.x * 100 * glyph.getWhscale() + 100), (f.y * 100 + 100), 0).color(255, 255, 255, 125).endVertex();
+            tess.vertex(stk.last().pose(), f.x, f.y, 0).color(255, 255, 255, 255).endVertex();
         });
         RenderSystem.enableBlend();
+        RenderSystem.disableCull();
         BufferUploader.drawWithShader(tess.end());
+        RenderSystem.enableCull();
         RenderSystem.disableBlend();
 
         stk.popPose();
