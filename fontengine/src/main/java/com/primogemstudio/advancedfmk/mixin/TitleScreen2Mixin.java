@@ -12,6 +12,7 @@ import kotlin.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.OptionsScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +25,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mixin(OptionsScreen.class)
+@Mixin(TitleScreen.class)
 public class TitleScreen2Mixin {
     @Unique
     private static final Map<Character, FreeTypeGlyph> fontProcessed;
@@ -46,10 +47,12 @@ public class TitleScreen2Mixin {
 
         var stk = guiGraphics.pose();
         stk.pushPose();
+        stk.scale(100 * glyph.getWhscale(), 100, 0);
+        stk.translate(100, 100, 0);
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         glyph.getIndices().forEach(integer -> {
             var f = glyph.getVertices().get(integer);
-            tess.vertex((f.x * 100 * glyph.getWhscale() + 100), (f.y * 100 + 100), 0).color(255, 0, 255, 125).endVertex();
+            tess.vertex((f.x * 100 * glyph.getWhscale() + 100), (f.y * 100 + 100), 0).color(255, 255, 255, 125).endVertex();
         });
         RenderSystem.enableBlend();
         BufferUploader.drawWithShader(tess.end());

@@ -33,7 +33,7 @@ class VertexFontOutputStream(out: OutputStream, private val ttf: FreeTypeFont) :
                 writeFloat(it.y)
             }
             writeInt(glyph.indices.size)
-            glyph.indices.forEach { writeInt(it) }
+            glyph.indices.reversed().forEach { writeInt(it) }
 
             le++
             if (le % 250 == 0) LOGGER.info("${a.key} 0x${Integer.toHexString(a.key.code)} ${le.toFloat() / l.toFloat() * 100} % complete")
