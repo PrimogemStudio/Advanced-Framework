@@ -6,60 +6,40 @@ uniform sampler2D BaseLayer;
 uniform vec4 ColorModulate;
 uniform int Radius;
 uniform int DigType;
+uniform vec2 InSize;
 
 in vec2 texCoord;
 in vec2 oneTexel;
 
 out vec4 fragColor;
 
-#define PI2 6.2831853072
-
-vec4 blur(int samples) {
-    vec4 O = vec4(0.0);
-    float r = float(samples)*0.5;
-    float sigma = r*0.5;
-    float f = 1./(6.28318530718*sigma*sigma);
-
-    int s2 = samples*samples;
-    for (int i = 0; i<s2; i++) {
-        vec2 d = vec2(i%samples, i/samples) - r;
-        O += texture(BaseLayer, texCoord + oneTexel * d) * exp(-0.5 * dot(d/=sigma, d)) * f;
-    }
-    // use pre-multiplied alpha
-    return O/O.a;
-}
-
-vec4 blur_dig2(int samples) {
-    float count = 1.0;
-    vec4 color = texture(BaseLayer, texCoord);
-    float directionStep = PI2 / 48;
-
-    vec2 off;
-    float c, s, dist, dist2, weight;
-    for (float d = 0.0; d < PI2; d += directionStep) {
-        c = cos(d);
-        s = sin(d);
-        dist = 1.0 / max(abs(c), abs(s));
-        dist2 = dist * 3.0;
-        off = vec2(c, s);
-        for (float i = dist2; i <= 32.0; i += dist2) {
-            weight = i / samples;
-            count += weight;
-            color += texture(BaseLayer, texCoord + off * oneTexel * i) * weight;
-        }
-    }
-
-    return color / count;
-}
-
+#define CORE_RAD 3
 void main() {
     vec4 col = texture(BaseLayer, texCoord);
     vec4 dst = texture(DiffuseSampler, texCoord);
-    if (col.a <= 0.01)
+    /*if (col.a <= 0.01)
     {
         fragColor = dst * ColorModulate;
         return;
-    }
+    }*/
 
-    fragColor = mix(dst, vec4(col.rgb, 1.0), col.a); // vec4(blur(Radius + 50).xyz, 1.0)
+    int scale = int(textureSize(BaseLayer, 0).x) / int(InSize.x);
+
+
+
+    vec4 col0 = texture(BaseLayer, texCoord + vec2(-oneTexel.x, -oneTexel.y) / 4);
+    vec4 col1 = texture(BaseLayer, texCoord + vec2(0, -oneTexel.y) / scale);
+    vec4 col2 = texture(BaseLayer, texCoord + vec2(oneTexel.x, -oneTexel.y) / scale);
+
+    vec4 col3 = texture(BaseLayer, texCoord + vec2(-oneTexel.x, oneTexel.y) / scale);
+    vec4 col4 = texture(BaseLayer, texCoord + vec2(0, oneTexel.y) / scale);
+    vec4 col5 = texture(BaseLayer, texCoord + vec2(oneTexel.x, oneTexel.y) / scale);
+
+    vec4 col6 = texture(BaseLayer, texCoord + vec2(-oneTexel.x, 0) / scale);
+    vec4 col7 = texture(BaseLayer, texCoord);
+    vec4 col8 = texture(BaseLayer, texCoord + vec2(oneTexel.x, 0) / scale);
+
+    vec4 r = (col0 + col1 + col2 + col3 + col4 + col5 + col6 + col7 + col8) / 9;
+
+    fragColor = mix(dst, vec4(r.rgb, 1.0), r.a);
 }

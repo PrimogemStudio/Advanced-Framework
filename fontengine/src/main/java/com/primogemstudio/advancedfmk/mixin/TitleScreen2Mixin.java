@@ -41,7 +41,7 @@ public class TitleScreen2Mixin {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
-        fontInternal.setClearColor(0f, 0f, 0f, 0f);
+        fontInternal.setClearColor(1f, 1f, 1f, 0f);
     }
 
     @Inject(at = @At("RETURN"), method = "render")
@@ -60,8 +60,8 @@ public class TitleScreen2Mixin {
         var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
         var stk = guiGraphics.pose();
         stk.pushPose();
-        stk.scale(20 * glyph.getWhscale() / s, 20 / s, 0);
-        stk.translate(1.5, 1.5, 0);
+        stk.scale(100 * glyph.getWhscale() / s, 100 / s, 0);
+        stk.translate(3.5, 3.5, 0);
 
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         glyph.getIndices().forEach(integer -> {
