@@ -48,8 +48,8 @@ public class TitleScreen2Mixin {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         fontInternal.clear(Util.getPlatform() == Util.OS.OSX);
         fontInternal.resize(
-                Minecraft.getInstance().getWindow().getWidth(),
-                Minecraft.getInstance().getWindow().getHeight(),
+                Minecraft.getInstance().getWindow().getWidth() * 4,
+                Minecraft.getInstance().getWindow().getHeight() * 4,
                 Util.getPlatform() == Util.OS.OSX
         );
         fontInternal.bindWrite(true);
