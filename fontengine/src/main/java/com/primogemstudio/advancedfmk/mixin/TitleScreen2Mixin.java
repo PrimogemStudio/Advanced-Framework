@@ -60,7 +60,7 @@ public class TitleScreen2Mixin {
         var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
         var stk = guiGraphics.pose();
         stk.pushPose();
-        stk.scale(100 * glyph.getWhscale() / s, 100 / s, 0);
+        stk.scale(20 * glyph.getWhscale() / s, 20 / s, 0);
         stk.translate(3.5, 3.5, 0);
 
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
