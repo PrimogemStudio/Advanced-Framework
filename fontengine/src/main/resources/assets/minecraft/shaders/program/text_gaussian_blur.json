@@ -71,19 +71,11 @@
       ]
     },
     {
-      "name": "Radius",
+      "name": "CalcSize",
       "type": "int",
       "count": 1,
       "values": [
-        8
-      ]
-    },
-    {
-      "name": "DigType",
-      "type": "int",
-      "count": 1,
-      "values": [
-        0
+        3
       ]
     }
   ]
