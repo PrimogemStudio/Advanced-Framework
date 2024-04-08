@@ -54,7 +54,7 @@ public class TitleScreen2Mixin {
         );
         fontInternal.bindWrite(true);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        var glyph = fontProcessed.get('测');
+        var glyph = fontProcessed.get('d');
         var tess = Tesselator.getInstance().getBuilder();
 
         var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
