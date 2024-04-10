@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mixin(TitleScreen.class)
-public class TitleScreen2Mixin {
+public class TitleScreenFontEngineMixin {
     @Unique
     private static final Map<Character, FreeTypeGlyph> fontProcessed;
     @Unique
@@ -54,13 +54,13 @@ public class TitleScreen2Mixin {
         );
         fontInternal.bindWrite(true);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        var glyph = fontProcessed.get('d');
+        var glyph = fontProcessed.get('内');
         var tess = Tesselator.getInstance().getBuilder();
 
         var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
         var stk = guiGraphics.pose();
         stk.pushPose();
-        stk.scale(16 * glyph.getWhscale() / s, 16 / s, 0);
+        stk.scale(36 * glyph.getWhscale() / s, 36 / s, 0);
         stk.translate(3.5, 3.5, 0);
 
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
