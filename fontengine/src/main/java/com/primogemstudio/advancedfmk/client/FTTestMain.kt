@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.zip.Deflater
 
 val LOGGER: Logger = LogManager.getLogger("FontGlyphViewer")
@@ -22,7 +23,7 @@ inline fun <T> timed(a: Any, func: () -> T): T {
 }
 
 fun main() {
-    val fnt = FreeTypeFont(
+    /*val fnt = FreeTypeFont(
         Compressor.decode(
             FreeTypeLibrary.javaClass.getResourceAsStream("/star_rail.res")!!.readAllBytes()
         )
@@ -40,5 +41,6 @@ fun main() {
         Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf")))
     )
     timed("Read file") { i.parse() }
-    i.close()
+    i.close()*/
+    Files.write(Paths.get("./StarRailFont.vtxf.uncompressed"), Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf"))).readAllBytes())
 }
