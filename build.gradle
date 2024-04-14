@@ -76,6 +76,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     include "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
+    implementation "org.apiguardian:apiguardian-api:1.1.2"
 
     modRuntimeOnly "com.terraformersmc:modmenu:9.0.0"
     /*modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.4"
@@ -110,14 +111,13 @@ processResources {
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = project.jvm_version.toInteger()
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         it.options.release = targetJavaVersion
     }
-    it.options.listFiles = true
-    it.options.verbose = true
+    it.options.compilerArgs.add("-Werror")
 }
 
 java {
@@ -130,9 +130,10 @@ java {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(project.jvm_version.toInteger())
     compilerOptions {
         verbose = true
+        allWarningsAsErrors = true
     }
 }
 
