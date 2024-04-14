@@ -4,8 +4,6 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "TitleScreenMixin",
-    "TitleScreenFontEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1
