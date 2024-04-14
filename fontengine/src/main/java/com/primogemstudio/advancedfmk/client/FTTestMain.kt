@@ -35,12 +35,13 @@ fun main() {
         ), fnt
     )
     timed("Process ttf and write") { out.write() }
-    out.close()
+    out.close()*/
 
     val i = VertexFontInputStream(
         Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf")))
     )
     timed("Read file") { i.parse() }
-    i.close()*/
-    Files.write(Paths.get("./StarRailFont.vtxf.uncompressed"), Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf"))).readAllBytes())
+    i.close()
+
+    // Files.write(Paths.get("./StarRailFont.vtxf.uncompressed"), Compressor.decode(Files.newInputStream(Path.of("./StarRailFont.vtxf"))).readAllBytes())
 }

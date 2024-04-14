@@ -20,14 +20,12 @@ class VertexFontInputStream(`in`: InputStream) : DataInputStream(`in`) {
             val code = readInt()
             val whscale = readFloat()
 
-            val vertices = mutableListOf<Vector2f>()
+            val vertices = Array(readInt()) { Vector2f() }
 
-            for (j in 0..<readInt()) vertices.add(Vector2f(readFloat(), readFloat()))
+            for (j in vertices.indices) vertices[j].set(readFloat(), readFloat())
 
-            val indices = mutableListOf<Int>()
-            for (k in 0..<readInt().apply { if (this % 3 != 0) throw IllegalStateException("Wrong indices size") }) {
-                indices.add(readInt())
-            }
+            val indices = IntArray(readInt())
+            for (k in indices.indices) indices[k] = readInt()
 
             map.add(Pair(code.toChar(), FreeTypeGlyph(whscale, vertices, indices)))
             le++

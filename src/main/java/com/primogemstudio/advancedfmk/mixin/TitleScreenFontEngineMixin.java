@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,8 +65,8 @@ public class TitleScreenFontEngineMixin {
         stk.translate(3.5, 3.5, 0);
 
         tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        glyph.getIndices().forEach(integer -> {
-            var f = glyph.getVertices().get(integer);
+        Arrays.stream(glyph.getIndices()).forEach(integer -> {
+            var f = glyph.getVertices()[integer];
             tess.vertex(stk.last().pose(), f.x, f.y, 0).color(255, 255, 255, 255).endVertex();
         });
         RenderSystem.enableBlend();

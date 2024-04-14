@@ -98,6 +98,6 @@ class MultiPolygon(private val whscale: Float) : Vector<Polygon>() {
             base = vertices.size
         }
 
-        return FreeTypeGlyph(whscale, vertices, indices)
+        return FreeTypeGlyph(whscale, vertices.toTypedArray(), indices.toIntArray())
     }
 }
