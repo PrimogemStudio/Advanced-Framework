@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.PMXModel
+import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -23,15 +24,12 @@ import kotlin.io.path.Path
 class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(entityType, level) {
     @Environment(EnvType.CLIENT)
     @JvmField
-    var model: PMXModel? = null
+    var wrap: EntityRenderWrapper? = null
 
     @Environment(EnvType.CLIENT)
     private var processed: Array<FloatArray>? = null
     private var mp = ""
 
-    @Environment(EnvType.CLIENT)
-    @JvmField
-    var enable_pipeline = false
     private var modelName = ""
 
     @Environment(EnvType.CLIENT)
@@ -39,7 +37,7 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
         if (Files.exists(Path(path))) {
             val file = File(path)
             modelName = file.name.replace(Regex("[^a-zA-Z0-9]+"), "_")
-            model = PMXModel(file)
+            wrap = EntityRenderWrapper(PMXModel(file))
             processed = null
         }
     }

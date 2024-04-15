@@ -14,22 +14,18 @@ import org.joml.Vector2i
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class EntityRenderWrapper(var model: PMXModel?) {
-    private var rendertype: RenderType? = if (model == null) null else CustomRenderType.saba(model!!.textureManager.id)
+class EntityRenderWrapper(val model: PMXModel) {
+    private val renderType: RenderType = CustomRenderType.saba(model.textureManager.id)
 
     companion object {
         private val constant_buffer: ByteBuffer = ByteBuffer.allocateDirect(128).order(ByteOrder.nativeOrder())
-    }
-
-    fun updateRenderType() {
-        rendertype = CustomRenderType.saba(model!!.textureManager.id)
     }
 
     @Suppress("KotlinConstantConditions")
     fun render(
         entityYaw: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int
     ) {
-        val vc = buffer.getBuffer(rendertype!!)
+        val vc = buffer.getBuffer(renderType)
         val buf = try {
             if (vc is SodiumBufferBuilder) vc.originalBufferBuilder
             else vc as BufferBuilder
@@ -46,15 +42,15 @@ class EntityRenderWrapper(var model: PMXModel?) {
             Vector2i(OverlayTexture.NO_OVERLAY, packedLight).get(100, constant_buffer)
             constant_buffer.putInt(108, buf.padding())
         }
-        buf.vertices = model!!.vertexCount
+        buf.vertices = model.vertexCount
         buf.resize()
-        model!!.updateAnimation()
-        model!!.render(buf.buffer, constant_buffer)
+        model.updateAnimation()
+        model.render(buf.buffer, constant_buffer)
         if (buf.padding() != 0) {
             buf.vertices = 0
             vc as SodiumBufferBuilderExt
             vc.mark()
-            for (i in 0 until model!!.vertexCount) vc.endVertex()
+            for (i in 0 until model.vertexCount) vc.endVertex()
             vc.unmark()
         }
         buf.submit()

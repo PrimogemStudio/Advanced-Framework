@@ -51,25 +51,25 @@ class AdvancedFrameworkClient : ClientModInitializer {
                         val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
                         model ?: return@executes 0
                         it.source.world.entitiesForRendering().forEach { e ->
-                            if (e is TestEntity && e.model != null) {
-                                e.model!!.animation.add(model)
-                                e.model!!.animation.setupAnimation()
+                            if (e is TestEntity && e.wrap != null) {
+                                e.wrap!!.model.animation.add(model)
+                                e.wrap!!.model.animation.setupAnimation()
                             }
                         }
                         0
                     }.then(argument("path", StringArgumentType.string()).executes {
                         it.source.world.entitiesForRendering().forEach { e ->
-                            if (e is TestEntity && e.model != null) {
-                                e.model!!.animation.add(File(StringArgumentType.getString(it, "path")))
-                                e.model!!.animation.setupAnimation()
+                            if (e is TestEntity && e.wrap != null) {
+                                e.wrap!!.model.animation.add(File(StringArgumentType.getString(it, "path")))
+                                e.wrap!!.model.animation.setupAnimation()
                             }
                         }
                         0
                     })).then(literal("clear").executes {
                         it.source.world.entitiesForRendering().forEach { e ->
-                            if (e is TestEntity && e.model != null) {
-                                e.model!!.animation.clear()
-                                e.model!!.animation.setupAnimation()
+                            if (e is TestEntity && e.wrap != null) {
+                                e.wrap!!.model.animation.clear()
+                                e.wrap!!.model.animation.setupAnimation()
                             }
                         }
                         0
