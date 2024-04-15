@@ -9,23 +9,26 @@ import com.primogemstudio.advancedfmk.mmd.PMXModel
 import me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.texture.OverlayTexture
 import org.joml.Vector2i
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class EntityRenderWrapper(var model: PMXModel?) {
     private var rendertype: RenderType? = if (model == null) null else CustomRenderType.saba(model!!.textureManager.id)
+
     companion object {
         private val constant_buffer: ByteBuffer = ByteBuffer.allocateDirect(128).order(ByteOrder.nativeOrder())
     }
+
     fun updateRenderType() {
         rendertype = CustomRenderType.saba(model!!.textureManager.id)
     }
+
     @Suppress("KotlinConstantConditions")
-    fun render(entityYaw: Float,
-               poseStack: PoseStack,
-               buffer: MultiBufferSource,
-               packedLight: Int) {
+    fun render(
+        entityYaw: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int
+    ) {
         val vc = buffer.getBuffer(rendertype!!)
         val buf = try {
             if (vc is SodiumBufferBuilder) vc.originalBufferBuilder
@@ -40,7 +43,7 @@ class EntityRenderWrapper(var model: PMXModel?) {
         with(poseStack.last()) {
             pose().get(0, constant_buffer)
             normal().get(64, constant_buffer)
-            Vector2i(net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, packedLight).get(100, constant_buffer)
+            Vector2i(OverlayTexture.NO_OVERLAY, packedLight).get(100, constant_buffer)
             constant_buffer.putInt(108, buf.padding())
         }
         buf.vertices = model!!.vertexCount

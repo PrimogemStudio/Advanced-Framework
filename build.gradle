@@ -79,10 +79,10 @@ dependencies {
     implementation "org.apiguardian:apiguardian-api:1.1.2"
 
     modRuntimeOnly "com.terraformersmc:modmenu:9.0.0"
-    /*modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.4"
+    modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.4"
     runtimeOnly "org.anarres:jcpp:1.+"
     runtimeOnly "io.github.douira:glsl-transformer:2.0.0-pre13"
-    runtimeOnly "org.antlr:antlr4-runtime:4.11.1"*/
+    runtimeOnly "org.antlr:antlr4-runtime:4.11.1"
     modRuntimeOnly "maven.modrinth:fpsdisplay:4.0.0+1.20.4"
 
     implementation platform("org.lwjgl:lwjgl-bom:3.3.3")
