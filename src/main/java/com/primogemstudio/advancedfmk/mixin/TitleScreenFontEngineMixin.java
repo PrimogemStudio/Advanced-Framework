@@ -6,11 +6,8 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.primogemstudio.advancedfmk.ftwrap.FreeTypeGlyph;
+import com.primogemstudio.advancedfmk.client.FontManager;
 import com.primogemstudio.advancedfmk.ftwrap.Shaders;
-import com.primogemstudio.advancedfmk.ftwrap.vtxf.VertexFontInputStream;
-import com.primogemstudio.advancedfmk.util.Compressor;
-import kotlin.Pair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,62 +19,35 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Mixin(TitleScreen.class)
 public class TitleScreenFontEngineMixin {
-    @Unique
-    private static final Map<Character, FreeTypeGlyph> fontProcessed;
     @Unique
     private static final TextureTarget fontInternal = new TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX);
 
     static {
-        try (VertexFontInputStream i = new VertexFontInputStream(Compressor.INSTANCE.decode(Files.newInputStream(Path.of("../StarRailFont.vtxf"))))) {
-            fontProcessed = i.parse().stream().collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         fontInternal.setClearColor(1f, 1f, 1f, 0f);
     }
 
     @Inject(at = @At("RETURN"), method = "render")
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         fontInternal.clear(Util.getPlatform() == Util.OS.OSX);
-        fontInternal.resize(
-                Minecraft.getInstance().getWindow().getWidth() * 4,
-                Minecraft.getInstance().getWindow().getHeight() * 4,
-                Util.getPlatform() == Util.OS.OSX
-        );
+        fontInternal.resize(Minecraft.getInstance().getWindow().getWidth() * 4, Minecraft.getInstance().getWindow().getHeight() * 4, Util.getPlatform() == Util.OS.OSX);
         fontInternal.bindWrite(true);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        var glyph = fontProcessed.get('内');
-        var tess = Tesselator.getInstance().getBuilder();
-
-        var s = (float) Minecraft.getInstance().getWindow().getGuiScale();
-        var stk = guiGraphics.pose();
-        stk.pushPose();
-        stk.scale(36 * glyph.getWhscale() / s, 36 / s, 0);
-        stk.translate(3.5, 3.5, 0);
-
-        tess.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        Arrays.stream(glyph.getIndices()).forEach(integer -> {
-            var f = glyph.getVertices()[integer];
-            tess.vertex(stk.last().pose(), f.x, f.y, 0).color(255, 255, 255, 255).endVertex();
-        });
+        var buff = Tesselator.getInstance().getBuilder();
+        var scale = (float) Minecraft.getInstance().getWindow().getGuiScale();
+        var poseStack = graphics.pose();
+        poseStack.pushPose();
+        poseStack.scale(1 / scale, 1 / scale, 1);
+        buff.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+        poseStack.popPose();
+        FontManager.INSTANCE.drawText(buff, poseStack, "测试abcd？?!");
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
-        BufferUploader.drawWithShader(tess.end());
+        BufferUploader.drawWithShader(buff.end());
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
-
         Shaders.INSTANCE.getTEXT_BLUR().setSamplerUniform("BaseLayer", fontInternal);
         Shaders.INSTANCE.getTEXT_BLUR().render(partialTick);
-
-        stk.popPose();
     }
 }

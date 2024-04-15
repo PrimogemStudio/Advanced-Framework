@@ -1,18 +1,19 @@
 package com.primogemstudio.advancedfmk.ftwrap
 
+import com.primogemstudio.advancedfmk.ftwrap.vtxf.CharGlyph
 import com.primogemstudio.advancedfmk.util.conic
 import com.primogemstudio.advancedfmk.util.cubic
 import org.joml.Vector2f
 import java.util.*
 
-class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
+class SVGQueue(private val dimension: Vector2f) : Vector<SVGOperation>() {
     fun toVertices(precision: Int): MultiPolygon {
         fun MutableList<Vector2f>.addN(d: Vector2f) {
             if (isEmpty()) add(d)
             if (get(size - 1) != d) add(d)
         }
 
-        val polygons = MultiPolygon(whscale)
+        val polygons = MultiPolygon(dimension)
 
         val vertices = mutableListOf<Vector2f>()
         val spl = {
@@ -86,18 +87,17 @@ class SVGQueue(private val whscale: Float) : Vector<SVGOperation>() {
     }
 }
 
-class MultiPolygon(private val whscale: Float) : Vector<Polygon>() {
-    fun bake(): FreeTypeGlyph {
+class MultiPolygon(private val dimension: Vector2f) : Vector<Polygon>() {
+    fun bake(): CharGlyph {
         val vertices = mutableListOf<Vector2f>()
         val indices = mutableListOf<Int>()
         var base = 0
-
         forEach {
             vertices.addAll(it.vertices)
             indices.addAll(it.toTriangles().map { it + base })
             base = vertices.size
         }
-
-        return FreeTypeGlyph(whscale, vertices.toTypedArray(), indices.toIntArray())
+        vertices.forEach { it.x *= dimension.x / dimension.y }
+        return CharGlyph(dimension, vertices.toTypedArray(), indices.toIntArray())
     }
 }

@@ -111,12 +111,13 @@ class FreeTypeFont : Closeable {
         MemoryUtil.memFree(buff)
     }
 
-    fun fetchGlyphOutline(chr: Long): SVGQueue {
+    fun fetchGlyphOutline(chr: Long): SVGQueue? {
         val glyphIndex = FT_Get_Char_Index(face, chr)
+        if (glyphIndex == 0) return null
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val outline = face.glyph()?.outline()!!
-        val border = fetchGlyphBorder(chr)
-        val target = SVGQueue(fetchGlyphBorderF(chr))
+        val border = fetchGlyphBorder(chr)!!
+        val target = SVGQueue(border)
         FT_Outline_Decompose(outline, functions(target), 1)
 
         target.forEach {
@@ -124,19 +125,14 @@ class FreeTypeFont : Closeable {
             it.control1?.div(border)?.apply { y = 1 - y }
             it.control2?.div(border)?.apply { y = 1 - y }
         }
-
         return target
     }
 
-    fun fetchGlyphBorder(chr: Long): Vector2f {
+    fun fetchGlyphBorder(chr: Long): Vector2f? {
         val glyphIndex = FT_Get_Char_Index(face, chr)
+        if (glyphIndex == 0) return null
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val metrics = face.glyph()?.metrics()!!
-
         return Vector2f(i26p6tof(metrics.width().toInt()), i26p6tof(metrics.height().toInt()))
-    }
-
-    fun fetchGlyphBorderF(chr: Long): Float {
-        return fetchGlyphBorder(chr).let { it.x / it.y }
     }
 }
