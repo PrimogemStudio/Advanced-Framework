@@ -28,7 +28,8 @@ object FontManager {
         val siz = 20 / 12
         text.forEach {
             val glyph = characterMap[it] ?: loadChar(it)
-            for (v in glyph.vertices) {
+            for (ind in glyph.indices) {
+                val v = glyph.vertices[ind]
                 poseStack.pushPose()
                 buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + x, v.y * glyph.dimension.y * siz + 100, 0f).color(255, 255, 255, 255).endVertex()
                 poseStack.popPose()

@@ -125,6 +125,15 @@ class FreeTypeFont : Closeable {
             it.control1?.div(border)?.apply { y = 1 - y }
             it.control2?.div(border)?.apply { y = 1 - y }
         }
+
+        var min = 1f
+        target.forEach { if (it.target.y < min) min = it.target.y }
+        target.forEach {
+            it.target.sub(0f, min)
+            it.control1?.sub(0f, min)
+            it.control2?.sub(0f, min)
+        }
+
         return target
     }
 
