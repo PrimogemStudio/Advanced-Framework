@@ -25,16 +25,16 @@ object FontManager {
 
     fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String) {
         var x = 50
-        val siz = 10
+        val siz = 20 / 12
         text.forEach {
             val glyph = characterMap[it] ?: loadChar(it)
-            for (ind in glyph.indices) {
-                val v = glyph.vertices[ind]
+            for (idx in glyph.indices) {
+                val v = glyph.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * siz + x, v.y * siz + 100, 0f).color(255, 255, 255, 255).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + x, v.y * glyph.dimension.y * siz + 100, 0f).color(255, 255, 255, 255).endVertex()
                 poseStack.popPose()
             }
-            x += siz
+            x += (glyph.dimension.x * siz).toInt()
         }
     }
 }
