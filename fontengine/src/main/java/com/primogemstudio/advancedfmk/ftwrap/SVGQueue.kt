@@ -97,7 +97,7 @@ class MultiPolygon(private val dimension: Vector2f) : Vector<Polygon>() {
             indices.addAll(it.toTriangles().map { it + base })
             base = vertices.size
         }
-        vertices.forEach { it.x *= dimension.x / dimension.y }
+        // vertices.forEach { it.x *= dimension.x / dimension.y }
         return CharGlyph(dimension, vertices.toTypedArray(), indices.toIntArray())
     }
 }
