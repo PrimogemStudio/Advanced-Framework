@@ -5,6 +5,7 @@ import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.util.freetype.FT_Face
+import org.lwjgl.util.freetype.FT_Matrix
 import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
@@ -90,6 +91,14 @@ class FreeTypeFont : Closeable {
 
     private fun initFontState() {
         FT_Set_Pixel_Sizes(face, 0, 12)
+        FT_Set_Transform(
+            face,
+            FT_Matrix.create()
+                .xx(16384L)
+                .xy(0L)
+                .yx(0L)
+                .yy(-16384L),
+            FT_Vector.create().x(0L).y(0L))
     }
 
     fun getAllChars(): List<Char> {
@@ -120,19 +129,11 @@ class FreeTypeFont : Closeable {
         val target = SVGQueue(border)
         FT_Outline_Decompose(outline, functions(target), 1)
 
-        target.forEach {
+        /*target.forEach {
             it.target.div(border).apply { y = 1 - y }
             it.control1?.div(border)?.apply { y = 1 - y }
             it.control2?.div(border)?.apply { y = 1 - y }
-        }
-
-        var min = 1f
-        target.forEach { if (it.target.y < min) min = it.target.y }
-        target.forEach {
-            it.target.sub(0f, min)
-            it.control1?.sub(0f, min)
-            it.control2?.sub(0f, min)
-        }
+        }*/
 
         return target
     }
