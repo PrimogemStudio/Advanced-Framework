@@ -14,7 +14,12 @@ object FontManager {
     var CurrentFont = DefaultFont.FONT
 
     init {
-        for (c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?/[]{};:'\"=-+()!@#$%^&*_<>.,~`") characterMap.put(c, CurrentFont, 50)
+        for (c in 0 .. 128 ) {
+            try {
+                characterMap.put(c.toChar(), CurrentFont, 50)
+            }
+            catch (_: Exception) {}
+        }
     }
 
     private fun loadChar(char: Char): CharGlyph {

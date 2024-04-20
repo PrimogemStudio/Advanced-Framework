@@ -93,11 +93,11 @@ class MultiPolygon(private val dimension: Vector2f) : Vector<Polygon>() {
         val indices = mutableListOf<Int>()
         var base = 0
         forEach {
-            vertices.addAll(it.vertices)
+            vertices.addAll(it.vertices.map { it.div(16f) })
             indices.addAll(it.toTriangles().map { it + base })
             base = vertices.size
         }
-        // vertices.forEach { it.x *= dimension.x / dimension.y }
+
         return CharGlyph(dimension, vertices.toTypedArray(), indices.toIntArray())
     }
 }
