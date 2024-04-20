@@ -1,10 +1,7 @@
-package com.primogemstudio.advancedfmk.client
+package com.primogemstudio.advancedfmk.fontengine
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import com.primogemstudio.advancedfmk.fontengine.DefaultFont
-import com.primogemstudio.advancedfmk.fontengine.CharGlyph
-import com.primogemstudio.advancedfmk.fontengine.CharacterMap
 import org.apache.logging.log4j.LogManager
 
 object FontManager {
