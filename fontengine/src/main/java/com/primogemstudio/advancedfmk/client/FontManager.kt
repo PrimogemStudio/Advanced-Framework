@@ -28,7 +28,7 @@ object FontManager {
         return characterMap[char]!!
     }
 
-    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, textHeight: Int) {
+    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, textHeight: Int, textColor: Int) {
         var currOffset = x
         val siz = textHeight / 12
         text.forEach {
@@ -36,7 +36,7 @@ object FontManager {
             for (idx in glyph.indices) {
                 val v = glyph.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + currOffset, v.y * glyph.dimension.y * siz + y, 0f).color(255, 255, 255, 255).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + currOffset, v.y * glyph.dimension.y * siz + y, 0f).color(textColor).endVertex()
                 poseStack.popPose()
             }
             currOffset += (glyph.dimension.x * siz).toInt()

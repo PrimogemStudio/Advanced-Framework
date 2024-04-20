@@ -41,7 +41,7 @@ public class TitleScreenFontEngineMixin {
         poseStack.scale(1 / scale, 1 / scale, 1);
         buff.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         poseStack.popPose();
-        FontManager.INSTANCE.drawText(buff, poseStack, "测试abcd？?!", 200, 200, 12);
+        FontManager.INSTANCE.drawText(buff, poseStack, "测试abcd？?!", 200, 200, 12, 0xafffffff);
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         BufferUploader.drawWithShader(buff.end());
