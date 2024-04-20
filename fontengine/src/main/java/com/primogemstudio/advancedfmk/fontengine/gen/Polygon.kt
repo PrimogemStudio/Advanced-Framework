@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine.gen
 
 import org.joml.Vector2f
 
@@ -16,7 +16,7 @@ data class Polygon(
             arr.add(vertices.size - holeSize - 0)
         }
 
-        val re = EarCut.earcut(
+        val re = EarCutTriangulation.earcut(
             vertices.flatMap { listOf(it.x, it.y) }.toFloatArray(),
             if (holes.isNotEmpty()) arr.toIntArray() else IntArray(0),
             2

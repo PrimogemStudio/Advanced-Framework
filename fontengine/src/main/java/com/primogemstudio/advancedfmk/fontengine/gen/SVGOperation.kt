@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine.gen
 
 import org.joml.Vector2f
 

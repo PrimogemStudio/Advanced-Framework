@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine.gen
 
 import java.util.*
 import kotlin.math.abs
@@ -6,7 +6,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 
-class EarCut {
+class EarCutTriangulation {
     internal class Node(var i: Int, var x: Float, var y: Float) {
         var z: Float = -1f
         var steiner: Boolean = false

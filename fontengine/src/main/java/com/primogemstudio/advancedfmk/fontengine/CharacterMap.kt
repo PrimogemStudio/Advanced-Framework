@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedfmk.ftwrap.vtxf
+package com.primogemstudio.advancedfmk.fontengine
 
-import com.primogemstudio.advancedfmk.ftwrap.FreeTypeFont
+import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import org.joml.Vector2f
 
 class CharacterMap {

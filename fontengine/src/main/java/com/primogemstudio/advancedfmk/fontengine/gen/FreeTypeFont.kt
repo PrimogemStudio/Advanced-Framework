@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine.gen
 
 import com.primogemstudio.advancedfmk.util.i26p6tof
 import org.joml.Matrix2f

@@ -2,9 +2,9 @@ package com.primogemstudio.advancedfmk.client
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import com.primogemstudio.advancedfmk.ftwrap.DefaultFont
-import com.primogemstudio.advancedfmk.ftwrap.vtxf.CharGlyph
-import com.primogemstudio.advancedfmk.ftwrap.vtxf.CharacterMap
+import com.primogemstudio.advancedfmk.fontengine.DefaultFont
+import com.primogemstudio.advancedfmk.fontengine.CharGlyph
+import com.primogemstudio.advancedfmk.fontengine.CharacterMap
 import org.apache.logging.log4j.LogManager
 
 object FontManager {

@@ -1,5 +1,6 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine
 
+import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import com.primogemstudio.advancedfmk.util.Compressor
 
 object DefaultFont {

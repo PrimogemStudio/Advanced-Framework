@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedfmk.ftwrap
+package com.primogemstudio.advancedfmk.fontengine.gen
 
-import com.primogemstudio.advancedfmk.ftwrap.vtxf.CharGlyph
+import com.primogemstudio.advancedfmk.fontengine.CharGlyph
 import com.primogemstudio.advancedfmk.util.conic
 import com.primogemstudio.advancedfmk.util.cubic
 import org.joml.Vector2f
