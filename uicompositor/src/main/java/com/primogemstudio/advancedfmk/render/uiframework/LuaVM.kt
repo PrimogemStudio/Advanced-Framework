@@ -13,8 +13,6 @@ object LuaVM {
         globals["fetch_pos"] = object: TwoArgFunction() {
             override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue = arg1.sub(arg2).div(2)
         }
-        // LuaC.install(globals)
-        // LuaJC.install(globals)
         LoadState.install(globals)
     }
 
