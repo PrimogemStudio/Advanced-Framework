@@ -6,7 +6,7 @@ plugins {
 }
 
 allprojects {
-    tasks.withType(Javadoc).all { enabled = false }
+    tasks.withType(Javadoc).configureEach { enabled = false }
 
     repositories {
         mavenCentral() {
@@ -96,6 +96,13 @@ dependencies {
     include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
     include "org.luaj:luaj-jse:3.0.1"
     include "org.ladysnake:satin:1.16.0"
+}
+
+tasks.register('rebuild') {
+    group 'build'
+    dependsOn 'clean'
+    dependsOn 'build'
+    tasks.named('build').mustRunAfter 'clean'
 }
 
 processResources {
