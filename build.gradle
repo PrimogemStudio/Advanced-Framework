@@ -109,7 +109,6 @@ tasks.register('rebuild') {
     group 'build'
     dependsOn 'clean'
     dependsOn 'build'
-    tasks.named('build').mustRunAfter 'clean'
 }
 
 tasks.register('cleanLogs') {
