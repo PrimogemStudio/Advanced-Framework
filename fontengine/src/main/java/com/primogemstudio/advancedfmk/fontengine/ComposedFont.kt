@@ -8,21 +8,27 @@ class ComposedFont {
     private val LOGGER = LogManager.getLogger(ComposedFont::class.java)
     private val characterMap = CharacterMap()
 
-    var CurrentFont = DefaultFont.FONT
+    var fontStack = mutableListOf(DefaultFont.FONT)
 
     init {
         for (c in 0 .. 128 ) {
-            try {
-                characterMap.put(c.toChar(), CurrentFont, 50)
+            fontStack.forEach {
+                try {
+                    characterMap.put(c.toChar(), it, 50)
+                }
+                catch (_: Exception) {}
             }
-            catch (_: Exception) {}
         }
     }
 
-    private fun loadChar(char: Char): CharGlyph {
+    private fun loadChar(char: Char): CharGlyph? {
         LOGGER.info("Loading char $char")
-        characterMap.put(char, CurrentFont, 50)
-        return characterMap[char]!!
+
+        fontStack.forEach {
+            try { return characterMap.put(char, it, 50) }
+            catch (_: Exception) { return null }
+        }
+        return null
     }
 
     fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, textHeight: Int, textColor: Int) {
@@ -30,6 +36,7 @@ class ComposedFont {
         val siz = textHeight / 12
         text.forEach {
             val glyph = characterMap[it] ?: loadChar(it)
+            glyph?: return@forEach
             for (idx in glyph.indices) {
                 val v = glyph.vertices[idx]
                 poseStack.pushPose()
