@@ -1,3 +1,10 @@
+import java.nio.file.FileVisitResult
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.Path
+
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection GroovyAccessibility
 plugins {
@@ -103,6 +110,24 @@ tasks.register('rebuild') {
     dependsOn 'clean'
     dependsOn 'build'
     tasks.named('build').mustRunAfter 'clean'
+}
+
+tasks.register('cleanLogs') {
+    group 'fabric'
+    if (Paths.get(rootDir.getAbsolutePath(), "run/logs").toFile().exists()) {
+        Files.walkFileTree(Paths.get(rootDir.getAbsolutePath(), "run/logs"),
+                new SimpleFileVisitor<Path>() {
+                    FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file)
+                        return FileVisitResult.CONTINUE
+                    }
+                    FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir)
+                        return FileVisitResult.CONTINUE
+                    }
+                }
+        )
+    }
 }
 
 processResources {
