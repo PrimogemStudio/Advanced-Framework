@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import org.apache.logging.log4j.LogManager
 
 class ComposedFont {
-    private val LOGGER = LogManager.getLogger(ComposedFont::class.java)
+    private val logger = LogManager.getLogger(ComposedFont::class.java)
     private val characterMap = CharacterMap()
 
     var fontStack = mutableListOf(DefaultFont.FONT)
@@ -22,11 +22,11 @@ class ComposedFont {
     }
 
     private fun loadChar(char: Char): CharGlyph? {
-        LOGGER.info("Loading char $char")
+        logger.info("Loading char $char")
 
         fontStack.forEach {
-            try { return characterMap.put(char, it, 50) }
-            catch (_: Exception) { return null }
+            return try { characterMap.put(char, it, 50) }
+            catch (_: Exception) { null }
         }
         return null
     }
