@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.primogemstudio.advancedfmk.fontengine.FontManager;
+import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
 import com.primogemstudio.advancedfmk.fontengine.Shaders;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenFontEngineMixin {
     @Unique
     private static final TextureTarget fontInternal = new TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX);
-
+    @Unique
+    private static final ComposedFont font = new ComposedFont();
     static {
         fontInternal.setClearColor(1f, 1f, 1f, 0f);
     }
@@ -41,7 +42,7 @@ public class TitleScreenFontEngineMixin {
         poseStack.scale(1 / scale, 1 / scale, 1);
         buff.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         poseStack.popPose();
-        FontManager.INSTANCE.drawText(buff, poseStack, "测试abcd？?!", 200, 200, 12, 0xafffffff);
+        font.drawText(buff, poseStack, "测试abcd？?!", 200, 200, 12, 0xafffffff);
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         BufferUploader.drawWithShader(buff.end());

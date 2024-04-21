@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import org.apache.logging.log4j.LogManager
 
-object FontManager {
-    private val LOGGER = LogManager.getLogger(FontManager::class.java)
+class ComposedFont {
+    private val LOGGER = LogManager.getLogger(ComposedFont::class.java)
     private val characterMap = CharacterMap()
 
     var CurrentFont = DefaultFont.FONT
