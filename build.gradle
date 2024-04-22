@@ -1,9 +1,5 @@
-import java.nio.file.FileVisitResult
-import java.nio.file.SimpleFileVisitor
+import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.Path
 
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection GroovyAccessibility
@@ -103,6 +99,9 @@ dependencies {
     include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
     include "org.luaj:luaj-jse:3.0.1"
     include "org.ladysnake:satin:1.16.0"
+}
+tasks.named("build").configure {
+    it.mustRunAfter("clean")
 }
 
 tasks.register('rebuild') {
