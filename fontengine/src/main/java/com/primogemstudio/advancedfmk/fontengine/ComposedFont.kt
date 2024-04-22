@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
 import kotlin.math.max
-import kotlin.text.HexFormat.BytesHexFormat
-import kotlin.text.HexFormat.NumberHexFormat
 
 class ComposedFont {
     private val logger = LogManager.getLogger(ComposedFont::class.java)
