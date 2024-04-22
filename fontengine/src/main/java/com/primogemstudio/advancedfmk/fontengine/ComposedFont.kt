@@ -31,9 +31,9 @@ class ComposedFont {
         return null
     }
 
-    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, textHeight: Int, textColor: Int) {
+    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
         var currOffset = x
-        val siz = textHeight / 12
+        val siz = point / 12
         text.forEach {
             val glyph = characterMap[it] ?: loadChar(it)
             glyph?: return@forEach
@@ -45,5 +45,18 @@ class ComposedFont {
             }
             currOffset += (glyph.dimension.x * siz).toInt()
         }
+    }
+
+    fun getTextWidth(text: String, point: Int): Int {
+        var currOffset = 0
+        val siz = point / 12
+
+        text.forEach {
+            val glyph = characterMap[it] ?: loadChar(it)
+            glyph?: return@forEach
+            currOffset += (glyph.dimension.x * siz).toInt()
+        }
+
+        return currOffset
     }
 }
