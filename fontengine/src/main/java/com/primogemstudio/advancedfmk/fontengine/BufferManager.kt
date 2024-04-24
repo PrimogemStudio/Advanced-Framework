@@ -20,6 +20,9 @@ object BufferManager {
             0f
         )
     }
+    fun renderTextNormal(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float) {
+        renderText(call, graphics, partialTick)
+    }
     inline fun renderText(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float) {
         fontInternal.clear(Util.getPlatform() === OS.OSX)
         fontInternal.resize(

@@ -1,26 +1,31 @@
-package com.primogemstudio.advancedfmk.mixin;
+package com.primogemstudio.advancedfmk.mixin
 
-import com.primogemstudio.advancedfmk.fontengine.BufferManager;
-import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.TitleScreen;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.primogemstudio.advancedfmk.fontengine.BufferManager.renderTextNormal
+import com.primogemstudio.advancedfmk.fontengine.BufferManager.updateBufferColor
+import com.primogemstudio.advancedfmk.fontengine.ComposedFont
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.TitleScreen
+import org.spongepowered.asm.mixin.Mixin
+import org.spongepowered.asm.mixin.Unique
+import org.spongepowered.asm.mixin.injection.At
+import org.spongepowered.asm.mixin.injection.Inject
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
-@Mixin(TitleScreen.class)
-public class TitleScreenFontEngineMixin {
-    @Unique
-    private static final ComposedFont font = new ComposedFont();
+@Mixin(TitleScreen::class)
+class TitleScreenFontEngineMixin {
+    @Inject(at = [At("RETURN")], method = ["render"])
+    fun render(graphics: GuiGraphics?, mx: Int, my: Int, partialTick: Float, ci: CallbackInfo?) {
+        ci?: return
+        updateBufferColor(0xffffffff.toInt())
+        renderTextNormal({ vertexConsumer, poseStack ->
+            font.drawWrapText(
+                vertexConsumer, poseStack, "测试abcd？?!", 200 + mx - mx, 200 + my - my, 9, 25, 0xffffffff.toInt()
+            )
+        }, graphics!!, partialTick)
+    }
 
-    @Inject(at = @At("RETURN"), method = "render")
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        BufferManager.INSTANCE.updateBufferColor(0xffff77ff);
-        BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            font.drawWrapText(vertexConsumer, poseStack, "测试abcd？?!", 200, 200, 9, 25, 0xffff77ff);
-            return null;
-        }, graphics, partialTick);
+    private companion object {
+        @Unique
+        private val font = ComposedFont()
     }
 }
