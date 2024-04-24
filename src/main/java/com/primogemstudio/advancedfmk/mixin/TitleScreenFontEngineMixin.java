@@ -42,7 +42,7 @@ public class TitleScreenFontEngineMixin {
         poseStack.scale(1 / scale, 1 / scale, 1);
         buff.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         poseStack.popPose();
-        font.drawWrapText(buff, poseStack, "测试abcd？?!", 200, 200, 9, 5, 0xffffffff);
+        font.drawWrapText(buff, poseStack, "测试abcd？?!", 200, 200, 9, 25, 0xffffffff);
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         BufferUploader.drawWithShader(buff.end());

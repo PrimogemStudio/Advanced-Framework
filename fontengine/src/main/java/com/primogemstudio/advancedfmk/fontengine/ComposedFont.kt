@@ -34,19 +34,19 @@ class ComposedFont {
         return null
     }
 
-    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
+    fun fetchGlyphs(text: String): Array<CharGlyph> = text.mapNotNull { characterMap[it] ?: loadChar(it) }.toTypedArray()
+
+    fun drawRect(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
         var currOffset = x
         val siz = point.toFloat() / 12f
-        text.forEach {
-            val glyph = characterMap[it] ?: loadChar(it)
-            glyph?: return@forEach
-            for (idx in glyph.indices) {
-                val v = glyph.vertices[idx]
+        fetchGlyphs(text).forEach {
+            for (idx in it.indices) {
+                val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + currOffset, v.y * glyph.dimension.y * siz + y, 0f).color(textColor).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f).color(textColor).endVertex()
                 poseStack.popPose()
             }
-            currOffset += (glyph.dimension.x * siz).toInt()
+            currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
     }
 
@@ -55,35 +55,31 @@ class ComposedFont {
         val siz = point.toFloat() / 12f
         var currY = y
         var currentLineH = 0
-        text.forEach {
-            val glyph = characterMap[it] ?: loadChar(it)
-            glyph?: return@forEach
-            currentLineH = max(currentLineH, (glyph.dimension.y * siz).toInt())
-            if (currOffset + (glyph.dimension.x * siz).toInt() - x > maxLineWidth) {
+        fetchGlyphs(text).forEach {
+            currentLineH = max(currentLineH, (it.dimension.y * siz).toInt())
+            if (currOffset + (it.dimension.x * siz).toInt() - x > maxLineWidth) {
                 currY += currentLineH
                 currentLineH = 0
                 currOffset = x
             }
-            for (idx in glyph.indices) {
-                val v = glyph.vertices[idx]
+            for (idx in it.indices) {
+                val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * glyph.dimension.x * siz + currOffset, v.y * glyph.dimension.y * siz + currY, 0f).color(textColor).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + currY, 0f).color(textColor).endVertex()
                 poseStack.popPose()
             }
-            currOffset += (glyph.dimension.x * siz).toInt()
+            currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
     }
 
-    fun getTextWidth(text: String, point: Int): Vector2f {
+    fun getTextRect(text: String, point: Int): Vector2f {
         var currOffset = 0
         val siz = point.toFloat() / 12f
         var currY = 0f
 
-        text.forEach {
-            val glyph = characterMap[it] ?: loadChar(it)
-            glyph?: return@forEach
-            currY = max(currY, glyph.dimension.y * siz)
-            currOffset += (glyph.dimension.x * siz).toInt()
+        fetchGlyphs(text).forEach {
+            currY = max(currY, it.dimension.y * siz)
+            currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
 
         return Vector2f(currOffset.toFloat(), currY)
@@ -94,16 +90,14 @@ class ComposedFont {
         val siz = point.toFloat() / 12f
         var currY = 0f
         var currentLineH = 0
-        text.forEach {
-            val glyph = characterMap[it] ?: loadChar(it)
-            glyph?: return@forEach
-            currentLineH = max(currentLineH, (glyph.dimension.y * siz).toInt())
-            if (currOffset + (glyph.dimension.x * siz).toInt() > maxLineWidth) {
+        fetchGlyphs(text).forEach {
+            currentLineH = max(currentLineH, (it.dimension.y * siz).toInt())
+            if (currOffset + (it.dimension.x * siz).toInt() > maxLineWidth) {
                 currY += currentLineH
                 currentLineH = 0
                 currOffset = 0
             }
-            currOffset += (glyph.dimension.x * siz).toInt()
+            currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
 
         return Vector2f(currOffset.toFloat(), currY)
