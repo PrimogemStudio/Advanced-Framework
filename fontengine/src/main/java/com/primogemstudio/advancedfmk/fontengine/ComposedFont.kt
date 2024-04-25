@@ -36,7 +36,11 @@ class ComposedFont {
 
     fun fetchGlyphs(text: String): Array<CharGlyph> = text.mapNotNull { characterMap[it] ?: loadChar(it) }.toTypedArray()
 
-    fun drawRect(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
+    fun drawCenteredText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
+        val rect = getTextRect(text, point)
+        drawText(buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, textColor)
+    }
+    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
         var currOffset = x
         val siz = point.toFloat() / 12f
         fetchGlyphs(text).forEach {
@@ -48,6 +52,10 @@ class ComposedFont {
             }
             currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
+    }
+    fun drawCenteredWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Int) {
+        val rect = getWrapTextRect(text, point, maxLineWidth)
+        drawWrapText(buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, maxLineWidth, textColor)
     }
 
     fun drawWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Int) {
@@ -85,7 +93,7 @@ class ComposedFont {
         return Vector2f(currOffset.toFloat(), currY)
     }
 
-    fun getWrapTextWidth(text: String, point: Int, maxLineWidth: Int): Vector2f {
+    fun getWrapTextRect(text: String, point: Int, maxLineWidth: Int): Vector2f {
         var currOffset = 0
         val siz = point.toFloat() / 12f
         var currY = 0f
