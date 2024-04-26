@@ -8,11 +8,16 @@ import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.primogemstudio.advancedfmk.fontengine.BufferManager.renderText
+import com.primogemstudio.advancedfmk.fontengine.ComposedFont
+import com.primogemstudio.advancedfmk.fontengine.Shaders.TEXT_BLUR
+import com.primogemstudio.advancedfmk.fontengine.Shaders.defaultClip
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.render.uiframework.BaseTexture
 import com.primogemstudio.advancedfmk.render.uiframework.ValueFetcher
 import com.primogemstudio.advancedfmk.render.uiframework.invoke
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.internalTarget
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.newfont
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.onosx
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.textSwap
 import net.minecraft.Util
@@ -25,6 +30,7 @@ object RendererConstraints {
     val internalTarget = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
     val textSwap = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
     val onosx = Util.getPlatform() == Util.OS.OSX
+    val newfont = ComposedFont()
 }
 
 abstract class UIObject(
@@ -62,6 +68,30 @@ abstract class UIObject(
     abstract fun registerTex()
     abstract var disableAlpha: Boolean
     abstract var clip: RenderTarget?
+}
+
+data class UIText(
+    var text: String = "",
+    var color: Vector4f = Vector4f(1f)
+): UIObject() {
+    override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
+        TEXT_BLUR.setSamplerUniform("ClipSampler", clip?: defaultClip)
+        renderText({ vc, ps ->
+            newfont.drawText(
+                vc, ps,
+                text,
+                location["x"]!!(vars.toMap()).toInt(),
+                location["y"]!!(vars.toMap()).toInt(),
+                9,
+                Vector4f(color.x, color.y, color.z, if (disableAlpha) 1f else color.w)
+            )
+        }, guiGraphics, vars.tick)
+    }
+
+    override fun registerTex() {}
+
+    override var disableAlpha: Boolean = false
+    override var clip: RenderTarget? = null
 }
 
 data class UITextLegacy(

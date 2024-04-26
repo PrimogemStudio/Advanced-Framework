@@ -36,7 +36,7 @@
       }
     },
     "advancedfmk:starrail_style_temp_text": {
-      "type": "advancedfmk:text_legacy",
+      "type": "advancedfmk:text",
       "color": [1.0, 1.0, 1.0, 1.0],
       "text": "测试! Hello world from UICompositor!",
       "location": {

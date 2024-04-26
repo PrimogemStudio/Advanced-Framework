@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
+import org.joml.Vector4f
 import kotlin.math.max
 
 class ComposedFont {
@@ -36,29 +37,29 @@ class ComposedFont {
 
     fun fetchGlyphs(text: String): Array<CharGlyph> = text.mapNotNull { characterMap[it] ?: loadChar(it) }.toTypedArray()
 
-    fun drawCenteredText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
+    fun drawCenteredText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Vector4f) {
         val rect = getTextRect(text, point)
         drawText(buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, textColor)
     }
-    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Int) {
+    fun drawText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Vector4f) {
         var currOffset = x
         val siz = point.toFloat() / 12f
         fetchGlyphs(text).forEach {
             for (idx in it.indices) {
                 val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f).color(textColor).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
                 poseStack.popPose()
             }
             currOffset += (it.dimension.x * siz * 1.1).toInt()
         }
     }
-    fun drawCenteredWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Int) {
+    fun drawCenteredWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Vector4f) {
         val rect = getWrapTextRect(text, point, maxLineWidth)
         drawWrapText(buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, maxLineWidth, textColor)
     }
 
-    fun drawWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Int) {
+    fun drawWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Vector4f) {
         var currOffset = x
         val siz = point.toFloat() / 12f
         var currY = y
@@ -73,7 +74,7 @@ class ComposedFont {
             for (idx in it.indices) {
                 val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + currY, 0f).color(textColor).endVertex()
+                buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + currY, 0f).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
                 poseStack.popPose()
             }
             currOffset += (it.dimension.x * siz * 1.1).toInt()
