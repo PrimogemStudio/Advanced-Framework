@@ -69,6 +69,7 @@ dependencies {
     include(implementation(project(path: ':uicompositor', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':fontengine', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
+    include(implementation(project(path: ':simulator')))
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
@@ -77,28 +78,29 @@ dependencies {
 
     modApi "net.fabricmc:fabric-loader:${project.loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    include "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2"
-    implementation "org.apiguardian:apiguardian-api:1.1.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.kotlin_coroutines_version}"
+    include "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${project.kotlin_coroutines_version}"
+    implementation "org.apiguardian:apiguardian-api:${project.apiguardian_api_version}"
 
-    modRuntimeOnly "com.terraformersmc:modmenu:9.0.0"
-    modRuntimeOnly "maven.modrinth:iris:1.6.17+1.20.4"
-    runtimeOnly "org.anarres:jcpp:1.+"
-    runtimeOnly "io.github.douira:glsl-transformer:2.0.0-pre13"
-    runtimeOnly "org.antlr:antlr4-runtime:4.11.1"
-    modRuntimeOnly "maven.modrinth:fpsdisplay:4.0.0+1.20.4"
+    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modRuntimeOnly "maven.modrinth:iris:${project.iris_version}"
+    runtimeOnly "org.anarres:jcpp:${project.jcpp_version}"
+    runtimeOnly "io.github.douira:glsl-transformer:${project.glsl_transformer_version}"
+    runtimeOnly "org.antlr:antlr4-runtime:${project.antlr4_runtime_version}"
+    modRuntimeOnly "maven.modrinth:fpsdisplay:${project.fpsdisplay_version}"
 
-    implementation platform("org.lwjgl:lwjgl-bom:3.3.3")
-    implementation "org.lwjgl:lwjgl-freetype:3.3.3"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows-arm64"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos-arm64"
+    implementation platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
+    implementation "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows-arm64"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos-arm64"
 
-    include "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
-    include "org.luaj:luaj-jse:3.0.1"
-    include "org.ladysnake:satin:1.16.0"
+    include "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
+    include "org.luaj:luaj-jse:${project.luaj_version}"
+    include "org.apache.bcel:bcel:${bcel_version}"
+    include "org.ladysnake:satin:${project.satin_version}"
 }
 tasks.named("build").configure {
     it.mustRunAfter("clean")

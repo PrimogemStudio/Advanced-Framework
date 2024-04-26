@@ -40,8 +40,8 @@ dependencies {
 
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    modApi modImplementation("maven.modrinth:sodium:mc1.20.4-0.5.8")
-    api implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    modApi modImplementation("maven.modrinth:sodium:${project.sodium_version}")
+    api implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}")
 }
 
 test {
