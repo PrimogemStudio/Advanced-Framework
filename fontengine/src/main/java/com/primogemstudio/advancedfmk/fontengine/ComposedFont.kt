@@ -51,7 +51,7 @@ class ComposedFont {
                 buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
                 poseStack.popPose()
             }
-            currOffset += (it.dimension.x * siz * 1.1).toInt()
+            currOffset += (it.dimension.x * siz).toInt()
         }
     }
     fun drawCenteredWrapText(buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, maxLineWidth: Int, textColor: Vector4f) {
@@ -77,7 +77,7 @@ class ComposedFont {
                 buff.vertex(poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + currY, 0f).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
                 poseStack.popPose()
             }
-            currOffset += (it.dimension.x * siz * 1.1).toInt()
+            currOffset += (it.dimension.x * siz).toInt()
         }
     }
 
@@ -88,7 +88,7 @@ class ComposedFont {
 
         fetchGlyphs(text).forEach {
             currY = max(currY, it.dimension.y * siz)
-            currOffset += (it.dimension.x * siz * 1.1).toInt()
+            currOffset += (it.dimension.x * siz).toInt()
         }
 
         return Vector2f(currOffset.toFloat(), currY)
@@ -106,7 +106,7 @@ class ComposedFont {
                 currentLineH = 0
                 currOffset = 0
             }
-            currOffset += (it.dimension.x * siz * 1.1).toInt()
+            currOffset += (it.dimension.x * siz).toInt()
         }
 
         return Vector2f(currOffset.toFloat(), currY)

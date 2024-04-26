@@ -11,6 +11,7 @@ import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import java.io.Closeable
 import java.nio.ByteBuffer
+import kotlin.math.max
 
 fun addrToVec(addr: Long): Vector2f {
     val vec = FT_Vector.create(addr)
@@ -115,7 +116,7 @@ class FreeTypeFont : Closeable {
     fun fetchGlyphOutline(chr: Long): SVGQueue? {
         val glyphIndex = FT_Get_Char_Index(face, chr)
         if (glyphIndex == 0) return null
-        FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
+        FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP or FT_LOAD_VERTICAL_LAYOUT)
         val outline = face.glyph()?.outline()!!
         val border = fetchGlyphBorder(chr)!!
         val target = SVGQueue(border)
@@ -134,6 +135,9 @@ class FreeTypeFont : Closeable {
         if (glyphIndex == 0) return null
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val metrics = face.glyph()?.metrics()!!
-        return Vector2f(i26p6tof(metrics.width().toInt()), i26p6tof(metrics.height().toInt()))
+        return Vector2f(
+            max(i26p6tof(metrics.horiAdvance().toInt()), i26p6tof(metrics.width().toInt())),
+            max(i26p6tof(metrics.vertAdvance().toInt()), i26p6tof(metrics.height().toInt()))
+        )
     }
 }
