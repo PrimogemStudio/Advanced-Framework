@@ -15,6 +15,9 @@
     },
     {
       "name": "BaseLayer"
+    },
+    {
+      "name": "ClipSampler"
     }
   ],
   "uniforms": [

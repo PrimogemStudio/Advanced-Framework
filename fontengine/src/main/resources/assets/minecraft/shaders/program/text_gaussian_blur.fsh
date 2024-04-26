@@ -6,6 +6,7 @@ uniform sampler2D BaseLayer;
 uniform vec4 ColorModulate;
 uniform vec2 InSize;
 uniform int CalcSize;
+uniform sampler2D ClipSampler;
 
 in vec2 texCoord;
 in vec2 oneTexel;
@@ -27,5 +28,5 @@ void main() {
         }
     }
 
-    fragColor = mix(dst, vec4(r.rgb, 1.0), r.a);
+    fragColor = mix(dst, vec4(r.rgb, 1.0), r.a * texture(ClipSampler, texCoord).a);
 }
