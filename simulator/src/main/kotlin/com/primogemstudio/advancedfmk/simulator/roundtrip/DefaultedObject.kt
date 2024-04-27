@@ -4,6 +4,7 @@ import kotlin.math.max
 import kotlin.reflect.KMutableProperty
 
 data class DefaultedObject(
+    val id: String,
     val health: Float,
     val mainOutput: Float,
     val type: CharacterBase.Type
@@ -22,4 +23,5 @@ data class DefaultedObject(
     }
 
     override fun operateHealth(func: (KMutableProperty<Float>) -> Unit) = func(this::currentHealth)
+    override fun toString(): String = id
 }
