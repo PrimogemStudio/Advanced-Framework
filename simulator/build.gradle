@@ -28,6 +28,7 @@ tasks.withType(JavaCompile).configureEach {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.kotlin_coroutines_version}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${project.kotlin_version}")
 }
 
 test {
