@@ -11,8 +11,15 @@ fun main() {
         while (i == -1 || !it.targetObjects[i].alive()) {
             i = Random.nextInt(0, it.targetObjects.size)
         }
-        println("${it.`object`} attack ${it.targetObjects[i]}")
-        i
+        println("${it.`object`} attack ${it.targetObjects[i]} (player)")
+        intArrayOf(i)
+    }, funcUncontrolledRequestTarget = {
+        var i = -1
+        while (i == -1 || !it.targetObjects[i].alive()) {
+            i = Random.nextInt(0, it.targetObjects.size)
+        }
+        println("${it.`object`} attack ${it.targetObjects[i]} (enemy)")
+        intArrayOf(i)
     })
 
     simu.characters.add(DefaultedObject(
@@ -20,6 +27,9 @@ fun main() {
     ))
     simu.characters.add(DefaultedObject(
         200f, 15f, CharacterBase.Type.Controllable
+    ))
+    simu.characters.add(DefaultedObject(
+        50f, 50f, CharacterBase.Type.Controllable
     ))
 
     simu.enemies.add(DefaultedObject(
