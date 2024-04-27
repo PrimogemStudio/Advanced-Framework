@@ -1,5 +1,5 @@
 package com.primogemstudio.advancedfmk.simulator
 
-data class ContextWrapper(
-    val simulator: Simulator
+open class ContextWrapper(
+    open val simulator: Simulator
 )
