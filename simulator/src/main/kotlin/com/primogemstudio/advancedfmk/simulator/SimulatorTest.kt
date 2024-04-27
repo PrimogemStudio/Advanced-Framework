@@ -33,10 +33,10 @@ fun main() {
     ))
 
     simu.enemies.add(DefaultedObject(
-        50f, 20f, CharacterBase.Type.UnControllable
+        500f, 20f, CharacterBase.Type.UnControllable
     ))
     simu.enemies.add(DefaultedObject(
-        75f, 5f, CharacterBase.Type.UnControllable
+        750f, 5f, CharacterBase.Type.UnControllable
     ))
 
     simu.loopMain()
