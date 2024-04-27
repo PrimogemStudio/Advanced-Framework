@@ -95,6 +95,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux"
     runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos"
     runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows-arm64"
+    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux-arm64"
     runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos-arm64"
 
     include "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
