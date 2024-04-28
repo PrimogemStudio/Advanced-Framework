@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator.roundtrip
 
+import com.primogemstudio.advancedfmk.simulator.Simulator
 import kotlin.math.max
 import kotlin.random.Random
 import kotlin.reflect.KMutableProperty
@@ -8,7 +9,8 @@ data class DefaultedObject(
     val id: String,
     val health: Float,
     val mainOutput: Float,
-    val type: CharacterBase.Type
+    val type: CharacterBase.Type,
+    override var simulator: Simulator
 ): CharacterBase {
     var currentHealth = health
         set(value) { field = max(0f, value) }
@@ -26,8 +28,11 @@ data class DefaultedObject(
     override fun toString(): String = id
     override fun getName(): String = id
 
-    override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type).apply { this.currentHealth = currentHealth }
+    override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type, simulator).apply { this.currentHealth = currentHealth }
+
+    var overrideTargets = intArrayOf()
     override fun selectTargets(context: TargetRequestContextWrapper): IntArray {
+        if (overrideTargets.isNotEmpty()) return overrideTargets
         var i = -1
         while (i == -1 || !context.targetObjects[i].alive()) {
             i = Random.nextInt(0, context.targetObjects.size)

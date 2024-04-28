@@ -6,37 +6,39 @@ import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
 
 class SnapshotTree(
     val parent: SnapshotTree?
-): HashMap<Simulator, SnapshotTree>()
+): HashMap<SimulatedUniverse, SnapshotTree>()
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
     val simu = SimulatedUniverse()
     simu.characters.add(DefaultedObject(
-        "Test character 1", 100f, 25f, CharacterBase.Type.Controllable
+        "Test character 1", 100f, 25f, CharacterBase.Type.Controllable, simu
     ))
     simu.characters.add(DefaultedObject(
-        "Test character 2", 200f, 15f, CharacterBase.Type.Controllable
+        "Test character 2", 200f, 15f, CharacterBase.Type.Controllable, simu
     ))
     simu.characters.add(DefaultedObject(
-        "Test character 3", 50f, 50f, CharacterBase.Type.Controllable
+        "Test character 3", 50f, 50f, CharacterBase.Type.Controllable, simu
     ))
 
     simu.enemies.add(DefaultedObject(
-        "Test enemy 1", 50f, 20f, CharacterBase.Type.UnControllable
+        "Test enemy 1", 50f, 20f, CharacterBase.Type.UnControllable, simu
     ))
     simu.enemies.add(DefaultedObject(
-        "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable
+        "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable, simu
     ))
 
 
     val snap = SnapshotTree(null)
     var current: SnapshotTree
     snap[simu.clone()] = SnapshotTree(snap).apply { current = this }
-    val sig = { current[simu.clone()] = SnapshotTree(current).apply { current = this } }
-    while (!simu.func(simu.simulateStep()).finished) sig()
-    sig()
 
-    with(simu.operationStack) {
+    simu.clone().apply {
+        simulateStep()
+        current[this] = SnapshotTree(current)
+    }
+
+    with(current.keys.toList()[0].operationStack) {
         var i = 0
         while (!isEmpty()) {
             val r = pop()
