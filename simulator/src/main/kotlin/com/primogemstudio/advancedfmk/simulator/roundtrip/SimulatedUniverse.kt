@@ -18,6 +18,7 @@ class SimulatedUniverse(
     )
 }) {
     private val operateQueue: Deque<MutableList<CharacterBase>> = LinkedList()
+    private val operationStack: Stack<OperationDataWrapper> = Stack()
     override fun simulateStep(context: ContextWrapper) {
         if (operateQueue.isEmpty()) {
             characters.forEach { operateQueue.offer(mutableListOf(it)) }
@@ -27,6 +28,7 @@ class SimulatedUniverse(
         val cu = operateQueue.poll()
         while (cu.size > 0) {
             val current = cu[0]
+            val result = OperationDataWrapper(current)
             when (current.type()) {
                 CharacterBase.Type.Controllable -> enemies
                 CharacterBase.Type.UnControllable -> characters
@@ -35,9 +37,12 @@ class SimulatedUniverse(
                     TargetRequestContextWrapper(
                         this@SimulatedUniverse, current, this
                     )
-                ).map { this[it] }.forEach {
-                    it.operateHealth { it.setter.call(it.getter.call() - current.calcOutputMain() * Random.nextInt(95, 105).toFloat() / 100f) }
-                }
+                ).map { this[it] }.map { t ->
+                    val data = current.calcOutputMain() * Random.nextInt(95, 105).toFloat() / 100f
+                    t.operateHealth { it.setter.call(it.getter.call() - data) }
+                    Pair(t, data)
+                }.forEach { (char, data) -> result.targets[char] = data }
+                operationStack.push(result)
             }
             cu.removeAt(0)
         }

@@ -11,7 +11,6 @@ data class DefaultedObject(
 ): CharacterBase {
     var currentHealth = health
         set(value) { field = max(0f, value) }
-
     override fun type(): CharacterBase.Type = type
 
     override fun calcHealth(): Float = currentHealth
@@ -24,4 +23,5 @@ data class DefaultedObject(
 
     override fun operateHealth(func: (KMutableProperty<Float>) -> Unit) = func(this::currentHealth)
     override fun toString(): String = id
+    override fun getName(): String = id
 }

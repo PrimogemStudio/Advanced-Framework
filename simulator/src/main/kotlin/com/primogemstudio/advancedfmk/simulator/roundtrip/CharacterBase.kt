@@ -11,6 +11,7 @@ interface CharacterBase {
     fun reset()
     fun alive(): Boolean
     fun operateHealth(func: (KMutableProperty<Float>) -> Unit)
+    fun getName(): String
 
     enum class Type {
         Controllable,
