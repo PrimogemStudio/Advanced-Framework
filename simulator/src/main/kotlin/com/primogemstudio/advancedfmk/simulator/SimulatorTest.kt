@@ -5,6 +5,8 @@ import com.primogemstudio.advancedfmk.simulator.roundtrip.DefaultedObject
 import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
 import kotlin.random.Random
 
+class SnapshotTree: HashMap<Simulator, SnapshotTree>()
+
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
     val simu = SimulatedUniverse(funcRequestTarget = {
@@ -20,7 +22,6 @@ fun main() {
         }
         intArrayOf(i)
     })
-
     simu.characters.add(DefaultedObject(
         "Test character 1", 100f, 25f, CharacterBase.Type.Controllable
     ))
@@ -37,6 +38,10 @@ fun main() {
     simu.enemies.add(DefaultedObject(
         "Test enemy 2", 75f, 5f, CharacterBase.Type.UnControllable
     ))
+
+
+    val snap = SnapshotTree()
+    snap[simu.clone()] = SnapshotTree()
 
     simu.simulateStep()
 

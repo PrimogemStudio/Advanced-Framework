@@ -53,7 +53,7 @@ class SimulatedUniverse(
         }
     }
 
-    override fun clone(): SimulatedUniverse =  SimulatedUniverse(
+    public override fun clone(): SimulatedUniverse =  SimulatedUniverse(
             characters.map { it.clone() }.toMutableList(),
             enemies.map { it.clone() }.toMutableList(),
             funcRequestTarget,
