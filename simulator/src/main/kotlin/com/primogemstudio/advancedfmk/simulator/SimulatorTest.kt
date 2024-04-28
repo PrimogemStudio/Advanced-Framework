@@ -29,15 +29,15 @@ fun main() {
         val t = simu.clone()
         runBlocking { t.loopMain().await() }
 
-        with(t.operationStack) {
+        /*with(t.operationStack) {
             var i = 0
             while (!isEmpty()) {
                 val r = pop()
                 println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
                 i++
             }
-        }
+        }*/
         println("Test passed!")
-        System.gc()
+        // System.gc()
     }
 }
