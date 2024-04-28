@@ -7,9 +7,7 @@ import java.util.*
 
 class SimulatedUniverse(
     val characters: MutableList<CharacterBase> = mutableListOf(),
-    val enemies: MutableList<CharacterBase> = mutableListOf(),
-    val funcRequestTarget: (TargetRequestContextWrapper) -> IntArray,
-    val funcUncontrolledRequestTarget: (TargetRequestContextWrapper) -> IntArray
+    val enemies: MutableList<CharacterBase> = mutableListOf()
 ): Simulator({
     enemies.flatMap { if (!it.alive()) listOf(it) else listOf() }
         .forEach { enemies.remove(it) }
@@ -37,7 +35,7 @@ class SimulatedUniverse(
                     CharacterBase.Type.UnControllable -> characters
                     CharacterBase.Type.UnControllableUnrequired -> characters
                 }.apply {
-                    (if (this == characters) funcUncontrolledRequestTarget else funcRequestTarget)(
+                    current.selectTargets(
                         TargetRequestContextWrapper(
                             this@SimulatedUniverse, current, this
                         )
@@ -55,9 +53,7 @@ class SimulatedUniverse(
 
     public override fun clone(): SimulatedUniverse =  SimulatedUniverse(
             characters.map { it.clone() }.toMutableList(),
-            enemies.map { it.clone() }.toMutableList(),
-            funcRequestTarget,
-            funcUncontrolledRequestTarget
+            enemies.map { it.clone() }.toMutableList()
         ).apply {
             this@apply.operationStack.addAll(this@SimulatedUniverse.operationStack)
             this@apply.operateQueue.addAll(this@SimulatedUniverse.operateQueue)

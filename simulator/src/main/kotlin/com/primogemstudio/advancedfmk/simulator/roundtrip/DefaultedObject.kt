@@ -27,4 +27,11 @@ data class DefaultedObject(
     override fun getName(): String = id
 
     override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type).apply { this.currentHealth = currentHealth }
+    override fun selectTargets(context: TargetRequestContextWrapper): IntArray {
+        var i = -1
+        while (i == -1 || !context.targetObjects[i].alive()) {
+            i = Random.nextInt(0, context.targetObjects.size)
+        }
+        return intArrayOf(i)
+    }
 }

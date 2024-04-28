@@ -12,6 +12,7 @@ interface CharacterBase: Cloneable {
     fun alive(): Boolean
     fun operateHealth(func: (KMutableProperty<Float>) -> Unit)
     fun getName(): String
+    fun selectTargets(context: TargetRequestContextWrapper): IntArray
 
     public override fun clone(): CharacterBase
 
