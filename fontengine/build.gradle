@@ -53,13 +53,6 @@ dependencies {
     api implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${project.kotlin_coroutines_version}")
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
 
-    include(implementation "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}")
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows-arm64"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux-arm64"))
-    include(runtimeOnly("org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos-arm64"))
     implementation(project(path: ':commonutils'))
 }
 

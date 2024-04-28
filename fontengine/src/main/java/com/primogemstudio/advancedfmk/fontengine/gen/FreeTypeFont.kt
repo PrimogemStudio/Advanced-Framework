@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.fontengine.gen
 
 import com.primogemstudio.advancedfmk.util.i26p6tof
+import net.minecraft.client.gui.font.providers.FreeTypeUtil
 import org.joml.Matrix2f
 import org.joml.Vector2f
 import org.lwjgl.system.MemoryStack
@@ -19,15 +20,7 @@ fun addrToVec(addr: Long): Vector2f {
 }
 
 object FreeTypeLibrary {
-    val handle: Long
-
-    init {
-        MemoryStack.stackPush().use { stack ->
-            val ptrBuff = stack.mallocPointer(1)
-            FT_Init_FreeType(ptrBuff)
-            handle = ptrBuff.get()
-        }
-    }
+    val handle = FreeTypeUtil.getLibrary()
 }
 
 class FreeTypeFont : Closeable {

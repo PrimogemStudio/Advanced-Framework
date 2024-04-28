@@ -87,16 +87,6 @@ dependencies {
     runtimeOnly "org.anarres:jcpp:${project.jcpp_version}"
     runtimeOnly "io.github.douira:glsl-transformer:${project.glsl_transformer_version}"
     runtimeOnly "org.antlr:antlr4-runtime:${project.antlr4_runtime_version}"
-    modRuntimeOnly "maven.modrinth:fpsdisplay:${project.fpsdisplay_version}"
-
-    implementation platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
-    implementation "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-windows-arm64"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-linux-arm64"
-    runtimeOnly "org.lwjgl:lwjgl-freetype:${project.lwjgl_version}:natives-macos-arm64"
 
     include "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
     include "org.jetbrains.kotlin:kotlin-reflect:${project.kotlin_version}"
@@ -123,12 +113,12 @@ tasks.register('cleanLogs') {
                         Files.delete(file)
                         return FileVisitResult.CONTINUE
                     }
+
                     FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                         Files.delete(dir)
                         return FileVisitResult.CONTINUE
                     }
-                }
-        )
+                })
     }
 }
 

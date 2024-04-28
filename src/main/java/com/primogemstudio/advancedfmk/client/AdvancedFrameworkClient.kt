@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.SabaNative
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
+import com.primogemstudio.advancedfmk.network.TestEntityAddPacket
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import com.primogemstudio.advancedfmk.util.NativeFileDialog
 import net.fabricmc.api.ClientModInitializer
@@ -15,16 +16,14 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 
-
 class AdvancedFrameworkClient : ClientModInitializer {
     override fun onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(ResourceLocation(MOD_ID, "update"), UpdatePacket())
-        TestEntity.registerPacket()
+        ClientPlayNetworking.registerGlobalReceiver(UpdatePacket.TYPE, UpdatePacket.Handler)
+        ClientPlayNetworking.registerGlobalReceiver(TestEntityAddPacket.TYPE, TestEntityAddPacket.Handler)
         ClientCommandRegistrationCallback.EVENT.register { dis, _ ->
             dis.register(
                 literal("advancedfmk").then(literal("flush").executes { UpdatePacket.flush();0 })
