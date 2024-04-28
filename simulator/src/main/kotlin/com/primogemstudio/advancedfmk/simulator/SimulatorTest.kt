@@ -6,20 +6,19 @@ import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
+@OptIn(ExperimentalStdlibApi::class)
 fun main() {
     val simu = SimulatedUniverse(funcRequestTarget = {
         var i = -1
         while (i == -1 || !it.targetObjects[i].alive()) {
             i = Random.nextInt(0, it.targetObjects.size)
         }
-        println("${it.`object`} -> ${it.targetObjects[i]}")
         intArrayOf(i)
     }, funcUncontrolledRequestTarget = {
         var i = -1
         while (i == -1 || !it.targetObjects[i].alive()) {
             i = Random.nextInt(0, it.targetObjects.size)
         }
-        println("${it.`object`} -> ${it.targetObjects[i]}")
         intArrayOf(i)
     })
 
@@ -42,5 +41,12 @@ fun main() {
 
     runBlocking { simu.loopMain().await() }
 
-    println(simu)
+    with(simu.operationStack) {
+        var i = 0
+        while (!isEmpty()) {
+            val r = pop()
+            println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
+            i++
+        }
+    }
 }

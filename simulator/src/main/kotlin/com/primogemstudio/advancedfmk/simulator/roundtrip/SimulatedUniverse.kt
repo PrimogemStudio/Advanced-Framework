@@ -19,7 +19,7 @@ class SimulatedUniverse(
     )
 }) {
     private val operateQueue: Deque<MutableList<CharacterBase>> = LinkedList()
-    private val operationStack: Stack<OperationDataWrapper> = Stack()
+    val operationStack: Stack<OperationDataWrapper> = Stack()
     override fun simulateStep(context: ContextWrapper) {
         if (operateQueue.isEmpty()) {
             characters.filter { it.alive() }.forEach { operateQueue.offer(mutableListOf(it)) }
