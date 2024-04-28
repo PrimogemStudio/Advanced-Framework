@@ -34,10 +34,10 @@ fun main() {
     ))
 
     simu.enemies.add(DefaultedObject(
-        "Test enemy 1", 500f, 20f, CharacterBase.Type.UnControllable
+        "Test enemy 1", 50f, 20f, CharacterBase.Type.UnControllable
     ))
     simu.enemies.add(DefaultedObject(
-        "Test enemy 2", 750f, 5f, CharacterBase.Type.UnControllable
+        "Test enemy 2", 75f, 5f, CharacterBase.Type.UnControllable
     ))
 
     runBlocking { simu.loopMain().await() }

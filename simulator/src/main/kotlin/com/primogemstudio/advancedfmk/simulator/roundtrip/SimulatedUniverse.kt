@@ -12,7 +12,7 @@ class SimulatedUniverse(
     val funcRequestTarget: (TargetRequestContextWrapper) -> IntArray,
     val funcUncontrolledRequestTarget: (TargetRequestContextWrapper) -> IntArray
 ): Simulator({
-    enemies.flatMap { if (it.calcHealth() <= 0f) listOf(it) else listOf() }
+    enemies.flatMap { if (!it.alive()) listOf(it) else listOf() }
         .forEach { enemies.remove(it) }
     ResultWrapper(
         characters.map { it.calcHealth() }.sum() == 0f ||
@@ -23,29 +23,32 @@ class SimulatedUniverse(
     private val operationStack: Stack<OperationDataWrapper> = Stack()
     override fun simulateStep(context: ContextWrapper) {
         if (operateQueue.isEmpty()) {
-            characters.forEach { operateQueue.offer(mutableListOf(it)) }
+            characters.filter { it.alive() }.forEach { operateQueue.offer(mutableListOf(it)) }
             enemies.forEach { operateQueue.offer(mutableListOf(it)) }
         }
 
         val cu = operateQueue.poll()
         while (cu.size > 0) {
             val current = cu[0]
-            val result = OperationDataWrapper(current)
-            when (current.type()) {
-                CharacterBase.Type.Controllable -> enemies
-                CharacterBase.Type.UnControllable -> characters
-                CharacterBase.Type.UnControllable_Unrequired -> characters
-            }.apply {
-                (if (this == characters) funcUncontrolledRequestTarget else funcRequestTarget)(
-                    TargetRequestContextWrapper(
-                        this@SimulatedUniverse, current, this
-                    )
-                ).map { this[it] }.map { t ->
-                    val data = current.calcOutputMain() * Random.nextInt(95, 105).toFloat() / 100f
-                    t.operateHealth { it.setter.call(it.getter.call() - data) }
-                    Pair(t, data)
-                }.forEach { (char, data) -> result.targets[char] = data }
-                operationStack.push(result)
+            run {
+                if (!current.alive()) return@run
+                val result = OperationDataWrapper(current)
+                when (current.type()) {
+                    CharacterBase.Type.Controllable -> enemies
+                    CharacterBase.Type.UnControllable -> characters
+                    CharacterBase.Type.UnControllableUnrequired -> characters
+                }.apply {
+                    (if (this == characters) funcUncontrolledRequestTarget else funcRequestTarget)(
+                        TargetRequestContextWrapper(
+                            this@SimulatedUniverse, current, this
+                        )
+                    ).map { this[it] }.map { t ->
+                        val data = current.calcOutputMain() * Random.nextInt(95, 105).toFloat() / 100f
+                        t.operateHealth { it.setter.call(it.getter.call() - data) }
+                        Pair(t, data)
+                    }.forEach { (char, data) -> result.targets[char] = data }
+                    operationStack.push(result)
+                }
             }
             cu.removeAt(0)
         }
