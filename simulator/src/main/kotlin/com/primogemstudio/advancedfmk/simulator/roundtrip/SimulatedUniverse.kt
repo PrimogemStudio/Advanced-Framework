@@ -4,7 +4,6 @@ import com.primogemstudio.advancedfmk.simulator.ContextWrapper
 import com.primogemstudio.advancedfmk.simulator.ResultWrapper
 import com.primogemstudio.advancedfmk.simulator.Simulator
 import java.util.*
-import kotlin.random.Random
 
 class SimulatedUniverse(
     val characters: MutableList<CharacterBase> = mutableListOf(),
@@ -43,9 +42,9 @@ class SimulatedUniverse(
                             this@SimulatedUniverse, current, this
                         )
                     ).map { this[it] }.map { t ->
-                        val data = current.calcOutputMain() * Random.nextInt(95, 105).toFloat() / 100f
-                        t.operateHealth { it.setter.call(it.getter.call() - data) }
-                        Pair(t, data)
+                        Pair(t, current.calcOutputMain().apply {
+                            t.operateHealth { it.setter.call(it.getter.call() - this) }
+                        })
                     }.forEach { (char, data) -> result.targets[char] = data }
                     operationStack.push(result)
                 }
@@ -53,4 +52,14 @@ class SimulatedUniverse(
             cu.removeAt(0)
         }
     }
+
+    override fun clone(): SimulatedUniverse =  SimulatedUniverse(
+            characters.map { it.clone() }.toMutableList(),
+            enemies.map { it.clone() }.toMutableList(),
+            funcRequestTarget,
+            funcUncontrolledRequestTarget
+        ).apply {
+            this@apply.operationStack.addAll(this@SimulatedUniverse.operationStack)
+            this@apply.operateQueue.addAll(this@SimulatedUniverse.operateQueue)
+        }
 }

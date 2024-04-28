@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.simulator.roundtrip
 
 import kotlin.reflect.KMutableProperty
 
-interface CharacterBase {
+interface CharacterBase: Cloneable {
     fun type(): Type
 
     fun calcHealth(): Float
@@ -12,6 +12,8 @@ interface CharacterBase {
     fun alive(): Boolean
     fun operateHealth(func: (KMutableProperty<Float>) -> Unit)
     fun getName(): String
+
+    public override fun clone(): CharacterBase
 
     enum class Type {
         Controllable,
