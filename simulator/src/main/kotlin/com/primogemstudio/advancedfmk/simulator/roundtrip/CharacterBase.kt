@@ -15,6 +15,7 @@ interface CharacterBase {
 
     enum class Type {
         Controllable,
-        UnControllable
+        UnControllable,
+        UnControllable_Unrequired
     }
 }

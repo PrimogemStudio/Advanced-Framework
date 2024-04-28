@@ -12,6 +12,8 @@ class SimulatedUniverse(
     val funcRequestTarget: (TargetRequestContextWrapper) -> IntArray,
     val funcUncontrolledRequestTarget: (TargetRequestContextWrapper) -> IntArray
 ): Simulator({
+    enemies.flatMap { if (it.calcHealth() <= 0f) listOf(it) else listOf() }
+        .forEach { enemies.remove(it) }
     ResultWrapper(
         characters.map { it.calcHealth() }.sum() == 0f ||
                 enemies.map { it.calcHealth() }.sum() == 0f
@@ -32,6 +34,7 @@ class SimulatedUniverse(
             when (current.type()) {
                 CharacterBase.Type.Controllable -> enemies
                 CharacterBase.Type.UnControllable -> characters
+                CharacterBase.Type.UnControllable_Unrequired -> characters
             }.apply {
                 (if (this == characters) funcUncontrolledRequestTarget else funcRequestTarget)(
                     TargetRequestContextWrapper(
