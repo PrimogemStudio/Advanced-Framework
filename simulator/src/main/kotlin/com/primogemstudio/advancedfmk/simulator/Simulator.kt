@@ -11,15 +11,14 @@ abstract class Simulator(open val func: (ContextWrapper) -> ResultWrapper): Clon
         return GlobalScope.async {
             var result: ResultWrapper? = null
             while (result?.finished != true) {
-                val context = ContextWrapper(
-                    simulator = this@Simulator
-                )
-                simulateStep(context)
-                result = func(context)
+                result = func(simulateStep())
             }
         }
     }
 
+    fun simulateStep(): ContextWrapper = ContextWrapper(
+        simulator = this
+    ).apply { simulateStep(this) }
     abstract fun simulateStep(context: ContextWrapper)
     abstract override fun clone(): Simulator
 }

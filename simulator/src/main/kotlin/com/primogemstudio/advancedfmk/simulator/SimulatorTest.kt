@@ -3,7 +3,6 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.roundtrip.CharacterBase
 import com.primogemstudio.advancedfmk.simulator.roundtrip.DefaultedObject
 import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
-import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -39,7 +38,7 @@ fun main() {
         "Test enemy 2", 75f, 5f, CharacterBase.Type.UnControllable
     ))
 
-    runBlocking { simu.loopMain().await() }
+    simu.simulateStep()
 
     with(simu.operationStack) {
         var i = 0
