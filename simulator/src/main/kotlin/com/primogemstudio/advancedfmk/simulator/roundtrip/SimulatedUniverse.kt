@@ -18,11 +18,18 @@ class SimulatedUniverse(
 }) {
     private val operateQueue: Deque<MutableList<CharacterBase>> = LinkedList()
     val operationStack: Stack<OperationDataWrapper> = Stack()
+    fun buildQueue() {
+        if (operateQueue.isNotEmpty()) return
+        characters.filter { it.alive() }.forEach { operateQueue.offer(mutableListOf(it)) }
+        enemies.forEach { operateQueue.offer(mutableListOf(it)) }
+    }
+    init { buildQueue() }
+    fun getCurrentChar(): CharacterBase {
+        buildQueue()
+        return operateQueue.peek()[0]
+    }
     override fun simulateStep(context: ContextWrapper) {
-        if (operateQueue.isEmpty()) {
-            characters.filter { it.alive() }.forEach { operateQueue.offer(mutableListOf(it)) }
-            enemies.forEach { operateQueue.offer(mutableListOf(it)) }
-        }
+        buildQueue()
 
         val cu = operateQueue.peek()
         val current = cu[0]

@@ -30,9 +30,7 @@ data class DefaultedObject(
 
     override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type, simulator).apply { this.currentHealth = currentHealth }
 
-    var overrideTargets = intArrayOf()
     override fun selectTargets(context: TargetRequestContextWrapper): IntArray {
-        if (overrideTargets.isNotEmpty()) return overrideTargets
         var i = -1
         while (i == -1 || !context.targetObjects[i].alive()) {
             i = Random.nextInt(0, context.targetObjects.size)

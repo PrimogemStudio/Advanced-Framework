@@ -3,10 +3,7 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.roundtrip.CharacterBase
 import com.primogemstudio.advancedfmk.simulator.roundtrip.DefaultedObject
 import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
-
-class SnapshotTree(
-    val parent: SnapshotTree?
-): HashMap<SimulatedUniverse, SnapshotTree>()
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
@@ -28,22 +25,19 @@ fun main() {
         "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable, simu
     ))
 
+    while (true) {
+        val t = simu.clone()
+        runBlocking { t.loopMain().await() }
 
-    val snap = SnapshotTree(null)
-    var current: SnapshotTree
-    snap[simu.clone()] = SnapshotTree(snap).apply { current = this }
-
-    simu.clone().apply {
-        simulateStep()
-        current[this] = SnapshotTree(current)
-    }
-
-    with(current.keys.toList()[0].operationStack) {
-        var i = 0
-        while (!isEmpty()) {
-            val r = pop()
-            println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
-            i++
+        with(t.operationStack) {
+            var i = 0
+            while (!isEmpty()) {
+                val r = pop()
+                println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
+                i++
+            }
         }
+        println("Test passed!")
+        System.gc()
     }
 }
