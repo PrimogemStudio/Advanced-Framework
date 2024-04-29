@@ -66,10 +66,10 @@ class SimulatedUniverse(
 
     public override fun clone(): SimulatedUniverse =  SimulatedUniverse(
             characters.map { it.clone() }.toMutableList(),
-            enemies.map { it.clone() }.toMutableList()
+            enemies.map { it.clone() }.toMutableList(),
+            operateQueue
         ).apply {
             this@apply.operationStack.addAll(this@SimulatedUniverse.operationStack)
-            this@apply.operateQueue.addAll(this@SimulatedUniverse.operateQueue)
             this@apply.characters.map { it.simulator = this@apply }
             this@apply.enemies.map { it.simulator = this@apply }
         }

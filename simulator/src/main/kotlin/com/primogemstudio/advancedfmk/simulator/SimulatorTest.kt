@@ -8,7 +8,7 @@ class SnapshotTree: HashMap<SimulatedUniverse, SnapshotTree>()
 
 fun genTarget(simu: SimulatedUniverse, depth: Int = 0): SnapshotTree {
     val target = SnapshotTree()
-    if (simu.func(simu.genContext()).finished || depth > 3) return target
+    if (simu.func(simu.genContext()).finished) return target
 
     println("${simu.getCurrentChar().getName()} $depth")
     for (i in 0 ..< simu.getCurrentChar().getChoicesCount()) {

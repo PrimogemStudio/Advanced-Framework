@@ -30,6 +30,7 @@ data class DefaultedObject(
     override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type, simulator).apply { this.currentHealth = currentHealth }
     override fun getAllChoices(): List<(TargetRequestContextWrapper) -> OperationDataWrapper> {
         return (simulator as SimulatedUniverse).getTargets().map { tg -> {
+            println("$this -> $tg")
             val data = OperationDataWrapper(this)
             val t = calcOutputMain() * Random.nextInt(9995, 10005).toFloat() / 10000f
 
