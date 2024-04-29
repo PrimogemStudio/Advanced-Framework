@@ -6,16 +6,16 @@ import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
 
 class SnapshotTree: HashMap<SimulatedUniverse, SnapshotTree>()
 
-fun genTarget(simu: SimulatedUniverse): SnapshotTree {
+fun genTarget(simu: SimulatedUniverse, depth: Int = 0): SnapshotTree {
     val target = SnapshotTree()
     target[simu] = SnapshotTree()
-    if (simu.func(simu.genContext()).finished) return target
+    if (simu.func(simu.genContext()).finished || depth > 2) return target
 
     for (i in 0 ..< simu.getCurrentChar().getChoicesCount()) {
         val cpy = simu.clone()
         cpy.getCurrentChar().currentChoice = i
         cpy.simulateStep()
-        target[simu]?.set(cpy, genTarget(cpy))
+        target[simu]?.set(cpy, genTarget(cpy, depth + 1))
     }
     return target
 }
@@ -52,5 +52,6 @@ fun main() {
         }
     }
     println("Test passed!")*/
-    println(genTarget(simu))
+    val t = genTarget(simu)
+    println(t)
 }
