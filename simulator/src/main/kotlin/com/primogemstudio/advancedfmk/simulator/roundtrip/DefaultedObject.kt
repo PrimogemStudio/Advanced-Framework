@@ -29,18 +29,16 @@ data class DefaultedObject(
 
     override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type, simulator).apply { this.currentHealth = currentHealth }
     override fun getAllChoices(): List<(TargetRequestContextWrapper) -> OperationDataWrapper> {
-        return listOf()
+        return (simulator as SimulatedUniverse).getTargets().map { tg -> {
+            val data = OperationDataWrapper(this)
+            val t = calcOutputMain() * Random.nextInt(9995, 10005).toFloat() / 10000f
+
+            tg.modHealth(-t)
+            data.targets[tg] = t
+            data
+        } }
     }
     override fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper {
-        var i = -1
-        while (i == -1 || !context.targetObjects[i].alive()) {
-            i = Random.nextInt(0, context.targetObjects.size)
-        }
-        val data = OperationDataWrapper(this)
-        val t = calcOutputMain() * Random.nextInt(9995, 10005).toFloat() / 10000f
-
-        context.targetObjects[i].modHealth(-t)
-        data.targets[context.targetObjects[i]] = t
-        return data
+        return getAllChoices()[Random.nextInt(getAllChoices().size)](context)
     }
 }
