@@ -14,7 +14,9 @@ interface CharacterBase: Cloneable {
     fun getName(): String
     fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper
     fun getAllChoices(): List<(TargetRequestContextWrapper) -> OperationDataWrapper>
+    fun getChoicesCount(): Int
     var simulator: Simulator
+    var currentChoice: Int
 
     public override fun clone(): CharacterBase
 

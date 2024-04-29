@@ -38,7 +38,10 @@ data class DefaultedObject(
             data
         } }
     }
+
+    override fun getChoicesCount(): Int = getAllChoices().size
+    override var currentChoice = 0
     override fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper {
-        return getAllChoices()[Random.nextInt(getAllChoices().size)](context)
+        return getAllChoices()[currentChoice](context)
     }
 }

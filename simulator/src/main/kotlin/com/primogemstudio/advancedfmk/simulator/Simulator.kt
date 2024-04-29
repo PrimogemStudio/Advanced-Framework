@@ -16,9 +16,10 @@ abstract class Simulator(open val func: (ContextWrapper) -> ResultWrapper): Clon
         }
     }
 
-    fun simulateStep(): ContextWrapper = ContextWrapper(
+    fun genContext(): ContextWrapper = ContextWrapper(
         simulator = this
-    ).apply { simulateStep(this) }
+    )
+    fun simulateStep(): ContextWrapper = genContext().apply { simulateStep(this) }
     abstract fun simulateStep(context: ContextWrapper)
     abstract override fun clone(): Simulator
 }

@@ -3,7 +3,22 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.roundtrip.CharacterBase
 import com.primogemstudio.advancedfmk.simulator.roundtrip.DefaultedObject
 import com.primogemstudio.advancedfmk.simulator.roundtrip.SimulatedUniverse
-import kotlinx.coroutines.runBlocking
+
+class SnapshotTree: HashMap<SimulatedUniverse, SnapshotTree>()
+
+fun genTarget(simu: SimulatedUniverse): SnapshotTree {
+    val target = SnapshotTree()
+    target[simu] = SnapshotTree()
+    if (simu.func(simu.genContext()).finished) return target
+
+    for (i in 0 ..< simu.getCurrentChar().getChoicesCount()) {
+        val cpy = simu.clone()
+        cpy.getCurrentChar().currentChoice = i
+        cpy.simulateStep()
+        target[simu]?.set(cpy, genTarget(cpy))
+    }
+    return target
+}
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
@@ -25,7 +40,7 @@ fun main() {
         "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable, simu
     ))
 
-    val t = simu.clone()
+    /*val t = simu.clone()
     runBlocking { t.loopMain().await() }
 
     with(t.operationStack) {
@@ -36,5 +51,6 @@ fun main() {
             i++
         }
     }
-    println("Test passed!")
+    println("Test passed!")*/
+    println(genTarget(simu))
 }
