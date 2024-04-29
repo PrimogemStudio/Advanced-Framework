@@ -7,16 +7,23 @@ import java.util.*
 
 class SimulatedUniverse(
     val characters: MutableList<CharacterBase> = mutableListOf(),
-    val enemies: MutableList<CharacterBase> = mutableListOf()
+    val enemies: MutableList<CharacterBase> = mutableListOf(),
+    private val operateQueue: Deque<MutableList<CharacterBase>> = LinkedList()
 ): Simulator({
     enemies.flatMap { if (!it.alive()) listOf(it) else listOf() }
         .forEach { enemies.remove(it) }
+    characters.flatMap { if (!it.alive()) listOf(it) else listOf() }
+        .forEach { chr -> operateQueue.forEach { it.remove(chr) } }
+
+    val tempData = mutableListOf<MutableList<CharacterBase>>()
+    operateQueue.forEach { if (it.isEmpty()) tempData.add(it) }
+    tempData.forEach { operateQueue.remove(it) }
+
     ResultWrapper(
         characters.map { it.calcHealth() }.sum() == 0f ||
                 enemies.map { it.calcHealth() }.sum() == 0f
     )
 }) {
-    private val operateQueue: Deque<MutableList<CharacterBase>> = LinkedList()
     val operationStack: Stack<OperationDataWrapper> = Stack()
     fun buildQueue() {
         if (operateQueue.isNotEmpty()) return
@@ -28,13 +35,19 @@ class SimulatedUniverse(
         buildQueue()
         return operateQueue.peek()[0]
     }
+    fun getTargets(): MutableList<CharacterBase> {
+        return when (getCurrentChar().type()) {
+            CharacterBase.Type.Controllable -> enemies
+            CharacterBase.Type.UnControllable -> characters
+            CharacterBase.Type.UnControllableUnrequired -> characters
+        }
+    }
     override fun simulateStep(context: ContextWrapper) {
         buildQueue()
 
         val cu = operateQueue.peek()
         val current = cu[0]
         run {
-            if (!current.alive()) return@run
             when (current.type()) {
                 CharacterBase.Type.Controllable -> enemies
                 CharacterBase.Type.UnControllable -> characters

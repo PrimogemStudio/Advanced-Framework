@@ -28,7 +28,9 @@ data class DefaultedObject(
     override fun getName(): String = id
 
     override fun clone(): CharacterBase = DefaultedObject(id, health, mainOutput, type, simulator).apply { this.currentHealth = currentHealth }
-
+    override fun getAllChoices(): List<(TargetRequestContextWrapper) -> OperationDataWrapper> {
+        return listOf()
+    }
     override fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper {
         var i = -1
         while (i == -1 || !context.targetObjects[i].alive()) {

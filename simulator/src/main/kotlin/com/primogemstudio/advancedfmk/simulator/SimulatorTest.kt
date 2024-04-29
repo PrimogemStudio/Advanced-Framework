@@ -19,10 +19,10 @@ fun main() {
     ))
 
     simu.enemies.add(DefaultedObject(
-        "Test enemy 1", 50f, 20f, CharacterBase.Type.UnControllable, simu
+        "Test enemy 1", 500f, 20f, CharacterBase.Type.UnControllable, simu
     ))
     simu.enemies.add(DefaultedObject(
-        "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable, simu
+        "Test enemy 2", 750f, 20f, CharacterBase.Type.UnControllable, simu
     ))
 
     val t = simu.clone()

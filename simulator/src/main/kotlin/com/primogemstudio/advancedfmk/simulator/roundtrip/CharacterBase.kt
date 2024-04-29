@@ -13,6 +13,7 @@ interface CharacterBase: Cloneable {
     fun modHealth(add: Float)
     fun getName(): String
     fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper
+    fun getAllChoices(): List<(TargetRequestContextWrapper) -> OperationDataWrapper>
     var simulator: Simulator
 
     public override fun clone(): CharacterBase
