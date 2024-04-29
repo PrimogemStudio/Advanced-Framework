@@ -25,19 +25,16 @@ fun main() {
         "Test enemy 2", 75f, 20f, CharacterBase.Type.UnControllable, simu
     ))
 
-    while (true) {
-        val t = simu.clone()
-        runBlocking { t.loopMain().await() }
+    val t = simu.clone()
+    runBlocking { t.loopMain().await() }
 
-        /*with(t.operationStack) {
-            var i = 0
-            while (!isEmpty()) {
-                val r = pop()
-                println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
-                i++
-            }
-        }*/
-        println("Test passed!")
-        // System.gc()
+    with(t.operationStack) {
+        var i = 0
+        while (!isEmpty()) {
+            val r = pop()
+            println("-0x${i.toHexString()} ${r.from} -> ${r.targets.map { it.key }} (${r.targets.map { it.value }}))")
+            i++
+        }
     }
+    println("Test passed!")
 }

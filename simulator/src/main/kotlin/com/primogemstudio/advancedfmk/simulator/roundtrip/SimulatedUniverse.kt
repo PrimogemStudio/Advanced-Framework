@@ -35,22 +35,16 @@ class SimulatedUniverse(
         val current = cu[0]
         run {
             if (!current.alive()) return@run
-            val result = OperationDataWrapper(current)
             when (current.type()) {
                 CharacterBase.Type.Controllable -> enemies
                 CharacterBase.Type.UnControllable -> characters
                 CharacterBase.Type.UnControllableUnrequired -> characters
             }.apply {
-                current.selectTargets(
+                operationStack.push(current.simulateStep(
                     TargetRequestContextWrapper(
                         this@SimulatedUniverse, current, this
                     )
-                ).map { this[it] }.map { t ->
-                    Pair(t, current.calcOutputMain().apply {
-                        t.operateHealth { it.setter.call(it.getter.call() - this) }
-                    })
-                }.forEach { (char, data) -> result.targets[char] = data }
-                operationStack.push(result)
+                ))
             }
         }
         cu.removeAt(0)

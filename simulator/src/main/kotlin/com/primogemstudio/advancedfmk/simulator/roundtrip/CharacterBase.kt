@@ -1,7 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator.roundtrip
 
 import com.primogemstudio.advancedfmk.simulator.Simulator
-import kotlin.reflect.KMutableProperty
 
 interface CharacterBase: Cloneable {
     fun type(): Type
@@ -11,9 +10,9 @@ interface CharacterBase: Cloneable {
 
     fun reset()
     fun alive(): Boolean
-    fun operateHealth(func: (KMutableProperty<Float>) -> Unit)
+    fun modHealth(add: Float)
     fun getName(): String
-    fun selectTargets(context: TargetRequestContextWrapper): IntArray
+    fun simulateStep(context: TargetRequestContextWrapper): OperationDataWrapper
     var simulator: Simulator
 
     public override fun clone(): CharacterBase
