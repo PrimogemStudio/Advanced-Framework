@@ -8,15 +8,14 @@ class SnapshotTree: HashMap<SimulatedUniverse, SnapshotTree>()
 
 fun genTarget(simu: SimulatedUniverse, depth: Int = 0): SnapshotTree {
     val target = SnapshotTree()
-    target[simu] = SnapshotTree()
-    if (simu.func(simu.genContext()).finished || depth > 2) return target
+    if (simu.func(simu.genContext()).finished || depth > 3) return target
 
     println("${simu.getCurrentChar().getName()} $depth")
     for (i in 0 ..< simu.getCurrentChar().getChoicesCount()) {
         val cpy = simu.clone()
         cpy.getCurrentChar().currentChoice = i
         cpy.simulateStep()
-        target[simu]?.set(cpy, genTarget(cpy, depth + 1))
+        target[cpy] = genTarget(cpy, depth + 1)
     }
     return target
 }
