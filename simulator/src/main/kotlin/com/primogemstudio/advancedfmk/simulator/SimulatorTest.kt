@@ -11,6 +11,7 @@ fun genTarget(simu: SimulatedUniverse, depth: Int = 0): SnapshotTree {
     target[simu] = SnapshotTree()
     if (simu.func(simu.genContext()).finished || depth > 2) return target
 
+    println("${simu.getCurrentChar().getName()} $depth")
     for (i in 0 ..< simu.getCurrentChar().getChoicesCount()) {
         val cpy = simu.clone()
         cpy.getCurrentChar().currentChoice = i
