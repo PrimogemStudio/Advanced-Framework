@@ -15,4 +15,6 @@ fun main() {
         )
     )
     println(uni.getQueueTop()?.getSolutions())
+    println(uni.getQueueTop()?.finishSolve())
+    println(uni.getQueueTop()?.getSolutions())
 }

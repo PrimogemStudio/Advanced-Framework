@@ -40,4 +40,6 @@ class RoundtripCharacterImplv0(
         if (simulator?.getQueueTop() != this) return listOf()
         return simulator?.getCurrTarget(this)?.map { { it.receiveAttack(mainOutput) } }?: listOf()
     }
+
+    override fun finishSolve(): Unit = simulator?.operateDone(this)!!
 }

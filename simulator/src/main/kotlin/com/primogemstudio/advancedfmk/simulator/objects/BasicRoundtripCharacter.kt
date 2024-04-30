@@ -13,4 +13,5 @@ interface BasicRoundtripCharacter: MappedObject {
 
     fun receiveAttack(value: Float)
     fun getSolutions(): List<() -> Unit>
+    fun finishSolve()
 }

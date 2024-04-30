@@ -21,4 +21,10 @@ class SimulatedUniverse(
         if (enemies.contains(c)) return characters
         return listOf()
     }
+    fun operateDone(c: BasicRoundtripCharacter) {
+        if (c == getQueueTop()) {
+            operQueue.peek().remove(c)
+            if (operQueue.peek().size == 0) operQueue.offer(operQueue.poll().apply { this.add(c) })
+        }
+    }
 }
