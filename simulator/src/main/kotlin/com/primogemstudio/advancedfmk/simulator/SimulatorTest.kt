@@ -14,7 +14,9 @@ fun main() {
             RoundtripCharacterImplv0("Test enemy 2", 75f, 20f)
         )
     )
-    println(uni.getQueueTop()?.getSolutions())
-    println(uni.getQueueTop()?.finishSolve())
-    println(uni.getQueueTop()?.getSolutions())
+    while (!uni.finished()) {
+        uni.getQueueTop()?.getSolutions()?.get(0)?.invoke()
+        uni.getQueueTop()?.finishSolve()
+    }
+    println(uni)
 }

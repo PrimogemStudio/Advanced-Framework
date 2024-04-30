@@ -10,8 +10,9 @@ interface BasicRoundtripCharacter: MappedObject {
 
     val mainOutput: Float
     var simulator: SimulatedUniverse?
+    val alive: Boolean
 
-    fun receiveAttack(value: Float)
+    fun receiveAttack(value: Float, additional: Map<String, Any>)
     fun getSolutions(): List<() -> Unit>
     fun finishSolve()
 }

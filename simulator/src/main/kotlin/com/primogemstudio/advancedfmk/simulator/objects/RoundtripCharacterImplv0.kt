@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.simulator.objects
 
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
 import kotlin.math.max
+import kotlin.random.Random
 
 class RoundtripCharacterImplv0(
     id: String,
@@ -27,8 +28,10 @@ class RoundtripCharacterImplv0(
 
     override val mainOutput: Float
         get() = initialData["output"] as Float
+    override val alive: Boolean
+        get() = health > 0f
 
-    override fun receiveAttack(value: Float) {
+    override fun receiveAttack(value: Float, additional: Map<String, Any>) {
         health = max(0f, health - value)
     }
 
@@ -38,7 +41,9 @@ class RoundtripCharacterImplv0(
     override fun overrideData(v: Map<String, Any>) { initialData = v.toMutableMap() }
     override fun getSolutions(): List<() -> Unit> {
         if (simulator?.getQueueTop() != this) return listOf()
-        return simulator?.getCurrTarget(this)?.map { { it.receiveAttack(mainOutput) } }?: listOf()
+        return simulator?.getCurrTarget(this)?.filter { it.alive }?.map {
+            { it.receiveAttack(mainOutput * Random.nextInt(9955, 10045).toFloat() / 10000f, mapOf()) }
+        }?: listOf()
     }
 
     override fun finishSolve(): Unit = simulator?.operateDone(this)!!
