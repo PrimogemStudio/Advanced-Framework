@@ -2,6 +2,23 @@ package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
 
+class ResultTree: HashMap<SnapshotResult, ResultTree>()
+
+fun genResult(uni: SimulatedUniverse): ResultTree {
+    val tar = ResultTree()
+    if (uni.finished()) return tar
+
+    val root = uni.mkSnapshot(null)
+    for (i in uni.getQueueTop()?.getSolutions()!!) {
+        val rs = i()
+        uni.getQueueTop()?.finishSolve()
+        tar[uni.mkSnapshot(rs)] = genResult(uni)
+        uni.resSnapshot(root)
+    }
+
+    return tar
+}
+
 fun main() {
     val uni = SimulatedUniverse(
         listOf(
@@ -14,17 +31,7 @@ fun main() {
             RoundtripCharacterImplv0("Test enemy 2", 75f, 20f)
         )
     )
-    /*while (!uni.finished()) {
-        val rs = uni.getQueueTop()?.getSolutions()?.get(0)?.invoke()
-        uni.getQueueTop()?.finishSolve()
-        val r = uni.mkSnapshot(rs!!)
-        println(r)
-    }
-    println(uni)*/
 
-    val r = uni.mkSnapshot(null)
-    uni.getQueueTop()?.getSolutions()?.get(0)?.invoke()
-    uni.getQueueTop()?.finishSolve()
-    uni.resSnapshot(r)
-    println(uni)
+    val r = genResult(uni)
+    println(r)
 }
