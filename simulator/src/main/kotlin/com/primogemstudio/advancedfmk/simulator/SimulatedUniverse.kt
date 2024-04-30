@@ -13,6 +13,8 @@ class SimulatedUniverse(
         enemies.forEach { operQueue.offer(mutableListOf(it)); it.simulator = this }
     }
 
+    fun finished(): Boolean = characters.map { it.health }.sum() == 0f || win()
+    fun win(): Boolean = enemies.map { it.health }.sum() == 0f
     fun getQueueTop(): BasicRoundtripCharacter? = operQueue.peek().firstOrNull()
     fun getCurrTarget(c: BasicRoundtripCharacter): List<BasicRoundtripCharacter> {
         if (characters.contains(c)) return enemies
