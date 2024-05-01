@@ -39,10 +39,10 @@ jobs:
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "LAST_COMMIT_SHA=$calculatedSha" >> ${GITHUB_ENV}
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Gradle

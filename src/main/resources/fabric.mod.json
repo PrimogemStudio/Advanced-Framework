@@ -24,9 +24,6 @@
     ],
     "main": [
       "com.primogemstudio.advancedfmk.AdvancedFramework"
-    ],
-    "preLaunch": [
-      "com.primogemstudio.advancedfmk.RenderDocHook"
     ]
   },
   "mixins": [
