@@ -16,7 +16,7 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
     if (uni.finished()) return tar
 
     val root = uni.mkSnapshot(null)
-    if (depth < 30) println("Solving depth $depth, ${uni.getQueueTop()?.id}")
+    // println("Solving depth $depth, ${uni.getQueueTop()?.id}")
     for (i in uni.getQueueTop()?.getSolutions()!!) {
         val rs = i()
         uni.getQueueTop()?.finishSolve()
@@ -28,12 +28,12 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
 }
 
 fun main() {
-    val t = Thread() {
+    val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
             println("Current calcs: $cont $depthd")
         }
-    }.apply { start() }
+    }
 
     val uni = SimulatedUniverse(
         listOf(
@@ -42,13 +42,13 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 5f, 20f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 5f, 20f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.4f, 20f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.4f, 20f)
         )
     )
 
     val r = genResult(uni)
-    println(r)
+    println(r.size)
     println(cont)
     t.interrupt()
 }
