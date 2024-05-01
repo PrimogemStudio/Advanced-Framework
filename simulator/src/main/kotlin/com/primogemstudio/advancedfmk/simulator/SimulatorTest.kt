@@ -1,18 +1,26 @@
 package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
+import kotlin.math.max
 
 class ResultTree: HashMap<SnapshotResult, ResultTree>()
 
-fun genResult(uni: SimulatedUniverse): ResultTree {
+var cont = 0
+var depthd = 0
+fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
+    cont++
+    if (cont % 100000 == 0) System.gc()
+    depthd = max(depthd, depth)
+
     val tar = ResultTree()
     if (uni.finished()) return tar
 
     val root = uni.mkSnapshot(null)
+    if (depth < 30) println("Solving depth $depth, ${uni.getQueueTop()?.id}")
     for (i in uni.getQueueTop()?.getSolutions()!!) {
         val rs = i()
         uni.getQueueTop()?.finishSolve()
-        tar[uni.mkSnapshot(rs)] = genResult(uni)
+        tar[uni.mkSnapshot(rs)] = genResult(uni, depth + 1)
         uni.resSnapshot(root)
     }
 
@@ -20,6 +28,13 @@ fun genResult(uni: SimulatedUniverse): ResultTree {
 }
 
 fun main() {
+    val t = Thread() {
+        while (true) {
+            Thread.sleep(500)
+            println("Current calcs: $cont $depthd")
+        }
+    }.apply { start() }
+
     val uni = SimulatedUniverse(
         listOf(
             RoundtripCharacterImplv0("Test character 1", 100f, 25f),
@@ -27,11 +42,13 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f, 20f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f, 20f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 5f, 20f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 5f, 20f)
         )
     )
 
     val r = genResult(uni)
     println(r)
+    println(cont)
+    t.interrupt()
 }
