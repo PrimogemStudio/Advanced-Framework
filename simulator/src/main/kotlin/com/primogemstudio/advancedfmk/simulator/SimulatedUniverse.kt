@@ -3,19 +3,23 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
+enum class OperationState {
+    NORMAL
+}
+
 class SimulatedUniverse(
     val characters: List<IRoundtripCharacter>,
     val enemies: List<IRoundtripCharacter>
 ) {
-    private val operQueue: Deque<MutableList<IRoundtripCharacter>> = LinkedList()
+    private val operQueue: Deque<MutableList<Pair<IRoundtripCharacter, OperationState>>> = LinkedList()
     init {
-        characters.forEach { operQueue.offer(mutableListOf(it)); it.simulator = this }
-        enemies.forEach { operQueue.offer(mutableListOf(it)); it.simulator = this }
+        characters.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
+        enemies.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
     }
 
     fun finished(): Boolean = characters.map { if (it.alive) 1f else 0f }.sum() == 0f || win()
     fun win(): Boolean = enemies.map { if (it.alive) 1f else 0f }.sum() == 0f
-    fun getQueueTop(): IRoundtripCharacter? = operQueue.peek().firstOrNull()
+    fun getQueueTop(): IRoundtripCharacter? = if (finished()) null else operQueue.peek().firstOrNull()?.first
     fun getCurrTarget(c: IRoundtripCharacter): List<IRoundtripCharacter> {
         if (characters.contains(c)) return enemies
         if (enemies.contains(c)) return characters
@@ -23,10 +27,11 @@ class SimulatedUniverse(
     }
     fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
-            operQueue.peek().remove(c)
-            if (operQueue.peek().size == 0) operQueue.offer(operQueue.poll().apply { this.add(c) })
+            val tg = operQueue.peek().firstOrNull { it.first == c }
+            operQueue.peek().remove(tg)
+            if (tg?.second == OperationState.NORMAL) operQueue.offer(operQueue.poll().apply { this.add(tg) })
 
-            operQueue.forEach { stk -> stk.removeAll { !it.alive } }
+            operQueue.forEach { stk -> stk.removeAll { !it.first.alive } }
             operQueue.removeAll { it.isEmpty() }
         }
     }
