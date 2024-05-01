@@ -27,7 +27,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
-    api implementation("org.lwjgl:lwjgl-tinyfd:3.3.2")
+    api implementation("org.lwjgl:lwjgl-tinyfd:${project.lwjgl_version}")
     implementation("org.joml:joml:${project.joml_version}")
 }
 
