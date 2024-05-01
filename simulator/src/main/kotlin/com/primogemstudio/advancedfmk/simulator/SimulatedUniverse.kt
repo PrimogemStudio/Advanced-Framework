@@ -1,13 +1,13 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.BasicRoundtripCharacter
+import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
 class SimulatedUniverse(
-    val characters: List<BasicRoundtripCharacter>,
-    val enemies: List<BasicRoundtripCharacter>
+    val characters: List<IRoundtripCharacter>,
+    val enemies: List<IRoundtripCharacter>
 ) {
-    private val operQueue: Deque<MutableList<BasicRoundtripCharacter>> = LinkedList()
+    private val operQueue: Deque<MutableList<IRoundtripCharacter>> = LinkedList()
     init {
         characters.forEach { operQueue.offer(mutableListOf(it)); it.simulator = this }
         enemies.forEach { operQueue.offer(mutableListOf(it)); it.simulator = this }
@@ -15,13 +15,13 @@ class SimulatedUniverse(
 
     fun finished(): Boolean = characters.map { if (it.alive) 1f else 0f }.sum() == 0f || win()
     fun win(): Boolean = enemies.map { if (it.alive) 1f else 0f }.sum() == 0f
-    fun getQueueTop(): BasicRoundtripCharacter? = operQueue.peek().firstOrNull()
-    fun getCurrTarget(c: BasicRoundtripCharacter): List<BasicRoundtripCharacter> {
+    fun getQueueTop(): IRoundtripCharacter? = operQueue.peek().firstOrNull()
+    fun getCurrTarget(c: IRoundtripCharacter): List<IRoundtripCharacter> {
         if (characters.contains(c)) return enemies
         if (enemies.contains(c)) return characters
         return listOf()
     }
-    fun operateDone(c: BasicRoundtripCharacter) {
+    fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
             operQueue.peek().remove(c)
             if (operQueue.peek().size == 0) operQueue.offer(operQueue.poll().apply { this.add(c) })

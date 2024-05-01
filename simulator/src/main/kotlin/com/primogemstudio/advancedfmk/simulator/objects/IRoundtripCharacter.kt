@@ -3,7 +3,7 @@ package com.primogemstudio.advancedfmk.simulator.objects
 import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
 
-interface BasicRoundtripCharacter: MappedObject {
+interface IRoundtripCharacter: MappedObject {
     val id: String
 
     var health: Float

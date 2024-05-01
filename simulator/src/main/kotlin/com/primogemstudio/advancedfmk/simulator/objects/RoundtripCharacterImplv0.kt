@@ -9,7 +9,7 @@ class RoundtripCharacterImplv0(
     id: String,
     initHealth: Float,
     output: Float
-): BasicRoundtripCharacter {
+): IRoundtripCharacter {
     private var initialData = mutableMapOf<String, Any>()
     init {
         initialData["id"] = id
