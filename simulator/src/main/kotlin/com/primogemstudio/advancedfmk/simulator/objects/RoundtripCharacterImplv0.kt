@@ -44,7 +44,7 @@ class RoundtripCharacterImplv0(
         if (simulator?.getQueueTop() != this) return listOf()
         return simulator?.getCurrTarget(this)?.filter { it.alive }?.map {
             {
-                val r = mainOutput * Random.nextInt(9955, 10045).toFloat() / 10000f
+                val r = mainOutput * Random.nextInt(9995, 10005).toFloat() / 10000f
                 it.receiveAttack(r, mapOf())
                 AttackResult(this, mapOf(Pair(it, r)))
             }

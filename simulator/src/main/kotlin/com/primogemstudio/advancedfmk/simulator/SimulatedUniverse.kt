@@ -9,9 +9,21 @@ enum class OperationState {
 
 class SimulatedUniverse(
     val characters: List<IRoundtripCharacter>,
-    val enemies: List<IRoundtripCharacter>
+    val enemies: List<IRoundtripCharacter>,
+    maxNum: Int, currentM: Int
 ) {
     private val operQueue: Deque<MutableList<Pair<IRoundtripCharacter, OperationState>>> = LinkedList()
+    private var extendedVal = mutableMapOf<String, Any>()
+
+    init {
+        extendedVal["maxN"] = maxNum
+        extendedVal["maxNCalc"] = currentM
+    }
+
+    var maxAttNum: Int
+        get() = extendedVal["maxNCalc"] as Int
+        set(v) { extendedVal["maxNCalc"] = v }
+
     init {
         characters.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
         enemies.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
@@ -41,6 +53,7 @@ class SimulatedUniverse(
             characters.map { it.getRawData().toMap() },
             enemies.map { it.getRawData().toMap() },
             operQueue.map { it.toMutableList() }.toList(),
+            extendedVal.toMap(),
             res
         )
     }
@@ -48,6 +61,7 @@ class SimulatedUniverse(
     fun resSnapshot(snap: SnapshotResult) {
         for (i in snap.charactersData.indices) characters[i].overrideData(snap.charactersData[i])
         for (i in snap.enemiesData.indices) enemies[i].overrideData(snap.enemiesData[i])
+        extendedVal = snap.extendedVals.toMutableMap()
 
         operQueue.clear()
         snap.operQueue.forEach { operQueue.add(it.toMutableList()) }
