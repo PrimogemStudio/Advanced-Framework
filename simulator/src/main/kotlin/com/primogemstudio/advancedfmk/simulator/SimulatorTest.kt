@@ -7,13 +7,19 @@ class ResultTree: HashMap<SnapshotResult, ResultTree>()
 
 var cont = 0
 var depthd = 0
+var all = 0f
+var succ = 0f
 fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
     cont++
     if (cont % 100000 == 0) System.gc()
     depthd = max(depthd, depth)
 
     val tar = ResultTree()
-    if (uni.finished()) return tar
+    if (uni.finished()) {
+        all += 1
+        if (uni.win()) succ += 1
+        return tar
+    }
 
     val root = uni.mkSnapshot(null)
     // println("Solving depth $depth, ${uni.getQueueTop()?.id}")
@@ -31,7 +37,7 @@ fun main() {
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
-            println("Current calcs: $cont $depthd")
+            println("Current calcs: $cont $depthd ${succ / all * 100f} %")
         }
     }
 
@@ -42,13 +48,14 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.4f, 20f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.4f, 20f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 2f, 20f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 2f, 20f)
         )
     )
 
     val r = genResult(uni)
     println(r.size)
     println(cont)
+    println("${succ / all * 100f} %")
     t.interrupt()
 }
