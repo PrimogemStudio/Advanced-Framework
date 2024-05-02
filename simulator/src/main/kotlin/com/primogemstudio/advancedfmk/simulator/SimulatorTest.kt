@@ -1,18 +1,15 @@
 package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
-import kotlin.math.max
 
 class ResultTree: HashMap<SnapshotResult, ResultTree>()
 
 var cont = 0
-var depthd = 0
 var all = 0f
 var succ = 0f
 fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
     cont++
-    if (cont % 10000 == 0) System.gc()
-    depthd = max(depthd, depth)
+    if (cont % 1000000 == 0) System.gc()
 
     val tar = ResultTree()
     if (uni.finished()) {
@@ -22,7 +19,6 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
     }
 
     val root = uni.mkSnapshot(null)
-    // println("Solving depth $depth, ${uni.getQueueTop()?.id}")
     for (i in uni.getQueueTop()?.getSolutions()!!) {
         val rs = i()
         uni.getQueueTop()?.finishSolve()
@@ -34,7 +30,7 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
 }
 
 fun main() {
-    val rr = { println("Current stat: $cont calcs, $depthd depth, ${all.toInt()} ends, ${succ / all * 100f} %") }
+    val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
@@ -46,11 +42,13 @@ fun main() {
         listOf(
             RoundtripCharacterImplv0("Test character 1", 100f, 25f),
             RoundtripCharacterImplv0("Test character 2", 200f, 15f),
-            RoundtripCharacterImplv0("Test character 3", 50f, 50f)
+            RoundtripCharacterImplv0("Test character 3", 50f, 50f),
+            RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
             RoundtripCharacterImplv0("Test enemy 1", 50f * 1.05f, 20f * 1.05f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.05f, 20f * 1.05f)
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.05f, 20f * 1.05f),
+            RoundtripCharacterImplv0("Test enemy 2", 100f * 1.05f, 15f * 1.05f)
         ),
         8, 3
     )
