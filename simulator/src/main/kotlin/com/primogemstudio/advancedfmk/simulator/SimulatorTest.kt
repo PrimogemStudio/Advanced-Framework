@@ -43,13 +43,13 @@ fun main() {
 
     val uni = SimulatedUniverse(
         listOf(
-            RoundtripCharacterImplv0("Test character 1", 100f, 25f * 0.7f),
-            RoundtripCharacterImplv0("Test character 2", 200f, 15f * 0.7f),
-            RoundtripCharacterImplv0("Test character 3", 50f, 50f * 0.7f)
+            RoundtripCharacterImplv0("Test character 1", 100f, 25f),
+            RoundtripCharacterImplv0("Test character 2", 200f, 15f),
+            RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.3f, 20f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.3f, 20f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.35f, 20f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.35f, 20f)
         )
     )
 
