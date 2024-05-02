@@ -37,6 +37,11 @@ class SimulatedUniverse(
         if (enemies.contains(c)) return characters
         return listOf()
     }
+    fun getCurrList(c: IRoundtripCharacter): List<IRoundtripCharacter> {
+        if (characters.contains(c)) return characters
+        if (enemies.contains(c)) return enemies
+        return listOf()
+    }
     fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
             val tg = operQueue.peek().firstOrNull { it.first == c }

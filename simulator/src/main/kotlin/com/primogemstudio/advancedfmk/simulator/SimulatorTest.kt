@@ -11,7 +11,7 @@ var all = 0f
 var succ = 0f
 fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
     cont++
-    if (cont % 100000 == 0) System.gc()
+    if (cont % 10000 == 0) System.gc()
     depthd = max(depthd, depth)
 
     val tar = ResultTree()
@@ -49,8 +49,8 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 3.3f, 20f * 3.3f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 3.3f, 20f * 3.3f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.05f, 20f * 1.05f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.05f, 20f * 1.05f)
         ),
         8, 3
     )
