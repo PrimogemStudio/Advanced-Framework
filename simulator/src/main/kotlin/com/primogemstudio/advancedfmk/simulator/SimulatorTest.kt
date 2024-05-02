@@ -43,8 +43,8 @@ fun main() {
 
     val uni = SimulatedUniverse(
         listOf(
-            RoundtripCharacterImplv0("Test character 1", 100f, 25f),
-            RoundtripCharacterImplv0("Test character 2", 200f, 15f),
+            RoundtripCharacterImplv0("Test character 1", 10f, 25f),
+            RoundtripCharacterImplv0("Test character 2", 20f, 15f),
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
