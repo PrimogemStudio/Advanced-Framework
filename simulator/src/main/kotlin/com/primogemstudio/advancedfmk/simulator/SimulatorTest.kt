@@ -34,28 +34,28 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
 }
 
 fun main() {
+    val rr = { println("Current stat: $cont calcs, $depthd depth, ${all.toInt()} ends, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
-            println("Current calcs: $cont $depthd ${succ / all * 100f} %")
+            rr()
         }
     }
 
     val uni = SimulatedUniverse(
         listOf(
-            RoundtripCharacterImplv0("Test character 1", 10f, 25f),
-            RoundtripCharacterImplv0("Test character 2", 20f, 15f),
+            RoundtripCharacterImplv0("Test character 1", 100f, 25f),
+            RoundtripCharacterImplv0("Test character 2", 200f, 15f),
             RoundtripCharacterImplv0("Test character 3", 50f, 50f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.35f, 20f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.35f, 20f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 2.4f, 20f * 2.4f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 2.4f, 20f * 2.4f)
         )
     )
 
     val r = genResult(uni)
     println(r.size)
-    println(cont)
-    println("${succ / all * 100f} %")
+    rr()
     t.interrupt()
 }
