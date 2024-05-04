@@ -30,7 +30,7 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
 }
 
 fun main() {
-    val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ / all * 100f} %") }
+    val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
@@ -46,9 +46,8 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.05f, 20f * 1.05f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.05f, 20f * 1.05f),
-            RoundtripCharacterImplv0("Test enemy 2", 100f * 1.05f, 15f * 1.05f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f)
         ),
         8, 3
     )
