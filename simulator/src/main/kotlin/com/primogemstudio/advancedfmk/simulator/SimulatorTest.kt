@@ -46,10 +46,10 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.25f, 20f * 1.25f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.25f, 20f * 1.25f)
         ),
-        8, 3
+        5, 3
     )
 
     val r = genResult(uni)
