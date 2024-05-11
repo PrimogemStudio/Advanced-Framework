@@ -3,16 +3,15 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
 import java.nio.file.Files
 import java.nio.file.Path
-
-class ResultTree: HashMap<SnapshotResult, ResultTree>()
+import java.util.zip.Deflater
+import java.util.zip.DeflaterOutputStream
 
 var cont = 0
 var all = 0f
 var succ = 0f
-val f = Files.newOutputStream(Path.of("result.txt")).bufferedWriter()
+val f = DeflaterOutputStream(Files.newOutputStream(Path.of("result.txt")), Deflater(Deflater.BEST_COMPRESSION)).bufferedWriter()
 fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     cont++
-    if (cont % 1000000 == 0) System.gc()
 
     if (uni.finished()) {
         all += 1
@@ -48,8 +47,8 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.25f, 20f * 1.25f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.25f, 20f * 1.25f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 3.5f, 20f * 3.5f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 3.5f, 20f * 3.5f)
         ),
         5, 3
     )
