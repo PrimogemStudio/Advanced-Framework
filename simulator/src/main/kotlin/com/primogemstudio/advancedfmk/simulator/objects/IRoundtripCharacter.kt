@@ -16,4 +16,5 @@ interface IRoundtripCharacter: MappedObject {
     fun receiveAttack(value: Float, additional: Map<String, Any>)
     fun getSolutions(): List<() -> AttackResult>
     fun finishSolve()
+    override fun toString(): String
 }

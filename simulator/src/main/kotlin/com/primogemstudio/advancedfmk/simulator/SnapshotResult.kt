@@ -11,4 +11,6 @@ data class SnapshotResult(
 ) {
     fun finish(): Boolean = charactersData.map { it["health"] as Float }.sum() == 0f || win()
     fun win(): Boolean = enemiesData.map { it["health"] as Float }.sum() == 0f
+
+    override fun toString(): String = "${charactersData.map { it["health"] }} ${enemiesData.map { it["health"] }}"
 }

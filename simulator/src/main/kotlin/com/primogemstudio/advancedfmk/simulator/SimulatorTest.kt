@@ -1,32 +1,34 @@
 package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
+import java.nio.file.Files
+import java.nio.file.Path
 
 class ResultTree: HashMap<SnapshotResult, ResultTree>()
 
 var cont = 0
 var all = 0f
 var succ = 0f
-fun genResult(uni: SimulatedUniverse, depth: Int = 0): ResultTree {
+val f = Files.newOutputStream(Path.of("result.txt")).bufferedWriter()
+fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     cont++
     if (cont % 1000000 == 0) System.gc()
 
-    val tar = ResultTree()
     if (uni.finished()) {
         all += 1
         if (uni.win()) succ += 1
-        return tar
+        return
     }
 
     val root = uni.mkSnapshot(null)
     for (i in uni.getQueueTop()?.getSolutions()!!) {
         val rs = i()
         uni.getQueueTop()?.finishSolve()
-        tar[uni.mkSnapshot(rs)] = genResult(uni, depth + 1)
+        f.appendLine("${"    ".repeat(depth)} $rs -> ")
+        f.appendLine("${"    ".repeat(depth + 1)} ${root}")
+        genResult(uni, depth + 1)
         uni.resSnapshot(root)
     }
-
-    return tar
 }
 
 fun main() {
@@ -52,8 +54,7 @@ fun main() {
         5, 3
     )
 
-    val r = genResult(uni)
-    println(r.size)
+    genResult(uni)
     rr()
     t.interrupt()
 }

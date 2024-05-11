@@ -58,4 +58,5 @@ class RoundtripCharacterImplv0(
     }
 
     override fun finishSolve(): Unit = simulator?.operateDone(this)!!
+    override fun toString(): String = id
 }
