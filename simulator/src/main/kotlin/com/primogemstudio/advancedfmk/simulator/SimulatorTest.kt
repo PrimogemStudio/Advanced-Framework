@@ -7,8 +7,8 @@ import java.util.zip.Deflater
 import java.util.zip.DeflaterOutputStream
 
 var cont = 0
-var all = 0f
-var succ = 0f
+var all: Double = 0.0
+var succ: Double = 0.0
 val f = DeflaterOutputStream(Files.newOutputStream(Path.of("result.txt")), Deflater(Deflater.BEST_COMPRESSION)).bufferedWriter()
 fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     cont++
