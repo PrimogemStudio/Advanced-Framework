@@ -29,8 +29,8 @@ class SimulatedUniverse(
         enemies.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
     }
 
-    fun finished(): Boolean = characters.map { if (it.alive) 1f else 0f }.sum() == 0f || win()
-    fun win(): Boolean = enemies.map { if (it.alive) 1f else 0f }.sum() == 0f
+    fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
+    fun win(): Boolean = enemies.map { it.health }.sum() <= 0f
     fun getQueueTop(): IRoundtripCharacter? = if (finished()) null else operQueue.peek().firstOrNull()?.first
     fun getCurrTarget(c: IRoundtripCharacter): List<IRoundtripCharacter> {
         if (characters.contains(c)) return enemies
