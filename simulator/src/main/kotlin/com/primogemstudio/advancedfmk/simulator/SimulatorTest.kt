@@ -18,15 +18,17 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     if (uni.finished()) {
         all += 1
         if (uni.win()) succ += 1
-        f.appendLine("${"    ".repeat(depth + 1)} ${uni.mkSnapshot(null)}")
+        val re = uni.mkSnapshot(null)
+        f.appendLine("${"    ".repeat(depth + 1)} ${re}")
+        f.appendLine("${"    ".repeat(depth + 1)} finish win=${re.win()}")
         return
     }
 
     val root = uni.mkSnapshot(null)
+    f.appendLine("${"    ".repeat(depth)} ${root}")
     for (i in uni.getQueueTop()?.getSolutions()!!) {
         val rs = i()
         uni.getQueueTop()?.finishSolve()
-        f.appendLine("${"    ".repeat(depth)} ${root}")
         f.appendLine("${"    ".repeat(depth + 1)} $rs -> ")
         genResult(uni, depth + 1)
         uni.resSnapshot(root)
