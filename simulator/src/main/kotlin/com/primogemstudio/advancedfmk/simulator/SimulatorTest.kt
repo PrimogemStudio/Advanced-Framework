@@ -1,14 +1,15 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.StandardOpenOption
-import java.util.zip.InflaterInputStream
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 
 var cont = 0
 var all: Double = 0.0
 var succ: Double = 0.0
-/*val f = DeflaterOutputStream(Files.newOutputStream(Path.of("result.txt")), Deflater(Deflater.BEST_COMPRESSION)).bufferedWriter()
+val f = GZIPOutputStream(Files.newOutputStream(Path.of("result.txt"))).bufferedWriter()
 fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     cont++
 
@@ -30,11 +31,11 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
         genResult(uni, depth + 1)
         uni.resSnapshot(root)
     }
-}*/
+}
 
 @ExperimentalStdlibApi
 fun main() {
-    /*val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
+    val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
@@ -50,8 +51,8 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.15f, 20f * 1.15f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.15f, 20f * 1.15f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f)
         ),
         5, 3
     )
@@ -59,8 +60,8 @@ fun main() {
     genResult(uni)
     rr()
     t.interrupt()
-    f.close()*/
-    val r = InflaterInputStream(Files.newInputStream(Path.of("result.txt"), StandardOpenOption.READ)).bufferedReader()
+    f.close()
+    val r = GZIPInputStream(Files.newInputStream(Path.of("result.txt"))).bufferedReader()
     while (true) {
         if (r.ready()) println(r.readLine())
         else break
