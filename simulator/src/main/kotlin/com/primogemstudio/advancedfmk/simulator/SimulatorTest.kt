@@ -1,17 +1,9 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption
-import java.util.zip.Deflater
-import java.util.zip.DeflaterOutputStream
-import java.util.zip.InflaterInputStream
-
 var cont = 0
 var all: Double = 0.0
 var succ: Double = 0.0
-val f = DeflaterOutputStream(Files.newOutputStream(Path.of("result.txt")), Deflater(Deflater.BEST_COMPRESSION)).bufferedWriter()
+/*val f = DeflaterOutputStream(Files.newOutputStream(Path.of("result.txt")), Deflater(Deflater.BEST_COMPRESSION)).bufferedWriter()
 fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     cont++
 
@@ -33,10 +25,10 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
         genResult(uni, depth + 1)
         uni.resSnapshot(root)
     }
-}
+}*/
 
 fun main() {
-    val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
+    /*val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
         while (true) {
             Thread.sleep(500)
@@ -66,5 +58,8 @@ fun main() {
     while (true) {
         if (r.ready()) println(r.readLine())
         else break
-    }
+    }*/
+    val cons = 0x40000000
+    val r = 0x30000000
+    println(r and cons)
 }

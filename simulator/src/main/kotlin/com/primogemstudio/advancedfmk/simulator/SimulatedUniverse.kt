@@ -3,8 +3,8 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
-enum class OperationState {
-    NORMAL
+object OperationFlags {
+    const val INSERTED: Int = 0x40000000
 }
 
 class SimulatedUniverse(
@@ -12,7 +12,7 @@ class SimulatedUniverse(
     val enemies: List<IRoundtripCharacter>,
     maxNum: Int, currentM: Int
 ) {
-    private val operQueue: Deque<MutableList<Pair<IRoundtripCharacter, OperationState>>> = LinkedList()
+    private val operQueue: Deque<MutableList<Pair<IRoundtripCharacter, Int>>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
@@ -25,8 +25,8 @@ class SimulatedUniverse(
         set(v) { extendedVal["maxNCalc"] = v }
 
     init {
-        characters.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
-        enemies.forEach { operQueue.offer(mutableListOf(Pair(it, OperationState.NORMAL))); it.simulator = this }
+        characters.forEach { operQueue.offer(mutableListOf(Pair(it, 0))); it.simulator = this }
+        enemies.forEach { operQueue.offer(mutableListOf(Pair(it, 0))); it.simulator = this }
     }
 
     fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
@@ -46,7 +46,8 @@ class SimulatedUniverse(
         if (c == getQueueTop()) {
             val tg = operQueue.peek().firstOrNull { it.first == c }
             operQueue.peek().remove(tg)
-            if (tg?.second == OperationState.NORMAL) operQueue.offer(operQueue.poll().apply { this.add(tg) })
+            // Non insertion
+            if (tg?.second!! and OperationFlags.INSERTED == 0) operQueue.offer(operQueue.poll().apply { this.add(tg) })
 
             operQueue.forEach { stk -> stk.removeAll { !it.first.alive } }
             operQueue.removeAll { it.isEmpty() }
