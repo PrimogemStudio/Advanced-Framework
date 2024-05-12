@@ -1,5 +1,10 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import java.util.zip.InflaterInputStream
+
 var cont = 0
 var all: Double = 0.0
 var succ: Double = 0.0
@@ -27,6 +32,7 @@ fun genResult(uni: SimulatedUniverse, depth: Int = 0) {
     }
 }*/
 
+@ExperimentalStdlibApi
 fun main() {
     /*val rr = { println("Current stat: $cont calcs, ${all.toInt()} ends, ${succ.toInt()} / ${all.toInt()}, ${succ / all * 100f} %") }
     val t = Thread.ofVirtual().start {
@@ -53,13 +59,10 @@ fun main() {
     genResult(uni)
     rr()
     t.interrupt()
-    f.close()
+    f.close()*/
     val r = InflaterInputStream(Files.newInputStream(Path.of("result.txt"), StandardOpenOption.READ)).bufferedReader()
     while (true) {
         if (r.ready()) println(r.readLine())
         else break
-    }*/
-    val cons = 0x40000000
-    val r = 0x30000000
-    println(r and cons)
+    }
 }
