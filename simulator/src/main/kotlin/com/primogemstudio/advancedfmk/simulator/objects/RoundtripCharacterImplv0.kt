@@ -10,11 +10,13 @@ class RoundtripCharacterImplv0(
     output: Float
 ): IRoundtripCharacter {
     private var initialData = mutableMapOf<String, Any>()
+    override val staticData: Map<String, Any> = mutableMapOf()
+
     init {
         initialData["id"] = id
         initialData["allHealth"] = initHealth
         initialData["health"] = initHealth
-        initialData["output"] = output
+        (staticData as MutableMap)["output"] = output
     }
 
     override val id: String
@@ -27,7 +29,7 @@ class RoundtripCharacterImplv0(
         get() = initialData["allHealth"] as Float
 
     override val mainOutput: Float
-        get() = initialData["output"] as Float
+        get() = staticData["output"] as Float
     override val alive: Boolean
         get() = health > 0f
 
