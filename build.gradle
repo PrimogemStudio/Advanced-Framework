@@ -70,6 +70,7 @@ dependencies {
     include(implementation(project(path: ':fontengine', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     include(implementation(project(path: ':simulator')))
+    include(implementation(project(path: ':binfiles')))
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()

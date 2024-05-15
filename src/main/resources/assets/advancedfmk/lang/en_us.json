@@ -6,5 +6,9 @@
   "modmenu.nameTranslation.advancedfmk_commonutils": "commonutils (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_commonutils": "Util functions for Advanced Framework",
   "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_uicompositor": "UI parser & renderer for Advanced Framework"
+  "modmenu.descriptionTranslation.advancedfmk_uicompositor": "UI parser & renderer for Advanced Framework",
+  "modmenu.nameTranslation.advancedfmk_simulator": "simulator (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_simulator": "Math models for Advanced Framework",
+  "modmenu.nameTranslation.advancedfmk_binfiles": "binfiles (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_binfiles": "Binary files reading & writing for Advanced Framework"
 }

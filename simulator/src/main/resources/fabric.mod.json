@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "advancedfmk_simulator",
+  "version": "${version}",
+  "name": "simulator (Advanced Framework)",
+  "description": "Math models for Advanced Framework",
+  "authors": [
+    "Jack253-png",
+    "hackermdch"
+  ],
+  "contact": {
+    "repo": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "sources": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "issues": "https://github.com/PrimogemStudio/Advanced-Framework/issues",
+    "homepage": "https://primogemstudio.github.io/advancedfmk-wiki"
+  },
+  "license": "GPLv3",
+  "icon": "assets/advancedfmk_simulator/icon.png",
+  "environment": "*",
+  "entrypoints": {},
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.10",
+    "fabric": ">=0.97.8",
+    "minecraft": "1.20.6"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "parent": "advancedfmk"
+    }
+  }
+}

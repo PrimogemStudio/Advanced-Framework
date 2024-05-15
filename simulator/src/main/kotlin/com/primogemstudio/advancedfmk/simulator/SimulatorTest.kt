@@ -1,14 +1,12 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.file.Compressions
-import com.primogemstudio.advancedfmk.simulator.file.SimulateResultFileOutputStream
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
+import com.primogemstudio.advancedfmk.bin.NBTOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 
 @ExperimentalStdlibApi
 fun main() {
-    val uni = SimulatedUniverse(
+    /*val uni = SimulatedUniverse(
         listOf(
             RoundtripCharacterImplv0("Test character 1", 100f, 25f),
             RoundtripCharacterImplv0("Test character 2", 200f, 15f),
@@ -31,5 +29,8 @@ fun main() {
     }
     output.simulate(uni)
     t.interrupt()
-    output.recStatus()
+    output.recStatus()*/
+
+    val out = NBTOutputStream(Files.newOutputStream(Path.of("test.nbt")))
+    out.writeByteTag("test", 0x01)
 }
