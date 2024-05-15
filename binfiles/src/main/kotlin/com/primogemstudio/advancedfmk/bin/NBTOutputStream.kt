@@ -46,6 +46,104 @@ class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
         writeUTF(s)
         writeUTF(st)
     }
+    fun writeListTag(s: String, l: List<Any>, withpre: Boolean = true) {
+        if (withpre) {
+            writeByte(0x09)
+            writeUTF(s)
+        }
+
+        if (l.isEmpty()) {
+            writeByte(0x01)
+            writeInt(0)
+            return
+        }
+
+        writeByte(when (l[0]) {
+            is Byte -> 0x01
+            is Short -> 0x02
+            is Int -> 0x03
+            is Long -> 0x04
+            is Float -> 0x05
+            is Double -> 0x06
+            is ByteArray -> 0x07
+            is String -> 0x08
+            is List<*> -> 0x09
+            is Map<*, *> -> 0x0a
+            is IntArray -> 0x0b
+            is LongArray -> 0x0c
+            else -> 0x00
+        })
+        writeInt(l.size)
+
+        l.forEach {
+            @Suppress("UNCHECKED_CAST")
+            when (it) {
+                is Byte -> writeByte(it.toInt())
+                is Short -> writeShort(it.toInt())
+                is Int -> writeInt(it)
+                is Long -> writeLong(it)
+                is Float -> writeFloat(it)
+                is Double -> writeDouble(it)
+                is ByteArray -> {
+                    writeInt(it.size)
+                    it.forEach { b -> writeByte(b.toInt()) }
+                }
+                is String -> writeUTF(it)
+                is List<*> -> writeListTag("", it as List<Any>, false)
+                is Map<*, *> -> {
+                    (it as Map<String, Any>).forEach { k, v ->
+                        when (v) {
+                            is Byte -> writeByteTag(k, v)
+                            is Short -> writeShortTag(k, v)
+                            is Int -> writeIntTag(k, v)
+                            is Long -> writeLongTag(k, v)
+                            is Float -> writeFloatTag(k, v)
+                            is Double -> writeDoubleTag(k, v)
+                            is ByteArray -> writeByteArray(k, v)
+                            is String -> writeString(k, v)
+                            is List<*> -> writeListTag(k, v as List<Any>)
+                            is Map<*, *> -> writeCompoundTag(k, v as Map<String, Any>)
+                            is IntArray -> writeIntArray(k, v)
+                            is LongArray -> writeLongArray(k, v)
+                        }
+                    }
+                    writeEndTag()
+                }
+                is IntArray -> {
+                    writeInt(it.size)
+                    it.forEach { b -> writeInt(b) }
+                }
+                is LongArray -> {
+                    writeInt(it.size)
+                    it.forEach { b -> writeLong(b) }
+                }
+                else -> writeEndTag()
+            }
+        }
+    }
+    fun writeCompoundTag(s: String, c: Map<String, Any>) {
+        writeByte(0x0a)
+        writeUTF(s)
+
+        @Suppress("UNCHECKED_CAST")
+        c.forEach { k, v ->
+            when (v) {
+                is Byte -> writeByteTag(k, v)
+                is Short -> writeShortTag(k, v)
+                is Int -> writeIntTag(k, v)
+                is Long -> writeLongTag(k, v)
+                is Float -> writeFloatTag(k, v)
+                is Double -> writeDoubleTag(k, v)
+                is ByteArray -> writeByteArray(k, v)
+                is String -> writeString(k, v)
+                is List<*> -> writeListTag(k, v as List<Any>)
+                is Map<*, *> -> writeCompoundTag(k, v as Map<String, Any>)
+                is IntArray -> writeIntArray(k, v)
+                is LongArray -> writeLongArray(k, v)
+            }
+        }
+        writeEndTag()
+    }
 
     fun writeIntArray(s: String, ir: IntArray) {
         writeByte(0x0b)

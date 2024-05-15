@@ -32,5 +32,7 @@ fun main() {
     output.recStatus()*/
 
     val out = NBTOutputStream(Files.newOutputStream(Path.of("test.nbt")))
-    out.writeByteTag("test", 0x01)
+    out.writeCompoundTag("Test", mapOf(
+        Pair("val1", listOf("Test"))
+    ))
 }
