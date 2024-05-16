@@ -3,6 +3,7 @@ package com.primogemstudio.advancedfmk.simulator
 import com.primogemstudio.advancedfmk.bin.NBTOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.zip.GZIPOutputStream
 
 @ExperimentalStdlibApi
 fun main() {
@@ -31,8 +32,9 @@ fun main() {
     t.interrupt()
     output.recStatus()*/
 
-    val out = NBTOutputStream(Files.newOutputStream(Path.of("test.nbt")))
+    val out = NBTOutputStream(GZIPOutputStream(Files.newOutputStream(Path.of("test.nbt"))))
     out.writeCompoundTag("Test", mapOf(
         Pair("val1", listOf("Test"))
     ))
+    out.close()
 }
