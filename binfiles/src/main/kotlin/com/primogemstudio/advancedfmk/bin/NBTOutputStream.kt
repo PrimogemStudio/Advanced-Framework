@@ -3,7 +3,7 @@ package com.primogemstudio.advancedfmk.bin
 import java.io.DataOutputStream
 import java.io.OutputStream
 
-class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
+open class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
     private var availableEnds: Long = 0L
 
     fun writeEndTag() {
@@ -52,7 +52,7 @@ class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
         writeUTF(s)
         writeUTF(st)
     }
-    fun writeListTagHeader(s: String, lt: Class<*>, ls: Int, withpre: Boolean = true) {
+    fun writeListTagHeader(s: String, lv: Any, ls: Int, withpre: Boolean = true) {
         if (withpre) {
             writeByte(0x09)
             writeUTF(s)
@@ -64,19 +64,19 @@ class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
             return
         }
 
-        writeByte(when (lt) {
-            Byte::class.java -> 0x01
-            Short::class.java -> 0x02
-            Int::class.java -> 0x03
-            Long::class.java -> 0x04
-            Float::class.java -> 0x05
-            Double::class.java -> 0x06
-            ByteArray::class.java -> 0x07
-            String::class.java -> 0x08
-            List::class.java -> 0x09
-            Map::class.java -> 0x0a
-            IntArray::class.java -> 0x0b
-            LongArray::class.java -> 0x0c
+        writeByte(when (lv) {
+            is Byte -> 0x01
+            is Short -> 0x02
+            is Int -> 0x03
+            is Long -> 0x04
+            is Float -> 0x05
+            is Double -> 0x06
+            is ByteArray -> 0x07
+            is String -> 0x08
+            is List<*> -> 0x09
+            is Map<*, *> -> 0x0a
+            is IntArray -> 0x0b
+            is LongArray -> 0x0c
             else -> 0x00
         })
         writeInt(ls)
@@ -127,7 +127,7 @@ class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
         }
     }
     fun writeListTag(s: String, l: List<Any>, withpre: Boolean = true) {
-        writeListTagHeader(s, l.let { if (it.isNotEmpty()) it[0].javaClass else Byte::class.java } as Class<*>, l.size, withpre)
+        writeListTagHeader(s, l.let { if (it.isNotEmpty()) it[0] else 0 }, l.size, withpre)
         l.forEach { writeListTagContent(it) }
     }
     fun writeCompoundTag(s: String, c: Map<String, Any>) {

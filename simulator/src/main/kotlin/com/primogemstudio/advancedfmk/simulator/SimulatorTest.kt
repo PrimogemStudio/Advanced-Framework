@@ -1,13 +1,13 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.bin.NBTOutputStream
+import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.zip.GZIPOutputStream
 
 @ExperimentalStdlibApi
 fun main() {
-    /*val uni = SimulatedUniverse(
+    val uni = SimulatedUniverse(
         listOf(
             RoundtripCharacterImplv0("Test character 1", 100f, 25f),
             RoundtripCharacterImplv0("Test character 2", 200f, 15f),
@@ -20,7 +20,7 @@ fun main() {
         ),
         5, 3
     )
-    val output = SimulateResultFileOutputStream(Files.newOutputStream(Path.of("result.txt")), Compressions.GZIP)
+    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result.nbt")))
 
     val t = Thread.ofVirtual().start {
         while (true) {
@@ -28,15 +28,7 @@ fun main() {
             output.recStatus()
         }
     }
-    output.simulate(uni)
+    output.writeRes(uni)
     t.interrupt()
-    output.recStatus()*/
-
-    val out = NBTOutputStream(GZIPOutputStream(Files.newOutputStream(Path.of("test.nbt"))))
-    out.writeCompoundTag("Test", mapOf(
-        Pair("val1", mapOf(
-            Pair("Test", 0L)
-        ))
-    ))
-    out.close()
+    output.recStatus()
 }
