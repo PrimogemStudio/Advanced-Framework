@@ -127,7 +127,7 @@ class NBTOutputStream(out: OutputStream): DataOutputStream(out) {
         }
     }
     fun writeListTag(s: String, l: List<Any>, withpre: Boolean = true) {
-        writeListTagHeader(s, l.let { if (it.isNotEmpty()) it[0] else 0.toByte() }.javaClass as Class<*>, l.size, withpre)
+        writeListTagHeader(s, l.let { if (it.isNotEmpty()) it[0].javaClass else Byte::class.java } as Class<*>, l.size, withpre)
         l.forEach { writeListTagContent(it) }
     }
     fun writeCompoundTag(s: String, c: Map<String, Any>) {

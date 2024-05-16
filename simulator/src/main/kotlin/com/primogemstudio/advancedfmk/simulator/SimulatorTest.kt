@@ -34,7 +34,9 @@ fun main() {
 
     val out = NBTOutputStream(GZIPOutputStream(Files.newOutputStream(Path.of("test.nbt"))))
     out.writeCompoundTag("Test", mapOf(
-        Pair("val1", listOf("Test"))
+        Pair("val1", mapOf(
+            Pair("Test", 0L)
+        ))
     ))
     out.close()
 }
