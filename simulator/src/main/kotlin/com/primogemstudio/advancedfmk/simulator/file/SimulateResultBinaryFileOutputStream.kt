@@ -10,10 +10,6 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
     private var targetSucceed: Long = 0
     fun recStatus() = println("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
     fun simulate(uni: SimulatedUniverse, depth: Int = 0) {
-        if (depth > 1) {
-            writeByteTag("nonend", 0x00)
-            return
-        }
         if (uni.finished()) {
             targetNum += 1
             if (uni.win()) targetSucceed += 1

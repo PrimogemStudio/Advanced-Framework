@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.simulator.file.Compressions
 import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
 import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplv0
 import java.nio.file.Files
@@ -20,7 +21,7 @@ fun main() {
         ),
         5, 3
     )
-    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result.nbt")))
+    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result.nbt")), Compressions.GZIP)
 
     val t = Thread.ofVirtual().start {
         while (true) {
@@ -31,4 +32,5 @@ fun main() {
     output.writeRes(uni)
     t.interrupt()
     output.recStatus()
+    output.close()
 }
