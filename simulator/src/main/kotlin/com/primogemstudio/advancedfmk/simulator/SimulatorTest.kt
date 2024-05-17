@@ -8,6 +8,7 @@ import java.nio.file.Path
 
 @ExperimentalStdlibApi
 fun main() {
+    System.setProperty("log4j.configurationFile", "log4j_conf.xml")
     val uni = SimulatedUniverse(
         listOf(
             RoundtripCharacterImplv0("Test character 1", 100f, 25f),
@@ -21,14 +22,16 @@ fun main() {
         ),
         5, 3
     )
-    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result.nbt")), Compressions.GZIP)
+    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result2.nbt")), Compressions.GZIP)
 
-    val t = Thread.ofVirtual().start {
-        while (true) {
-            Thread.sleep(200)
-            output.recStatus()
+    val t = object: Thread("Record Thread") {
+        override fun run() {
+            while (true) {
+                try { sleep(200) } catch (_: Exception) {}
+                output.recStatus()
+            }
         }
-    }
+    }.apply { start() }
     output.writeRes(uni)
     t.interrupt()
     output.recStatus()

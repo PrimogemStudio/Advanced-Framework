@@ -2,13 +2,16 @@ package com.primogemstudio.advancedfmk.simulator.file
 
 import com.primogemstudio.advancedfmk.bin.NBTOutputStream
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
+import org.apache.logging.log4j.LogManager
 import java.io.OutputStream
 
 class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(out) {
+    @OptIn(ExperimentalStdlibApi::class)
+    private val logger = LogManager.getLogger("SimulatedUniverse@0x${hashCode().toHexString()}")
     constructor(out: OutputStream, c: Compressions): this(c.func(out))
     private var targetNum: Long = 0
     private var targetSucceed: Long = 0
-    fun recStatus() = println("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
+    fun recStatus() = logger.info("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
     fun simulate(uni: SimulatedUniverse, depth: Int = 0) {
         if (uni.finished()) {
             targetNum += 1
