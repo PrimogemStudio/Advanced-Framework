@@ -46,7 +46,7 @@ class SimulatedUniverse(
         if (c == getQueueTop()) {
             val tg = operQueue.peek().firstOrNull { it.first == c }
             operQueue.peek().remove(tg)
-            // Non insertion
+
             if (tg?.second!! and OperationFlags.INSERTED == 0) operQueue.offer(operQueue.poll().apply { this.add(tg) })
 
             operQueue.forEach { stk -> stk.removeAll { !it.first.alive } }
