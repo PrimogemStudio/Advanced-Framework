@@ -67,6 +67,7 @@ loom {
 dependencies {
     include(implementation(project(path: ':mmdrenderer', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':uicompositor', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
+    include(implementation(project(path: ':jsengine', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':fontengine', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     include(implementation(project(path: ':simulator')))
@@ -94,6 +95,9 @@ dependencies {
     include "org.luaj:luaj-jse:${project.luaj_version}"
     include "org.apache.bcel:bcel:${bcel_version}"
     include "org.ladysnake:satin:${project.satin_version}"
+
+    include "org.graalvm.js:js:22.1.0.1"
+    include "org.graalvm.js:js-scriptengine:22.1.0.1"
 }
 tasks.named("build").configure {
     it.mustRunAfter("clean")

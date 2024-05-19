@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'maven-publish'
     id 'signing'
@@ -27,8 +28,22 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.kotlin_coroutines_version}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${project.kotlin_version}")
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.parchment_version}@zip")
+    }
+
+    modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+    modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    api implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}")
+    api implementation("org.luaj:luaj-jse:${project.luaj_version}")
+    api implementation("org.apache.bcel:bcel:${bcel_version}")
+    modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
+    implementation(project(path: ':fontengine', configuration: "namedElements"))
+
+    implementation("org.graalvm.js:js:22.1.0.1")
+    implementation("org.graalvm.js:js-scriptengine:22.1.0.1")
 }
 
 test {
@@ -49,7 +64,11 @@ processResources {
 }
 
 jar {
-    archiveBaseName = "advancedfmk-binfiles"
+    archiveBaseName = "advancedfmk-jsengine"
+}
+
+remapJar {
+    archiveBaseName = "advancedfmk-jsengine"
 }
 
 task sourcesJar(type: Jar) {
@@ -65,7 +84,7 @@ task javadocJar(type: Jar) {
 }
 
 artifacts {
-    archives sourcesJar, javadocJar
+    archives sourcesJar
 }
 
 var publish = new Properties()
@@ -80,7 +99,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'advancedfmk-binfiles'
+            artifactId = 'advancedfmk-jsengine'
             version = version
 
             from components.kotlin
@@ -88,8 +107,8 @@ publishing {
             artifact javadocJar
 
             pom {
-                name = 'binfiles (Advanced Framework)'
-                description = 'Binary files reading & writing for Advanced Framework'
+                name = 'jsengine (Advanced Framework)'
+                description = 'React Native implementation for Advanced Framework'
                 url = 'http://github.com/PrimogemStudio/Advanced-Framework'
                 licenses {
                     license {
