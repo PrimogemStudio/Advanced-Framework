@@ -48,7 +48,7 @@ class SVGQueue(private val dimension: Vector2f) : Vector<SVGOperation>() {
         }
         spl()
 
-        val areas = polygons.map { Pair(it, it.area()) }.sortedBy { it.second }.reversed().map { it.first }.toMutableList()
+        val areas = polygons.toMutableList()
         val infos = mutableListOf<PolygonInfo>()
         var currentDepth = 0
 
@@ -60,7 +60,7 @@ class SVGQueue(private val dimension: Vector2f) : Vector<SVGOperation>() {
                         isTop = false
                     }
                 }
-                if (isTop) infos.add(infos.filter { it.depth == currentDepth - 1 }.filter { it.poly.contains(i) }.firstOrNull()?.bindNew(i)?: PolygonInfo(i, 0, null))
+                if (isTop) infos.add(infos.firstOrNull { it.depth == currentDepth - 1 && it.poly.contains(i) }?.bindNew(i)?: PolygonInfo(i, 0, null))
             }
             areas.removeIf { infos.map { p -> p.poly }.contains(it) }
             currentDepth ++
