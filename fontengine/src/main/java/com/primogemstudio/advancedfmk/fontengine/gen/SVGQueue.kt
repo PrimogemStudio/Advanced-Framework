@@ -65,15 +65,14 @@ class SVGQueue(private val dimension: Vector2f) : Vector<SVGOperation>() {
             areas.removeIf { infos.map { p -> p.poly }.contains(it) }
             currentDepth ++
         }
-        val polygonsl = infos.filter { it.depth % 2 == 0 }.map { pi ->
+        polygons.removeIf { true }
+        polygons.addAll(infos.filter { it.depth % 2 == 0 }.map { pi ->
             infos.filter { it.depth == pi.depth + 1 && it.parent == pi.poly }.map { it.poly }.forEach {
                 pi.poly.vertices.addAll(it.vertices)
                 pi.poly.holes.add(it)
             }
             pi.poly
-        }
-        polygons.removeIf { true }
-        polygons.addAll(polygonsl)
+        })
 
         return polygons
     }
