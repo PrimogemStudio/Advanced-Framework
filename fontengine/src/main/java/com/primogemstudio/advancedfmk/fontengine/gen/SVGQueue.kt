@@ -48,43 +48,43 @@ class SVGQueue(private val dimension: Vector2f) : Vector<SVGOperation>() {
         }
         spl()
 
-        val contained = mutableListOf<Pair<Polygon, Polygon>>()
+        val areas = polygons.map { Pair(it, it.area()) }.sortedBy { it.second }.reversed().map { it.first }.toMutableList()
+        val infos = mutableListOf<PolygonInfo>()
+        var currentDepth = 0
 
-        for (i in polygons) {
-            for (j in polygons) {
-                if (i != j) {
-                    var contains = true
-                    for (point in j.vertices) {
-                        if (!isInPoly(point, i)) {
-                            contains = false
-                            break
-                        }
+        while (areas.isNotEmpty()) {
+            for (i in areas) {
+                var isTop = true
+                for (j in areas) {
+                    if (i != j && j.contains(i)) {
+                        isTop = false
                     }
-
-                    if (contains) contained.add(Pair(i, j))
                 }
+                if (isTop) infos.add(infos.filter { it.depth == currentDepth - 1 }.filter { it.poly.contains(i) }.firstOrNull()?.bindNew(i)?: PolygonInfo(i, 0, null))
             }
+            areas.removeIf { infos.map { p -> p.poly }.contains(it) }
+            currentDepth ++
         }
-
-        contained.forEach { (t, u) ->
-            t.vertices.addAll(u.vertices)
-            polygons.remove(u)
-            t.holes.add(u)
+        val polygonsl = infos.filter { it.depth % 2 == 0 }.map { pi ->
+            infos.filter { it.depth == pi.depth + 1 && it.parent == pi.poly }.map { it.poly }.forEach {
+                pi.poly.vertices.addAll(it.vertices)
+                pi.poly.holes.add(it)
+            }
+            pi.poly
         }
+        polygons.removeIf { true }
+        polygons.addAll(polygonsl)
 
         return polygons
     }
+}
 
-    private fun isInPoly(point: Vector2f, polygon: Polygon): Boolean {
-        var count = 0
-        for (i in polygon.vertices.indices) {
-            val p1 = polygon.vertices[i]
-            val p2 = polygon.vertices[(i + 1) % polygon.vertices.size]
-            if ((p1.y > point.y) != (p2.y > point.y) && (point.x < (p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x)) count++
-        }
-
-        return count % 2 == 1
-    }
+data class PolygonInfo(
+    val poly: Polygon,
+    val depth: Int,
+    val parent: Polygon?
+) {
+    fun bindNew(p: Polygon): PolygonInfo = PolygonInfo(p, depth + 1, poly)
 }
 
 class MultiPolygon(private val dimension: Vector2f) : Vector<Polygon>() {
