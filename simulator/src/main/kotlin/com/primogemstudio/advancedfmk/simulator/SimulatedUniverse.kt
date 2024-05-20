@@ -1,10 +1,12 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.simulator.OperationFlags.TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
 object OperationFlags {
     const val INSERTED: Long = 4611686018427387904
+    const val TURN_LENGTH: Long = 10000
 }
 
 class SimulatedUniverse(
@@ -18,15 +20,29 @@ class SimulatedUniverse(
     init {
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
+        extendedVal["passedTime"] = 0L
     }
 
     var maxAttNum: Int
         get() = extendedVal["maxNCalc"] as Int
         set(v) { extendedVal["maxNCalc"] = v }
+    var passedTime: Long
+        get() = extendedVal["passedTime"] as Long
+        set(v) { extendedVal["passedTime"] = v }
 
     init {
-        characters.forEach { operQueue.offer(Pair(it, 0)); it.simulator = this }
-        enemies.forEach { operQueue.offer(Pair(it, 0)); it.simulator = this }
+        characters.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        enemies.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+    }
+
+    private fun refreshQueue(top: IRoundtripCharacter) {
+        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }
+        res = res.sortedBy { it.second }
+        val opp = res.first().second
+        passedTime += opp
+        res = res.map { Pair(it.first, it.second - opp) }
+        operQueue.removeIf { true }
+        operQueue.addAll(res)
     }
 
     fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
@@ -44,12 +60,15 @@ class SimulatedUniverse(
     }
     fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
-            val tg = operQueue.firstOrNull { it.first == c }
+            operQueue.removeIf { !it.first.alive }
+            refreshQueue(c)
+            /*val tg = operQueue.first { it.first == c }
             operQueue.remove(tg)
 
             if (tg?.second!! and OperationFlags.INSERTED == 0L) operQueue.offer(tg)
 
             operQueue.removeIf { !it.first.alive }
+            refreshQueue(tg.first)*/
         }
     }
 

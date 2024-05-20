@@ -11,14 +11,14 @@ fun main() {
     System.setProperty("log4j.configurationFile", "log4j_conf.xml")
     val uni = SimulatedUniverse(
         listOf(
-            RoundtripCharacterImplv0("Test character 1", 100f, 25f),
-            RoundtripCharacterImplv0("Test character 2", 200f, 15f),
-            RoundtripCharacterImplv0("Test character 3", 50f, 50f),
-            RoundtripCharacterImplv0("Test character 3", 150f, 20f)
+            RoundtripCharacterImplv0("Test character 1", 100f, 25f, 95),
+            RoundtripCharacterImplv0("Test character 2", 200f, 15f, 105),
+            RoundtripCharacterImplv0("Test character 3", 50f, 50f, 105),
+            RoundtripCharacterImplv0("Test character 3", 150f, 20f, 125)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f, 65)
         ),
         5, 3
     )

@@ -7,7 +7,8 @@ import kotlin.math.max
 class RoundtripCharacterImplv0(
     id: String,
     initHealth: Float,
-    output: Float
+    output: Float,
+    speed: Long
 ): IRoundtripCharacter {
     private var initialData = mutableMapOf<String, Any>()
     override val staticData: Map<String, Any> = mutableMapOf()
@@ -16,6 +17,7 @@ class RoundtripCharacterImplv0(
         initialData["id"] = id
         initialData["allHealth"] = initHealth
         initialData["health"] = initHealth
+        initialData["speed"] = speed
         (staticData as MutableMap)["output"] = output
     }
 
@@ -32,6 +34,10 @@ class RoundtripCharacterImplv0(
         get() = staticData["output"] as Float
     override val alive: Boolean
         get() = health > 0f
+
+    override var speed: Long
+        get() = initialData["speed"] as Long
+        set(value) { initialData["speed"] = value }
 
     override fun receiveAttack(value: Float, additional: Map<String, Any>) {
         health = max(0f, health - value)
