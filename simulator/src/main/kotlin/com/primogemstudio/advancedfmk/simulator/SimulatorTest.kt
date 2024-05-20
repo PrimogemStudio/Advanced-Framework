@@ -17,12 +17,12 @@ fun main() {
             RoundtripCharacterImplv0("Test character 3", 150f, 20f)
         ),
         listOf(
-            RoundtripCharacterImplv0("Test enemy 1", 50f * 3.5f, 20f * 3.5f),
-            RoundtripCharacterImplv0("Test enemy 2", 75f * 3.5f, 20f * 3.5f)
+            RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f),
+            RoundtripCharacterImplv0("Test enemy 2", 75f * 1.5f, 20f * 1.5f)
         ),
         5, 3
     )
-    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result2.nbt")), Compressions.GZIP)
+    val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("result3.nbt")), Compressions.GZIP)
 
     val t = object: Thread("Record Thread") {
         override fun run() {

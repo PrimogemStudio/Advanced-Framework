@@ -12,7 +12,7 @@ class SimulatedUniverse(
     val enemies: List<IRoundtripCharacter>,
     maxNum: Int, currentM: Int
 ) {
-    private val operQueue: Deque<MutableList<Pair<IRoundtripCharacter, Int>>> = LinkedList()
+    private val operQueue: Deque<Pair<IRoundtripCharacter, Int>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
@@ -25,13 +25,13 @@ class SimulatedUniverse(
         set(v) { extendedVal["maxNCalc"] = v }
 
     init {
-        characters.forEach { operQueue.offer(mutableListOf(Pair(it, 0))); it.simulator = this }
-        enemies.forEach { operQueue.offer(mutableListOf(Pair(it, 0))); it.simulator = this }
+        characters.forEach { operQueue.offer(Pair(it, 0)); it.simulator = this }
+        enemies.forEach { operQueue.offer(Pair(it, 0)); it.simulator = this }
     }
 
     fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
     fun win(): Boolean = enemies.map { it.health }.sum() <= 0f
-    fun getQueueTop(): IRoundtripCharacter? = if (finished()) null else operQueue.peek().firstOrNull()?.first
+    fun getQueueTop(): IRoundtripCharacter? = operQueue.peek()?.first
     fun getCurrTarget(c: IRoundtripCharacter): List<IRoundtripCharacter> {
         if (characters.contains(c)) return enemies
         if (enemies.contains(c)) return characters
@@ -44,13 +44,12 @@ class SimulatedUniverse(
     }
     fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
-            val tg = operQueue.peek().firstOrNull { it.first == c }
-            operQueue.peek().remove(tg)
+            val tg = operQueue.firstOrNull { it.first == c }
+            operQueue.remove(tg)
 
-            if (tg?.second!! and OperationFlags.INSERTED == 0) operQueue.offer(operQueue.poll().apply { this.add(tg) })
+            if (tg?.second!! and OperationFlags.INSERTED == 0) operQueue.offer(tg)
 
-            operQueue.forEach { stk -> stk.removeAll { !it.first.alive } }
-            operQueue.removeAll { it.isEmpty() }
+            operQueue.removeIf { !it.first.alive }
         }
     }
 
@@ -58,7 +57,7 @@ class SimulatedUniverse(
         return SnapshotResult(
             characters.map { it.getRawData().toMap() },
             enemies.map { it.getRawData().toMap() },
-            operQueue.map { it.toMutableList() }.toList(),
+            operQueue.toList(),
             extendedVal.toMap(),
             res
         )
@@ -70,6 +69,6 @@ class SimulatedUniverse(
         extendedVal = snap.extendedVals.toMutableMap()
 
         operQueue.clear()
-        snap.operQueue.forEach { operQueue.add(it.toMutableList()) }
+        snap.operQueue.forEach { operQueue.add(it) }
     }
 }
