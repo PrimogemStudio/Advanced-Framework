@@ -5,7 +5,7 @@ import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 data class SnapshotResult(
     val charactersData: List<Map<String, Any>>,
     val enemiesData: List<Map<String, Any>>,
-    val operQueue: List<Pair<IRoundtripCharacter, Int>>,
+    val operQueue: List<Pair<IRoundtripCharacter, Long>>,
     val extendedVals: Map<String, Any>,
     val lastOperation: AttackResult?
 ) {

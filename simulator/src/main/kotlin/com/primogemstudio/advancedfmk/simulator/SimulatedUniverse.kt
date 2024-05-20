@@ -4,7 +4,7 @@ import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
 object OperationFlags {
-    const val INSERTED: Int = 0x40000000
+    const val INSERTED: Long = 4611686018427387904
 }
 
 class SimulatedUniverse(
@@ -12,7 +12,7 @@ class SimulatedUniverse(
     val enemies: List<IRoundtripCharacter>,
     maxNum: Int, currentM: Int
 ) {
-    private val operQueue: Deque<Pair<IRoundtripCharacter, Int>> = LinkedList()
+    val operQueue: Deque<Pair<IRoundtripCharacter, Long>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
@@ -47,7 +47,7 @@ class SimulatedUniverse(
             val tg = operQueue.firstOrNull { it.first == c }
             operQueue.remove(tg)
 
-            if (tg?.second!! and OperationFlags.INSERTED == 0) operQueue.offer(tg)
+            if (tg?.second!! and OperationFlags.INSERTED == 0L) operQueue.offer(tg)
 
             operQueue.removeIf { !it.first.alive }
         }
