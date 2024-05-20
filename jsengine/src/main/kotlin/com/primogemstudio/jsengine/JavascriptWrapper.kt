@@ -10,6 +10,8 @@ class JavascriptWrapper {
     companion object {
         @JvmStatic
         fun main(arr: Array<String>) {
+            System.setProperty("polyglot.engine.WarnInterpreterOnly", "false")
+
             val engineManager = ScriptEngineManager()
             val jsEngine = engineManager.getEngineByName("graal.js")
             val funcCall = jsEngine as Invocable
@@ -22,10 +24,10 @@ class JavascriptWrapper {
 
             val jsonObject = mutableMapOf(Pair("a", "abc"))
 
-            val res = funcCall.invokeFunction("App", jsonObject)
+            val res = funcCall.invokeFunction("App")
             println("invoke param: $jsonObject")
             println("invoke result type: " + res.javaClass.name)
-            println("invoke result: ${(res as Map<*, *>)["msg"]}")
+            println("invoke result: $res")
         }
     }
 }
