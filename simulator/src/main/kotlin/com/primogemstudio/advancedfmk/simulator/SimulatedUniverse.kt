@@ -62,13 +62,6 @@ class SimulatedUniverse(
         if (c == getQueueTop()) {
             operQueue.removeIf { !it.first.alive }
             refreshQueue(c)
-            /*val tg = operQueue.first { it.first == c }
-            operQueue.remove(tg)
-
-            if (tg?.second!! and OperationFlags.INSERTED == 0L) operQueue.offer(tg)
-
-            operQueue.removeIf { !it.first.alive }
-            refreshQueue(tg.first)*/
         }
     }
 
