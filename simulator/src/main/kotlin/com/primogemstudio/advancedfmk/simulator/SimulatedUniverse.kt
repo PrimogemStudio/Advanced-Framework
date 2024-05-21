@@ -38,6 +38,7 @@ class SimulatedUniverse(
     }
 
     private fun refreshQueue(top: IRoundtripCharacter?) {
+        if (operQueue.first.first == top && operQueue.first.second and INSERTED != 0L) operQueue.pop()
         var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second xor INSERTED }
         val opp = res.first().second
         passedTime += opp
