@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.simulator.OperationFlags.INSERTED
 import com.primogemstudio.advancedfmk.simulator.OperationFlags.TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
@@ -37,7 +38,7 @@ class SimulatedUniverse(
     }
 
     private fun refreshQueue(top: IRoundtripCharacter?) {
-        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second }
+        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second xor INSERTED }
         val opp = res.first().second
         passedTime += opp
         res = res.map { Pair(it.first, it.second - opp) }
