@@ -33,9 +33,10 @@ class SimulatedUniverse(
     init {
         characters.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
         enemies.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        refreshQueue(null)
     }
 
-    private fun refreshQueue(top: IRoundtripCharacter) {
+    private fun refreshQueue(top: IRoundtripCharacter?) {
         var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }
         res = res.sortedBy { it.second }
         val opp = res.first().second

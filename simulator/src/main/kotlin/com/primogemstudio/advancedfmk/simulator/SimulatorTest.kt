@@ -14,7 +14,7 @@ fun main() {
             RoundtripCharacterImplv0("Test character 1", 100f, 25f, 95),
             RoundtripCharacterImplv0("Test character 2", 200f, 15f, 105),
             RoundtripCharacterImplv0("Test character 3", 50f, 50f, 105),
-            RoundtripCharacterImplv0("Test character 3", 150f, 20f, 125)
+            RoundtripCharacterImplv0("Test character 4", 150f, 20f, 125)
         ),
         listOf(
             RoundtripCharacterImplv0("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60),
