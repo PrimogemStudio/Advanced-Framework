@@ -4,7 +4,7 @@ import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
 import kotlin.math.max
 
-class RoundtripCharacterImplv0(
+class RoundtripCharacterImplV0(
     id: String,
     initHealth: Float,
     output: Float,
@@ -44,9 +44,9 @@ class RoundtripCharacterImplv0(
     }
 
     override var simulator: SimulatedUniverse? = null
-
-    override fun getRawData(): Map<String, Any> = initialData
-    override fun overrideData(v: Map<String, Any>) { initialData = v.toMutableMap() }
+    override var rawData: Map<String, Any>
+        get() = initialData
+        set(v) { initialData = v.toMutableMap() }
     override fun getSolutions(): List<() -> AttackResult> {
         if (simulator?.getQueueTop() != this) return listOf()
         return simulator?.getCurrTarget(this)?.filter { it.alive }?.flatMap {

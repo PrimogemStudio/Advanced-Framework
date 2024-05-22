@@ -71,8 +71,8 @@ class SimulatedUniverse(
 
     fun mkSnapshot(res: AttackResult?): SnapshotResult {
         return SnapshotResult(
-            characters.map { it.getRawData().toMap() },
-            enemies.map { it.getRawData().toMap() },
+            characters.map { it.rawData.toMap() },
+            enemies.map { it.rawData.toMap() },
             operateQueue.toList(),
             extendedVal.toMap(),
             res
@@ -80,8 +80,8 @@ class SimulatedUniverse(
     }
 
     fun resSnapshot(snap: SnapshotResult) {
-        for (i in snap.charactersData.indices) characters[i].overrideData(snap.charactersData[i])
-        for (i in snap.enemiesData.indices) enemies[i].overrideData(snap.enemiesData[i])
+        for (i in snap.charactersData.indices) characters[i].rawData = snap.charactersData[i]
+        for (i in snap.enemiesData.indices) enemies[i].rawData = snap.enemiesData[i]
         extendedVal = snap.extendedVals.toMutableMap()
 
         operateQueue.clear()
