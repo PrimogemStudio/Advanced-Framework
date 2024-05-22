@@ -45,7 +45,7 @@ class RoundtripCharacterImplV0(
 
     override var simulator: SimulatedUniverse? = null
     override var rawData: Map<String, Any>
-        get() = initialData
+        get() = initialData.toMap()
         set(v) { initialData = v.toMutableMap() }
     override fun getSolutions(): List<() -> AttackResult> {
         if (simulator?.getQueueTop() != this) return listOf()

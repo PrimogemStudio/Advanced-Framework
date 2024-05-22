@@ -71,8 +71,8 @@ class SimulatedUniverse(
 
     fun mkSnapshot(res: AttackResult?): SnapshotResult {
         return SnapshotResult(
-            characters.map { it.rawData.toMap() },
-            enemies.map { it.rawData.toMap() },
+            characters.map { it.rawData },
+            enemies.map { it.rawData },
             operateQueue.toList(),
             extendedVal.toMap(),
             res
