@@ -11,11 +11,11 @@ object OperationFlags {
 }
 
 class SimulatedUniverse(
-    val characters: List<IRoundtripCharacter>,
-    val enemies: List<IRoundtripCharacter>,
+    private val characters: List<IRoundtripCharacter>,
+    private val enemies: List<IRoundtripCharacter>,
     maxNum: Int, currentM: Int
 ) {
-    val operQueue: Deque<Pair<IRoundtripCharacter, UInt>> = LinkedList()
+    private val operateQueue: Deque<Pair<IRoundtripCharacter, UInt>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
@@ -27,30 +27,30 @@ class SimulatedUniverse(
     var maxAttNum: Int
         get() = extendedVal["maxNCalc"] as Int
         set(v) { extendedVal["maxNCalc"] = v }
-    var passedTime: UInt
+    private var passedTime: UInt
         get() = extendedVal["passedTime"] as UInt
         set(v) { extendedVal["passedTime"] = v }
 
     init {
-        characters.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
-        enemies.forEach { operQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
         refreshQueue(null)
     }
 
     private fun refreshQueue(top: IRoundtripCharacter?) {
-        if (operQueue.first.first == top && operQueue.first.second and INSERTED != 0u) operQueue.pop()
-        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
+        if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
+        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
         val opp = res.first().second
         passedTime += opp
         res = res.map { Pair(it.first, it.second - opp) }
 
-        operQueue.removeIf { true }
-        operQueue.addAll(res)
+        operateQueue.removeIf { true }
+        operateQueue.addAll(res)
     }
 
     fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
     fun win(): Boolean = enemies.map { it.health }.sum() <= 0f
-    fun getQueueTop(): IRoundtripCharacter? = operQueue.peek()?.first
+    fun getQueueTop(): IRoundtripCharacter? = operateQueue.peek()?.first
     fun getCurrTarget(c: IRoundtripCharacter): List<IRoundtripCharacter> {
         if (characters.contains(c)) return enemies
         if (enemies.contains(c)) return characters
@@ -63,7 +63,7 @@ class SimulatedUniverse(
     }
     fun operateDone(c: IRoundtripCharacter) {
         if (c == getQueueTop()) {
-            operQueue.removeIf { !it.first.alive }
+            operateQueue.removeIf { !it.first.alive }
             refreshQueue(c)
         }
     }
@@ -72,7 +72,7 @@ class SimulatedUniverse(
         return SnapshotResult(
             characters.map { it.getRawData().toMap() },
             enemies.map { it.getRawData().toMap() },
-            operQueue.toList(),
+            operateQueue.toList(),
             extendedVal.toMap(),
             res
         )
@@ -83,7 +83,7 @@ class SimulatedUniverse(
         for (i in snap.enemiesData.indices) enemies[i].overrideData(snap.enemiesData[i])
         extendedVal = snap.extendedVals.toMutableMap()
 
-        operQueue.clear()
-        snap.operQueue.forEach { operQueue.add(it) }
+        operateQueue.clear()
+        snap.operQueue.forEach { operateQueue.add(it) }
     }
 }
