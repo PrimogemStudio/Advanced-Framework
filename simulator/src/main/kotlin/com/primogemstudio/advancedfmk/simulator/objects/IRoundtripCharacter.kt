@@ -13,7 +13,7 @@ interface IRoundtripCharacter: MappedObject {
     var simulator: SimulatedUniverse?
     val alive: Boolean
 
-    var speed: Long
+    var speed: UInt
 
     fun receiveAttack(value: Float, additional: Map<String, Any>)
     fun getSolutions(): List<() -> AttackResult>

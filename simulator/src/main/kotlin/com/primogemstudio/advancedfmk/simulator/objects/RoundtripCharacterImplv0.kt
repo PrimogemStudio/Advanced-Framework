@@ -8,7 +8,7 @@ class RoundtripCharacterImplv0(
     id: String,
     initHealth: Float,
     output: Float,
-    speed: Long
+    speed: UInt
 ): IRoundtripCharacter {
     private var initialData = mutableMapOf<String, Any>()
     override val staticData: Map<String, Any> = mutableMapOf()
@@ -35,8 +35,8 @@ class RoundtripCharacterImplv0(
     override val alive: Boolean
         get() = health > 0f
 
-    override var speed: Long
-        get() = initialData["speed"] as Long
+    override var speed: UInt
+        get() = initialData["speed"] as UInt
         set(value) { initialData["speed"] = value }
 
     override fun receiveAttack(value: Float, additional: Map<String, Any>) {

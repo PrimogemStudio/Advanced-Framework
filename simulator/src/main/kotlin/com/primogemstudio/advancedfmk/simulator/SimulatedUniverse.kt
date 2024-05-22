@@ -6,8 +6,8 @@ import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
 import java.util.*
 
 object OperationFlags {
-    const val INSERTED: Long = 0x4000000000000000
-    const val TURN_LENGTH: Long = 10000
+    const val INSERTED = 2147483648u
+    const val TURN_LENGTH = 10000u
 }
 
 class SimulatedUniverse(
@@ -15,20 +15,20 @@ class SimulatedUniverse(
     val enemies: List<IRoundtripCharacter>,
     maxNum: Int, currentM: Int
 ) {
-    val operQueue: Deque<Pair<IRoundtripCharacter, Long>> = LinkedList()
+    val operQueue: Deque<Pair<IRoundtripCharacter, UInt>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
-        extendedVal["passedTime"] = 0L
+        extendedVal["passedTime"] = 0u
     }
 
     var maxAttNum: Int
         get() = extendedVal["maxNCalc"] as Int
         set(v) { extendedVal["maxNCalc"] = v }
-    var passedTime: Long
-        get() = extendedVal["passedTime"] as Long
+    var passedTime: UInt
+        get() = extendedVal["passedTime"] as UInt
         set(v) { extendedVal["passedTime"] = v }
 
     init {
@@ -38,8 +38,8 @@ class SimulatedUniverse(
     }
 
     private fun refreshQueue(top: IRoundtripCharacter?) {
-        if (operQueue.first.first == top && operQueue.first.second and INSERTED != 0L) operQueue.pop()
-        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second xor INSERTED }
+        if (operQueue.first.first == top && operQueue.first.second and INSERTED != 0u) operQueue.pop()
+        var res = operQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
         val opp = res.first().second
         passedTime += opp
         res = res.map { Pair(it.first, it.second - opp) }
