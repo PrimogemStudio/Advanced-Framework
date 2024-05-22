@@ -5,6 +5,11 @@ import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
 import org.apache.logging.log4j.LogManager
 import java.io.OutputStream
 
+enum class Compressions(val func: (OutputStream) -> OutputStream) {
+    GZIP({ java.util.zip.GZIPOutputStream(it) }),
+    DEFLATER({ java.util.zip.DeflaterOutputStream(it, java.util.zip.Deflater(java.util.zip.Deflater.BEST_COMPRESSION)) });
+}
+
 class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(out) {
     @OptIn(ExperimentalStdlibApi::class)
     private val logger = LogManager.getLogger("SimulatedUniverse@0x${hashCode().toHexString()}")
@@ -12,7 +17,7 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
     private var targetNum: Long = 0
     private var targetSucceed: Long = 0
     fun recStatus() = logger.info("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
-    fun simulate(uni: SimulatedUniverse, depth: Int = 0) {
+    private fun simulate(uni: SimulatedUniverse, depth: Int = 0) {
         if (uni.finished()) {
             targetNum += 1
             if (uni.win()) targetSucceed += 1

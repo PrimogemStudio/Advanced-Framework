@@ -22,6 +22,9 @@ class SimulatedUniverse(
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
         extendedVal["passedTime"] = 0u
+        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        refreshQueue(null)
     }
 
     var maxAttNum: Int
@@ -30,12 +33,6 @@ class SimulatedUniverse(
     private var passedTime: UInt
         get() = extendedVal["passedTime"] as UInt
         set(v) { extendedVal["passedTime"] = v }
-
-    init {
-        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
-        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
-        refreshQueue(null)
-    }
 
     private fun refreshQueue(top: RoundtripCharacter?) {
         if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
