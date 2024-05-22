@@ -40,9 +40,10 @@ class SimulatedUniverse(
     private fun refreshQueue(top: RoundtripCharacter?) {
         if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
         var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
-        val opp = res.first().second
-        passedTime += opp
-        res = res.map { Pair(it.first, it.second - opp) }
+        res.first().second.apply {
+            passedTime += this
+            res = res.map { Pair(it.first, it.second - this) }
+        }
 
         operateQueue.removeIf { true }
         operateQueue.addAll(res)
