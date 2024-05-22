@@ -9,7 +9,7 @@ class RoundtripCharacterImplv0(
     initHealth: Float,
     output: Float,
     speed: UInt
-): IRoundtripCharacter {
+): RoundtripCharacter {
     private var initialData = mutableMapOf<String, Any>()
     override val staticData: Map<String, Any> = mutableMapOf()
 

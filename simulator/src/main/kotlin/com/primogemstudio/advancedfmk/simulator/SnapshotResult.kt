@@ -1,11 +1,11 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.IRoundtripCharacter
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacter
 
 data class SnapshotResult(
     val charactersData: List<Map<String, Any>>,
     val enemiesData: List<Map<String, Any>>,
-    val operQueue: List<Pair<IRoundtripCharacter, UInt>>,
+    val operQueue: List<Pair<RoundtripCharacter, UInt>>,
     val extendedVals: Map<String, Any>,
     val lastOperation: AttackResult?
 ) {
