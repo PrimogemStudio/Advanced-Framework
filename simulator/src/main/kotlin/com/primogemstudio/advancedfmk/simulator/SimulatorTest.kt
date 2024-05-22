@@ -27,7 +27,7 @@ fun main() {
     val t = object: Thread("Record Thread") {
         override fun run() {
             while (true) {
-                sleep(200)
+                try { sleep(200) } catch (_: InterruptedException) { break }
                 output.recStatus()
             }
         }
