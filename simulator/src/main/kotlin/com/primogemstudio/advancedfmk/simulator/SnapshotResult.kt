@@ -1,6 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 
 data class SnapshotResult(
     val charactersData: List<Map<String, Any>>,

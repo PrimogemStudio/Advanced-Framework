@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.objects.interfaces
 
 import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse

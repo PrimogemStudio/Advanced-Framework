@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.OperationFlags.INSERTED
 import com.primogemstudio.advancedfmk.simulator.OperationFlags.TURN_LENGTH
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import java.util.*
 
 object OperationFlags {

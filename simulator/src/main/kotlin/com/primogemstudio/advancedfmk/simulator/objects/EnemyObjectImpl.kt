@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.simulator.objects
 
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness
+import com.primogemstudio.advancedfmk.simulator.objects.interfaces.EnemyObject
 
 class EnemyObjectImpl(
     id: String,

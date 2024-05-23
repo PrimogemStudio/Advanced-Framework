@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.objects.interfaces
 
 interface MappedObject {
     var rawData: Map<String, Any>

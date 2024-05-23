@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.simulator.objects
 
 import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import kotlin.math.max
 
 open class RoundtripCharacterImplV0(
