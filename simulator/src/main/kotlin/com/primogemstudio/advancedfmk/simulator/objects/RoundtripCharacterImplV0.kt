@@ -4,12 +4,12 @@ import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
 import kotlin.math.max
 
-class RoundtripCharacterImplV0(
+open class RoundtripCharacterImplV0(
     id: String,
     initHealth: Float,
     output: Float,
     speed: UInt
-): RoundtripCharacter {
+): RoundtripObject {
     private var initialData = mutableMapOf<String, Any>()
     override val staticData: Map<String, Any> = mutableMapOf()
 

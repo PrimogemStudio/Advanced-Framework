@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.simulator
 
 import com.primogemstudio.advancedfmk.simulator.OperationFlags.INSERTED
 import com.primogemstudio.advancedfmk.simulator.OperationFlags.TURN_LENGTH
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacter
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripObject
 import java.util.*
 
 object OperationFlags {
@@ -11,11 +11,11 @@ object OperationFlags {
 }
 
 class SimulatedUniverse(
-    private val characters: List<RoundtripCharacter>,
-    private val enemies: List<RoundtripCharacter>,
+    private val characters: List<RoundtripObject>,
+    private val enemies: List<RoundtripObject>,
     maxNum: Int, currentM: Int
 ) {
-    private val operateQueue: Deque<Pair<RoundtripCharacter, UInt>> = LinkedList()
+    private val operateQueue: Deque<Pair<RoundtripObject, UInt>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
     init {
@@ -34,7 +34,7 @@ class SimulatedUniverse(
         get() = extendedVal["passedTime"] as UInt
         set(v) { extendedVal["passedTime"] = v }
 
-    private fun refreshQueue(top: RoundtripCharacter?) {
+    private fun refreshQueue(top: RoundtripObject?) {
         if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
         var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
         res.first().second.apply {
@@ -48,18 +48,18 @@ class SimulatedUniverse(
 
     fun finished(): Boolean = characters.map { it.health }.sum() <= 0f || win()
     fun win(): Boolean = enemies.map { it.health }.sum() <= 0f
-    fun getQueueTop(): RoundtripCharacter? = operateQueue.peek()?.first
-    fun getCurrTarget(c: RoundtripCharacter): List<RoundtripCharacter> {
+    fun getQueueTop(): RoundtripObject? = operateQueue.peek()?.first
+    fun getCurrTarget(c: RoundtripObject): List<RoundtripObject> {
         if (characters.contains(c)) return enemies
         if (enemies.contains(c)) return characters
         return listOf()
     }
-    fun getCurrList(c: RoundtripCharacter): List<RoundtripCharacter> {
+    fun getCurrList(c: RoundtripObject): List<RoundtripObject> {
         if (characters.contains(c)) return characters
         if (enemies.contains(c)) return enemies
         return listOf()
     }
-    fun operateDone(c: RoundtripCharacter) {
+    fun operateDone(c: RoundtripObject) {
         if (c == getQueueTop()) {
             operateQueue.removeIf { !it.first.alive }
             refreshQueue(c)

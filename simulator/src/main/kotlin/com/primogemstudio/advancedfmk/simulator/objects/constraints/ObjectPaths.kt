@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.objects.constraints
 
 enum class ObjectPaths {
     Harmony,

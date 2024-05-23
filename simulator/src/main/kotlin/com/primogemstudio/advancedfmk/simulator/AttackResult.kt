@@ -1,8 +1,8 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacter
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripObject
 
 data class AttackResult(
-    val from: RoundtripCharacter?,
-    val targets: Map<RoundtripCharacter, Float>
+    val from: RoundtripObject?,
+    val targets: Map<RoundtripObject, Float>
 )
