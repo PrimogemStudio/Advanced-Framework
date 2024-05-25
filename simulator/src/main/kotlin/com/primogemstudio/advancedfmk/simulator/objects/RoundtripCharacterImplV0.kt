@@ -12,7 +12,7 @@ open class RoundtripCharacterImplV0(
     speed: UInt
 ): RoundtripObject {
     private var initialData = mutableMapOf<String, Any>()
-    override val staticData: Map<String, Any> = mutableMapOf()
+    final override val staticData: Map<String, Any> = mutableMapOf()
 
     init {
         initialData["id"] = id
@@ -55,12 +55,12 @@ open class RoundtripCharacterImplV0(
                 {
                     val r = mainOutput * 10005f / 10000f
                     it.receiveAttack(r, mapOf())
-                    AttackResult(this, mapOf(Pair(it, r)))
+                    AttackResult(this, mapOf(Pair(it, r)), 0.5)
                 },
                 {
                     val r = mainOutput * 9995f / 10000f
                     it.receiveAttack(r, mapOf())
-                    AttackResult(this, mapOf(Pair(it, r)))
+                    AttackResult(this, mapOf(Pair(it, r)), 0.5)
                 }
             )
         }?: listOf()

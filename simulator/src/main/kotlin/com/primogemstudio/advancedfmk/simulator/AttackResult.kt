@@ -4,5 +4,6 @@ import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObje
 
 data class AttackResult(
     val from: RoundtripObject?,
-    val targets: Map<RoundtripObject, Float>
+    val targets: Map<RoundtripObject, Float>,
+    val weight: Double
 )
