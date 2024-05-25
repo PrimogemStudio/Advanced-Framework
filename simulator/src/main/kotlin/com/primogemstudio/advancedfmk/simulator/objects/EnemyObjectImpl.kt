@@ -8,5 +8,5 @@ class EnemyObjectImpl(
     initHealth: Float,
     output: Float,
     speed: UInt,
-    override val weakness: List<ObjectWeakness>
+    override val weakness: MutableList<ObjectWeakness>
 ): RoundtripCharacterImplV0(id, initHealth, output, speed), EnemyObject
