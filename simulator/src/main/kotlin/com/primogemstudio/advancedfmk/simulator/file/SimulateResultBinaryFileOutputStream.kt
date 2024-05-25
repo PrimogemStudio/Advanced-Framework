@@ -35,7 +35,6 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
         writeListTag("enemies", root.enemiesData.map { it["health"] as Float })
         for (i in uni.getQueueTop()?.getSolutions()!!) {
             val rs = i()
-            i()
             uni.getQueueTop()?.finishSolve()
 
             writeCompoundTagHeader(rs.toString())
