@@ -154,9 +154,4 @@ class NBTInputTextStream(`in`: InputStream, private val out: PrintStream): DataI
         for (i in 0 ..< siz) out.print("${readLong()}, ")
         out.println("]")
     }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    fun forwardBytes() {
-        readNBytes(16).forEach { print("0x${it.toHexString()} ") }
-    }
 }
