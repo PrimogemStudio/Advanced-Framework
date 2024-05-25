@@ -134,6 +134,8 @@ class NBTInputTextStream(`in`: InputStream, private val out: PrintStream): DataI
 
         availableEnds--
 
+        out.println("${"    ".repeat(availableEnds)}}")
+
         // forwardBytes()
     }
 
