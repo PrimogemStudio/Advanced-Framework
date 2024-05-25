@@ -1,15 +1,15 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.bin.NBTInputTextStream
-import java.io.PrintStream
+import com.primogemstudio.advancedfmk.simulator.file.Compressions
+import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
+import com.primogemstudio.advancedfmk.simulator.objects.RoundtripCharacterImplV0
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.zip.GZIPInputStream
 
 @ExperimentalStdlibApi
 fun main() {
     System.setProperty("log4j.configurationFile", "log4j_conf.xml")
-    /*val uni = SimulatedUniverse(
+    val uni = SimulatedUniverse(
         listOf(
             RoundtripCharacterImplV0("Test character 1", 100f, 25f, 95u),
             RoundtripCharacterImplV0("Test character 2", 200f, 15f, 105u),
@@ -35,9 +35,9 @@ fun main() {
     output.writeRes(uni)
     t.interrupt()
     output.recStatus()
-    output.close()*/
-    val o = PrintStream(Files.newOutputStream(Path.of("testtext.txt")))
+    output.close()
+    /*val o = PrintStream(Files.newOutputStream(Path.of("testtext.txt")))
     val `in` = NBTInputTextStream(GZIPInputStream(Files.newInputStream(Path.of("result3.nbt"))), o)
     `in`.readCompoundTag()
-    `in`.close()
+    `in`.close()*/
 }
