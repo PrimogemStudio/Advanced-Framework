@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.Mth
 import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -145,10 +144,7 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
     }
 
     @AccessFromNative
-    private val buff = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder())
-
-    @AccessFromNative
-    fun mapping(ti: Int) {
+    fun mapping(ti: Int, buff: ByteBuffer) {
         val r = map[ti]!!
         val x = buff.getFloat(0).toDouble()
         val y = buff.getFloat(4).toDouble()

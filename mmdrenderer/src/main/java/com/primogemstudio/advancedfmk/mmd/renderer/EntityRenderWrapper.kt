@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
 import org.joml.Vector2i
+import org.lwjgl.opengl.GL32
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -25,6 +26,7 @@ class EntityRenderWrapper(val model: PMXModel) {
     fun render(
         entityYaw: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int
     ) {
+        GL32.GL_INT
         val vc = buffer.getBuffer(renderType)
         val buf = try {
             if (vc is SodiumBufferBuilder) vc.originalBufferBuilder
@@ -33,6 +35,7 @@ class EntityRenderWrapper(val model: PMXModel) {
             vc as BufferBuilder
         }
         buf as BufferBuilderExt
+        buf.setPMXModel(model)
         poseStack.pushPose()
         poseStack.scale(0.1f, 0.1f, 0.1f)
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))

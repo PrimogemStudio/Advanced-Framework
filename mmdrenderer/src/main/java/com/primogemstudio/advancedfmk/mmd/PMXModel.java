@@ -1,8 +1,11 @@
 package com.primogemstudio.advancedfmk.mmd;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
 import com.primogemstudio.advancedfmk.mmd.renderer.MMDTextureAtlas;
 import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager;
+import org.lwjgl.opengl.GL32;
 
 import java.io.File;
 import java.lang.ref.Cleaner;
@@ -10,33 +13,42 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+
 public class PMXModel implements AutoCloseable {
     @AccessFromNative
     private long ptr;
     @AccessFromNative
-    private Cleaner.Cleanable cleaner;
+    private final Cleaner.Cleanable cleaner;
     private static int ID = 0;
     private final int id = ++ID;
     private final String texture = "mmd_texture" + id;
     @AccessFromNative
     private final MMDTextureAtlas atlas;
     public final TextureManager textureManager;
-    public final int vertexCount;
+    public final int vertexCount, indexCount;
     public final Animation animation;
+    private final int ibo;
 
     public PMXModel(File file) {
         load(file);
         vertexCount = getVertexCount();
+        indexCount = getIndexCount();
         atlas = Loader.createAtlas(getTextures());
         textureManager = new TextureManager(atlas);
         animation = new Animation(this);
         textureManager.register(texture);
         mappingVertices();
+        ibo = GlStateManager._glGenBuffers();
+        GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), GL32.GL_STATIC_DRAW);
         var p = ptr;
         var tm = textureManager;
+        var t_ibo = ibo;
         cleaner = SabaNative.cleaner.register(this, () -> {
-            SabaNative.release(PMXModel.class, p);
+            release(p);
             tm.release();
+            RenderSystem.glDeleteBuffers(t_ibo);
         });
     }
 
@@ -44,11 +56,21 @@ public class PMXModel implements AutoCloseable {
 
     public native void render(ByteBuffer buff, ByteBuffer constants);
 
+    private native ByteBuffer getIndices();
+
     private native int getVertexCount();
+
+    private native int getIndexCount();
 
     private native List<File> getTextures();
 
     private native void mappingVertices();
+
+    private static native void release(long ptr);
+
+    public void bindIndices() {
+        GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    }
 
     private float lastTime = System.nanoTime() / 1000000000f;
     @AccessFromNative

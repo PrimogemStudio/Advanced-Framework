@@ -1,13 +1,19 @@
 package com.primogemstudio.advancedfmk.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.blaze3d.platform.MemoryTracker;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferVertexConsumer;
 import com.mojang.blaze3d.vertex.DefaultedVertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt;
+import com.primogemstudio.advancedfmk.interfaces.RenderedBufferExt;
+import com.primogemstudio.advancedfmk.mmd.PMXModel;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.nio.ByteBuffer;
 
@@ -27,6 +33,9 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
 
     @Shadow
     public ByteBuffer buffer;
+
+    @Unique
+    private PMXModel model;
 
     @Override
     public boolean fullFormat() {
@@ -59,6 +68,40 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
         if (buffer.capacity() < size) {
             buffer = MemoryTracker.resize(buffer, size);
             buffer.rewind();
+        }
+    }
+
+    @Nullable
+    @Override
+    public PMXModel getPMXModel() {
+        return model;
+    }
+
+    @Override
+    public void setPMXModel(@Nullable PMXModel model) {
+        this.model = model;
+    }
+
+    @ModifyReturnValue(method = "storeRenderedBuffer", at = @At("RETURN"))
+    private BufferBuilder.RenderedBuffer storeRenderedBuffer(BufferBuilder.RenderedBuffer original) {
+        ((RenderedBufferExt) original).setPMXModel(model);
+        model = null;
+        return original;
+    }
+
+    @Mixin(BufferBuilder.RenderedBuffer.class)
+    public static class RenderedBufferMixin implements RenderedBufferExt {
+        @Unique
+        private PMXModel model;
+
+        @Override
+        public PMXModel getPMXModel() {
+            return model;
+        }
+
+        @Override
+        public void setPMXModel(@Nullable PMXModel model) {
+            this.model = model;
         }
     }
 }

@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "BufferBuilderMixin",
-    "NativeImageMixin"
+    "BufferBuilderMixin$RenderedBufferMixin",
+    "NativeImageMixin",
+    "VertexBufferMixin"
   ],
   "injectors": {
     "defaultRequire": 1
