@@ -7,4 +7,8 @@ interface EnemyObject {
     fun removeWeakness(chr: RoundtripObject?, prop: ObjectWeakness): Boolean
 
     fun haveWeakness(prop: ObjectWeakness): Boolean
+
+    val initToughness: Short
+    var toughness: Short
+    val toughnessBreaked: Boolean
 }

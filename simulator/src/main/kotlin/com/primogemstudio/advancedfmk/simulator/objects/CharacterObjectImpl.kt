@@ -46,12 +46,18 @@ class CharacterObjectImpl(
                 listOf(
                     {
                         val r = dmg * (1 + critDmg)
-                        it.receiveAttack(r, mapOf(Pair(OBJECT_DYN_DMG_ELEMENT, dmgElement)))
+                        it.receiveAttack(r, mapOf(
+                            Pair(OBJECT_DYN_DMG_ELEMENT, dmgElement),
+                            Pair(OBJECT_DYN_ROUGHNESS_BREAK, 1)
+                        ))
                         AttackResult(this, mapOf(Pair(it, r)), 1.0 / l.size * critRate)
                     },
                     {
                         val r = dmg
-                        it.receiveAttack(r, mapOf(Pair(OBJECT_DYN_DMG_ELEMENT, dmgElement)))
+                        it.receiveAttack(r, mapOf(
+                            Pair(OBJECT_DYN_DMG_ELEMENT, dmgElement),
+                            Pair(OBJECT_DYN_ROUGHNESS_BREAK, 1)
+                        ))
                         AttackResult(this, mapOf(Pair(it, r)), 1.0 / l.size * (1 - critRate))
                     }
                 )

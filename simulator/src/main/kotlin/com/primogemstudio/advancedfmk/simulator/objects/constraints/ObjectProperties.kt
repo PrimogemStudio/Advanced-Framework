@@ -7,6 +7,8 @@ const val OBJECT_ST_DMG = "basic_static:object_dmg"
 const val OBJECT_ST_ALLHP = "basic_static:object_allhp"
 
 const val OBJECT_EEXT_WEAKNESS = "eext:object_weakness"
+const val OBJECT_EEXT_TOUGHNESS = "eext:object_toughness"
+const val OBJECT_EEXT_ST_TOUGHNESS = "eext_static:object_init_toughness"
 const val OBJECT_CEXT_CRITRATE = "cext:object_critrate"
 const val OBJECT_CEXT_CRITDMG = "cext:object_critdmg"
 const val OBJECT_CEXT_ST_CRITRATE = "cext_static:object_init_critrate"
@@ -14,5 +16,6 @@ const val OBJECT_CEXT_ST_CRITDMG = "cext_static:object_init_critdmg"
 const val OBJECT_CEXT_ST_DMG_ELEMENT = "cext_static:object_dmg_element"
 
 const val OBJECT_DYN_DMG_ELEMENT = "dyn:object_dmg_element"
+const val OBJECT_DYN_ROUGHNESS_BREAK = "dyn:object_roughness_break"
 
 const val OBJECT_GLB_PASSED_TIME = "global:passed_time"
