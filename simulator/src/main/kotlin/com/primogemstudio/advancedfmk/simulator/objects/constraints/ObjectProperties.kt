@@ -14,3 +14,5 @@ const val OBJECT_CEXT_ST_CRITDMG = "cext_static:object_init_critdmg"
 const val OBJECT_CEXT_ST_DMG_ELEMENT = "cext_static:object_dmg_element"
 
 const val OBJECT_DYN_DMG_ELEMENT = "dyn:object_dmg_element"
+
+const val OBJECT_GLB_PASSED_TIME = "global:passed_time"

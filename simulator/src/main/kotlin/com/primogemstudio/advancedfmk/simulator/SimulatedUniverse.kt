@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.OBJECT_GLB_PASSED_TIME
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.OPSTK_FLAG_INSERTED
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
@@ -16,7 +17,7 @@ class SimulatedUniverse(
     init {
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
-        extendedVal["passedTime"] = 0u
+        extendedVal[OBJECT_GLB_PASSED_TIME] = 0u
         characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
         enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
         refreshQueue(null)
@@ -26,8 +27,8 @@ class SimulatedUniverse(
         get() = extendedVal["maxNCalc"] as Int
         set(v) { extendedVal["maxNCalc"] = v }
     private var passedTime: UInt
-        get() = extendedVal["passedTime"] as UInt
-        set(v) { extendedVal["passedTime"] = v }
+        get() = extendedVal[OBJECT_GLB_PASSED_TIME] as UInt
+        set(v) { extendedVal[OBJECT_GLB_PASSED_TIME] = v }
 
     private fun refreshQueue(top: RoundtripObject?) {
         if (operateQueue.first.first == top && operateQueue.first.second and OPSTK_FLAG_INSERTED != 0u) operateQueue.pop()
