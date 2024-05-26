@@ -17,13 +17,13 @@ fun main() {
     val uni = SimulatedUniverse(
         listOf(
             CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f, Physical),
-            CharacterObjectImpl("Test character 2", 200f, 15f, 105u, 0.05f, 0.5f, Ice),
+            CharacterObjectImpl("Test character 2", 200f, 15f, 105u, 0.05f, 0.5f, Physical),
             CharacterObjectImpl("Test character 3", 50f, 50f, 105u, 0.05f, 0.5f, Quantum),
             CharacterObjectImpl("Test character 4", 150f, 20f, 125u, 0.05f, 0.5f, Imaginary)
         ),
         listOf(
-            EnemyObjectImpl("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60u, mutableListOf(), 16),
-            EnemyObjectImpl("Test enemy 2", 75f * 1.5f, 20f * 1.5f, 65u, mutableListOf(), 8)
+            EnemyObjectImpl("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60u, mutableListOf(Physical), 2),
+            EnemyObjectImpl("Test enemy 2", 75f * 1.5f, 20f * 1.5f, 65u, mutableListOf(Ice), 2)
         ),
         5, 3
     )

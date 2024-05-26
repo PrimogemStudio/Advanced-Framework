@@ -8,7 +8,7 @@ interface EnemyObject {
 
     fun haveWeakness(prop: ObjectWeakness): Boolean
 
-    val initToughness: Short
-    var toughness: Short
+    val initToughness: Int
+    var toughness: Int
     val toughnessBreaked: Boolean
 }

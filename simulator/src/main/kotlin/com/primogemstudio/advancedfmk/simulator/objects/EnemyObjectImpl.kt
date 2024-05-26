@@ -11,7 +11,7 @@ class EnemyObjectImpl(
     dmg: Float,
     spd: UInt,
     initWeakness: List<ObjectWeakness>,
-    toughness: Short
+    toughness: Int
 ): RoundtripObjectImplV0(id, initHp, dmg, spd), EnemyObject {
     init {
         initialData[OBJECT_EEXT_WEAKNESS] = initWeakness.toMutableList()
@@ -25,7 +25,7 @@ class EnemyObjectImpl(
 
     override fun receiveAttack(value: Float, additional: Map<String, Any>) {
         super.receiveAttack(value, additional)
-        if (haveWeakness(additional[OBJECT_DYN_DMG_ELEMENT] as ObjectWeakness)) toughness = (toughness - (additional[OBJECT_DYN_ROUGHNESS_BREAK] as Number).toShort()).toShort()
+        if (haveWeakness(additional[OBJECT_DYN_DMG_ELEMENT] as ObjectWeakness)) toughness -= (additional[OBJECT_DYN_ROUGHNESS_BREAK] as Number).toInt()
     }
 
     override fun appendWeakness(chr: RoundtripObject?, prop: ObjectWeakness): Boolean = weakness.add(prop)
@@ -34,12 +34,12 @@ class EnemyObjectImpl(
     override fun haveWeakness(prop: ObjectWeakness): Boolean = weakness.contains(prop)
 
     override val toughnessBreaked: Boolean
-        get() = toughness == 0.toShort()
+        get() = toughness == 0
 
-    override var toughness: Short
-        get() = initialData[OBJECT_EEXT_TOUGHNESS] as Short
-        set(v) { initialData[OBJECT_EEXT_TOUGHNESS] = max(0, v.toInt()) }
+    override var toughness: Int
+        get() = initialData[OBJECT_EEXT_TOUGHNESS] as Int
+        set(v) { initialData[OBJECT_EEXT_TOUGHNESS] = max(0, v) }
 
-    override val initToughness: Short
-        get() = staticData[OBJECT_EEXT_ST_TOUGHNESS] as Short
+    override val initToughness: Int
+        get() = staticData[OBJECT_EEXT_ST_TOUGHNESS] as Int
 }
