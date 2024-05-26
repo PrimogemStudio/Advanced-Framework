@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.simulator.objects
 
 import com.primogemstudio.advancedfmk.simulator.AttackResult
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.*
 import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import kotlin.math.max
 
@@ -11,34 +12,36 @@ open class RoundtripCharacterImplV0(
     dmg: Float,
     spd: UInt
 ): RoundtripObject {
-    private var initialData = mutableMapOf<String, Any>()
+    protected var initialData = mutableMapOf<String, Any>()
     final override val staticData: Map<String, Any> = mutableMapOf()
 
     init {
-        initialData["id"] = id
-        initialData["hp"] = initHp
-        initialData["spd"] = spd
-        (staticData as MutableMap)["dmg"] = dmg
-        staticData["allHp"] = initHp
+        initialData[OBJECT_ID] = id
+        initialData[OBJECT_HP] = initHp
+        initialData[OBJECT_SPD] = spd
+        (staticData as MutableMap).apply {
+            this[OBJECT_ST_DMG] = dmg
+            this[OBJECT_ST_ALLHP] = initHp
+        }
     }
 
     override val id: String
-        get() = initialData["id"] as String
+        get() = initialData[OBJECT_ID] as String
     override var health: Float
-        get() = initialData["hp"] as Float
-        set(value) { initialData["hp"] = value }
+        get() = initialData[OBJECT_HP] as Float
+        set(value) { initialData[OBJECT_HP] = value }
 
     override val allHealth: Float
-        get() = staticData["allHp"] as Float
+        get() = staticData[OBJECT_ST_ALLHP] as Float
 
     override val dmg: Float
-        get() = staticData["dmg"] as Float
+        get() = staticData[OBJECT_ST_DMG] as Float
     override val alive: Boolean
         get() = health > 0f
 
     override var spd: UInt
-        get() = initialData["spd"] as UInt
-        set(value) { initialData["spd"] = value }
+        get() = initialData[OBJECT_SPD] as UInt
+        set(value) { initialData[OBJECT_SPD] = value }
 
     override fun receiveAttack(value: Float, additional: Map<String, Any>) {
         health = max(0f, health - value)
@@ -53,9 +56,8 @@ open class RoundtripCharacterImplV0(
         return simulator?.getCurrTarget(this)?.filter { it.alive }?.let { l ->
             l.flatMap {
                 listOf {
-                    val r = dmg
-                    it.receiveAttack(r, mapOf())
-                    AttackResult(this, mapOf(Pair(it, r)), 1.0 / l.size)
+                    it.receiveAttack(dmg, mapOf())
+                    AttackResult(this, mapOf(Pair(it, dmg)), 1.0 / l.size)
                 }
             }
         }?: listOf()

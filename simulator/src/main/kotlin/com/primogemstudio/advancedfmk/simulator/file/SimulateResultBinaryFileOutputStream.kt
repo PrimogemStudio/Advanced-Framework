@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.simulator.file
 
 import com.primogemstudio.advancedfmk.bin.NBTOutputStream
 import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.OBJECT_HP
 import org.apache.logging.log4j.LogManager
 import java.io.OutputStream
 
@@ -23,16 +24,16 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
             if (uni.win()) targetSucceed += 1
             val re = uni.mkSnapshot(null)
             writeDoubleTag("weight", weight)
-            writeListTag("characters", re.charactersData.map { it["hp"] as Float })
-            writeListTag("enemies", re.enemiesData.map { it["hp"] as Float })
+            writeListTag("characters", re.charactersData.map { it[OBJECT_HP] as Float })
+            writeListTag("enemies", re.enemiesData.map { it[OBJECT_HP] as Float })
             writeByteTag("resultWin", if (re.win()) 0x01 else 0x00)
             return
         }
 
         val root = uni.mkSnapshot(null)
         writeDoubleTag("weight", weight)
-        writeListTag("characters", root.charactersData.map { it["hp"] as Float })
-        writeListTag("enemies", root.enemiesData.map { it["hp"] as Float })
+        writeListTag("characters", root.charactersData.map { it[OBJECT_HP] as Float })
+        writeListTag("enemies", root.enemiesData.map { it[OBJECT_HP] as Float })
         for (i in uni.getQueueTop()?.getSolutions()!!) {
             val rs = i()
             uni.getQueueTop()?.finishSolve()

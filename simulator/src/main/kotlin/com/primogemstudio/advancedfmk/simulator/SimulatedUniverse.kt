@@ -1,14 +1,9 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.OperationFlags.INSERTED
-import com.primogemstudio.advancedfmk.simulator.OperationFlags.TURN_LENGTH
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.INSERTED
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import java.util.*
-
-object OperationFlags {
-    const val INSERTED = 2147483648u
-    const val TURN_LENGTH = 10000u
-}
 
 class SimulatedUniverse(
     private val characters: List<RoundtripObject>,
