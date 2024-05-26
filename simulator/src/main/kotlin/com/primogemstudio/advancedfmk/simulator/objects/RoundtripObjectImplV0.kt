@@ -6,7 +6,7 @@ import com.primogemstudio.advancedfmk.simulator.objects.constraints.*
 import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import kotlin.math.max
 
-open class RoundtripCharacterImplV0(
+open class RoundtripObjectImplV0(
     id: String,
     initHp: Float,
     dmg: Float,
@@ -15,14 +15,15 @@ open class RoundtripCharacterImplV0(
     protected var initialData = mutableMapOf<String, Any>()
     final override val staticData: Map<String, Any> = mutableMapOf()
 
+    protected fun modStaticData(k: String, v: Any) { (staticData as MutableMap<String, Any>)[k] = v }
+
     init {
         initialData[OBJECT_ID] = id
         initialData[OBJECT_HP] = initHp
         initialData[OBJECT_SPD] = spd
-        (staticData as MutableMap).apply {
-            this[OBJECT_ST_DMG] = dmg
-            this[OBJECT_ST_ALLHP] = initHp
-        }
+
+        modStaticData(OBJECT_ST_DMG, dmg)
+        modStaticData(OBJECT_ST_ALLHP, initHp)
     }
 
     override val id: String
