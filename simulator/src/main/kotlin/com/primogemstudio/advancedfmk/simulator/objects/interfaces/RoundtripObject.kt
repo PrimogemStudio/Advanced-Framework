@@ -9,11 +9,11 @@ interface RoundtripObject: MappedObject {
     var health: Float
     val allHealth: Float
 
-    val mainOutput: Float
+    val dmg: Float
     var simulator: SimulatedUniverse?
     val alive: Boolean
 
-    var speed: UInt
+    var spd: UInt
 
     fun receiveAttack(value: Float, additional: Map<String, Any>)
     fun getSolutions(): List<() -> AttackResult>

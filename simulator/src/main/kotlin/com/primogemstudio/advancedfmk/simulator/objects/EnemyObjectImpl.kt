@@ -5,8 +5,8 @@ import com.primogemstudio.advancedfmk.simulator.objects.interfaces.EnemyObject
 
 class EnemyObjectImpl(
     id: String,
-    initHealth: Float,
-    output: Float,
-    speed: UInt,
+    initHp: Float,
+    dmg: Float,
+    spd: UInt,
     override val weakness: MutableList<ObjectWeakness>
-): RoundtripCharacterImplV0(id, initHealth, output, speed), EnemyObject
+): RoundtripCharacterImplV0(id, initHp, dmg, spd), EnemyObject

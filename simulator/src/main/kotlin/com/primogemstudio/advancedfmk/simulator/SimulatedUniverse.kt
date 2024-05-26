@@ -22,8 +22,8 @@ class SimulatedUniverse(
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
         extendedVal["passedTime"] = 0u
-        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
-        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.speed)); it.simulator = this }
+        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
+        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
         refreshQueue(null)
     }
 
@@ -36,7 +36,7 @@ class SimulatedUniverse(
 
     private fun refreshQueue(top: RoundtripObject?) {
         if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
-        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.speed) else it }.sortedBy { it.second and INSERTED.inv() }
+        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.spd) else it }.sortedBy { it.second and INSERTED.inv() }
         res.first().second.apply {
             passedTime += this
             res = res.map { Pair(it.first, it.second - this) }

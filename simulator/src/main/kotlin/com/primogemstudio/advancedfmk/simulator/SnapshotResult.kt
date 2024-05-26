@@ -9,8 +9,8 @@ data class SnapshotResult(
     val extendedVals: Map<String, Any>,
     val lastOperation: AttackResult?
 ) {
-    fun finish(): Boolean = charactersData.map { it["health"] as Float }.sum() == 0f || win()
-    fun win(): Boolean = enemiesData.map { it["health"] as Float }.sum() == 0f
+    fun finish(): Boolean = charactersData.map { it["hp"] as Float }.sum() == 0f || win()
+    fun win(): Boolean = enemiesData.map { it["hp"] as Float }.sum() == 0f
 
-    override fun toString(): String = "${charactersData.map { it["health"] }} ${enemiesData.map { it["health"] }}"
+    override fun toString(): String = "${charactersData.map { it["hp"] }} ${enemiesData.map { it["hp"] }}"
 }

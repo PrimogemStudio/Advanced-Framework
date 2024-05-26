@@ -23,16 +23,16 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
             if (uni.win()) targetSucceed += 1
             val re = uni.mkSnapshot(null)
             writeDoubleTag("weight", weight)
-            writeListTag("characters", re.charactersData.map { it["health"] as Float })
-            writeListTag("enemies", re.enemiesData.map { it["health"] as Float })
+            writeListTag("characters", re.charactersData.map { it["hp"] as Float })
+            writeListTag("enemies", re.enemiesData.map { it["hp"] as Float })
             writeByteTag("resultWin", if (re.win()) 0x01 else 0x00)
             return
         }
 
         val root = uni.mkSnapshot(null)
         writeDoubleTag("weight", weight)
-        writeListTag("characters", root.charactersData.map { it["health"] as Float })
-        writeListTag("enemies", root.enemiesData.map { it["health"] as Float })
+        writeListTag("characters", root.charactersData.map { it["hp"] as Float })
+        writeListTag("enemies", root.enemiesData.map { it["hp"] as Float })
         for (i in uni.getQueueTop()?.getSolutions()!!) {
             val rs = i()
             uni.getQueueTop()?.finishSolve()
