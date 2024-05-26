@@ -1,6 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator
 
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.INSERTED
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.OPSTK_FLAG_INSERTED
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
 import java.util.*
@@ -30,8 +30,8 @@ class SimulatedUniverse(
         set(v) { extendedVal["passedTime"] = v }
 
     private fun refreshQueue(top: RoundtripObject?) {
-        if (operateQueue.first.first == top && operateQueue.first.second and INSERTED != 0u) operateQueue.pop()
-        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.spd) else it }.sortedBy { it.second and INSERTED.inv() }
+        if (operateQueue.first.first == top && operateQueue.first.second and OPSTK_FLAG_INSERTED != 0u) operateQueue.pop()
+        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.spd) else it }.sortedBy { it.second and OPSTK_FLAG_INSERTED.inv() }
         res.first().second.apply {
             passedTime += this
             res = res.map { Pair(it.first, it.second - this) }
