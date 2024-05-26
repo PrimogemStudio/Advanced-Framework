@@ -5,6 +5,7 @@ import com.primogemstudio.advancedfmk.simulator.file.Compressions
 import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
 import com.primogemstudio.advancedfmk.simulator.objects.CharacterObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.EnemyObjectImpl
+import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness.*
 import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Path
@@ -15,10 +16,10 @@ fun main() {
     System.setProperty("log4j.configurationFile", "log4j_conf.xml")
     val uni = SimulatedUniverse(
         listOf(
-            CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f),
-            CharacterObjectImpl("Test character 2", 200f, 15f, 105u, 0.05f, 0.5f),
-            CharacterObjectImpl("Test character 3", 50f, 50f, 105u, 0.05f, 0.5f),
-            CharacterObjectImpl("Test character 4", 150f, 20f, 125u, 0.05f, 0.5f)
+            CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f, Physical),
+            CharacterObjectImpl("Test character 2", 200f, 15f, 105u, 0.05f, 0.5f, Ice),
+            CharacterObjectImpl("Test character 3", 50f, 50f, 105u, 0.05f, 0.5f, Quantum),
+            CharacterObjectImpl("Test character 4", 150f, 20f, 125u, 0.05f, 0.5f, Imaginary)
         ),
         listOf(
             EnemyObjectImpl("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60u, mutableListOf()),
