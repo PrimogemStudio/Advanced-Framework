@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk
+package com.primogemstudio.advancedfmk.ui
 
 import com.primogemstudio.advancedfmk.render.uiframework.Compositor
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound

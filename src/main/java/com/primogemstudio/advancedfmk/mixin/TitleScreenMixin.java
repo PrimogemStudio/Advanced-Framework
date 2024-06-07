@@ -1,8 +1,8 @@
 package com.primogemstudio.advancedfmk.mixin;
 
-import com.primogemstudio.advancedfmk.UITestKt;
 import com.primogemstudio.advancedfmk.render.uiframework.ui.GlobalVarsKt;
 import com.primogemstudio.advancedfmk.render.uiframework.ui.UICompound;
+import com.primogemstudio.advancedfmk.ui.UITestKt;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
