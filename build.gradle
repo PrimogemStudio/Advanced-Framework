@@ -96,7 +96,9 @@ dependencies {
     include "org.apache.bcel:bcel:${bcel_version}"
     include "org.ladysnake:satin:${project.satin_version}"
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:${project.kotlin_version}"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 tasks.test {
