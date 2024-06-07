@@ -10,7 +10,7 @@ import java.nio.file.Path
 
 @ExperimentalStdlibApi
 fun main() {
-    System.setProperty("log4j.configurationFile", "../log4j_conf.xml")
+    System.setProperty("log4j.configurationFile", "log4j_conf.xml")
     val uni = SimulatedUniverse(
         listOf(
             CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f, Physical),
