@@ -17,13 +17,12 @@ import java.lang.Thread.sleep
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.GZIPInputStream
+import java.util.zip.InflaterInputStream
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class SimulatorTest {
     @OptIn(DelicateCoroutinesApi::class)
-    @Order(0)
-    @Test
-    fun binOutputTest() {
+    internal fun binOutput(c: Compressions, target: String) {
         val uni = SimulatedUniverse(
             listOf(
                 CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f, Physical),
@@ -37,7 +36,7 @@ internal class SimulatorTest {
             ),
             5, 3
         )
-        val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("tests/result.nbt")), Compressions.GZIP)
+        val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of(target)), c)
         var ended = false
         GlobalScope.async {
             while (!ended) {
@@ -52,11 +51,31 @@ internal class SimulatorTest {
         output.close()
     }
 
+    @Order(0)
+    @Test
+    fun binOutputGzipTest() {
+        binOutput(Compressions.GZIP, "tests/result.nbt")
+    }
+    @Order(0)
+    @Test
+    fun binOutputDeflaterTest() {
+        binOutput(Compressions.DEFLATER, "tests/result_def.nbt")
+    }
+
     @Order(1)
     @Test
-    fun binTranslate() {
+    fun binTranslateGzip() {
         val o = PrintStream(Files.newOutputStream(Path.of("tests/result.txt")))
         val `in` = NBTInputTextStream(GZIPInputStream(Files.newInputStream(Path.of("tests/result.nbt"))), o)
+        `in`.readCompoundTag()
+        `in`.close()
+    }
+
+    @Order(1)
+    @Test
+    fun binTranslateInflater() {
+        val o = PrintStream(Files.newOutputStream(Path.of("tests/result_def.txt")))
+        val `in` = NBTInputTextStream(InflaterInputStream(Files.newInputStream(Path.of("tests/result_def.nbt"))), o)
         `in`.readCompoundTag()
         `in`.close()
     }
