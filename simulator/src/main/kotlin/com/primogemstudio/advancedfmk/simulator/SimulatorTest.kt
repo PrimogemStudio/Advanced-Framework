@@ -1,12 +1,15 @@
 package com.primogemstudio.advancedfmk.simulator
 
+import com.primogemstudio.advancedfmk.bin.NBTInputTextStream
 import com.primogemstudio.advancedfmk.simulator.file.Compressions
 import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
 import com.primogemstudio.advancedfmk.simulator.objects.CharacterObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.EnemyObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness.*
+import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.zip.GZIPInputStream
 
 @ExperimentalStdlibApi
 fun main() {
@@ -39,8 +42,8 @@ fun main() {
     output.recStatus()
     output.close()
 
-    /*val o = PrintStream(Files.newOutputStream(Path.of("testtext.txt")))
+    val o = PrintStream(Files.newOutputStream(Path.of("testtext.txt")))
     val `in` = NBTInputTextStream(GZIPInputStream(Files.newInputStream(Path.of("result3.nbt"))), o)
     `in`.readCompoundTag()
-    `in`.close()*/
+    `in`.close()
 }
