@@ -7,15 +7,20 @@ import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOut
 import com.primogemstudio.advancedfmk.simulator.objects.CharacterObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.EnemyObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.junit.jupiter.api.*
 import java.io.File
 import java.io.PrintStream
+import java.lang.Thread.sleep
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.GZIPInputStream
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class SimulatorTest {
+    @OptIn(DelicateCoroutinesApi::class)
     @Order(0)
     @Test
     fun binOutputTest() {
@@ -33,17 +38,16 @@ internal class SimulatorTest {
             5, 3
         )
         val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of("tests/result.nbt")), Compressions.GZIP)
-
-        val t = object: Thread("Record Thread") {
-            override fun run() {
-                while (true) {
-                    try { sleep(200) } catch (_: InterruptedException) { break }
-                    output.recStatus()
-                }
+        var ended = false
+        GlobalScope.async {
+            while (!ended) {
+                try { sleep(200) } catch (_: InterruptedException) { break }
+                output.recStatus()
             }
-        }.apply { start() }
+        }.onAwait
+
         output.writeRes(uni)
-        t.interrupt()
+        ended = true
         output.recStatus()
         output.close()
     }
