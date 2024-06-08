@@ -17,7 +17,7 @@ class ComposedFont {
         for (c in 0..128) {
             fontStack.forEach {
                 try {
-                    characterMap.put(c.toChar(), it, 20)
+                    characterMap.put(c.toChar(), it, 50)
                 } catch (_: Exception) {
                 }
             }

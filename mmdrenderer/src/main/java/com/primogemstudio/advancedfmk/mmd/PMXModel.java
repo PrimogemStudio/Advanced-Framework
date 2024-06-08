@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
 import com.primogemstudio.advancedfmk.mmd.renderer.MMDTextureAtlas;
 import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager;
-import org.lwjgl.opengl.GL32;
 
 import java.io.File;
 import java.lang.ref.Cleaner;
@@ -41,7 +40,7 @@ public class PMXModel implements AutoCloseable {
         mappingVertices();
         ibo = GlStateManager._glGenBuffers();
         GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), GL32.GL_STATIC_DRAW);
+        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), 0x88E4); // GL_STATIC_DRAW
         var p = ptr;
         var tm = textureManager;
         var t_ibo = ibo;
