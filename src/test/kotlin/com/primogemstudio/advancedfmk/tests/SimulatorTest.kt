@@ -8,6 +8,7 @@ import com.primogemstudio.advancedfmk.simulator.objects.CharacterObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.EnemyObjectImpl
 import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness.*
 import org.junit.jupiter.api.*
+import java.io.File
 import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Path
@@ -60,15 +61,14 @@ internal class SimulatorTest {
         @BeforeAll
         @JvmStatic
         internal fun configureLogging() {
-            System.setProperty("log4j.configurationFile", "log4j_conf.xml")
+            System.setProperty("log4j.configurationFile", "configs/log4j_conf.xml")
         }
 
         @BeforeAll
         @JvmStatic
         internal fun mkTestDir() {
-            Path.of("tests").apply {
-                if (!Files.deleteIfExists(this) && !this.toFile().mkdirs()) throw IllegalStateException("test dir is failed to reset!")
-            }
+            File("tests").deleteRecursively()
+            File("tests").mkdirs()
         }
     }
 }
