@@ -3,14 +3,16 @@ package com.primogemstudio.advancedfmk.simulator.starrailike
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_GLB_PASSED_TIME
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OPSTK_FLAG_INSERTED
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.TURN_LENGTH
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.CharacterObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.EnemyObject
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 import java.util.*
 
-class SimulatedUniverse(
-    private val characters: List<RoundtripObject>,
-    private val enemies: List<RoundtripObject>,
-    maxNum: Int, currentM: Int
-) {
+ class SimulatedUniverse<C, E>(
+     private val characters: List<C>,
+     private val enemies: List<E>,
+     maxNum: Int, currentM: Int
+) where C: RoundtripObject, C: CharacterObject, E: RoundtripObject, E: EnemyObject {
     private val operateQueue: Deque<Pair<RoundtripObject, UInt>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()
 
