@@ -1,7 +1,7 @@
-package com.primogemstudio.advancedfmk.simulator
+package com.primogemstudio.advancedfmk.simulator.starrailike
 
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.OBJECT_HP
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_HP
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 
 data class SnapshotResult(
     val charactersData: List<Map<String, Any>>,

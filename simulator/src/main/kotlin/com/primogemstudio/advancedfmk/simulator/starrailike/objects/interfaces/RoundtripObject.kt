@@ -1,7 +1,7 @@
-package com.primogemstudio.advancedfmk.simulator.objects.interfaces
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces
 
-import com.primogemstudio.advancedfmk.simulator.AttackResult
-import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.starrailike.AttackResult
+import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
 
 interface RoundtripObject: MappedObject {
     val id: String

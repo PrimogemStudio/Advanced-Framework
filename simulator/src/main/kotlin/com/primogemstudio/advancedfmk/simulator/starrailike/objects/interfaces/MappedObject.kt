@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.simulator.objects.interfaces
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces
 
 interface MappedObject {
     var rawData: Map<String, Any>

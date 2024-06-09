@@ -1,12 +1,12 @@
 package com.primogemstudio.advancedfmk.tests
 
 import com.primogemstudio.advancedfmk.bin.NBTInputTextStream
-import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
-import com.primogemstudio.advancedfmk.simulator.file.Compressions
-import com.primogemstudio.advancedfmk.simulator.file.SimulateResultBinaryFileOutputStream
-import com.primogemstudio.advancedfmk.simulator.objects.CharacterObjectImpl
-import com.primogemstudio.advancedfmk.simulator.objects.EnemyObjectImpl
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness.*
+import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.starrailike.file.Compressions
+import com.primogemstudio.advancedfmk.simulator.starrailike.file.SimulateResultBinaryFileOutputStream
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.CharacterObjectImpl
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.EnemyObjectImpl
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.ObjectWeakness.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async

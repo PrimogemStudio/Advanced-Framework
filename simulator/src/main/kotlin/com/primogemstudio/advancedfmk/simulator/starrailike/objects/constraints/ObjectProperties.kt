@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.simulator.objects.constraints
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints
 
 const val OBJECT_ID = "basic:object_id"
 const val OBJECT_HP = "basic:object_hp"

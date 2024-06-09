@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedfmk.simulator.objects.interfaces
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces
 
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.ObjectWeakness
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.ObjectWeakness
 
 interface EnemyObject {
     fun appendWeakness(chr: RoundtripObject?, prop: ObjectWeakness): Boolean

@@ -1,8 +1,8 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects
 
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.*
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.EnemyObject
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.*
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.EnemyObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 import kotlin.math.max
 
 class EnemyObjectImpl(

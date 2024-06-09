@@ -1,9 +1,9 @@
-package com.primogemstudio.advancedfmk.simulator
+package com.primogemstudio.advancedfmk.simulator.starrailike
 
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.OBJECT_GLB_PASSED_TIME
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.OPSTK_FLAG_INSERTED
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.TURN_LENGTH
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_GLB_PASSED_TIME
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OPSTK_FLAG_INSERTED
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.TURN_LENGTH
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 import java.util.*
 
 class SimulatedUniverse(

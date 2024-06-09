@@ -1,9 +1,9 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects
 
-import com.primogemstudio.advancedfmk.simulator.AttackResult
-import com.primogemstudio.advancedfmk.simulator.SimulatedUniverse
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.*
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.RoundtripObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.AttackResult
+import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.*
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 import kotlin.math.max
 
 open class RoundtripObjectImplV0(

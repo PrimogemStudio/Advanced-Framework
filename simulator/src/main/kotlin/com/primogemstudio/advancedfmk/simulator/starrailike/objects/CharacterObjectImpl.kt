@@ -1,8 +1,8 @@
-package com.primogemstudio.advancedfmk.simulator.objects
+package com.primogemstudio.advancedfmk.simulator.starrailike.objects
 
-import com.primogemstudio.advancedfmk.simulator.AttackResult
-import com.primogemstudio.advancedfmk.simulator.objects.constraints.*
-import com.primogemstudio.advancedfmk.simulator.objects.interfaces.CharacterObject
+import com.primogemstudio.advancedfmk.simulator.starrailike.AttackResult
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.*
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.CharacterObject
 
 class CharacterObjectImpl(
     id: String,
