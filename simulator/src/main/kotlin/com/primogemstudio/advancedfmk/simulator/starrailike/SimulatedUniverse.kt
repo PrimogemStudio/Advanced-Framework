@@ -1,8 +1,8 @@
 package com.primogemstudio.advancedfmk.simulator.starrailike
 
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_GLB_PASSED_TIME
-import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OPSTK_FLAG_INSERTED
-import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.TURN_LENGTH
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OPSTK_FLAG_SPECIAL
+import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OPSTK_TURN_LENGTH
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.CharacterObject
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.EnemyObject
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
@@ -20,8 +20,8 @@ import java.util.*
         extendedVal["maxN"] = maxNum
         extendedVal["maxNCalc"] = currentM
         extendedVal[OBJECT_GLB_PASSED_TIME] = 0u
-        characters.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
-        enemies.forEach { operateQueue.offer(Pair(it, TURN_LENGTH / it.spd)); it.simulator = this }
+        characters.forEach { operateQueue.offer(Pair(it, OPSTK_TURN_LENGTH / it.spd)); it.simulator = this }
+        enemies.forEach { operateQueue.offer(Pair(it, OPSTK_TURN_LENGTH / it.spd)); it.simulator = this }
         refreshQueue(null)
     }
 
@@ -33,8 +33,8 @@ import java.util.*
         set(v) { extendedVal[OBJECT_GLB_PASSED_TIME] = v }
 
     private fun refreshQueue(top: RoundtripObject?) {
-        if (operateQueue.first.first == top && operateQueue.first.second and OPSTK_FLAG_INSERTED != 0u) operateQueue.pop()
-        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + TURN_LENGTH / it.first.spd) else it }.sortedBy { it.second and OPSTK_FLAG_INSERTED.inv() }
+        if (operateQueue.first.first == top && operateQueue.first.second and OPSTK_FLAG_SPECIAL != 0u) operateQueue.pop()
+        var res = operateQueue.map { if (it.first == top) Pair(it.first, it.second + OPSTK_TURN_LENGTH / it.first.spd) else it }.sortedBy { it.second and OPSTK_FLAG_SPECIAL.inv() }
         res.first().second.apply {
             passedTime += this
             res = res.map { Pair(it.first, it.second - this) }
