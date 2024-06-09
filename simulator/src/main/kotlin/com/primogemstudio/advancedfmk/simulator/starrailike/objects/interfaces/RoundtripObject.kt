@@ -10,7 +10,7 @@ interface RoundtripObject: MappedObject {
     val allHealth: Float
 
     val dmg: Float
-    var simulator: SimulatedUniverse?
+    var simulator: SimulatedUniverse<*, *>?
     val alive: Boolean
 
     var spd: UInt

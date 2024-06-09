@@ -48,7 +48,7 @@ open class RoundtripObjectImplV0(
         health = max(0f, health - value)
     }
 
-    override var simulator: SimulatedUniverse? = null
+    override var simulator: SimulatedUniverse<*, *>? = null
     override var rawData: Map<String, Any>
         get() = initialData.toMap()
         set(v) { initialData = v.toMutableMap() }

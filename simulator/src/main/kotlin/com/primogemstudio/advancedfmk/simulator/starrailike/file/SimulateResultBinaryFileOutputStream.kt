@@ -18,7 +18,7 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
     private var targetNum: Long = 0
     private var targetSucceed: Long = 0
     fun recStatus() = logger.info("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
-    private fun simulate(uni: SimulatedUniverse, depth: Int = 0, weight: Double = 1.0) {
+    private fun simulate(uni: SimulatedUniverse<*, *>, depth: Int = 0, weight: Double = 1.0) {
         if (uni.finished()) {
             targetNum += 1
             if (uni.win()) targetSucceed += 1
@@ -45,7 +45,7 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
             uni.resSnapshot(root)
         }
     }
-    fun writeRes(uni: SimulatedUniverse) {
+    fun writeRes(uni: SimulatedUniverse<*, *>) {
         writeCompoundTagHeader("")
         simulate(uni)
         writeEndTag()
