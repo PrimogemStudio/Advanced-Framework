@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 
 public class PMXModel implements AutoCloseable {
     @AccessFromNative
@@ -40,7 +41,7 @@ public class PMXModel implements AutoCloseable {
         mappingVertices();
         ibo = GlStateManager._glGenBuffers();
         GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), 0x88E4); // GL_STATIC_DRAW
+        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), GL_STATIC_DRAW);
         var p = ptr;
         var tm = textureManager;
         var t_ibo = ibo;
@@ -53,7 +54,7 @@ public class PMXModel implements AutoCloseable {
 
     private native void load(File file);
 
-    public native void render(ByteBuffer buff, ByteBuffer constants);
+    public native void render(long pointer, ByteBuffer constants);
 
     private native ByteBuffer getIndices();
 

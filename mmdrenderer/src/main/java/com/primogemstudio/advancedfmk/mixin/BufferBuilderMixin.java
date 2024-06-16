@@ -1,27 +1,22 @@
 package com.primogemstudio.advancedfmk.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mojang.blaze3d.platform.MemoryTracker;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferVertexConsumer;
-import com.mojang.blaze3d.vertex.DefaultedVertexConsumer;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.interfaces.BufferBuilderExt;
-import com.primogemstudio.advancedfmk.interfaces.RenderedBufferExt;
+import com.primogemstudio.advancedfmk.interfaces.DrawStateExt;
 import com.primogemstudio.advancedfmk.mmd.PMXModel;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-import java.nio.ByteBuffer;
-
-
 @Mixin(BufferBuilder.class)
-public abstract class BufferBuilderMixin extends DefaultedVertexConsumer implements BufferVertexConsumer, BufferBuilderExt {
-    @Shadow
-    private int nextElementByte;
+public class BufferBuilderMixin implements BufferBuilderExt {
     @Shadow
     private boolean fullFormat;
 
@@ -32,7 +27,8 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
     private VertexFormat format;
 
     @Shadow
-    public ByteBuffer buffer;
+    @Final
+    public ByteBufferBuilder buffer;
 
     @Unique
     private PMXModel model;
@@ -43,32 +39,14 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
     }
 
     @Override
-    public void bumpNxt(int val) {
-        nextElementByte += val;
-    }
-
-    @Override
-    public void setPtr(int ptr) {
-        nextElementByte = ptr;
-    }
-
-    @Override
-    public void submit() {
-        nextElementByte = vertices * format.getVertexSize();
-    }
-
-    @Override
     public int padding() {
         return format.getVertexSize() - 36;
     }
 
     @Override
-    public void resize() {
-        var size = vertices * format.getVertexSize();
-        if (buffer.capacity() < size) {
-            buffer = MemoryTracker.resize(buffer, size);
-            buffer.rewind();
-        }
+    public long resize(int size) {
+        vertices = size;
+        return buffer.reserve(vertices * format.getVertexSize());
     }
 
     @Nullable
@@ -82,15 +60,18 @@ public abstract class BufferBuilderMixin extends DefaultedVertexConsumer impleme
         this.model = model;
     }
 
-    @ModifyReturnValue(method = "storeRenderedBuffer", at = @At("RETURN"))
-    private BufferBuilder.RenderedBuffer storeRenderedBuffer(BufferBuilder.RenderedBuffer original) {
-        ((RenderedBufferExt) original).setPMXModel(model);
-        model = null;
-        return original;
+    @ModifyReturnValue(method = "storeMesh", at = @At("RETURN"))
+    private MeshData storeRenderedBuffer(MeshData original) {
+        if (original != null) {
+            ((DrawStateExt) (Object) original.drawState()).setPMXModel(model);
+            model = null;
+            return original;
+        }
+        return null;
     }
 
-    @Mixin(BufferBuilder.RenderedBuffer.class)
-    public static class RenderedBufferMixin implements RenderedBufferExt {
+    @Mixin(MeshData.DrawState.class)
+    public static class DrawStateMixin implements DrawStateExt {
         @Unique
         private PMXModel model;
 

@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
@@ -57,7 +58,11 @@ class TestEntity(entityType: EntityType<out Entity>, level: Level) : Entity(enti
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
-        return ServerPlayNetworking.createS2CPacket(TestEntityAddPacket(this, mp)) as Packet<ClientGamePacketListener>
+    override fun getAddEntityPacket(serverEntity: ServerEntity): Packet<ClientGamePacketListener> {
+        return ServerPlayNetworking.createS2CPacket(
+            TestEntityAddPacket(
+                this, serverEntity, mp
+            )
+        ) as Packet<ClientGamePacketListener>
     }
 }

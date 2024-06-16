@@ -7,17 +7,14 @@ import java.util.Objects;
 public final class SabaNative {
     static {
         var arch = System.getProperty("os.arch");
-        var path = "";
+        var path = "/natives/";
         var os = System.getProperty("os.name");
         var name = "";
         if (arch.equals("aarch64")) {
-            if (os.contains("Windows")) throw new RuntimeException("Unsupported Windows on ARM");
-            path = "/natives/arm/";
+            if (!os.contains("Mac OS")) throw new RuntimeException("Unsupported your system on ARM");
         } else if (arch.equals("amd64")) {
             if (os.contains("Mac OS")) throw new RuntimeException("Unsupported Mac OS on x86");
-            path = "/natives/";
         }
-        if (path.isEmpty()) throw new RuntimeException("Unsupported CPU architecture: " + arch);
         if (os.contains("Windows")) path += name = "saba-native.dll";
         else if (os.contains("Linux")) path += name = "libsaba-native.so";
         else if (os.contains("Mac OS")) path += name = "libsaba-native.dylib";

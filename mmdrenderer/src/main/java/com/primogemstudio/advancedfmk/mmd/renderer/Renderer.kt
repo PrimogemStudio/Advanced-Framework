@@ -154,10 +154,10 @@ class MMDTextureAtlas(tes: List<NativeImage>) : AbstractTexture() {
 }
 
 class TextureManager(private val texture: MMDTextureAtlas) {
-    var id = ResourceLocation(MOD_ID, "")
+    var id = ResourceLocation.fromNamespaceAndPath(MOD_ID, "")
 
     fun register(prefix: String) {
-        id = ResourceLocation(MOD_ID, prefix)
+        id = ResourceLocation.fromNamespaceAndPath(MOD_ID, prefix)
         Minecraft.getInstance().textureManager.register(id, texture)
     }
 
@@ -175,7 +175,7 @@ object CustomRenderType {
             VertexFormat.Mode.TRIANGLES,
             0x200000,
             false,
-            true,
+            false,
             CompositeState.builder().setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)

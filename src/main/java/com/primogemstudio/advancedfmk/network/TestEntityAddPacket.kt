@@ -8,10 +8,15 @@ import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerEntity
 
 class TestEntityAddPacket(val packet: ClientboundAddEntityPacket, val path: String) : CustomPacketPayload {
     companion object {
-        val TYPE = CustomPacketPayload.Type<TestEntityAddPacket>(ResourceLocation(MOD_ID, "test_entity_add"))
+        val TYPE = CustomPacketPayload.Type<TestEntityAddPacket>(
+            ResourceLocation.fromNamespaceAndPath(
+                MOD_ID, "test_entity_add"
+            )
+        )
         val CODEC = StreamCodec.ofMember(TestEntityAddPacket::write, ::TestEntityAddPacket)!!
     }
 
@@ -21,7 +26,9 @@ class TestEntityAddPacket(val packet: ClientboundAddEntityPacket, val path: Stri
     }
 
     constructor(buf: RegistryFriendlyByteBuf) : this(ClientboundAddEntityPacket.STREAM_CODEC.decode(buf), buf.readUtf())
-    constructor(entity: TestEntity, path: String) : this(ClientboundAddEntityPacket(entity), path)
+    constructor(entity: TestEntity, serverEntity: ServerEntity, path: String) : this(
+        ClientboundAddEntityPacket(entity, serverEntity), path
+    )
 
     override fun type(): CustomPacketPayload.Type<out TestEntityAddPacket> {
         return TYPE

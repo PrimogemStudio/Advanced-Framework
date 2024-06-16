@@ -12,11 +12,17 @@ import net.minecraft.world.entity.MobCategory
 
 object Entities {
     fun register() {
-        val entity = Registry.register(BuiltInRegistries.ENTITY_TYPE, ResourceLocation(MOD_ID, "test_entity"),
+        val entity = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "test_entity"),
             EntityType.Builder.of(
-                { entityType, level -> TestEntity(entityType, level) },
-                MobCategory.MISC
-            ).build("test_entity"))
-        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) EntityRendererRegistry.register(entity) { TestEntityRenderer(it) }
+                { entityType, level -> TestEntity(entityType, level) }, MobCategory.MISC
+            ).build("test_entity")
+        )
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) EntityRendererRegistry.register(entity) {
+            TestEntityRenderer(
+                it
+            )
+        }
     }
 }

@@ -57,9 +57,9 @@ class ComposedFont {
             for (idx in it.indices) {
                 val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(
+                buff.addVertex(
                     poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f
-                ).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
+                ).setColor(textColor.x, textColor.y, textColor.z, textColor.w)
                 poseStack.popPose()
             }
             currOffset += (it.dimension.x * siz).toInt()
@@ -106,12 +106,12 @@ class ComposedFont {
             for (idx in it.indices) {
                 val v = it.vertices[idx]
                 poseStack.pushPose()
-                buff.vertex(
+                buff.addVertex(
                     poseStack.last().pose(),
                     v.x * it.dimension.x * siz + currOffset,
                     v.y * it.dimension.y * siz + currY,
                     0f
-                ).color(textColor.x, textColor.y, textColor.z, textColor.w).endVertex()
+                ).setColor(textColor.x, textColor.y, textColor.z, textColor.w)
                 poseStack.popPose()
             }
             currOffset += (it.dimension.x * siz).toInt()

@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player
 class UpdatePacket(private val id: Int, private val path: String) : CustomPacketPayload {
     companion object {
         private val map = Int2ObjectOpenHashMap<String>()
-        val TYPE = CustomPacketPayload.Type<UpdatePacket>(ResourceLocation(MOD_ID, "update"))
+        val TYPE = CustomPacketPayload.Type<UpdatePacket>(ResourceLocation.fromNamespaceAndPath(MOD_ID, "update"))
         val CODEC = StreamCodec.ofMember(UpdatePacket::write, ::UpdatePacket)!!
 
         init {

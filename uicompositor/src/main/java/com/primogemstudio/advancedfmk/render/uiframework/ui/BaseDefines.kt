@@ -71,14 +71,14 @@ abstract class UIObject(
 }
 
 data class UIText(
-    var text: String = "",
-    var color: Vector4f = Vector4f(1f)
-): UIObject() {
+    var text: String = "", var color: Vector4f = Vector4f(1f)
+) : UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
-        TEXT_BLUR.setSamplerUniform("ClipSampler", clip?: defaultClip)
+        TEXT_BLUR.setSamplerUniform("ClipSampler", clip ?: defaultClip)
         renderText({ vc, ps ->
             newfont.drawText(
-                vc, ps,
+                vc,
+                ps,
                 text,
                 location["x"]!!(vars.toMap()).toInt(),
                 location["y"]!!(vars.toMap()).toInt(),
@@ -95,9 +95,8 @@ data class UIText(
 }
 
 data class UITextLegacy(
-    var text: String = "",
-    var color: Vector4f = Vector4f(1f)
-): UIObject() {
+    var text: String = "", var color: Vector4f = Vector4f(1f)
+) : UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
         textSwap.resize(vars.screen_size.x.toInt() * 2, vars.screen_size.y.toInt() * 2, onosx)
         textSwap.setClearColor(0f, 0f, 0f, 0f)
@@ -113,10 +112,7 @@ data class UITextLegacy(
             text,
             location["x"]!!(vars.toMap()).toInt(),
             location["y"]!!(vars.toMap()).toInt(),
-            a and 0xFF shl 24 or
-                    (r and 0xFF shl 16) or
-                    (g and 0xFF shl 8) or
-                    (b and 0xFF shl 0)
+            a and 0xFF shl 24 or (r and 0xFF shl 16) or (g and 0xFF shl 8) or (b and 0xFF shl 0)
         )
 
         val shaderIns = if (clip != null) Shaders.TEXTSWAP_CLIP else Shaders.TEXTSWAP
@@ -159,23 +155,22 @@ data class UIRect(
             if (clip != null) setSampler("ClipSampler", clip!!)
         }
 
-        val buff = Tesselator.getInstance().builder
-        buff.begin(
+        val buff = Tesselator.getInstance().begin(
             VertexFormat.Mode.QUADS,
-            if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX
+            if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP
         )
         val matrix = guiGraphics.pose().last().pose()
         val bdsize = 8
-        buff.vertex(matrix, s[0] - bdsize, s[1] - bdsize, 0f).color(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) uv(0f, 0f) }.endVertex()
-        buff.vertex(matrix, s[0] - bdsize, s[1] + s[3] + bdsize, 0f).color(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) uv(0f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2] + bdsize, s[1] + s[3] + bdsize, 0f).color(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) uv(1f, 1f) }.endVertex()
-        buff.vertex(matrix, s[0] + s[2] + bdsize, s[1] - bdsize, 0f).color(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) uv(1f, 0f) }.endVertex()
+        buff.addVertex(matrix, s[0] - bdsize, s[1] - bdsize, 0f).setColor(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) setUv(0f, 0f) }
+        buff.addVertex(matrix, s[0] - bdsize, s[1] + s[3] + bdsize, 0f).setColor(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) setUv(0f, 1f) }
+        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] + s[3] + bdsize, 0f).setColor(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) setUv(1f, 1f) }
+        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] - bdsize, 0f).setColor(color.x, color.y, color.z, alp)
+            .apply { if (texture != null) setUv(1f, 0f) }
         RenderSystem.enableBlend()
-        BufferUploader.drawWithShader(buff.end())
+        BufferUploader.drawWithShader(buff.build()!!)
         RenderSystem.disableBlend()
     }
 
@@ -191,7 +186,7 @@ data class UIRect(
 
 data class UICompound(
     var components: Map<ResourceLocation, UIObject> = mutableMapOf(),
-    var topComponent: ResourceLocation = ResourceLocation("minecraft:null")
+    var topComponent: ResourceLocation = ResourceLocation.parse("minecraft:null")
 ) : UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
         val top = findTop()

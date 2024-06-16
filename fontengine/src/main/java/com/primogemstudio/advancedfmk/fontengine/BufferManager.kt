@@ -20,6 +20,7 @@ object BufferManager {
             0f
         )
     }
+
     inline fun renderText(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float) {
         fontInternal.clear(Util.getPlatform() === OS.OSX)
         fontInternal.resize(
@@ -29,17 +30,16 @@ object BufferManager {
         )
         fontInternal.bindWrite(true)
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
-        val buff = Tesselator.getInstance().builder
+        val buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR)
         val scale = Minecraft.getInstance().window.guiScale.toFloat()
         val poseStack: PoseStack = graphics.pose()
         poseStack.pushPose()
         poseStack.scale(1 / scale, 1 / scale, 1f)
-        buff.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR)
         poseStack.popPose()
         call(buff, poseStack)
         RenderSystem.enableBlend()
         RenderSystem.disableCull()
-        BufferUploader.drawWithShader(buff.end())
+        BufferUploader.drawWithShader(buff.build()!!)
         RenderSystem.enableCull()
         RenderSystem.disableBlend()
         TEXT_BLUR.setSamplerUniform("BaseLayer", fontInternal)

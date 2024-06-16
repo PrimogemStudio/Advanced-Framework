@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation
 
 class TestEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<TestEntity>(context) {
     override fun getTextureLocation(entity: TestEntity): ResourceLocation {
-        return ResourceLocation("")
+        return ResourceLocation.withDefaultNamespace("")
     }
 
     override fun render(
