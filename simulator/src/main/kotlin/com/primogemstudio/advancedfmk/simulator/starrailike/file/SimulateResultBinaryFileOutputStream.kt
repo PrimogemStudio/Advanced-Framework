@@ -21,7 +21,7 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
     private var processed: Double = 0.0
     private var processed_suc: Double = 0.0
     private var processed_fai: Double = 0.0
-    fun recStatus() = logger.info("$targetNum/~${Ansi.ansi().fgBrightYellow()}${(targetNum.toDouble() / processed).toLong()}${Ansi.ansi().reset()}, ${processed * 100} % -> ${Ansi.ansi().fgBrightGreen()}${processed_suc * 100} % / ${Ansi.ansi().fgBrightRed()}${processed_fai * 100} % ${Ansi.ansi().reset()}")
+    fun recStatus() = logger.info("$targetNum/${Ansi.ansi().fgBrightYellow()}~${(targetNum.toDouble() / processed).toLong()}${Ansi.ansi().reset()}, ${processed * 100} % -> ${Ansi.ansi().fgBrightGreen()}${processed_suc * 100} % / ${Ansi.ansi().fgBrightRed()}${processed_fai * 100} % ${Ansi.ansi().reset()}")
     private fun simulate(uni: SimulatedUniverse<*, *>, depth: Int = 0, weight: Double = 1.0) {
         if (uni.finished()) {
             targetNum += 1
