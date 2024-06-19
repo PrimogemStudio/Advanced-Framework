@@ -95,6 +95,7 @@ dependencies {
     include "org.luaj:luaj-jse:${project.luaj_version}"
     include "org.apache.bcel:bcel:${bcel_version}"
     include "org.ladysnake:satin:${project.satin_version}"
+    include(implementation("org.fusesource.jansi:jansi:2.4.0"))
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:${project.kotlin_version}"
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

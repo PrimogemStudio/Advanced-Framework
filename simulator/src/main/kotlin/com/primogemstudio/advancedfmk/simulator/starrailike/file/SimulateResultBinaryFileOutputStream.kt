@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.bin.NBTOutputStream
 import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_HP
 import org.apache.logging.log4j.LogManager
+import org.fusesource.jansi.Ansi
 import java.io.OutputStream
 
 enum class Compressions(val func: (OutputStream) -> OutputStream) {
@@ -17,12 +18,17 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
     constructor(out: OutputStream, c: Compressions): this(c.func(out))
     private var targetNum: Long = 0
     private var targetSucceed: Long = 0
-    fun recStatus() = logger.info("$targetSucceed/$targetNum, ${targetSucceed.toDouble() / targetNum.toDouble() * 100} %")
+    private var processed: Double = 0.0
+    private var processed_suc: Double = 0.0
+    private var processed_fai: Double = 0.0
+    fun recStatus() = logger.info("$targetNum/~${Ansi.ansi().fgBrightYellow()}${(targetNum.toDouble() / processed).toLong()}${Ansi.ansi().reset()}, ${processed * 100} % -> ${Ansi.ansi().fgBrightGreen()}${processed_suc * 100} % / ${Ansi.ansi().fgBrightRed()}${processed_fai * 100} % ${Ansi.ansi().reset()}")
     private fun simulate(uni: SimulatedUniverse<*, *>, depth: Int = 0, weight: Double = 1.0) {
         if (uni.finished()) {
             targetNum += 1
             if (uni.win()) targetSucceed += 1
             val re = uni.mkSnapshot(null)
+            processed += weight
+            if (re.win()) processed_suc += weight else processed_fai += weight
             writeDoubleTag("weight", weight)
             writeListTag("characters", re.charactersData.map { it[OBJECT_HP] as Float })
             writeListTag("enemies", re.enemiesData.map { it[OBJECT_HP] as Float })
