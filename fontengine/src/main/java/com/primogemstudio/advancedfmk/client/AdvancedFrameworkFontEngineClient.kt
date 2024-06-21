@@ -1,6 +1,5 @@
 package com.primogemstudio.advancedfmk.client
 
-import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import net.fabricmc.api.ClientModInitializer
 import org.lwjgl.util.harfbuzz.HarfBuzz.*
 
@@ -11,9 +10,7 @@ class AdvancedFrameworkFontEngineClient : ClientModInitializer {
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
-    // noto-sans-abraic.ttf
-    val pth = "/usr/share/fonts/StarRailFont.ttf"
-    val ftfont = FreeTypeFont(pth)
+    val pth = "/usr/share/fonts/noto-sans-abraic.ttf"
 
     val blob = hb_blob_create_from_file_or_fail(pth)
     val blength = hb_blob_get_length(blob)
@@ -27,8 +24,7 @@ fun main() {
     hb_font_set_scale(font, upem, upem)
 
     val buffer = hb_buffer_create()
-    // "إنه اختبار"
-    hb_buffer_add_utf8(buffer, "Test! 测试！", 0, -1)
+    hb_buffer_add_utf8(buffer, "إنه اختبار", 0, -1)
     hb_buffer_guess_segment_properties(buffer)
 
     hb_shape(font, buffer, null)
@@ -37,7 +33,7 @@ fun main() {
 
     for (i in 0 ..< count) {
         val info = infos?.get(i)
-        println("cluster ${info?.cluster()}\t\t\tglyph ${info?.codepoint()}->${ftfont.toGlyphIndex(info?.codepoint()?.toLong()?: 0L, true)}")
+        println("cluster ${info?.cluster()}\t\t\tglyph 0x${info?.codepoint()?.toHexString()}")
     }
     hb_buffer_destroy(buffer)
     hb_font_destroy(font)

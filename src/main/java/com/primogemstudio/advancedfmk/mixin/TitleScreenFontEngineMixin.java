@@ -20,7 +20,7 @@ public class TitleScreenFontEngineMixin {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0xffffffff);
         BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            font.drawWrapText(vertexConsumer, poseStack, "Test!0123456789:", 200, 200, 9, 500, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawWrapText(vertexConsumer, poseStack, "测试回abcd？?!", 200, 200, 9, 500, new Vector4f(1f, 1f, 1f, 1f));
             return null;
         }, graphics, partialTick);
     }
