@@ -11,7 +11,8 @@ class AdvancedFrameworkFontEngineClient : ClientModInitializer {
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
-    val pth = "/usr/share/fonts/noto-sans-abraic.ttf"
+    // noto-sans-abraic.ttf
+    val pth = "/usr/share/fonts/StarRailFont.ttf"
     val ftfont = FreeTypeFont(pth)
 
     val blob = hb_blob_create_from_file_or_fail(pth)
@@ -26,10 +27,9 @@ fun main() {
     hb_font_set_scale(font, upem, upem)
 
     val buffer = hb_buffer_create()
-    hb_buffer_add_utf8(buffer, "إنه اختبار", 0, -1)
+    // "إنه اختبار"
+    hb_buffer_add_utf8(buffer, "Test! 测试！", 0, -1)
     hb_buffer_guess_segment_properties(buffer)
-
-    val direction = hb_buffer_get_direction(buffer)
 
     hb_shape(font, buffer, null)
     val count = hb_buffer_get_length(buffer)
@@ -37,9 +37,8 @@ fun main() {
 
     for (i in 0 ..< count) {
         val info = infos?.get(i)
-        println("cluster ${info?.cluster()}\t\t\tglyph 0x${info?.codepoint()?.toHexString()}->0x${ftfont.toGlyphIndex(info?.codepoint()?.toLong()?: 0L, direction == HB_DIRECTION_RTL).toHexString()}")
+        println("cluster ${info?.cluster()}\t\t\tglyph ${info?.codepoint()}->${ftfont.toGlyphIndex(info?.codepoint()?.toLong()?: 0L, true)}")
     }
-
     hb_buffer_destroy(buffer)
     hb_font_destroy(font)
     hb_face_destroy(face)

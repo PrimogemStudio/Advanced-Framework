@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.fontengine
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -11,15 +12,15 @@ class ComposedFont {
     private val logger = LogManager.getLogger(javaClass)
     private val characterMap = CharacterMap()
 
-    var fontStack = mutableListOf(DefaultFont.FONT)
+    var fontStack = mutableListOf(FreeTypeFont("/usr/share/fonts/noto-sans-abraic.ttf"), DefaultFont.FONT)
 
     init {
         for (c in 0..128) {
-            fontStack.forEach {
+            for (it in fontStack) {
                 try {
                     characterMap.put(c.toChar(), it, 50)
-                } catch (_: Exception) {
-                }
+                    break
+                } catch (_: Exception) {}
             }
         }
     }
@@ -28,12 +29,10 @@ class ComposedFont {
     private fun loadChar(char: Char): CharGlyph? {
         logger.info("Loading char $char (0x${char.code.toHexString()})")
 
-        fontStack.forEach {
-            return try {
-                characterMap.put(char, it, 50)
-            } catch (_: Exception) {
-                null
-            }
+        for (it in fontStack) {
+            try {
+                return characterMap.put(char, it, 50)
+            } catch (_: Exception) {}
         }
         return null
     }
