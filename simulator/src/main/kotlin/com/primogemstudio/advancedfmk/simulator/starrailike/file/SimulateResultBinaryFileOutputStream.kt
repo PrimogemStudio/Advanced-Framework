@@ -31,21 +31,21 @@ class SimulateResultBinaryFileOutputStream(out: OutputStream): NBTOutputStream(o
         val terminal: Terminal = TerminalBuilder.builder()
             .system(true)
             .build()
-            .apply { termWid = this.width }
+            .apply { termWid = max(60, this.width) }
         val nf = NumberFormat.getNumberInstance().apply {
             maximumFractionDigits = 8
             roundingMode = RoundingMode.HALF_UP
         }
     }
     fun recStatus() {
-        print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).saveCursorPosition())
-        var pr = "  ${nf.format(processed * 100)} %"
+        if (termWid > 0) print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).saveCursorPosition())
+        val pr = "  ${nf.format(processed * 100)} %"
         val textlength = max(pr.length, 20)
         val l = ((termWid - textlength).toDouble() * processed).toInt()
         val l2 = ((termWid - textlength).toDouble() * (1 - processed)).toInt()
         print(Ansi.ansi().fgBrightGreen().a("—".repeat(l)).fgBrightBlack().a("—".repeat(l2)).fgBrightYellow().a(pr).reset())
-        print(Ansi.ansi().restoreCursorPosition())
-
+        if (termWid > 0) print(Ansi.ansi().restoreCursorPosition())
+        if (termWid < 0) println()
 
         /*Pair(targetNum, (targetNum.toDouble() / processed).toLong()).apply {
             logger.info(

@@ -106,12 +106,16 @@ class FreeTypeFont : Closeable {
         MemoryUtil.memFree(buff)
     }
 
-    fun fetchGlyphOutline(chr: Long): SVGQueue? {
-        val glyphIndex = FT_Get_Char_Index(face, chr)
+    fun toGlyphIndex(chr: Long, raw: Boolean = false): Int {
+        return if (raw) chr.toInt() else FT_Get_Char_Index(face, chr)
+    }
+
+    fun fetchGlyphOutline(chr: Long, raw: Boolean = false): SVGQueue? {
+        val glyphIndex = toGlyphIndex(chr, raw)
         if (glyphIndex == 0) return null
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP or FT_LOAD_VERTICAL_LAYOUT)
         val outline = face.glyph()?.outline()!!
-        val border = fetchGlyphBorder(chr)!!
+        val border = fetchGlyphBorder(chr, raw)!!
         val target = SVGQueue(border)
         FT_Outline_Decompose(outline, functions(target), 1)
 
@@ -123,8 +127,8 @@ class FreeTypeFont : Closeable {
         return target
     }
 
-    fun fetchGlyphBorder(chr: Long): Vector2f? {
-        val glyphIndex = FT_Get_Char_Index(face, chr)
+    fun fetchGlyphBorder(chr: Long, raw: Boolean = false): Vector2f? {
+        val glyphIndex = toGlyphIndex(chr, raw)
         if (glyphIndex == 0) return null
         FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val metrics = face.glyph()?.metrics()!!

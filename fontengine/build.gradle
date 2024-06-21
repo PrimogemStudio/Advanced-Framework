@@ -40,6 +40,26 @@ tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add("-Werror")
 }
 
+def osName = System.getProperty("os.name")
+if (osName.toLowerCase().contains("linux")) {
+    project.ext.lwjglNatives = "natives-linux"
+    def osArch = System.getProperty("os.arch")
+    if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+        project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
+    } else if (osArch.startsWith("ppc")) {
+        project.ext.lwjglNatives += "-ppc64le"
+    } else if (osArch.startsWith("riscv")) {
+        project.ext.lwjglNatives += "-riscv64"
+    }
+}
+else if (osName.toLowerCase().contains("osx") || osName.toLowerCase().contains("macos")) project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+else if (osName.toLowerCase().contains("windows")) {
+    def osArch = System.getProperty("os.arch")
+    project.ext.lwjglNatives = osArch.contains("64")
+            ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+            : "natives-windows-x86"
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
@@ -54,6 +74,9 @@ dependencies {
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
 
     implementation(project(path: ':commonutils'))
+
+    implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}")
+    implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:${project.ext.lwjglNatives}")
 }
 
 test {
