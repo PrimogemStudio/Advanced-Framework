@@ -10,8 +10,6 @@ import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import org.jline.terminal.Terminal
-import org.jline.terminal.TerminalBuilder
 import org.junit.jupiter.api.*
 import java.io.File
 import java.io.PrintStream
@@ -42,7 +40,7 @@ internal class SimulatorTest {
         var ended = false
         GlobalScope.async {
             while (!ended) {
-                try { sleep(200) } catch (_: InterruptedException) { break }
+                try { sleep(15) } catch (_: InterruptedException) { break }
                 output.recStatus()
             }
         }.onAwait
@@ -94,12 +92,6 @@ internal class SimulatorTest {
         internal fun mkTestDir() {
             File("tests").deleteRecursively()
             File("tests").mkdirs()
-
-            val terminal: Terminal = TerminalBuilder.builder()
-                .system(true)
-                .build()
-
-            println(terminal.width)
         }
     }
 }
