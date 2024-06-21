@@ -10,7 +10,7 @@ class AdvancedFrameworkFontEngineClient : ClientModInitializer {
 
 @OptIn(ExperimentalStdlibApi::class)
 fun main() {
-    val pth = "/usr/share/fonts/noto-sans-abraic.ttf"
+    val pth = "/home/coder2/Downloads/e22538b031e7794b26df4517a6b0c479.ttf"
 
     val blob = hb_blob_create_from_file_or_fail(pth)
     val blength = hb_blob_get_length(blob)
