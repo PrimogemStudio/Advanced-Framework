@@ -10,9 +10,9 @@ data class Polygon(
         val r = mutableListOf<Int>()
 
         var holeSize = holes.sumOf { it.vertices.size }
-        val base = vertices.size - holeSize - 1
+        val base = vertices.size - holeSize
         val arr = mutableListOf(base)
-        for (i in 0..<holes.size - 1) {
+        for (i in 0 ..< holes.size - 1) {
             holeSize -= holes[i].vertices.size
             arr.add(vertices.size - holeSize - 0)
         }

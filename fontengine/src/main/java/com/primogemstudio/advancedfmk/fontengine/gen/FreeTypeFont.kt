@@ -135,9 +135,9 @@ class FreeTypeFont : Closeable {
         FT_Outline_Decompose(outline, functions(target), 1)
 
         target.forEach {
-            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f)).mul(2f)
-            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(2f)
-            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(2f)
+            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f)).mul(1024f)
+            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(1024f)
+            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(1024f)
         }
         return target
     }
