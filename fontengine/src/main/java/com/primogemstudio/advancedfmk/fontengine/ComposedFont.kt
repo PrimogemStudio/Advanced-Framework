@@ -14,41 +14,42 @@ class ComposedFont {
     var fontStack = mutableListOf(DefaultFont.FONT)
 
     init {
-        /*for (c in 0..128) {
+        for (c in 0..128) {
             for (it in fontStack) {
                 try {
                     characterMap.put(c.toChar(), it, 10)
                     break
                 } catch (_: Exception) {}
             }
-        }*/
+        }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun loadChar(char: Char): CharGlyph? {
-        logger.info("Loading char $char (0x${char.code.toHexString()})")
-
+    private fun loadChar(char: Char, raw: Boolean = false): CharGlyph? {
+        logger.info("Loading char 0x${char.code.toHexString()}")
         for (it in fontStack) {
             try {
-                return characterMap.put(char, it, 10)
+                return characterMap.put(char, it, 10, raw)
             } catch (_: Exception) {}
         }
         return null
     }
 
-    fun fetchGlyphs(text: String): Array<CharGlyph> {
-        /*var result: IntArray? = null
-            fontStack.forEach {
-                if (result == null) result = it.shape(text)
+    fun fetchGlyphs(text: String, shape: Boolean = true): Array<CharGlyph> {
+        if (shape) {
+            var result: IntArray? = null
+            fontStack.forEach { f ->
+                if (result == null) result = f.shape(text)
                 else {
-                    val temp = it.shape(text)
-                    for (i in temp.indices) {
-                        if (result?.get(i) == 0) result?.set(i, temp[i])
-                    }
+                    val temp = f.shape(text)
+                    for (i in temp.indices) if (result?.get(i) == 0) result?.set(i, temp[i])
                 }
             }
-            return result?.filter { it != 0 }?.map { characterMap[it.toChar()]?: loadChar(it.toChar()) }?.mapNotNull { it }?.toTypedArray()?: emptyArray()*/
-        return text.mapNotNull { characterMap[it]?: loadChar(it) }.toTypedArray()
+            return result?.map {
+                if (characterMap.contains(it.toChar(), fontStack, true)) characterMap[it.toChar(), fontStack, true] else loadChar(it.toChar(), true)
+            }?.filterNotNull()?.toTypedArray()?: emptyArray()
+        }
+        else return text.mapNotNull { characterMap[it, fontStack]?: loadChar(it) }.toTypedArray()
     }
 
 

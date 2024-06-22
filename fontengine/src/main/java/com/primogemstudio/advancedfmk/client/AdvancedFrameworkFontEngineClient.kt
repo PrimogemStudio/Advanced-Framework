@@ -15,8 +15,8 @@ fun main() {
         print("0x${it.toHexString()} ")
     }*/
     val fontStack = listOf(DefaultFont.FONT)
-    var result: IntArray? = null
     val r = "abcdABCD!@#$%^&*()_+测试"
+    var result: IntArray? = null
     fontStack.forEach { f ->
         if (result == null) result = f.shape(r)
         else {
@@ -25,5 +25,6 @@ fun main() {
         }
     }
     println(r)
-    result?.toList()?.forEach { println("$it -> ${fontStack[0].getGlyphName(it)}") }
+    result?.toList()?.forEach { println("$it -> ${fontStack[0].getGlyphName(it)} -> ${fontStack[0].chars[it] + 1}") }
+    println(fontStack[0].getGlyphName(0x1fffff))
 }

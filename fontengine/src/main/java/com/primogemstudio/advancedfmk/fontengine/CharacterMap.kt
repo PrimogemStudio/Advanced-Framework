@@ -4,16 +4,21 @@ import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import org.joml.Vector2f
 
 class CharacterMap {
-    private val map = HashMap<Char, CharGlyph>()
+    private val map = HashMap<String, CharGlyph>()
 
-    operator fun get(char: Char): CharGlyph? {
-        return map[char]
+    fun contains(char: Char, fontlist: List<FreeTypeFont>, raw: Boolean = false): Boolean {
+        return map.contains(fontlist.map { it.getGlyphName(if (raw) char.code else it.getGlyphId(char.code.toLong())) }.first { it.isNotEmpty() }) || map.contains(".notdef")
     }
 
-    fun put(char: Char, font: FreeTypeFont, precision: Int): CharGlyph? {
-        val glyph = font.fetchGlyphOutline(char.code.toLong()) ?: throw RuntimeException("Char not found: $char")
-        map[char] = glyph.toVertices(precision).bake()
-        return map[char]
+    operator fun get(char: Char, fontlist: List<FreeTypeFont>, raw: Boolean = false): CharGlyph? {
+        return fontlist.map { it.getGlyphName(if (raw) char.code else it.getGlyphId(char.code.toLong())) }.first { it.isNotEmpty() }.let { map[it] }
+    }
+
+    fun put(char: Char, font: FreeTypeFont, precision: Int, raw: Boolean = false): CharGlyph? {
+        val glyph = font.fetchGlyphOutline(char.code.toLong(), raw) ?: throw RuntimeException("Char not found: $char")
+        val id = font.getGlyphName(font.getGlyphId(char.code.toLong()))
+        map[id] = glyph.toVertices(precision).bake()
+        return map[id]
     }
 }
 
