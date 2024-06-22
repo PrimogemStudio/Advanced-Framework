@@ -76,7 +76,7 @@ dependencies {
     implementation(project(path: ':commonutils'))
 
     implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}")
-    implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:${project.ext.lwjglNatives}")
+    runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:${project.ext.lwjglNatives}")
 }
 
 test {

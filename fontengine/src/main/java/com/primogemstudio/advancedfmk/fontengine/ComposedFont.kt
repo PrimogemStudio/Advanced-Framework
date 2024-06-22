@@ -17,7 +17,7 @@ class ComposedFont {
         for (c in 0..128) {
             for (it in fontStack) {
                 try {
-                    characterMap.put(c.toChar(), it, 50)
+                    characterMap.put(c.toChar(), it, 10)
                     break
                 } catch (_: Exception) {}
             }
@@ -25,19 +25,34 @@ class ComposedFont {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun loadChar(char: Char): CharGlyph? {
+    private fun loadChar(char: Char, raw: Boolean = false): CharGlyph? {
         logger.info("Loading char $char (0x${char.code.toHexString()})")
 
         for (it in fontStack) {
             try {
-                return characterMap.put(char, it, 50)
+                return characterMap.put(char, it, 10, raw)
             } catch (_: Exception) {}
         }
         return null
     }
 
-    fun fetchGlyphs(text: String): Array<CharGlyph> =
-        text.mapNotNull { characterMap[it] ?: loadChar(it) }.toTypedArray()
+    fun fetchGlyphs(text: String, shaping: Boolean = false): Array<CharGlyph> {
+        if (shaping) {
+            var result: IntArray? = null
+            fontStack.forEach {
+                if (result == null) result = it.shape(text)
+                else {
+                    val temp = it.shape(text)
+                    for (i in temp.indices) {
+                        if (result?.get(i) == 0) result?.set(i, temp[i])
+                    }
+                }
+            }
+            return result?.filter { it != 0 }?.map { characterMap[it.toChar()]?: loadChar(it.toChar(), true) }?.mapNotNull { it }?.toTypedArray()?: emptyArray()
+        }
+        else return text.mapNotNull { characterMap[it]?: loadChar(it) }.toTypedArray()
+    }
+
 
     fun drawCenteredText(
         buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Vector4f

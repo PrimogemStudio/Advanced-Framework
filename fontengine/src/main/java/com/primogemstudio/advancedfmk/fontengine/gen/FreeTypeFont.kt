@@ -10,6 +10,7 @@ import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
+import org.lwjgl.util.harfbuzz.HarfBuzz.*
 import java.io.Closeable
 import java.nio.ByteBuffer
 import kotlin.math.max
@@ -59,6 +60,10 @@ class FreeTypeFont : Closeable {
 
     private var face: FT_Face
     private var buff: ByteBuffer? = null
+    private var hb_blob: Long = 0L
+    private var hb_face: Long = 0L
+    private var hb_upem = 0
+    private var hb_font: Long = 0L
 
     constructor(data: ByteArray) {
         buff = MemoryUtil.memAlloc(data.size)
@@ -70,6 +75,7 @@ class FreeTypeFont : Closeable {
                 FreeTypeLibrary.handle, buff!!, 0, ptrBuff
             )
             face = FT_Face.create(ptrBuff.get())
+            hb_blob = hb_blob_create(buff!!, HB_MEMORY_MODE_READONLY, 0) {}
             initFontState()
         }
     }
@@ -79,12 +85,18 @@ class FreeTypeFont : Closeable {
             val ptrBuff = stack.mallocPointer(1)
             FT_New_Face(FreeTypeLibrary.handle, path, 0, ptrBuff)
             face = FT_Face.create(ptrBuff.get())
+            hb_blob = hb_blob_create_from_file_or_fail(path)
             initFontState()
         }
     }
 
     private fun initFontState() {
         FT_Set_Pixel_Sizes(face, 0, 12)
+
+        hb_face = hb_face_create(hb_blob, 0)
+        hb_upem = hb_face_get_upem(hb_face)
+        hb_font = hb_font_create(hb_face)
+        hb_font_set_scale(hb_font, hb_upem, hb_upem)
     }
 
     fun getAllChars(): List<Char> {
@@ -104,6 +116,9 @@ class FreeTypeFont : Closeable {
     override fun close() {
         FT_Done_Face(face)
         MemoryUtil.memFree(buff)
+        hb_face_destroy(hb_face)
+        hb_font_destroy(hb_font)
+        hb_blob_destroy(hb_blob)
     }
 
     fun toGlyphIndex(chr: Long, raw: Boolean = false): Int {
@@ -120,9 +135,9 @@ class FreeTypeFont : Closeable {
         FT_Outline_Decompose(outline, functions(target), 1)
 
         target.forEach {
-            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f)).mul(16f)
-            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(16f)
-            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(16f)
+            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f)).mul(2f)
+            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(2f)
+            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(2f)
         }
         return target
     }
@@ -136,5 +151,21 @@ class FreeTypeFont : Closeable {
             max(i26p6tof(metrics.horiAdvance().toInt()), i26p6tof(metrics.width().toInt())),
             max(i26p6tof(metrics.vertAdvance().toInt()), i26p6tof(metrics.height().toInt()))
         )
+    }
+
+    fun shape(s: String): IntArray {
+        val buffer = hb_buffer_create()
+        hb_buffer_add_utf8(buffer, s, 0, -1)
+        hb_buffer_guess_segment_properties(buffer)
+
+        hb_shape(hb_font, buffer, null)
+        val count = hb_buffer_get_length(buffer)
+        val infos = hb_buffer_get_glyph_infos(buffer)
+
+        val result = IntArray(count)
+        for (i in 0 ..< count) result[i] = infos?.get(i)?.codepoint()?: 0
+        hb_buffer_destroy(buffer)
+
+        return result
     }
 }

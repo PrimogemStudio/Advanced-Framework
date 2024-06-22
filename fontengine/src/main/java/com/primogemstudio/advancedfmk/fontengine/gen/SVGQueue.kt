@@ -91,9 +91,9 @@ class MultiPolygon(private val dimension: Vector2f) : Vector<Polygon>() {
         val vertices = mutableListOf<Vector2f>()
         val indices = mutableListOf<Int>()
         var base = 0
-        forEach {
-            vertices.addAll(it.vertices.map { it.div(16f) })
-            indices.addAll(it.toTriangles().map { it + base })
+        forEach { n ->
+            vertices.addAll(n.vertices.map { it.div(2f) })
+            indices.addAll(n.toTriangles().map { it + base })
             base = vertices.size
         }
 

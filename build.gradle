@@ -102,15 +102,15 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux-arm32")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux-arm64")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows-x86")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows-arm64")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-macos")
-    include("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-macos-arm64")
+    include(implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux-arm32"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-linux-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows-x86"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-windows-arm64"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-macos"))
+    include(runtimeOnly("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}:natives-macos-arm64"))
 }
 
 tasks.test {
