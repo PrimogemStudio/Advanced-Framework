@@ -8,7 +8,6 @@ class AdvancedFrameworkFontEngineClient : ClientModInitializer {
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun main() {
     /*val pth = "/home/coder2/Downloads/e22538b031e7794b26df4517a6b0c479.ttf"
     val ftfont = FreeTypeFont(Files.readAllBytes(Paths.get(pth)))
@@ -17,15 +16,14 @@ fun main() {
     }*/
     val fontStack = listOf(DefaultFont.FONT)
     var result: IntArray? = null
+    val r = "abcdABCD!@#$%^&*()_+测试"
     fontStack.forEach { f ->
-        if (result == null) result = f.shape("测试 abcdABCD!@#$%^&*()_+").map { f.chars[it].code }.toIntArray()
+        if (result == null) result = f.shape(r)
         else {
-            val temp = f.shape("测试 abcdABCD!@#$%^&*()_+").map { if (it == 0) -1 else f.chars[it].code }.toIntArray()
+            val temp = f.shape(r)
             for (i in temp.indices) if (result?.get(i) == 0) result?.set(i, temp[i])
         }
     }
-    println("测试 abcdABCD!@#$%^&*()_+")
-    var r = ""
-    result?.toList()?.forEach { r += it.toChar().toString() }
     println(r)
+    result?.toList()?.forEach { println("$it -> ${fontStack[0].getGlyphName(it)}") }
 }

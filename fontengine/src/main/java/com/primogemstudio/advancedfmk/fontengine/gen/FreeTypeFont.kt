@@ -11,6 +11,7 @@ import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import org.lwjgl.util.harfbuzz.HarfBuzz.*
+import org.lwjgl.util.harfbuzz.hb_feature_t
 import java.io.Closeable
 import java.nio.ByteBuffer
 import kotlin.math.max
@@ -77,7 +78,7 @@ class FreeTypeFont : Closeable {
                 FreeTypeLibrary.handle, buff!!, 0, ptrBuff
             )
             face = FT_Face.create(ptrBuff.get())
-            hb_blob = hb_blob_create(buff!!, HB_MEMORY_MODE_READONLY, 0) {}
+            hb_blob = hb_blob_create(buff!!, HB_MEMORY_MODE_READONLY, ptrBuff.address()) {}
             initFontState()
         }
     }
@@ -158,14 +159,33 @@ class FreeTypeFont : Closeable {
         hb_buffer_add_utf8(buffer, s, 0, -1)
         hb_buffer_guess_segment_properties(buffer)
 
-        hb_shape(hb_font, buffer, null)
+        val result: IntArray
+        hb_shape(
+            hb_font, buffer,
+            hb_feature_t.create(
+                hb_feature_t.create().set(
+                    HB_TAG('d'.code, 'l'.code, 'i'.code, 'g'.code),
+                    1,
+                    HB_FEATURE_GLOBAL_START,
+                    HB_FEATURE_GLOBAL_END
+                ).address(), 16
+            )
+        )
         val count = hb_buffer_get_length(buffer)
         val infos = hb_buffer_get_glyph_infos(buffer)
-
-        val result = IntArray(count)
-        for (i in 0 ..< count) result[i] = infos?.get(i)?.codepoint()?: 0
+        result = IntArray(count)
+        for (i in 0..<count) result[i] = infos?.get(i)?.codepoint()?: 0
         hb_buffer_destroy(buffer)
 
         return result
+    }
+    fun getGlyphId(chr: Long): Int = FT_Get_Char_Index(face, chr)
+    fun getGlyphName(t: Int): String {
+        val buff = MemoryUtil.memAlloc(128)
+        buff.rewind()
+        FT_Get_Glyph_Name(face, t, buff)
+        val dest = ByteArray(128)
+        buff.get(dest)
+        return String(dest.slice(0 ..< dest.indexOfFirst { it == 0x00.toByte() }).toByteArray())
     }
 }
