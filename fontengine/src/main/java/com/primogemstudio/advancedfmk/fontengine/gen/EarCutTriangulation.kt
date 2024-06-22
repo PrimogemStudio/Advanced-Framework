@@ -7,8 +7,8 @@ import kotlin.math.min
 
 
 class EarCutTriangulation {
-    internal class Node(var i: Int, var x: Float, var y: Float) {
-        var z: Float = -1f
+    internal class Node(var i: Int, var x: Double, var y: Double) {
+        var z: Double = -1.0
         var steiner: Boolean = false
         var prev: Node? = null
         var next: Node? = null
@@ -17,7 +17,7 @@ class EarCutTriangulation {
     }
 
     companion object {
-        fun earcut(data: FloatArray, holeIndices: IntArray?, dim: Int): List<Int> {
+        fun earcut(data: DoubleArray, holeIndices: IntArray?, dim: Int): List<Int> {
             val hasHoles = holeIndices != null && holeIndices.isNotEmpty()
             val outerLen = if (hasHoles) holeIndices!![0] * dim else data.size
             var outerNode = linkedList(data, 0, outerLen, dim, true)
@@ -25,13 +25,13 @@ class EarCutTriangulation {
 
             if (outerNode == null || outerNode.next === outerNode.prev) return emptyList()
 
-            var minX = 0f
-            var minY = 0f
-            var maxX: Float
-            var maxY: Float
-            var x: Float
-            var y: Float
-            var invSize = 0f
+            var minX = 0.0
+            var minY = 0.0
+            var maxX: Double
+            var maxY: Double
+            var x: Double
+            var y: Double
+            var invSize = 0.0
 
             if (hasHoles) outerNode = eliminateHoles(data, holeIndices, outerNode, dim)
 
@@ -52,8 +52,8 @@ class EarCutTriangulation {
                     i += dim
                 }
 
-                invSize = max((maxX - minX).toDouble(), (maxY - minY).toDouble()).toFloat()
-                invSize = if (invSize != 0f) (1 / invSize) else 0f
+                invSize = max((maxX - minX), (maxY - minY))
+                invSize = if (invSize != 0.0) (1 / invSize) else 0.0
             }
 
             earcutLinked(outerNode, triangles, dim, minX, minY, invSize, 0)
@@ -61,7 +61,7 @@ class EarCutTriangulation {
             return triangles
         }
 
-        private fun linkedList(data: FloatArray, start: Int, end: Int, dim: Int, clockwise: Boolean): Node? {
+        private fun linkedList(data: DoubleArray, start: Int, end: Int, dim: Int, clockwise: Boolean): Node? {
             var i: Int
             var last: Node? = null
 
@@ -97,7 +97,7 @@ class EarCutTriangulation {
             do {
                 again = false
 
-                if (!p!!.steiner && (equals(p, p.next) || area(p.prev, p, p.next) == 0f)) {
+                if (!p!!.steiner && (equals(p, p.next) || area(p.prev, p, p.next) == 0.0)) {
                     removeNode(p)
                     end = p.prev
                     p = end
@@ -112,11 +112,11 @@ class EarCutTriangulation {
         }
 
         private fun earcutLinked(
-            earI: Node?, triangles: MutableList<Int>, dim: Int, minX: Float, minY: Float, invSize: Float, pass: Int
+            earI: Node?, triangles: MutableList<Int>, dim: Int, minX: Double, minY: Double, invSize: Double, pass: Int
         ) {
             var ear: Node = earI ?: return
 
-            if (pass == 0 && invSize != 0f) indexCurve(ear, minX, minY, invSize)
+            if (pass == 0 && invSize != 0.0) indexCurve(ear, minX, minY, invSize)
 
             var stop = ear
             var prev: Node?
@@ -126,7 +126,7 @@ class EarCutTriangulation {
                 prev = ear.prev
                 next = ear.next
 
-                if (if (invSize != 0f) isEarHashed(ear, minX, minY, invSize) else isEar(ear)) {
+                if (if (invSize != 0.0) isEarHashed(ear, minX, minY, invSize) else isEar(ear)) {
                     triangles.add(prev!!.i / dim)
                     triangles.add(ear.i / dim)
                     triangles.add(next!!.i / dim)
@@ -180,7 +180,7 @@ class EarCutTriangulation {
             return true
         }
 
-        private fun isEarHashed(ear: Node?, minX: Float, minY: Float, invSize: Float): Boolean {
+        private fun isEarHashed(ear: Node?, minX: Double, minY: Double, invSize: Double): Boolean {
             val a = ear!!.prev
             val c = ear.next
 
@@ -255,7 +255,7 @@ class EarCutTriangulation {
         }
 
         private fun splitEarcut(
-            start: Node?, triangles: MutableList<Int>, dim: Int, minX: Float, minY: Float, invSize: Float
+            start: Node?, triangles: MutableList<Int>, dim: Int, minX: Double, minY: Double, invSize: Double
         ) {
             var a = start
             do {
@@ -275,7 +275,7 @@ class EarCutTriangulation {
             } while (a !== start)
         }
 
-        private fun eliminateHoles(data: FloatArray, holeIndices: IntArray?, outerNodeI: Node, dim: Int): Node {
+        private fun eliminateHoles(data: DoubleArray, holeIndices: IntArray?, outerNodeI: Node, dim: Int): Node {
             var outerNode: Node? = outerNodeI
             val queue: MutableList<Node?> = ArrayList()
             var start: Int
@@ -324,7 +324,7 @@ class EarCutTriangulation {
             var p = outerNode
             val hx = hole!!.x
             val hy = hole.y
-            var qx = -Float.MAX_VALUE
+            var qx = -Double.MAX_VALUE
             var m: Node? = null
 
             do {
@@ -349,8 +349,8 @@ class EarCutTriangulation {
             val stop: Node = m
             val mx = m.x
             val my = m.y
-            var tanMin = Float.MAX_VALUE
-            var tan: Float
+            var tanMin = Double.MAX_VALUE
+            var tan: Double
 
             p = m
 
@@ -359,7 +359,7 @@ class EarCutTriangulation {
                         if (hy < my) hx else qx, hy, mx, my, if (hy < my) qx else hx, hy, p.x, p.y
                     )
                 ) {
-                    tan = (abs((hy - p.y).toDouble()) / (hx - p.x)).toFloat()
+                    tan = (abs((hy - p.y)) / (hx - p.x))
 
                     if (locallyInside(
                             p, hole
@@ -382,10 +382,10 @@ class EarCutTriangulation {
             return area(m!!.prev, m, p!!.prev) < 0 && area(p.next, m, m.next) < 0
         }
 
-        private fun indexCurve(start: Node, minX: Float, minY: Float, invSize: Float) {
+        private fun indexCurve(start: Node, minX: Double, minY: Double, invSize: Double) {
             var p: Node? = start
             do {
-                if (p!!.z == -1f) p.z = zOrder(p.x, p.y, minX, minY, invSize)
+                if (p!!.z == -1.0) p.z = zOrder(p.x, p.y, minX, minY, invSize)
                 p.prevZ = p.prev
                 p.nextZ = p.next
                 p = p.next
@@ -456,7 +456,7 @@ class EarCutTriangulation {
             return list
         }
 
-        private fun zOrder(x0: Float, y0: Float, minX: Float, minY: Float, invSize: Float): Float {
+        private fun zOrder(x0: Double, y0: Double, minX: Double, minY: Double, invSize: Double): Double {
             var x = (32767 * (x0 - minX) * invSize).toInt()
             var y = (32767 * (y0 - minY) * invSize).toInt()
 
@@ -470,7 +470,7 @@ class EarCutTriangulation {
             y = (y or (y shl 2)) and 0x33333333
             y = (y or (y shl 1)) and 0x55555555
 
-            return (x or (y shl 1)).toFloat()
+            return (x or (y shl 1)).toDouble()
         }
 
         private fun getLeftmost(start: Node?): Node? {
@@ -485,7 +485,7 @@ class EarCutTriangulation {
         }
 
         private fun pointInTriangle(
-            ax: Float, ay: Float, bx: Float, by: Float, cx: Float, cy: Float, px: Float, py: Float
+            ax: Double, ay: Double, bx: Double, by: Double, cx: Double, cy: Double, px: Double, py: Double
         ): Boolean {
             return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && ((ax - px) * (by - py) - (bx - px) * (ay - py) >= 0) && ((bx - px) * (cy - py) - (cx - px) * (by - py) >= 0)
         }
@@ -493,12 +493,12 @@ class EarCutTriangulation {
         private fun isValidDiagonal(a: Node?, b: Node?): Boolean {
             return a!!.next!!.i != b!!.i && a.prev!!.i != b.i && !intersectsPolygon(a, b) && (locallyInside(
                 a, b
-            ) && locallyInside(b, a) && middleInside(a, b) && (area(a.prev, a, b.prev) != 0f || area(
+            ) && locallyInside(b, a) && middleInside(a, b) && (area(a.prev, a, b.prev) != 0.0 || area(
                 a, b.prev, b
-            ) != 0f) || equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0)
+            ) != 0.0) || equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0)
         }
 
-        private fun area(p: Node?, q: Node?, r: Node?): Float {
+        private fun area(p: Node?, q: Node?, r: Node?): Double {
             return (q!!.y - p!!.y) * (r!!.x - q.x) - (q.x - p.x) * (r.y - q.y)
         }
 
@@ -529,13 +529,13 @@ class EarCutTriangulation {
 
         private fun onSegment(p: Node?, q: Node?, r: Node?): Boolean {
             return q!!.x <= max(
-                p!!.x.toDouble(), r!!.x.toDouble()
-            ) && q.x >= min(p.x.toDouble(), r.x.toDouble()) && q.y <= max(
-                p.y.toDouble(), r.y.toDouble()
-            ) && q.y >= min(p.y.toDouble(), r.y.toDouble())
+                p!!.x, r!!.x
+            ) && q.x >= min(p.x, r.x) && q.y <= max(
+                p.y, r.y
+            ) && q.y >= min(p.y, r.y)
         }
 
-        private fun sign(num: Float): Int {
+        private fun sign(num: Double): Int {
             return if (num > 0) 1 else if (num < 0) -1 else 0
         }
 
@@ -593,7 +593,7 @@ class EarCutTriangulation {
             return b2
         }
 
-        private fun insertNode(i: Int, x: Float, y: Float, last: Node?): Node {
+        private fun insertNode(i: Int, x: Double, y: Double, last: Node?): Node {
             val p = Node(i, x, y)
 
             if (last == null) {
@@ -616,8 +616,8 @@ class EarCutTriangulation {
             if (p.nextZ != null) p.nextZ!!.prevZ = p.prevZ
         }
 
-        private fun signedArea(data: FloatArray, start: Int, end: Int, dim: Int): Float {
-            var sum = 0f
+        private fun signedArea(data: DoubleArray, start: Int, end: Int, dim: Int): Double {
+            var sum = 0.0
             var i = start
             var j = end - dim
             while (i < end) {

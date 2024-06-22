@@ -18,7 +18,7 @@ data class Polygon(
         }
 
         val re = EarCutTriangulation.earcut(
-            vertices.flatMap { listOf(it.x, it.y) }.toFloatArray(),
+            vertices.flatMap { listOf(it.x.toDouble(), it.y.toDouble()) }.toDoubleArray(),
             if (holes.isNotEmpty()) arr.toIntArray() else IntArray(0),
             2
         )
