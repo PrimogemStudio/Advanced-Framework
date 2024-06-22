@@ -14,31 +14,30 @@ class ComposedFont {
     var fontStack = mutableListOf(DefaultFont.FONT)
 
     init {
-        for (c in 0..128) {
+        /*for (c in 0..128) {
             for (it in fontStack) {
                 try {
                     characterMap.put(c.toChar(), it, 10)
                     break
                 } catch (_: Exception) {}
             }
-        }
+        }*/
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun loadChar(char: Char, raw: Boolean = false): CharGlyph? {
+    private fun loadChar(char: Char): CharGlyph? {
         logger.info("Loading char $char (0x${char.code.toHexString()})")
 
         for (it in fontStack) {
             try {
-                return characterMap.put(char, it, 10, raw)
+                return characterMap.put(char, it, 10)
             } catch (_: Exception) {}
         }
         return null
     }
 
-    fun fetchGlyphs(text: String, shaping: Boolean = false): Array<CharGlyph> {
-        if (shaping) {
-            var result: IntArray? = null
+    fun fetchGlyphs(text: String): Array<CharGlyph> {
+        /*var result: IntArray? = null
             fontStack.forEach {
                 if (result == null) result = it.shape(text)
                 else {
@@ -48,9 +47,8 @@ class ComposedFont {
                     }
                 }
             }
-            return result?.filter { it != 0 }?.map { characterMap[it.toChar()]?: loadChar(it.toChar(), true) }?.mapNotNull { it }?.toTypedArray()?: emptyArray()
-        }
-        else return text.mapNotNull { characterMap[it]?: loadChar(it) }.toTypedArray()
+            return result?.filter { it != 0 }?.map { characterMap[it.toChar()]?: loadChar(it.toChar()) }?.mapNotNull { it }?.toTypedArray()?: emptyArray()*/
+        return text.mapNotNull { characterMap[it]?: loadChar(it) }.toTypedArray()
     }
 
 

@@ -8,10 +8,10 @@ import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.E
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.interfaces.RoundtripObject
 import java.util.*
 
- class SimulatedUniverse<C, E>(
-     private val characters: List<C>,
-     private val enemies: List<E>,
-     maxNum: Int, currentM: Int
+class SimulatedUniverse<C, E>(
+    private val characters: List<C>,
+    private val enemies: List<E>,
+    maxNum: Int, currentM: Int
 ) where C: RoundtripObject, C: CharacterObject, E: RoundtripObject, E: EnemyObject {
     private val operateQueue: Deque<Pair<RoundtripObject, UInt>> = LinkedList()
     private var extendedVal = mutableMapOf<String, Any>()

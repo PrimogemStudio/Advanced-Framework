@@ -64,6 +64,8 @@ class FreeTypeFont : Closeable {
     private var hb_face: Long = 0L
     private var hb_upem = 0
     private var hb_font: Long = 0L
+    var chars = listOf<Char>()
+        private set
 
     constructor(data: ByteArray) {
         buff = MemoryUtil.memAlloc(data.size)
@@ -97,9 +99,11 @@ class FreeTypeFont : Closeable {
         hb_upem = hb_face_get_upem(hb_face)
         hb_font = hb_font_create(hb_face)
         hb_font_set_scale(hb_font, hb_upem, hb_upem)
+
+        chars = getAllChars()
     }
 
-    fun getAllChars(): List<Char> {
+    private fun getAllChars(): List<Char> {
         val map = mutableListOf<Char>()
         MemoryStack.stackPush().use {
             val index = it.mallocInt(1)
@@ -121,16 +125,12 @@ class FreeTypeFont : Closeable {
         hb_blob_destroy(hb_blob)
     }
 
-    fun toGlyphIndex(chr: Long, raw: Boolean = false): Int {
-        return if (raw) chr.toInt() else FT_Get_Char_Index(face, chr)
-    }
-
-    fun fetchGlyphOutline(chr: Long, raw: Boolean = false): SVGQueue? {
-        val glyphIndex = toGlyphIndex(chr, raw)
-        if (glyphIndex == 0) return null
-        FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP or FT_LOAD_VERTICAL_LAYOUT)
+    fun fetchGlyphOutline(chr: Long): SVGQueue? {
+        val c = FT_Get_Char_Index(face, chr)
+        if (c == 0) return null
+        FT_Load_Glyph(face, c, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP or FT_LOAD_VERTICAL_LAYOUT)
         val outline = face.glyph()?.outline()!!
-        val border = fetchGlyphBorder(chr, raw)!!
+        val border = fetchGlyphBorder(chr)!!
         val target = SVGQueue(border)
         FT_Outline_Decompose(outline, functions(target), 1)
 
@@ -142,10 +142,10 @@ class FreeTypeFont : Closeable {
         return target
     }
 
-    fun fetchGlyphBorder(chr: Long, raw: Boolean = false): Vector2f? {
-        val glyphIndex = toGlyphIndex(chr, raw)
-        if (glyphIndex == 0) return null
-        FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
+    private fun fetchGlyphBorder(chr: Long): Vector2f? {
+        val c = FT_Get_Char_Index(face, chr)
+        if (c == 0) return null
+        FT_Load_Glyph(face, c, FT_LOAD_DEFAULT or FT_LOAD_NO_BITMAP)
         val metrics = face.glyph()?.metrics()!!
         return Vector2f(
             max(i26p6tof(metrics.horiAdvance().toInt()), i26p6tof(metrics.width().toInt())),

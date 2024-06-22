@@ -10,9 +10,8 @@ class CharacterMap {
         return map[char]
     }
 
-    fun put(char: Char, font: FreeTypeFont, precision: Int, raw: Boolean = false): CharGlyph? {
-        if (font.toGlyphIndex(char.code.toLong(), raw) == 0) throw Exception()
-        val glyph = font.fetchGlyphOutline(char.code.toLong(), raw) ?: throw RuntimeException("Char not found: $char")
+    fun put(char: Char, font: FreeTypeFont, precision: Int): CharGlyph? {
+        val glyph = font.fetchGlyphOutline(char.code.toLong()) ?: throw RuntimeException("Char not found: $char")
         map[char] = glyph.toVertices(precision).bake()
         return map[char]
     }
