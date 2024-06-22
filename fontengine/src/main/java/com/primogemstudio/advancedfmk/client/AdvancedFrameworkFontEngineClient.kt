@@ -1,30 +1,8 @@
 package com.primogemstudio.advancedfmk.client
 
-import com.primogemstudio.advancedfmk.fontengine.DefaultFont
 import net.fabricmc.api.ClientModInitializer
 
 class AdvancedFrameworkFontEngineClient : ClientModInitializer {
     override fun onInitializeClient() {
     }
-}
-
-fun main() {
-    /*val pth = "/home/coder2/Downloads/e22538b031e7794b26df4517a6b0c479.ttf"
-    val ftfont = FreeTypeFont(Files.readAllBytes(Paths.get(pth)))
-    ftfont.shape("إنه اختبار").forEach {
-        print("0x${it.toHexString()} ")
-    }*/
-    val fontStack = listOf(DefaultFont.FONT)
-    val r = "abcdABCD!@#$%^&*()_+测试"
-    var result: IntArray? = null
-    fontStack.forEach { f ->
-        if (result == null) result = f.shape(r)
-        else {
-            val temp = f.shape(r)
-            for (i in temp.indices) if (result?.get(i) == 0) result?.set(i, temp[i])
-        }
-    }
-    println(r)
-    result?.toList()?.forEach { println("$it -> ${fontStack[0].getGlyphName(it)} -> ${fontStack[0].chars[it] + 1}") }
-    println(fontStack[0].getGlyphName(0x1fffff))
 }
