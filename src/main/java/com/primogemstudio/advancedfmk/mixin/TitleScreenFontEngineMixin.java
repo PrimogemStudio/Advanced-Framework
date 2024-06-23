@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
-    private static final String TEXT = "عربي في ماين كرافت";
-
+    @Unique
+    private static final String TEXT = "مرحبا بالعالم!";
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);

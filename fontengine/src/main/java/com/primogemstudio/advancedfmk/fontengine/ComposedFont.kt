@@ -26,7 +26,7 @@ class ComposedFont {
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun loadChar(char: Char, raw: Boolean = false): CharGlyph? {
-        logger.info("Loading char 0x${char.code.toHexString()}")
+        logger.debug("Loading char 0x${char.code.toHexString()}")
         for (it in fontStack) {
             try {
                 return characterMap.put(char, it, 2, raw)
@@ -38,13 +38,15 @@ class ComposedFont {
     fun fetchGlyphs(text: String, shape: Boolean = true): Array<CharGlyph> {
         if (shape) {
             var result: IntArray? = null
+            var rlt = -1
             fontStack.forEach { f ->
-                if (result == null) result = f.shape(text)
+                if (result == null) result = f.shape(text).let { rlt = it.second; it.first }
                 else {
-                    val temp = f.shape(text)
+                    val temp = f.shape(text).let { rlt = it.second; it.first }
                     for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) result?.set(i, temp[i])
                 }
             }
+            logger.debug("$rlt")
             return result?.map {
                 characterMap[it.toChar(), fontStack, true] ?: loadChar(it.toChar(), true)
             }?.filterNotNull()?.toTypedArray()?: emptyArray()

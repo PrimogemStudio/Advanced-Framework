@@ -151,10 +151,11 @@ class FreeTypeFont : Closeable {
         )
     }
 
-    fun shape(s: String): IntArray {
+    fun shape(s: String): Pair<IntArray, Int> {
         val buffer = hb_buffer_create()
         hb_buffer_add_utf8(buffer, s, 0, -1)
         hb_buffer_guess_segment_properties(buffer)
+        val direction = hb_buffer_get_direction(buffer)
 
         val result: IntArray
         hb_shape(hb_font, buffer, null)
@@ -164,7 +165,7 @@ class FreeTypeFont : Closeable {
         for (i in 0..<count) result[i] = infos?.get(i)?.codepoint()?: 0
         hb_buffer_destroy(buffer)
 
-        return result
+        return Pair(result, direction)
     }
     fun getGlyphId(chr: Long): Int = FT_Get_Char_Index(face, chr)
     fun getGlyphName(t: Int): String {
