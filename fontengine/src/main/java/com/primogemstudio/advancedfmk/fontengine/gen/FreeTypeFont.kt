@@ -11,7 +11,6 @@ import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import org.lwjgl.util.harfbuzz.HarfBuzz.*
-import org.lwjgl.util.harfbuzz.hb_feature_t
 import java.io.Closeable
 import java.nio.ByteBuffer
 import kotlin.math.max
@@ -158,17 +157,7 @@ class FreeTypeFont : Closeable {
         hb_buffer_guess_segment_properties(buffer)
 
         val result: IntArray
-        hb_shape(
-            hb_font, buffer,
-            hb_feature_t.create(
-                hb_feature_t.create().set(
-                    HB_TAG('d'.code, 'l'.code, 'i'.code, 'g'.code),
-                    1,
-                    HB_FEATURE_GLOBAL_START,
-                    HB_FEATURE_GLOBAL_END
-                ).address(), 24
-            )
-        )
+        hb_shape(hb_font, buffer, null)
         val count = hb_buffer_get_length(buffer)
         val infos = hb_buffer_get_glyph_infos(buffer)
         result = IntArray(count)
