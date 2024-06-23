@@ -23,6 +23,8 @@ import java.io.StringWriter
 
 class AdvancedFrameworkClient : ClientModInitializer {
     override fun onInitializeClient() {
+        PayloadTypeRegistry.playS2C().register(UpdatePacket.TYPE, UpdatePacket.CODEC)
+        PayloadTypeRegistry.playS2C().register(TestEntityAddPacket.TYPE, TestEntityAddPacket.CODEC)
         ClientPlayNetworking.registerGlobalReceiver(UpdatePacket.TYPE, UpdatePacket.Handler)
         ClientPlayNetworking.registerGlobalReceiver(TestEntityAddPacket.TYPE, TestEntityAddPacket.Handler)
         ClientCommandRegistrationCallback.EVENT.register { dis, _ ->
@@ -86,8 +88,6 @@ class AdvancedFrameworkClient : ClientModInitializer {
             )
         }
         SabaNative.init()
-        PayloadTypeRegistry.playS2C().register(UpdatePacket.TYPE, UpdatePacket.CODEC)
-        PayloadTypeRegistry.playS2C().register(TestEntityAddPacket.TYPE, TestEntityAddPacket.CODEC)
     }
 }
 
