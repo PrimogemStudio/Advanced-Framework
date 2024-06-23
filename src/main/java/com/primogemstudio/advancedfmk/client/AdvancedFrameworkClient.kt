@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import java.io.File
@@ -85,6 +86,8 @@ class AdvancedFrameworkClient : ClientModInitializer {
             )
         }
         SabaNative.init()
+        PayloadTypeRegistry.playS2C().register(UpdatePacket.TYPE, UpdatePacket.CODEC)
+        PayloadTypeRegistry.playS2C().register(TestEntityAddPacket.TYPE, TestEntityAddPacket.CODEC)
     }
 }
 
