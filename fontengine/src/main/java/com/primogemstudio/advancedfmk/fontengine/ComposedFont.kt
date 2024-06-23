@@ -11,7 +11,7 @@ class ComposedFont {
     private val logger = LogManager.getLogger(javaClass)
     private val characterMap = CharacterMap()
 
-    var fontStack = mutableListOf(DefaultFont.FONT)
+    var fontStack = mutableListOf(DefaultFont.ABRAIC, DefaultFont.FONT)
 
     init {
         for (c in 0..128) {
@@ -42,7 +42,7 @@ class ComposedFont {
                 if (result == null) result = f.shape(text)
                 else {
                     val temp = f.shape(text)
-                    for (i in temp.indices) if (result?.get(i) == 0) result?.set(i, temp[i])
+                    for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) result?.set(i, temp[i])
                 }
             }
             return result?.map {
