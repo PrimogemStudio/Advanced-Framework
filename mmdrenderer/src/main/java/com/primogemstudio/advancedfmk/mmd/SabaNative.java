@@ -1,12 +1,15 @@
 package com.primogemstudio.advancedfmk.mmd;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileOutputStream;
 import java.lang.ref.Cleaner;
 import java.util.Objects;
 
 public final class SabaNative {
     private static boolean available = true;
-
+    private static Logger logger = LogManager.getLogger(SabaNative.class);
     static {
         try {
             var arch = System.getProperty("os.arch");
@@ -33,6 +36,7 @@ public final class SabaNative {
             }
         } catch (Throwable e) {
             available = false;
+            logger.warn("advancedfmk-mmdrenderer doesn't support this platform! MMD renderer is unavailable");
         }
     }
 
