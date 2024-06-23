@@ -6,7 +6,7 @@
   "client": [
     "BufferBuilderMixin",
     "BufferBuilderMixin$DrawStateMixin",
-    "NativeImageMixin",
+    "PngInfoMixin",
     "VertexBufferMixin"
   ],
   "injectors": {
