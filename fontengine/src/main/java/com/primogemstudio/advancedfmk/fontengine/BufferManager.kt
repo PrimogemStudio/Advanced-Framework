@@ -17,7 +17,7 @@ object BufferManager {
             color.shr(16).and(0xff).toFloat() / 255f,
             color.shr(8).and(0xff).toFloat() / 255f,
             color.and(0xff).toFloat() / 255f,
-            0f
+            color.shr(24).and(0xff).toFloat() / 255f
         )
     }
 

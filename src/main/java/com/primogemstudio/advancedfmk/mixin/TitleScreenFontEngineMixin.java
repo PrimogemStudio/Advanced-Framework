@@ -15,12 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
+    private static final String TEXT = "عربي في ماين كرافت";
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        BufferManager.INSTANCE.updateBufferColor(0xffffffff);
+        BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
         BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            font.drawWrapText(vertexConsumer, poseStack, "مرحبا بالعالم!", 0, 48, 9, 500, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawWrapText(vertexConsumer, poseStack, TEXT, 0, 48, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
             return null;
         }, graphics, partialTick);
     }

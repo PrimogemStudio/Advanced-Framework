@@ -166,7 +166,7 @@ class FreeTypeFont : Closeable {
                     1,
                     HB_FEATURE_GLOBAL_START,
                     HB_FEATURE_GLOBAL_END
-                ).address(), 16
+                ).address(), 24
             )
         )
         val count = hb_buffer_get_length(buffer)

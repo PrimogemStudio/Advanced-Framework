@@ -11,7 +11,7 @@ class ComposedFont {
     private val logger = LogManager.getLogger(javaClass)
     private val characterMap = CharacterMap()
 
-    var fontStack = mutableListOf(DefaultFont.ABRAIC, DefaultFont.FONT)
+    var fontStack = mutableListOf(DefaultFont.ARABIC, DefaultFont.FONT)
 
     init {
         for (c in 0..128) {

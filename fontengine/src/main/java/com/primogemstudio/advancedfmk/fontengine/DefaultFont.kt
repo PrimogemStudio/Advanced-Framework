@@ -5,10 +5,14 @@ import com.primogemstudio.advancedfmk.util.Compressor
 
 object DefaultFont {
     val FONT = FreeTypeFont(
-        Compressor.decode(DefaultFont.javaClass.getResourceAsStream("/star_rail.res")!!.readAllBytes())
+        Compressor.decode(
+            DefaultFont.javaClass.getResourceAsStream("/assets/advancedfmk/fonts/star_rail.ttf.zstd")!!.readAllBytes()
+        )
     )
 
-    val ABRAIC = FreeTypeFont(
-        Compressor.decode(DefaultFont.javaClass.getResourceAsStream("/abraic.res")!!.readAllBytes())
+    val ARABIC = FreeTypeFont(
+        Compressor.decode(
+            DefaultFont.javaClass.getResourceAsStream("/assets/advancedfmk/fonts/arabic.ttf.zstd")!!.readAllBytes()
+        )
     )
 }
