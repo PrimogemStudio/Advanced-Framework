@@ -76,7 +76,12 @@ class AdvancedFrameworkClient : ClientModInitializer {
                         }
                         0
                     })).then(literal("attach").executes {
-                        val model = NativeFileDialog.openFileDialog("打开", "D:/", arrayOf("*.vmd"), "VMD File")
+                        val model = NativeFileDialog.openFileDialog(
+                            "打开",
+                            "D:/",
+                            arrayOf("*.dll", "*.so", "*.dylib"),
+                            "Dynamic lib files"
+                        )
                         model ?: return@executes 0
                         try {
                             System.load(model.absolutePath)
