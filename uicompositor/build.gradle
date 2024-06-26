@@ -41,7 +41,6 @@ dependencies {
     api implementation("org.apache.bcel:bcel:${bcel_version}")
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
     implementation(project(path: ':fontengine', configuration: "namedElements"))
-    implementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
 }
 
 test {

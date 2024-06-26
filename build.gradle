@@ -95,7 +95,6 @@ dependencies {
     include "org.luaj:luaj-jse:${project.luaj_version}"
     include "org.apache.bcel:bcel:${bcel_version}"
     include "org.ladysnake:satin:${project.satin_version}"
-    include "org.yaml:snakeyaml:${project.snakeyaml_version}"
     include(implementation("org.fusesource.jansi:jansi:2.4.0"))
     include(implementation("org.jline:jline:3.18.0"))
 
