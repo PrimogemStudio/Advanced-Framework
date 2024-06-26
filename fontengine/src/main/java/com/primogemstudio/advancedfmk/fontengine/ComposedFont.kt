@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.fontengine
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import org.apache.logging.log4j.LogManager
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -38,17 +39,27 @@ class ComposedFont {
     fun fetchGlyphs(text: String, shape: Boolean = true): Array<CharGlyph> {
         if (shape) {
             var result: IntArray? = null
+            var fnts: Array<FreeTypeFont>? = null
+
             var rlt = -1
             fontStack.forEach { f ->
-                if (result == null) result = f.shape(text).let { rlt = it.second; it.first }
+                if (result == null) {
+                    result = f.shape(text).let { rlt = it.second; it.first }
+                    fnts = Array(result?.size!!) { f }
+                }
                 else {
                     val temp = f.shape(text).let { rlt = it.second; it.first }
-                    for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) result?.set(i, temp[i])
+                    for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) {
+                        result?.set(i, temp[i])
+                        fnts?.set(i, f)
+                    }
                 }
             }
             logger.debug("$rlt")
+            var idx = 0
             return result?.map {
-                characterMap[it.toChar(), fontStack, true] ?: loadChar(it.toChar(), true)
+                idx++
+                characterMap[it.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(it.toChar(), true)
             }?.filterNotNull()?.toTypedArray()?: emptyArray()
         }
         else return text.mapNotNull { characterMap[it, fontStack]?: loadChar(it) }.toTypedArray()

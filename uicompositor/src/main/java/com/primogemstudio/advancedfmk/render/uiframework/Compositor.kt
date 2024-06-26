@@ -21,7 +21,7 @@ class RLGsonParser : TypeAdapter<ResourceLocation>() {
         p0?.value("$p1")
     }
 
-    override fun read(p0: JsonReader?): ResourceLocation = ResourceLocation.withDefaultNamespace(p0?.nextString()!!)
+    override fun read(p0: JsonReader?): ResourceLocation = ResourceLocation.parse(p0?.nextString()!!)
 }
 
 class Vector4fGsonParser : TypeAdapter<Vector4f>() {
@@ -71,7 +71,7 @@ object Compositor {
         ) {
             val a = fromJson(json, Map::class.java)
             val comp =
-                (a["components"] as Map<*, *>).mapKeys { ResourceLocation.withDefaultNamespace(it.key.toString()) }
+                (a["components"] as Map<*, *>).mapKeys { ResourceLocation.parse(it.key.toString()) }
             return UICompound(comp.mapValues {
                 when ((it.value as Map<*, *>)["type"]) {
                     "advancedfmk:rectangle" -> fromJson(toJson(it.value), UIRect::class.java)
@@ -80,7 +80,7 @@ object Compositor {
                     "advancedfmk:text" -> fromJson(toJson(it.value), UIText::class.java)
                     else -> UICompound()
                 }
-            }, ResourceLocation.withDefaultNamespace(a["topComponent"].toString()))
+            }, ResourceLocation.parse(a["topComponent"].toString()))
         }
     }
 }

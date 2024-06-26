@@ -10,6 +10,10 @@ class CharacterMap {
         return fontlist.map { it.getGlyphName(if (raw) char.code else it.getGlyphId(char.code.toLong())) }.first { it.isNotEmpty() }.let { map[it] }
     }
 
+    operator fun get(char: Char, font: FreeTypeFont, raw: Boolean = false): CharGlyph? {
+        return font.getGlyphName(if (raw) char.code else font.getGlyphId(char.code.toLong())).let { map[it] }
+    }
+
     fun put(char: Char, font: FreeTypeFont, precision: Int, raw: Boolean = false): CharGlyph? {
         val glyph = font.fetchGlyphOutline(char.code.toLong(), raw) ?: throw RuntimeException("Char not found: $char")
         val id = font.getGlyphName(if (raw) char.code else font.getGlyphId(char.code.toLong()))

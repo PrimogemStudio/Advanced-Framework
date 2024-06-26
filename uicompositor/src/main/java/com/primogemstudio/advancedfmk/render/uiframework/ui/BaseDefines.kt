@@ -154,21 +154,22 @@ data class UIRect(
             getUniform("Size")!!.set(floatArrayOf(s[2], s[3]))
             if (clip != null) setSampler("ClipSampler", clip!!)
         }
-
+        //
         val buff = Tesselator.getInstance().begin(
             VertexFormat.Mode.QUADS,
-            if (texture == null) DefaultVertexFormat.POSITION_COLOR else DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP
+            if (texture == null) DefaultVertexFormat.POSITION_COLOR else Shaders.POSITION_COLOR_TEX
         )
+        //
         val matrix = guiGraphics.pose().last().pose()
         val bdsize = 8
-        buff.addVertex(matrix, s[0] - bdsize, s[1] - bdsize, 0f).setColor(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) setUv(0f, 0f) }
-        buff.addVertex(matrix, s[0] - bdsize, s[1] + s[3] + bdsize, 0f).setColor(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) setUv(0f, 1f) }
-        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] + s[3] + bdsize, 0f).setColor(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) setUv(1f, 1f) }
-        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] - bdsize, 0f).setColor(color.x, color.y, color.z, alp)
-            .apply { if (texture != null) setUv(1f, 0f) }
+        buff.addVertex(matrix, s[0] - bdsize, s[1] - bdsize, 0f)
+            .apply { if (texture != null) setUv(0f, 0f) }.setColor(color.x, color.y, color.z, alp)
+        buff.addVertex(matrix, s[0] - bdsize, s[1] + s[3] + bdsize, 0f)
+            .apply { if (texture != null) setUv(0f, 1f) }.setColor(color.x, color.y, color.z, alp)
+        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] + s[3] + bdsize, 0f)
+            .apply { if (texture != null) setUv(1f, 1f) }.setColor(color.x, color.y, color.z, alp)
+        buff.addVertex(matrix, s[0] + s[2] + bdsize, s[1] - bdsize, 0f)
+            .apply { if (texture != null) setUv(1f, 0f) }.setColor(color.x, color.y, color.z, alp)
         RenderSystem.enableBlend()
         BufferUploader.drawWithShader(buff.build()!!)
         RenderSystem.disableBlend()

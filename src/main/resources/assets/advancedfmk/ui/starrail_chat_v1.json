@@ -10,7 +10,7 @@
       "filter": {
         "type": "advancedfmk:gaussian_blur",
         "args": {
-          "Radius": 32,
+          "Radius": 8,
           "DigType": 1
         }
       },

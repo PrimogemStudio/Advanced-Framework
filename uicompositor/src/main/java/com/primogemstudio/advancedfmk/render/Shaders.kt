@@ -1,6 +1,8 @@
 package com.primogemstudio.advancedfmk.render
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormatElement
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ShaderInstance
 import net.minecraft.resources.ResourceLocation
@@ -46,5 +48,10 @@ object Shaders {
     @JvmField
     val TEXTSWAP_CLIP: ManagedShaderEffect = ShaderEffectManager.getInstance()
         .manage(ResourceLocation.withDefaultNamespace("shaders/filter/textswap_clip.json"))
+
+    @JvmField
+    val POSITION_COLOR_TEX =
+        VertexFormat.builder().add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR)
+            .add("UV0", VertexFormatElement.UV0).build()
 }
 
