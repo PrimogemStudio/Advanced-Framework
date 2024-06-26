@@ -41,21 +41,20 @@ class ComposedFont {
             var result: IntArray? = null
             var fnts: Array<FreeTypeFont>? = null
 
-            var rlt = -1
             fontStack.forEach { f ->
                 if (result == null) {
-                    result = f.shape(text).let { rlt = it.second; it.first }
+                    result = f.shape(text).first
                     fnts = Array(result?.size!!) { f }
                 }
                 else {
-                    val temp = f.shape(text).let { rlt = it.second; it.first }
+                    val temp = f.shape(text).first
                     for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) {
                         result?.set(i, temp[i])
                         fnts?.set(i, f)
                     }
                 }
             }
-            logger.debug("$rlt")
+
             var idx = 0
             return result?.map {
                 idx++
