@@ -15,16 +15,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
-    /*@Unique
-    private static final String TEXTT = "مرحبا بالعالم!";*/
     @Unique
-    private static final String TEXT = "测试! Hello world from UICompositor!";
+    private static final String TEXTT = "مرحبا بالعالم!";
+    @Unique
+    private static final String TEXTTT = "*** -> <- |>";
+    @Unique
+    private static final String TEXT = "测试! *** -> |> Hello world from UICompositor!";
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
         BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            // font.drawWrapText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
-            font.drawWrapText(vertexConsumer, poseStack, TEXT, 0, 148, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawWrapText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawWrapText(vertexConsumer, poseStack, TEXTTT, 0, 60, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawWrapText(vertexConsumer, poseStack, TEXT, 0, 72, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
             return null;
         }, graphics, partialTick);
     }

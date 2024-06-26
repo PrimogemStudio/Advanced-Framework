@@ -12,7 +12,11 @@ class ComposedFont {
     private val logger = LogManager.getLogger(javaClass)
     private val characterMap = CharacterMap()
 
-    var fontStack = mutableListOf(DefaultFont.DEFAULT_CJK, DefaultFont.ARABIC)
+    var fontStack = mutableListOf(
+        FreeTypeFont("/usr/share/fonts/MonacoLigaturizedNerdFont-Bold.ttf"),
+        DefaultFont.DEFAULT_CJK,
+        DefaultFont.ARABIC
+    )
 
     init {
         for (c in 0..128) {
@@ -36,11 +40,16 @@ class ComposedFont {
         return null
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun loadChar(char: Char, font: FreeTypeFont, raw: Boolean = false): CharGlyph? {
+        logger.debug("Loading char 0x${char.code.toHexString()} (direct)")
+        return characterMap.put(char, font, 15, raw)
+    }
+
     fun fetchGlyphs(text: String, shape: Boolean = true): Array<CharGlyph> {
         if (shape) {
             var result: IntArray? = null
             var fnts: Array<FreeTypeFont>? = null
-
             fontStack.forEach { f ->
                 if (result == null) {
                     result = f.shape(text).first
@@ -58,7 +67,11 @@ class ComposedFont {
             var idx = 0
             return result?.map {
                 idx++
-                characterMap[it.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(it.toChar(), true)
+                characterMap[it.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(
+                    it.toChar(),
+                    fnts?.get(idx - 1)!!,
+                    true
+                )
             }?.filterNotNull()?.toTypedArray()?: emptyArray()
         }
         else return text.mapNotNull { characterMap[it, fontStack]?: loadChar(it) }.toTypedArray()
