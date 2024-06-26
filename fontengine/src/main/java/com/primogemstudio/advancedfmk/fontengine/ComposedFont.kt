@@ -12,13 +12,13 @@ class ComposedFont {
     private val logger = LogManager.getLogger(javaClass)
     private val characterMap = CharacterMap()
 
-    var fontStack = mutableListOf(DefaultFont.ARABIC, DefaultFont.FONT)
+    var fontStack = mutableListOf(DefaultFont.DEFAULT_CJK, DefaultFont.ARABIC)
 
     init {
         for (c in 0..128) {
             for (it in fontStack) {
                 try {
-                    characterMap.put(c.toChar(), it, 2)
+                    characterMap.put(c.toChar(), it, 15)
                     break
                 } catch (_: Exception) {}
             }
@@ -30,7 +30,7 @@ class ComposedFont {
         logger.debug("Loading char 0x${char.code.toHexString()}")
         for (it in fontStack) {
             try {
-                return characterMap.put(char, it, 2, raw)
+                return characterMap.put(char, it, 15, raw)
             } catch (_: Exception) {}
         }
         return null

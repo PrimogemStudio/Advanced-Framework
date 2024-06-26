@@ -16,7 +16,8 @@ public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
     @Unique
-    private static final String TEXT = "مرحبا بالعالم!";
+    // private static final String TEXT = "مرحبا بالعالم!";
+    private static final String TEXT = "测试! Hello world from UICompositor!";
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);

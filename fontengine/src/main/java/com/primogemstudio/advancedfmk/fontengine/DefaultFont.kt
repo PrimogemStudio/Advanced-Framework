@@ -4,7 +4,7 @@ import com.primogemstudio.advancedfmk.fontengine.gen.FreeTypeFont
 import com.primogemstudio.advancedfmk.util.Compressor
 
 object DefaultFont {
-    val FONT = FreeTypeFont(
+    val DEFAULT_CJK = FreeTypeFont(
         Compressor.decode(
             DefaultFont.javaClass.getResourceAsStream("/assets/advancedfmk/fonts/star_rail.ttf.zstd")!!.readAllBytes()
         )
