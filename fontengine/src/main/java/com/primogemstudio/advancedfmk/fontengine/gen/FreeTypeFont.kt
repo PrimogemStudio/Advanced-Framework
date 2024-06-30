@@ -7,7 +7,7 @@ import org.joml.Vector2f
 import org.lwjgl.BufferUtils
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.memAddress
+import org.lwjgl.system.MemoryUtil.*
 import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
@@ -71,7 +71,7 @@ class FreeTypeFont : Closeable {
         private set
 
     constructor(data: ByteArray) {
-        buff = MemoryUtil.memAlloc(data.size)
+        buff = memAlloc(data.size)
         buff!!.put(data)
         buff!!.rewind()
         MemoryStack.stackPush().use { stack ->
@@ -154,14 +154,30 @@ class FreeTypeFont : Closeable {
         )
     }
 
-    var shapingFeatures: List<String> =
-        listOf("ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "cv30", "cv60", "cv61")
+    var shapingFeatures: List<Pair<String, Boolean>> =
+        listOf(
+            "liga",
+            "calm",
+            "ss01",
+            "ss02",
+            "ss03",
+            "ss04",
+            "ss05",
+            "ss06",
+            "ss07",
+            "ss08",
+            "ss09",
+            "cv30",
+            "cv60",
+            "cv61"
+        ).map { Pair(it, true) }
         set(value) {
             field = value
             loadFeaturesToMem()
         }
     private var shapingFeatBf: ByteBuffer? = null
 
+    @OptIn(ExperimentalStdlibApi::class)
     private fun loadFeaturesToMem(): ByteBuffer {
         val genF = { t: String -> HB_TAG(t[0].code, t[1].code, t[2].code, t[3].code) }
 
@@ -170,12 +186,17 @@ class FreeTypeFont : Closeable {
 
         var off = 0
         shapingFeatures.forEach {
-            hb_feature_t.ntag(add + off, genF(it))
-            hb_feature_t.nvalue(add + off, 1)
+            hb_feature_t.ntag(add + off, genF(it.first))
+            hb_feature_t.nvalue(add + off, if (it.second) 1 else 0)
             hb_feature_t.nstart(add + off, HB_FEATURE_GLOBAL_START)
             hb_feature_t.nend(add + off, HB_FEATURE_GLOBAL_END)
             off += 16
         }
+
+        for (addr in add..<add + 16 * shapingFeatures.size) {
+            println("${addr.toHexString()} -> ${memGetByte(addr).toHexString()}")
+        }
+
         return shapingFeatBf!!
     }
 
@@ -185,6 +206,15 @@ class FreeTypeFont : Closeable {
         hb_buffer_guess_segment_properties(buffer)
         val direction = hb_buffer_get_direction(buffer)
 
+        /*val genF = { t: String -> HB_TAG(t[0].code, t[1].code, t[2].code, t[3].code) }
+
+        MemoryStack.stackPush().use { stack ->
+            val buf = stack.mallocPointer(shapingFeatures.size * 16)
+            for (i in shapingFeatures.indices) {
+                hb_feature_t.create(buf.address() + i * 16).set(genF(shapingFeatures[i]), 1, HB_FEATURE_GLOBAL_START, HB_FEATURE_GLOBAL_END)
+            }
+            hb_shape(hb_font, buffer, hb_feature_t.Buffer(buf.getByteBuffer(shapingFeatures.size * 16)))
+        }*/
         hb_shape(hb_font, buffer, hb_feature_t.Buffer(shapingFeatBf ?: loadFeaturesToMem()))
 
         val result: IntArray
@@ -198,7 +228,7 @@ class FreeTypeFont : Closeable {
     }
     fun getGlyphId(chr: Long): Int = FT_Get_Char_Index(face, chr)
     fun getGlyphName(t: Int): String {
-        val buff = MemoryUtil.memAlloc(128)
+        val buff = memAlloc(128)
         buff.rewind()
         FT_Get_Glyph_Name(face, t, buff)
         val dest = ByteArray(128)

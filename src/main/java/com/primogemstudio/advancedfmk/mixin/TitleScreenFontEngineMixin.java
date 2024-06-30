@@ -16,7 +16,7 @@ public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
     @Unique
-    private static final String TEXTT = "مرحبا بالعالم!";
+    private static final String TEXTT = "ࣻمرحبا بالعالم!";
     @Unique
     private static final String TEXTTT = "*** -> <- |>";
     @Unique
