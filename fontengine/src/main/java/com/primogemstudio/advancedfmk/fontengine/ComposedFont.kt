@@ -45,9 +45,10 @@ class ComposedFont {
         return characterMap.put(char, font, 15, raw)
     }
 
-    fun fetchGlyphs(text: String, shape: Boolean = true): Array<CharGlyph> {
+    @Suppress("UNCHECKED_CAST")
+    fun fetchGlyphs(text: String, shape: Boolean = true): Array<Pair<CharGlyph, Vector2f>> {
         if (shape) {
-            var result: IntArray? = null
+            var result: Array<Pair<Int, Vector2f>>? = null
             var fnts: Array<FreeTypeFont>? = null
             fontStack.forEach { f ->
                 if (result == null) {
@@ -56,7 +57,7 @@ class ComposedFont {
                 }
                 else {
                     val temp = f.shape(text).first
-                    for (i in temp.indices) if ((i < result?.size!!) && result?.get(i) == 0) {
+                    for (i in temp.indices) if ((i < result?.size!!) && result?.get(i)?.first == 0) {
                         result?.set(i, temp[i])
                         fnts?.set(i, f)
                     }
@@ -66,43 +67,20 @@ class ComposedFont {
             var idx = 0
             return result?.map {
                 idx++
-                characterMap[it.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(
-                    it.toChar(),
-                    fnts?.get(idx - 1)!!,
-                    true
+                Pair(
+                    characterMap[it.first.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(
+                        it.first.toChar(),
+                        fnts?.get(idx - 1)!!,
+                        true
+                    ),
+                    it.second
                 )
-            }?.filterNotNull()?.toTypedArray()?: emptyArray()
-        }
-        else return text.mapNotNull { characterMap[it, fontStack]?: loadChar(it) }.toTypedArray()
+            }?.filter { it.first != null }?.toTypedArray() as Array<Pair<CharGlyph, Vector2f>>
+        } else return text.mapNotNull { characterMap[it, fontStack] ?: loadChar(it) }.map { Pair(it, Vector2f(0f)) }
+            .toTypedArray()
     }
-
 
     fun drawCenteredText(
-        buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Vector4f
-    ) {
-        val rect = getTextRect(text, point)
-        drawText(buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, textColor)
-    }
-
-    fun drawText(
-        buff: VertexConsumer, poseStack: PoseStack, text: String, x: Int, y: Int, point: Int, textColor: Vector4f
-    ) {
-        var currOffset = x
-        val siz = point.toFloat() / 12f
-        fetchGlyphs(text).forEach {
-            for (idx in it.indices) {
-                val v = it.vertices[idx]
-                poseStack.pushPose()
-                buff.addVertex(
-                    poseStack.last().pose(), v.x * it.dimension.x * siz + currOffset, v.y * it.dimension.y * siz + y, 0f
-                ).setColor(textColor.x, textColor.y, textColor.z, textColor.w)
-                poseStack.popPose()
-            }
-            currOffset += (it.dimension.x * siz).toInt()
-        }
-    }
-
-    fun drawCenteredWrapText(
         buff: VertexConsumer,
         poseStack: PoseStack,
         text: String,
@@ -112,74 +90,61 @@ class ComposedFont {
         maxLineWidth: Int,
         textColor: Vector4f
     ) {
-        val rect = getWrapTextRect(text, point, maxLineWidth)
-        drawWrapText(
-            buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, maxLineWidth, textColor
+        val rect = getTextBorder(text, point, maxLineWidth)
+        drawText(
+            buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, textColor, maxLineWidth
         )
     }
 
-    fun drawWrapText(
+    fun drawText(
         buff: VertexConsumer,
         poseStack: PoseStack,
         text: String,
         x: Int,
         y: Int,
         point: Int,
-        maxLineWidth: Int,
-        textColor: Vector4f
+        textColor: Vector4f,
+        maxLineWidth: Int = -1
     ) {
         var currOffset = x
         val siz = point.toFloat() / 12f
         var currY = y
         var currentLineH = 0
         fetchGlyphs(text).forEach {
-            currentLineH = max(currentLineH, (it.dimension.y * siz).toInt())
-            if (currOffset + (it.dimension.x * siz).toInt() - x > maxLineWidth) {
+            currentLineH = max(currentLineH, (it.first.dimension.y * siz).toInt())
+            if (maxLineWidth > 0 && it.second.y == 0f && currOffset + (it.first.dimension.x * siz).toInt() - x > maxLineWidth) {
                 currY += currentLineH
                 currentLineH = 0
                 currOffset = x
             }
-            for (idx in it.indices) {
-                val v = it.vertices[idx]
+            for (idx in it.first.indices) {
+                val v = it.first.vertices[idx]
                 poseStack.pushPose()
                 buff.addVertex(
                     poseStack.last().pose(),
-                    v.x * it.dimension.x * siz + currOffset,
-                    v.y * it.dimension.y * siz + currY,
+                    (v.x + it.second.x) * it.first.dimension.x * siz + currOffset,
+                    (v.y - it.second.y) * it.first.dimension.y * siz + currY,
                     0f
                 ).setColor(textColor.x, textColor.y, textColor.z, textColor.w)
                 poseStack.popPose()
             }
-            currOffset += (it.dimension.x * siz).toInt()
+            if (it.second.y == 0f) currOffset += (it.first.dimension.x * siz).toInt()
         }
     }
 
-    fun getTextRect(text: String, point: Int): Vector2f {
-        var currOffset = 0
-        val siz = point.toFloat() / 12f
-        var currY = 0f
-
-        fetchGlyphs(text).forEach {
-            currY = max(currY, it.dimension.y * siz)
-            currOffset += (it.dimension.x * siz).toInt()
-        }
-
-        return Vector2f(currOffset.toFloat(), currY)
-    }
-
-    fun getWrapTextRect(text: String, point: Int, maxLineWidth: Int): Vector2f {
+    fun getTextBorder(text: String, point: Int, maxLineWidth: Int = -1): Vector2f {
         var currOffset = 0
         val siz = point.toFloat() / 12f
         var currY = 0f
         var currentLineH = 0
         fetchGlyphs(text).forEach {
-            currentLineH = max(currentLineH, (it.dimension.y * siz).toInt())
-            if (currOffset + (it.dimension.x * siz).toInt() > maxLineWidth) {
+            currentLineH = max(currentLineH, (it.first.dimension.y * siz).toInt())
+            if (maxLineWidth > 0 && currOffset + (it.first.dimension.x * siz).toInt() > maxLineWidth) {
                 currY += currentLineH
                 currentLineH = 0
                 currOffset = 0
             }
-            currOffset += (it.dimension.x * siz).toInt()
+            currOffset += (it.first.dimension.x * siz).toInt()
         }
 
         return Vector2f(currOffset.toFloat(), currY)

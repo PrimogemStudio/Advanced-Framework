@@ -25,9 +25,9 @@ public class TitleScreenFontEngineMixin {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
         BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            font.drawWrapText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
-            font.drawWrapText(vertexConsumer, poseStack, TEXTTT, 0, 60, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
-            font.drawWrapText(vertexConsumer, poseStack, TEXT, 0, 72, 9, 240, new Vector4f(1f, 1f, 1f, 1f));
+            font.drawText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
+            font.drawText(vertexConsumer, poseStack, TEXTTT, 0, 60, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
+            font.drawText(vertexConsumer, poseStack, TEXT, 0, 72, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
             return null;
         }, graphics, partialTick);
     }

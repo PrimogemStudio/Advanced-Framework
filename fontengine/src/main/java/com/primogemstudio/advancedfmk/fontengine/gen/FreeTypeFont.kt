@@ -67,8 +67,6 @@ class FreeTypeFont : Closeable {
     private var hb_face: Long = 0L
     private var hb_upem = 0
     private var hb_font: Long = 0L
-    var chars = listOf<Char>()
-        private set
 
     constructor(data: ByteArray) {
         buff = memAlloc(data.size)
@@ -102,8 +100,6 @@ class FreeTypeFont : Closeable {
         hb_upem = hb_face_get_upem(hb_face)
         hb_font = hb_font_create(hb_face)
         hb_font_set_scale(hb_font, hb_upem, hb_upem)
-
-        chars = getAllChars()
     }
 
     private fun getAllChars(): List<Char> {
@@ -200,7 +196,7 @@ class FreeTypeFont : Closeable {
         return shapingFeatBf!!
     }
 
-    fun shape(s: String): Pair<IntArray, Int> {
+    fun shape(s: String): Pair<Array<Pair<Int, Vector2f>>, Int> {
         val buffer = hb_buffer_create()
         hb_buffer_add_utf8(buffer, s, 0, -1)
         hb_buffer_guess_segment_properties(buffer)
@@ -217,14 +213,24 @@ class FreeTypeFont : Closeable {
         }*/
         hb_shape(hb_font, buffer, hb_feature_t.Buffer(shapingFeatBf ?: loadFeaturesToMem()))
 
-        val result: IntArray
         val count = hb_buffer_get_length(buffer)
         val infos = hb_buffer_get_glyph_infos(buffer)
-        result = IntArray(count)
-        for (i in 0..<count) result[i] = infos?.get(i)?.codepoint()?: 0
+        val positions = hb_buffer_get_glyph_positions(buffer)
+        val result = mutableListOf<Pair<Int, Vector2f>>()
+        for (i in 0..<count) {
+            result.add(
+                Pair(
+                    infos?.get(i)?.codepoint() ?: 0,
+                    Vector2f(
+                        positions?.get(i)?.x_offset()?.toFloat()?.div(hb_upem) ?: 0f,
+                        positions?.get(i)?.y_offset()?.toFloat()?.div(hb_upem) ?: 0f
+                    )
+                )
+            )
+        }
         hb_buffer_destroy(buffer)
 
-        return Pair(result, direction)
+        return Pair(result.toTypedArray(), direction)
     }
     fun getGlyphId(chr: Long): Int = FT_Get_Char_Index(face, chr)
     fun getGlyphName(t: Int): String {
