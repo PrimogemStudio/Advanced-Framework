@@ -4,13 +4,16 @@ import com.primogemstudio.advancedfmk.util.i26p6tof
 import net.minecraft.client.gui.font.providers.FreeTypeUtil
 import org.joml.Matrix2f
 import org.joml.Vector2f
+import org.lwjgl.BufferUtils
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.MemoryUtil.memAddress
 import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
 import org.lwjgl.util.freetype.FreeType.*
 import org.lwjgl.util.harfbuzz.HarfBuzz.*
+import org.lwjgl.util.harfbuzz.hb_feature_t
 import java.io.Closeable
 import java.nio.ByteBuffer
 import kotlin.math.max
@@ -157,8 +160,25 @@ class FreeTypeFont : Closeable {
         hb_buffer_guess_segment_properties(buffer)
         val direction = hb_buffer_get_direction(buffer)
 
+        val genF = { t: String -> HB_TAG(t[0].code, t[1].code, t[2].code, t[3].code) }
+
+        val enables =
+            arrayOf("ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "cv30", "cv60", "cv61")
+        val r = BufferUtils.createByteBuffer(16 * enables.size)
+        val add = memAddress(r)
+
+        var off = 0
+        enables.forEach {
+            hb_feature_t.ntag(add + off, genF(it))
+            hb_feature_t.nvalue(add + off, 1)
+            hb_feature_t.nstart(add + off, HB_FEATURE_GLOBAL_START)
+            hb_feature_t.nend(add + off, HB_FEATURE_GLOBAL_END)
+            off += 16
+        }
+
+        nhb_shape(hb_font, buffer, add, enables.size)
+
         val result: IntArray
-        hb_shape(hb_font, buffer, null)
         val count = hb_buffer_get_length(buffer)
         val infos = hb_buffer_get_glyph_infos(buffer)
         result = IntArray(count)
