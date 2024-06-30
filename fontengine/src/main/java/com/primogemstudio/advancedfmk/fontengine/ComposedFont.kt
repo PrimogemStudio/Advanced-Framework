@@ -13,7 +13,6 @@ class ComposedFont {
     private val characterMap = CharacterMap()
 
     var fontStack = mutableListOf(
-        FreeTypeFont("/usr/share/fonts/MonacoLigaturizedNerdFont-Bold.ttf"),
         DefaultFont.DEFAULT_CJK,
         DefaultFont.ARABIC
     )
