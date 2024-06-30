@@ -21,7 +21,7 @@ class ComposedFont {
         for (c in 0..128) {
             for (it in fontStack) {
                 try {
-                    characterMap.put(c.toChar(), it, 15)
+                    characterMap.put(c.toChar(), it, 5)
                     break
                 } catch (_: Exception) {}
             }
@@ -33,7 +33,7 @@ class ComposedFont {
         logger.debug("Loading char 0x${char.code.toHexString()}")
         for (it in fontStack) {
             try {
-                return characterMap.put(char, it, 15, raw)
+                return characterMap.put(char, it, 5, raw)
             } catch (_: Exception) {}
         }
         return null

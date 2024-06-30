@@ -7,7 +7,8 @@ import org.joml.Vector2f
 import org.lwjgl.BufferUtils
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.MemoryUtil.*
+import org.lwjgl.system.MemoryUtil.memAddress
+import org.lwjgl.system.MemoryUtil.memAlloc
 import org.lwjgl.util.freetype.FT_Face
 import org.lwjgl.util.freetype.FT_Outline_Funcs
 import org.lwjgl.util.freetype.FT_Vector
@@ -187,10 +188,6 @@ class FreeTypeFont : Closeable {
             hb_feature_t.nstart(add + off, HB_FEATURE_GLOBAL_START)
             hb_feature_t.nend(add + off, HB_FEATURE_GLOBAL_END)
             off += 16
-        }
-
-        for (addr in add..<add + 16 * shapingFeatures.size) {
-            println("${addr.toHexString()} -> ${memGetByte(addr).toHexString()}")
         }
 
         return shapingFeatBf!!
