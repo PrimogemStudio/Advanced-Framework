@@ -154,29 +154,38 @@ class FreeTypeFont : Closeable {
         )
     }
 
-    fun shape(s: String): Pair<IntArray, Int> {
-        val buffer = hb_buffer_create()
-        hb_buffer_add_utf8(buffer, s, 0, -1)
-        hb_buffer_guess_segment_properties(buffer)
-        val direction = hb_buffer_get_direction(buffer)
+    var shapingFeatures: List<String> =
+        listOf("ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "cv30", "cv60", "cv61")
+        set(value) {
+            field = value
+            loadFeaturesToMem()
+        }
+    private var shapingFeatBf: ByteBuffer? = null
 
+    private fun loadFeaturesToMem(): ByteBuffer {
         val genF = { t: String -> HB_TAG(t[0].code, t[1].code, t[2].code, t[3].code) }
 
-        val enables =
-            arrayOf("ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "cv30", "cv60", "cv61")
-        val r = BufferUtils.createByteBuffer(16 * enables.size)
-        val add = memAddress(r)
+        shapingFeatBf = BufferUtils.createByteBuffer(16 * shapingFeatures.size)
+        val add = memAddress(shapingFeatBf!!)
 
         var off = 0
-        enables.forEach {
+        shapingFeatures.forEach {
             hb_feature_t.ntag(add + off, genF(it))
             hb_feature_t.nvalue(add + off, 1)
             hb_feature_t.nstart(add + off, HB_FEATURE_GLOBAL_START)
             hb_feature_t.nend(add + off, HB_FEATURE_GLOBAL_END)
             off += 16
         }
+        return shapingFeatBf!!
+    }
 
-        nhb_shape(hb_font, buffer, add, enables.size)
+    fun shape(s: String): Pair<IntArray, Int> {
+        val buffer = hb_buffer_create()
+        hb_buffer_add_utf8(buffer, s, 0, -1)
+        hb_buffer_guess_segment_properties(buffer)
+        val direction = hb_buffer_get_direction(buffer)
+
+        hb_shape(hb_font, buffer, hb_feature_t.Buffer(shapingFeatBf ?: loadFeaturesToMem()))
 
         val result: IntArray
         val count = hb_buffer_get_length(buffer)
