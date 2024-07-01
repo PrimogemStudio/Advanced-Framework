@@ -3,7 +3,7 @@ package com.primogemstudio.advancedfmk.mixin;
 import com.primogemstudio.advancedfmk.fontengine.BufferManager;
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Screen.class)
+@Mixin(TitleScreen.class)
 public class TitleScreenFontEngineMixin {
     @Unique
     private static final ComposedFont font = new ComposedFont();
