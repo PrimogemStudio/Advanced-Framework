@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.mixin;
 
 import com.primogemstudio.advancedfmk.fontengine.BufferManager;
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
+import com.primogemstudio.advancedfmk.render.kui.GlobalData;
 import com.primogemstudio.advancedfmk.render.kui.KUITest;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -25,6 +26,8 @@ public class TitleScreenFontEngineMixin {
 
     @Unique
     private static final KUITest test = new KUITest();
+    @Unique
+    private static boolean ui = true;
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
@@ -35,6 +38,9 @@ public class TitleScreenFontEngineMixin {
             return null;
         }, graphics, partialTick);
 
-        test.render(graphics);
+        long l = System.nanoTime();
+        test.render(GlobalData.genData(graphics, partialTick));
+        ui = !ui;
+        System.out.println((double) (System.nanoTime() - l) / 1000 / 1000);
     }
 }
