@@ -20,6 +20,7 @@ import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.newfont
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.onosx
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.textSwap
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.updateSize
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -31,6 +32,18 @@ object RendererConstraints {
     val textSwap = TextureTarget(1, 1, true, Util.getPlatform() == Util.OS.OSX)
     val onosx = Util.getPlatform() == Util.OS.OSX
     val newfont = ComposedFont()
+
+    var sizex = 0
+    var sizey = 0
+    fun updateSize(x: Int, y: Int) {
+        if (sizex != x || sizey != y) {
+            sizex = x
+            sizey = y
+
+            internalTarget.resize(x, y, onosx)
+            textSwap.resize(x, y, onosx)
+        }
+    }
 }
 
 abstract class UIObject(
@@ -40,7 +53,7 @@ abstract class UIObject(
         var type: String, var args: Map<String, Any> = mutableMapOf()
     ) {
         fun init(vars: GlobalVars) {
-            internalTarget.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
+            updateSize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt())
             internalTarget.setClearColor(0f, 0f, 0f, 0f)
             internalTarget.clear(onosx)
             internalTarget.bindWrite(true)
@@ -98,7 +111,7 @@ data class UITextLegacy(
     var text: String = "", var color: Vector4f = Vector4f(1f)
 ) : UIObject() {
     override fun render(vars: GlobalVars, guiGraphics: GuiGraphics) {
-        textSwap.resize(vars.screen_size.x.toInt() * 2, vars.screen_size.y.toInt() * 2, onosx)
+        updateSize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt())
         textSwap.setClearColor(0f, 0f, 0f, 0f)
         textSwap.clear(onosx)
         textSwap.bindWrite(true)

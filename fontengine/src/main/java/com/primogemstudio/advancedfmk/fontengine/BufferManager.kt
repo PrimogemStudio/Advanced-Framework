@@ -12,6 +12,9 @@ import net.minecraft.client.renderer.GameRenderer
 
 object BufferManager {
     val fontInternal = TextureTarget(1, 1, true, Util.getPlatform() == OS.OSX).apply { setClearColor(1f, 1f, 1f, 0f) }
+    var sizew = 0
+    var sizeh = 0
+
     fun updateBufferColor(color: Int) {
         fontInternal.setClearColor(
             color.shr(16).and(0xff).toFloat() / 255f,
@@ -23,11 +26,15 @@ object BufferManager {
 
     inline fun renderText(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float) {
         fontInternal.clear(Util.getPlatform() === OS.OSX)
-        fontInternal.resize(
-            Minecraft.getInstance().window.width * 4,
-            Minecraft.getInstance().window.height * 4,
-            Util.getPlatform() === OS.OSX
-        )
+        if (sizew != Minecraft.getInstance().window.width || sizeh != Minecraft.getInstance().window.height) {
+            sizew = Minecraft.getInstance().window.width
+            sizeh = Minecraft.getInstance().window.height
+            fontInternal.resize(
+                sizew * 4,
+                sizeh * 4,
+                Util.getPlatform() === OS.OSX
+            )
+        }
         fontInternal.bindWrite(true)
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
         val buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR)
