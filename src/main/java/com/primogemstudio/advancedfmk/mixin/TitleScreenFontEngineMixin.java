@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.mixin;
 
 import com.primogemstudio.advancedfmk.fontengine.BufferManager;
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
+import com.primogemstudio.advancedfmk.render.kui.KUITest;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.joml.Vector4f;
@@ -21,6 +22,9 @@ public class TitleScreenFontEngineMixin {
     private static final String TEXTTT = "*** -> <- |>";
     @Unique
     private static final String TEXT = "测试! *** -> |> Hello world from UICompositor!";
+
+    @Unique
+    private static final KUITest test = new KUITest();
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
@@ -30,5 +34,7 @@ public class TitleScreenFontEngineMixin {
             font.drawText(vertexConsumer, poseStack, TEXT, 0, 72, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
             return null;
         }, graphics, partialTick);
+
+        test.render(graphics);
     }
 }
