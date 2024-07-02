@@ -21,6 +21,7 @@ import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.onosx
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.textSwap
 import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.updateSize
+import com.primogemstudio.advancedfmk.render.uiframework.ui.RendererConstraints.updating
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -35,14 +36,16 @@ object RendererConstraints {
 
     var sizex = 0
     var sizey = 0
+    var updating = false
     fun updateSize(x: Int, y: Int) {
-        if (sizex != x || sizey != y) {
+        updating = if (sizex != x || sizey != y) {
             sizex = x
             sizey = y
 
             internalTarget.resize(x, y, onosx)
             textSwap.resize(x, y, onosx)
-        }
+            true
+        } else false
     }
 }
 
@@ -212,7 +215,7 @@ data class UICompound(
         }
 
         clip?.setClearColor(0f, 0f, 0f, 0f)
-        clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
+        if (updating) clip?.resize(vars.screen_size.x.toInt(), vars.screen_size.y.toInt(), onosx)
         clip?.clear(onosx)
         clip?.bindWrite(true)
 
