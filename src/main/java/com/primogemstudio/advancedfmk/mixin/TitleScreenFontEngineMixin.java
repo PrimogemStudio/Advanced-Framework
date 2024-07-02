@@ -26,21 +26,18 @@ public class TitleScreenFontEngineMixin {
 
     @Unique
     private static final KUITest test = new KUITest();
-    @Unique
-    private static boolean ui = true;
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         BufferManager.INSTANCE.updateBufferColor(0x00ffffff);
         BufferManager.INSTANCE.renderText((vertexConsumer, poseStack) -> {
-            font.drawText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
-            font.drawText(vertexConsumer, poseStack, TEXTTT, 0, 60, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
+            // font.drawText(vertexConsumer, poseStack, TEXTT, 0, 48, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
+            // font.drawText(vertexConsumer, poseStack, TEXTTT, 0, 60, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
             font.drawText(vertexConsumer, poseStack, TEXT, 0, 72, 9, new Vector4f(1f, 1f, 1f, 1f), 240);
             return null;
         }, graphics, partialTick);
 
-        long l = System.nanoTime();
+        // long l = System.nanoTime();
         test.render(GlobalData.genData(graphics, partialTick));
-        ui = !ui;
-        System.out.println((double) (System.nanoTime() - l) / 1000 / 1000);
+        // System.out.println((double) (System.nanoTime() - l) / 1000 / 1000);
     }
 }
