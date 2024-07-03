@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.fontengine.BufferManager;
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont;
 import com.primogemstudio.advancedfmk.render.kui.GlobalData;
 import com.primogemstudio.advancedfmk.render.kui.KUITest;
+import com.primogemstudio.advancedfmk.render.kui.elements.RealElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.joml.Vector4f;
@@ -38,6 +39,7 @@ public class TitleScreenFontEngineMixin {
 
         // long l = System.nanoTime();
         test.render(GlobalData.genData(graphics, partialTick));
+        ((RealElement) test.getElem().getSubElements().getFirst()).getPos().set(mouseX, mouseY);
         // System.out.println((double) (System.nanoTime() - l) / 1000 / 1000);
     }
 }

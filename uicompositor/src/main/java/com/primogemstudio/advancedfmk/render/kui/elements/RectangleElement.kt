@@ -20,7 +20,7 @@ class RectangleElement(
     var smoothedge: Float,
     var texturePath: ResourceLocation? = null
 ) : RealElement(pos) {
-    private val avg = { a: Float, b: Float -> (a + b) / 2 }
+    private val avg = { a: Float, b: Float -> a + b / 2 }
     override fun render(data: GlobalData) {
         val shader = if (texturePath != null) Shaders.ROUNDED_RECT_TEX else Shaders.ROUNDED_RECT
         texturePath?.also { RenderSystem.setShaderTexture(0, it) }
