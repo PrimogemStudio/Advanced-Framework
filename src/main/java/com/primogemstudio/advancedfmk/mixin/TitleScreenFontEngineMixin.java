@@ -39,7 +39,7 @@ public class TitleScreenFontEngineMixin {
 
         // long l = System.nanoTime();
         test.render(GlobalData.genData(graphics, partialTick));
-        ((RealElement) test.getElem().getSubElements().getFirst()).getPos().set(mouseX, mouseY);
+        ((RealElement) test.getElem().getSubElements().getFirst()).getPos().set(mouseX - 50, mouseY - 50);
         // System.out.println((double) (System.nanoTime() - l) / 1000 / 1000);
     }
 }
