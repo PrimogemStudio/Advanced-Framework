@@ -17,6 +17,8 @@ class ComposedFont {
         DefaultFont.ARABIC
     )
 
+    private val shapingCache = mutableMapOf<String, Array<Pair<CharGlyph, Vector2f>>>()
+
     init {
         for (c in 0..128) {
             for (it in fontStack) {
@@ -48,6 +50,7 @@ class ComposedFont {
     @Suppress("UNCHECKED_CAST")
     fun fetchGlyphs(text: String, shape: Boolean = true): Array<Pair<CharGlyph, Vector2f>> {
         if (shape) {
+            if (shapingCache.contains(text)) return shapingCache[text]!!
             var result: Array<Pair<Int, Vector2f>>? = null
             var fnts: Array<FreeTypeFont>? = null
             fontStack.forEach { f ->
@@ -65,7 +68,7 @@ class ComposedFont {
             }
 
             var idx = 0
-            return result?.map {
+            return (result?.map {
                 idx++
                 Pair(
                     characterMap[it.first.toChar(), fnts?.get(idx - 1)!!, true] ?: loadChar(
@@ -75,7 +78,8 @@ class ComposedFont {
                     ),
                     it.second
                 )
-            }?.filter { it.first != null }?.toTypedArray() as Array<Pair<CharGlyph, Vector2f>>
+            }?.filter { it.first != null }
+                ?.toTypedArray() as Array<Pair<CharGlyph, Vector2f>>).apply { shapingCache[text] = this }
         } else return text.mapNotNull { characterMap[it, fontStack] ?: loadChar(it) }.map { Pair(it, Vector2f(0f)) }
             .toTypedArray()
     }
