@@ -8,7 +8,7 @@ import org.ladysnake.satin.api.managed.ShaderEffectManager
 
 object Shaders {
     val defaultClip = TextureTarget(1, 1, true, Util.getPlatform() == OS.OSX).apply {
-        setClearColor(1f, 1f, 1f, 0f)
+        setClearColor(1f, 1f, 1f, 1f)
         clear(Util.getPlatform() == OS.OSX)
     }
 

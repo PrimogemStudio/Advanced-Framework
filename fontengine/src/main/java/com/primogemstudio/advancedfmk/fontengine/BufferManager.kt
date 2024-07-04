@@ -4,6 +4,7 @@ import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import com.primogemstudio.advancedfmk.fontengine.Shaders.TEXT_BLUR
+import com.primogemstudio.advancedfmk.fontengine.Shaders.defaultClip
 import net.minecraft.Util
 import net.minecraft.Util.OS
 import net.minecraft.client.Minecraft
@@ -50,6 +51,7 @@ object BufferManager {
         RenderSystem.enableCull()
         RenderSystem.disableBlend()
         TEXT_BLUR.setSamplerUniform("BaseLayer", fontInternal)
+        TEXT_BLUR.setSamplerUniform("ClipSampler", defaultClip)
         TEXT_BLUR.render(partialTick)
     }
 }
