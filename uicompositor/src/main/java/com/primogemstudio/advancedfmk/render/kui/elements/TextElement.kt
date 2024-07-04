@@ -18,21 +18,21 @@ class TextElement(
     var vanilla: Boolean = false
 ) : RealElement(pos) {
     override fun render(data: GlobalData) {
+        val c = (color.x * 255).toInt().and(0xFF).shl(16) +
+                (color.y * 255).toInt().and(0xFF).shl(8) +
+                (color.z * 255).toInt().and(0xFF)
         if (vanilla) {
             data.graphics.drawString(
                 Minecraft.getInstance().font,
                 text,
                 pos.x.toInt(),
                 pos.y.toInt(),
-                (color.w * 255).toInt().and(0xFF).shl(24)
-                        + (color.x * 255).toInt().and(0xFF).shl(16)
-                        + (color.y * 255).toInt().and(0xFF).shl(8)
-                        + (color.z * 255).toInt().and(0xFF)
+                c + (color.w * 255).toInt().and(0xFF).shl(24)
             )
             return
         }
 
-        updateBufferColor(0x00ffffff)
+        updateBufferColor(c)
         renderText({ vertexConsumer, poseStack ->
             FONT.drawText(
                 vertexConsumer,

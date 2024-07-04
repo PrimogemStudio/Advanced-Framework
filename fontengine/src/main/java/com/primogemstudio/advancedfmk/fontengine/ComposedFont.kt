@@ -114,6 +114,7 @@ class ComposedFont {
         val siz = point.toFloat() / 12f
         var currY = y
         var currentLineH = 0
+        poseStack.pushPose()
         fetchGlyphs(text).forEach {
             currentLineH = max(currentLineH, (it.first.dimension.y * siz).toInt())
             if (maxLineWidth > 0 && it.second.y == 0f && currOffset + (it.first.dimension.x * siz).toInt() - x > maxLineWidth) {
@@ -123,17 +124,16 @@ class ComposedFont {
             }
             for (idx in it.first.indices) {
                 val v = it.first.vertices[idx]
-                poseStack.pushPose()
                 buff.addVertex(
                     poseStack.last().pose(),
                     (v.x + it.second.x) * it.first.dimension.x * siz + currOffset,
                     (v.y - it.second.y) * it.first.dimension.y * siz + currY,
                     0f
                 ).setColor(textColor.x, textColor.y, textColor.z, textColor.w)
-                poseStack.popPose()
             }
             if (it.second.y == 0f) currOffset += (it.first.dimension.x * siz).toInt()
         }
+        poseStack.popPose()
     }
 
     fun getTextBorder(text: String, point: Int, maxLineWidth: Int = -1): Vector2f {

@@ -29,7 +29,6 @@ class KUITest {
     )
 
     fun render(gd: GlobalData) {
-        // gd.graphics.drawString(Minecraft.getInstance().font, "Hello world, KUI!", 0, 0, 0xffffff)
         elem.render(gd)
     }
 }
