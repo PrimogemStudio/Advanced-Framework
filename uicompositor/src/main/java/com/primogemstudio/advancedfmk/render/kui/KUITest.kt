@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.render.kui
 
 import com.primogemstudio.advancedfmk.render.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.render.kui.elements.RectangleElement
+import com.primogemstudio.advancedfmk.render.kui.elements.TextElement
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -17,6 +18,12 @@ class KUITest {
                 0f,
                 0.006f,
                 ResourceLocation.parse("advancedfmk:ui/textures/microsoft.png")
+            ),
+            TextElement(
+                Vector2f(0f, 0f),
+                "测试！Hello world from UI compositor!",
+                Vector4f(1f),
+                9
             )
         )
     )
