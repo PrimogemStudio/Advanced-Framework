@@ -23,8 +23,7 @@ class KUITest {
                 Vector2f(0f, 0f),
                 "测试！Hello world from UI compositor!",
                 Vector4f(1f),
-                9,
-                true
+                9
             )
         )
     )
