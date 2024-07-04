@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.fontengine.BufferManager.renderText
 import com.primogemstudio.advancedfmk.fontengine.BufferManager.updateBufferColor
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont
 import com.primogemstudio.advancedfmk.render.kui.GlobalData
+import net.minecraft.client.Minecraft
 import org.joml.Vector2f
 import org.joml.Vector4f
 
@@ -13,9 +14,24 @@ class TextElement(
     override var pos: Vector2f,
     var text: String,
     var color: Vector4f,
-    var textsize: Int
+    var textsize: Int,
+    var vanilla: Boolean = false
 ) : RealElement(pos) {
     override fun render(data: GlobalData) {
+        if (vanilla) {
+            data.graphics.drawString(
+                Minecraft.getInstance().font,
+                text,
+                pos.x.toInt(),
+                pos.y.toInt(),
+                (color.w * 255).toInt().and(0xFF).shl(24)
+                        + (color.x * 255).toInt().and(0xFF).shl(16)
+                        + (color.y * 255).toInt().and(0xFF).shl(8)
+                        + (color.z * 255).toInt().and(0xFF)
+            )
+            return
+        }
+
         updateBufferColor(0x00ffffff)
         renderText({ vertexConsumer, poseStack ->
             FONT.drawText(
@@ -25,8 +41,7 @@ class TextElement(
                 pos.x.toInt(),
                 pos.y.toInt(),
                 textsize,
-                color,
-                240
+                color
             )
         }, data.graphics, data.tick)
     }
