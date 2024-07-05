@@ -13,7 +13,7 @@ class KUITest {
             RectangleElement(
                 Vector2f(0f, 0f),
                 Vector2f(100f, 100f),
-                Vector4f(1f),
+                Vector4f(1f, 1f, 1f, 0.25f),
                 20f,
                 0f,
                 0.006f,
