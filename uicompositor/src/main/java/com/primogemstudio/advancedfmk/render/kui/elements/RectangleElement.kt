@@ -7,8 +7,7 @@ import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.render.Shaders
 import com.primogemstudio.advancedfmk.render.kui.GlobalData
-import com.primogemstudio.advancedfmk.render.kui.pipe.COMPOSE_FRAME
-import com.primogemstudio.advancedfmk.render.kui.pipe.IS_OSX
+import com.primogemstudio.advancedfmk.render.kui.pipe.FilterBase
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -20,15 +19,17 @@ class RectangleElement(
     var radius: Float,
     var thickness: Float,
     var smoothedge: Float,
-    var texturePath: ResourceLocation? = null
-) : RealElement(pos) {
+    var texturePath: ResourceLocation? = null,
+    var filter: FilterBase? = null
+) : RealElement(pos), FilteredElement {
     init {
-        Shaders.GAUSSIAN_BLUR.setUniformValue("Radius", 16)
-        Shaders.GAUSSIAN_BLUR.setUniformValue("DigType", 0)
+        filter?.arg("Radius", 16)
+        filter?.arg("DigType", 0)
     }
+
+    override fun filter(): FilterBase? = filter
     override fun render(data: GlobalData) {
-        COMPOSE_FRAME.clear(IS_OSX)
-        COMPOSE_FRAME.bindWrite(true)
+        filter?.init()
 
         val shader = if (texturePath != null) Shaders.ROUNDED_RECT_TEX else Shaders.ROUNDED_RECT
         texturePath?.also { RenderSystem.setShaderTexture(0, it) }
@@ -73,7 +74,6 @@ class RectangleElement(
         BufferUploader.drawWithShader(buff.build()!!)
         RenderSystem.enableBlend()
 
-        Shaders.GAUSSIAN_BLUR.setSamplerUniform("InputSampler", COMPOSE_FRAME)
-        Shaders.GAUSSIAN_BLUR.render(data.tick)
+        filter?.apply(data)
     }
 }
