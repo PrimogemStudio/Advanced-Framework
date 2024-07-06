@@ -1,19 +1,11 @@
 {
   "targets": [
-    "temp",
     "swap"
   ],
   "passes": [
     {
       "name": "gaussian_blur",
       "intarget": "minecraft:main",
-      "outtarget": "temp",
-      "uniforms": [
-      ]
-    },
-    {
-      "name": "gaussian_blur",
-      "intarget": "temp",
       "outtarget": "swap",
       "uniforms": [
       ]

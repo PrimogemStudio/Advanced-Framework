@@ -22,11 +22,6 @@ class RectangleElement(
     var texturePath: ResourceLocation? = null,
     var filter: FilterBase? = null
 ) : RealElement(pos), FilteredElement {
-    init {
-        filter?.arg("Radius", 16)
-        filter?.arg("DigType", 0)
-    }
-
     override fun filter(): FilterBase? = filter
     override fun render(data: GlobalData) {
         filter?.init()
@@ -74,6 +69,7 @@ class RectangleElement(
         BufferUploader.drawWithShader(buff.build()!!)
         RenderSystem.enableBlend()
 
+        filter?.arg("Radius", 16)
         filter?.apply(data)
     }
 }

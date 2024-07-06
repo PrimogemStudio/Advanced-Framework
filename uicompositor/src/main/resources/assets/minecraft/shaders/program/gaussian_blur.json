@@ -85,6 +85,14 @@
       "values": [
         0
       ]
+    },
+    {
+      "name": "NoiseStrength",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.0625
+      ]
     }
   ]
 }
