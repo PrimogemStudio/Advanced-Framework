@@ -32,7 +32,7 @@ public class TitleScreenKUIMixin {
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        test.render(GlobalData.genData(graphics, partialTick));
+        test.getElem().render(GlobalData.genData(graphics, partialTick));
         mx = mouseX;
         my = mouseY;
     }

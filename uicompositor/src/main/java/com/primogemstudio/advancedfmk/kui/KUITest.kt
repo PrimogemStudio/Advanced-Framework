@@ -33,8 +33,4 @@ class KUITest {
             )
         )
     )
-
-    fun render(gd: GlobalData) {
-        elem.render(gd)
-    }
 }
