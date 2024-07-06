@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.render
+package com.primogemstudio.advancedfmk.kui
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat

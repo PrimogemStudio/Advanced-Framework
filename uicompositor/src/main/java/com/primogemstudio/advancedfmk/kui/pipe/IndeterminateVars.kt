@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.render.kui.pipe
+package com.primogemstudio.advancedfmk.kui.pipe
 
 import com.mojang.blaze3d.pipeline.TextureTarget
 import net.minecraft.Util

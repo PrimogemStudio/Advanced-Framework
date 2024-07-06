@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedfmk.render.kui.elements
+package com.primogemstudio.advancedfmk.kui.elements
 
-import com.primogemstudio.advancedfmk.render.kui.GlobalData
+import com.primogemstudio.advancedfmk.kui.GlobalData
 
 class GroupElement(var subElements: List<UIElement>) : UIElement {
     override fun render(data: GlobalData) {

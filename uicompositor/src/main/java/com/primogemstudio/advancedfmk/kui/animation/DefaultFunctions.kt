@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.render.uiframework.animation
+package com.primogemstudio.advancedfmk.kui.animation
 
 import kotlin.math.*
 

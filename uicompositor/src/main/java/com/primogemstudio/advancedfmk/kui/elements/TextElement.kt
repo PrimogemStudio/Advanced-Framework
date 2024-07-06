@@ -1,9 +1,9 @@
-package com.primogemstudio.advancedfmk.render.kui.elements
+package com.primogemstudio.advancedfmk.kui.elements
 
 import com.primogemstudio.advancedfmk.fontengine.BufferManager.renderText
 import com.primogemstudio.advancedfmk.fontengine.BufferManager.updateBufferColor
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont
-import com.primogemstudio.advancedfmk.render.kui.GlobalData
+import com.primogemstudio.advancedfmk.kui.GlobalData
 import net.minecraft.client.Minecraft
 import org.joml.Vector2f
 import org.joml.Vector4f

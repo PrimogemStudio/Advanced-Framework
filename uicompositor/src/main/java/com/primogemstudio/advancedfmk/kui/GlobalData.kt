@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.render.kui
+package com.primogemstudio.advancedfmk.kui
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics

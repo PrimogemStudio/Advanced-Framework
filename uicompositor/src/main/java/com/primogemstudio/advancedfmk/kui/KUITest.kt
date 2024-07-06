@@ -1,9 +1,9 @@
-package com.primogemstudio.advancedfmk.render.kui
+package com.primogemstudio.advancedfmk.kui
 
-import com.primogemstudio.advancedfmk.render.kui.elements.GroupElement
-import com.primogemstudio.advancedfmk.render.kui.elements.RectangleElement
-import com.primogemstudio.advancedfmk.render.kui.elements.TextElement
-import com.primogemstudio.advancedfmk.render.kui.pipe.PostShaderFilter
+import com.primogemstudio.advancedfmk.kui.elements.GroupElement
+import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
+import com.primogemstudio.advancedfmk.kui.elements.TextElement
+import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f

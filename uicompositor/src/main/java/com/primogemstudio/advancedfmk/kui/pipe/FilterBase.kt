@@ -1,6 +1,6 @@
-package com.primogemstudio.advancedfmk.render.kui.pipe
+package com.primogemstudio.advancedfmk.kui.pipe
 
-import com.primogemstudio.advancedfmk.render.kui.GlobalData
+import com.primogemstudio.advancedfmk.kui.GlobalData
 
 interface FilterBase {
     fun init()

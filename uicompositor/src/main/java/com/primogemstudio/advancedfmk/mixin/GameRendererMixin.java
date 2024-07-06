@@ -1,18 +1,16 @@
 package com.primogemstudio.advancedfmk.mixin;
 
-import com.primogemstudio.advancedfmk.render.uiframework.ui.GlobalVarsKt;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import org.joml.Vector2f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.primogemstudio.advancedfmk.render.kui.pipe.IndeterminateVarsKt.composeFrame;
+import static com.primogemstudio.advancedfmk.kui.pipe.IndeterminateVarsKt.composeFrame;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -21,9 +19,6 @@ public class GameRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/gui/GuiGraphics;<init>(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V"))
     private void preRender(DeltaTracker deltaTracker, boolean bl, CallbackInfo ci) {
-        GlobalVarsKt.getData().setScreen_size(new Vector2f(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight()));
-        GlobalVarsKt.getData().setTick(deltaTracker.getGameTimeDeltaPartialTick(false));
-
         int w = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int h = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 

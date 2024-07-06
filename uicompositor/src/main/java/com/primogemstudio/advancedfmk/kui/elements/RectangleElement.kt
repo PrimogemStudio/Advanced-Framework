@@ -1,13 +1,13 @@
-package com.primogemstudio.advancedfmk.render.kui.elements
+package com.primogemstudio.advancedfmk.kui.elements
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
-import com.primogemstudio.advancedfmk.render.Shaders
-import com.primogemstudio.advancedfmk.render.kui.GlobalData
-import com.primogemstudio.advancedfmk.render.kui.pipe.FilterBase
+import com.primogemstudio.advancedfmk.kui.GlobalData
+import com.primogemstudio.advancedfmk.kui.Shaders
+import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f

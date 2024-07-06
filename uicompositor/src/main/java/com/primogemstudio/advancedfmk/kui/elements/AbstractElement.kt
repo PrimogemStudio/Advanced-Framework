@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.render.kui.elements
+package com.primogemstudio.advancedfmk.kui.elements
 
 import org.joml.Vector2f
 
