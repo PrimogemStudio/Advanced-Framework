@@ -37,8 +37,6 @@ dependencies {
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}")
-    api implementation("org.luaj:luaj-jse:${project.luaj_version}")
-    api implementation("org.apache.bcel:bcel:${bcel_version}")
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
     implementation(project(path: ':fontengine', configuration: "namedElements"))
 }
