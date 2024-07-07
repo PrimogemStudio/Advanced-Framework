@@ -1,14 +1,16 @@
 grammar QML;
 
-class : 'class';
-
+root : object+ ;
+object : NAME object_part ;
+object_part: '{' litr '}';
 litr : NUMBER | STR;
 
-STR  : '"' .*? '"';
+STR : '"' .*? '"';
+NAME : [a-zA-Z0-9_$]+;
 
-NUMBER : [0-9]+ | [0-9] + '.' + [0-9]+ ;
+NUMBER : [0-9]+ | '0x' [0-9]+ | [0-9] + '.' + [0-9]+ ;
 
-LINEGAP  : [ \t\r\n]+ -> skip;
+LINEGAP : [ \t\r\n]+ -> skip;
 
 COMMENT : '//' .*? '\n' -> channel(HIDDEN);
 COMMENT_MULTI : '/*' .*? '*/' -> channel(HIDDEN);
