@@ -88,7 +88,7 @@ dependencies {
 //    modRuntimeOnly "maven.modrinth:iris:${project.iris_version}"
     runtimeOnly "org.anarres:jcpp:${project.jcpp_version}"
     runtimeOnly "io.github.douira:glsl-transformer:${project.glsl_transformer_version}"
-    runtimeOnly "org.antlr:antlr4-runtime:${project.antlr4_runtime_version}"
+    include(implementation("org.antlr:antlr4-runtime:${project.antlr4_runtime_version}"))
 
     include "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
     include "org.jetbrains.kotlin:kotlin-reflect:${project.kotlin_version}"

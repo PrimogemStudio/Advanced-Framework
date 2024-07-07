@@ -34,3 +34,7 @@ class KUITest {
         )
     )
 }
+
+fun main() {
+
+}

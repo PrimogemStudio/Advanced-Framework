@@ -39,6 +39,7 @@ dependencies {
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}")
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
     implementation(project(path: ':fontengine', configuration: "namedElements"))
+    implementation("org.antlr:antlr4-runtime:${project.antlr4_runtime_version}")
 }
 
 test {
