@@ -1,8 +1,9 @@
 grammar QML;
 
 root : object+ ;
-object : NAME object_part ;
-object_part: '{' litr '}';
+object : NAME object_part+ ;
+object_part: '{' object_partin+ '}' | '{' '}';
+object_partin: NAME ':' litr | object;
 litr : NUMBER | STR;
 
 STR : '"' .*? '"';
