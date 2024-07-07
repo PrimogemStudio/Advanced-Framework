@@ -54,9 +54,9 @@ vec4 blur_dig2(int samples) {
 }
 
 float random(vec2 st) {
-    return fract(sin(dot(st.xy,
+    return (fract(sin(dot(st.xy,
     vec2(12.9898,78.233)))*
-    43758.5453123) - 0.5;
+    43758.5453123) - 0.5) * 2;
 }
 
 void main() {
@@ -69,7 +69,7 @@ void main() {
     }
 
     fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a);
-    fragColor.x += random(texCoord) * NoiseStrength;
-    fragColor.y += random(texCoord) * NoiseStrength;
-    fragColor.z += random(texCoord) * NoiseStrength;
+    fragColor.x += random(dst.xy * 0.03125 * texCoord) * NoiseStrength;
+    fragColor.y += random(dst.xz * 0.03125 * texCoord) * NoiseStrength;
+    fragColor.z += random(dst.yz * 0.03125 * texCoord) * NoiseStrength;
 }
