@@ -1,65 +1,59 @@
+/*******************************************************************************
+ * Copyright (c) 2015 QNX Software Systems
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 grammar QML;
 
-root: number | primitive | imp_call;
+import ECMAScript;
 
-number: INT | FLOAT | BOOL;
+qmlProgram
+	: qmlHeaderItem* qmlObjectRoot EOF
+	;
 
-ver_part: number | number '.';
-ver: ver_part+;
+qmlHeaderItem
+	: qmlImportDeclaration
+	| qmlPragmaDeclaration
+	;
 
-imp_call: 'import ' obj_call ' ' ver;
+qmlImportDeclaration
+	: 'import' qmlQualifiedId DecimalLiteral ('as' Identifier)? ';'?
+	| 'import' StringLiteral DecimalLiteral? ('as' Identifier)? ';'?
+	| 'import' qmlQualifiedId ('as' Identifier)? ';'?
+	| 'import' StringLiteral ('as' Identifier)? ';'?
+	;
 
-obj_call_pth: OBJECT | OBJECT '.';
-obj_call: obj_call_pth+;
-obj_call_arg: primitive | primitive ',';
-obj_call_args: obj_call_arg+;
-obj_argcall: obj_call '(' ')' | obj_call '(' obj_call_args ')';
+qmlQualifiedId
+	: Identifier ('.' Identifier)*
+	;
 
-blk_code: '{' '}' | '{' primitive '}';
+qmlPragmaDeclaration
+	: 'pragma' Identifier ';'?
+	;
 
-primitive
-    : number
-    | STR
-    | obj_argcall
-    | obj_call
-    | primitive EQU primitive
-    | primitive EQU_IND primitive
-    | primitive BIGGER primitive
-    | primitive SMALLER primitive
-    | primitive NSMALLER primitive
-    | primitive NBIGGER primitive
-    | primitive AND primitive
-    | primitive BAND primitive
-    | primitive OR primitive
-    | primitive BOR primitive
-    | NOR primitive
-    | BNOR primitive
-    | primitive INLINE_IF_ST primitive INLINE_IF_ED primitive;
+qmlObjectRoot
+	: qmlObjectLiteral?
+	;
 
-GAP: [ \t\r\n] -> skip;
+qmlObjectLiteral
+	: qmlQualifiedId qmlMembers 
+	;
 
-INT: [0-9]+ | '0x' [0-9a-fA-F]+;
-FLOAT: [0-9]+ '.' [0-9]+;
-BOOL: 'true' | 'false';
-EQU: '==';
-EQU_IND: '===';
-BIGGER: '>';
-SMALLER: '<';
-NSMALLER: '>=';
-NBIGGER: '<=';
+qmlMembers
+	: '{' qmlMember* '}'
+	;
 
-AND: '&&';
-BAND: '&';
-OR: '||';
-BOR: '|';
-NOR: '!';
-BNOR: '~';
+qmlMember
+	: qmlQualifiedId ':' singleExpression
+	| qmlObjectLiteral
+	| 'readonly'? 'property' qmlPropertyType Identifier (':' singleExpression)?
+	| functionDeclaration
+	;
 
-INLINE_IF_ST: '?';
-INLINE_IF_ED: ':';
 
-STR: '"' .*? '"';
-OBJECT: [0-9A-Za-z]+;
-
-COMMENT: '//' .*? '\n' -> channel(HIDDEN);
-COMMENT_MULTI: '/*' .*? '*/' -> channel(HIDDEN);
+qmlPropertyType
+	: Identifier // TODO
+	| 'var'
+	;
