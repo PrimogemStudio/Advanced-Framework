@@ -4,7 +4,11 @@ import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
+import com.primogemstudio.advancedfmk.kui.qml.parser.QMLLexer
+import com.primogemstudio.advancedfmk.kui.qml.parser.QMLParser
 import net.minecraft.resources.ResourceLocation
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
 import org.joml.Vector2f
 import org.joml.Vector4f
 import org.ladysnake.satin.api.managed.ShaderEffectManager
@@ -33,4 +37,9 @@ class KUITest {
             )
         )
     )
+}
+
+fun main() {
+    val parser = QMLParser(CommonTokenStream(QMLLexer(CharStreams.fromString("import QtQuick 2.0\nRectangle { }"))))
+    println(parser.program().toStringTree())
 }
