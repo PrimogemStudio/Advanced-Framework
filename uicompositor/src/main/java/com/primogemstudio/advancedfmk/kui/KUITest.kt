@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
+import com.primogemstudio.advancedfmk.kui.qml.ast.QMLMainVisitor
 import com.primogemstudio.advancedfmk.kui.qml.parser.QMLLexer
 import com.primogemstudio.advancedfmk.kui.qml.parser.QMLParser
 import net.minecraft.resources.ResourceLocation
@@ -58,15 +59,7 @@ fun main() {
             )
         )
     val prg = parser.program()
-    prg.import_().forEach { println(it.toStringTree()) }
-    println(
-        prg.rootMember().objectDefinition().objectInitializer().objectMember(0).scriptStatement().expressionStatement()
-            .expression().assignmentExpression().conditionalExpression().logicalORExpression().logicalANDExpression()
-            .bitwiseORExpression().bitwiseXORExpression().bitwiseANDExpression().equalityExpression()
-            .relationalExpression().shiftExpression().additiveExpression().multiplicativeExpression().unaryExpression()
-            .postfixExpression().leftHandSideExpression().newExpression().memberExpression().primaryExpression()
-            .NumericLiteral()
-    )
+    QMLMainVisitor().visit(prg)
 
     val cn = ClassNode()
     cn.access = ACC_PUBLIC
