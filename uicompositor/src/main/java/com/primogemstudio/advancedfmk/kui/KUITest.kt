@@ -45,8 +45,28 @@ class KUITest {
 
 fun main() {
     val parser =
-        QMLParser(CommonTokenStream(QMLLexer(CharStreams.fromString("import QtQuick 2.0\nRectangle { color = \"cyan\" }"))))
-    println(parser.program().toStringTree())
+        QMLParser(
+            CommonTokenStream(
+                QMLLexer(
+                    CharStreams.fromString(
+                        String(
+                            KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.qml")!!
+                                .readAllBytes()
+                        )
+                    )
+                )
+            )
+        )
+    val prg = parser.program()
+    prg.import_().forEach { println(it.toStringTree()) }
+    println(
+        prg.rootMember().objectDefinition().objectInitializer().objectMember(0).scriptStatement().expressionStatement()
+            .expression().assignmentExpression().conditionalExpression().logicalORExpression().logicalANDExpression()
+            .bitwiseORExpression().bitwiseXORExpression().bitwiseANDExpression().equalityExpression()
+            .relationalExpression().shiftExpression().additiveExpression().multiplicativeExpression().unaryExpression()
+            .postfixExpression().leftHandSideExpression().newExpression().memberExpression().primaryExpression()
+            .NumericLiteral()
+    )
 
     val cn = ClassNode()
     cn.access = ACC_PUBLIC
