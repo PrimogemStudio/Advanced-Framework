@@ -12,6 +12,12 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.joml.Vector2f
 import org.joml.Vector4f
 import org.ladysnake.satin.api.managed.ShaderEffectManager
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.Opcodes.*
+import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.tree.MethodNode
+import java.nio.file.Files
+import java.nio.file.Path
 
 class KUITest {
     val elem = GroupElement(
@@ -42,4 +48,56 @@ class KUITest {
 fun main() {
     val parser = QMLParser(CommonTokenStream(QMLLexer(CharStreams.fromString("import QtQuick 2.0\nRectangle { }"))))
     println(parser.program().toStringTree())
+
+    /*ClassNode cn = new ClassNode();
+        cn.version = V1_5;
+        cn.access = ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE;
+        cn.name = "pkg/Comparable";
+        cn.superName = "java/lang/Object";
+        cn.interfaces.add("pkg/Mesurable");
+        cn.fields.add(new FieldNode(ACC_PUBLIC + ACC_FINAL + ACC_STATIC,
+                "LESS", "Ljava/lang/String;", null, "sss"));
+        cn.fields.add(new FieldNode(ACC_PUBLIC + ACC_FINAL + ACC_STATIC,
+                "EQUAL", "I", null, new Integer(0)));
+        cn.fields.add(new FieldNode(ACC_PUBLIC + ACC_FINAL + ACC_STATIC,
+                "GREATER", "I", null, new Integer(1)));
+        cn.methods.add(new MethodNode(ACC_PUBLIC + ACC_ABSTRACT,
+                "compareTo", "(Ljava/lang/Object;)I", null, null));
+        ClassWriter cw=new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cn.accept(cw);*/
+
+    val cn = ClassNode()
+    cn.access = ACC_PUBLIC
+    cn.version = 61
+    cn.name = "com/primogemstudio/advancedfmk/kui/Dyn"
+    cn.superName = "java/lang/Object"
+
+    val mn = MethodNode(
+        ACC_PUBLIC or ACC_STATIC,
+        "test", "()V", null, null
+    )
+    mn.visitCode()
+    mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
+    mn.visitLdcInsn("Test")
+    mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
+    mn.visitInsn(RETURN)
+    mn.visitEnd()
+    cn.methods.add(mn)
+
+    val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
+    cn.accept(cw)
+
+    val cld = MyClassLoader()
+    val c = cld.defineClass("com.primogemstudio.advancedfmk.kui.Dyn", cw.toByteArray())
+
+    Files.write(Path.of("/home/coder2/Test.class"), cw.toByteArray())
+
+    val r = c.getMethod("test")
+    r.invoke(null)
+}
+
+class MyClassLoader : ClassLoader() {
+    fun defineClass(name: String, b: ByteArray): Class<*> {
+        return super.defineClass(name, b, 0, b.size)
+    }
 }
