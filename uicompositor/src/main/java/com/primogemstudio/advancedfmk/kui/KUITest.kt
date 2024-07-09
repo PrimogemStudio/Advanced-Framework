@@ -68,19 +68,37 @@ fun main() {
 
     val cn = ClassNode()
     cn.access = ACC_PUBLIC
-    cn.version = 61
+    cn.version = V21
     cn.name = "com/primogemstudio/advancedfmk/kui/Dyn"
     cn.superName = "java/lang/Object"
+    cn.sourceFile = "test.qml"
+
+    val mnc = MethodNode(
+        ACC_PUBLIC,
+        "<init>", "()V", null, null
+    )
+    mnc.visitCode()
+    mnc.visitVarInsn(ALOAD, 0)
+    mnc.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
+    mnc.visitInsn(RETURN)
+    mnc.visitEnd()
+    cn.methods.add(mnc)
 
     val mn = MethodNode(
-        ACC_PUBLIC or ACC_STATIC,
-        "test", "()V", null, null
+        ACC_PUBLIC,
+        "test", "()V", null, arrayOf("java/lang/Exception")
     )
     mn.visitCode()
     mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
     mn.visitLdcInsn("Test")
     mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
-    mn.visitInsn(RETURN)
+
+    mn.visitTypeInsn(NEW, "java/lang/Exception")
+    mn.visitInsn(DUP)
+    mn.visitLdcInsn("This is a generated exception")
+    mn.visitMethodInsn(INVOKESPECIAL, "java/lang/Exception", "<init>", "(Ljava/lang/String;)V", false)
+    mn.visitInsn(ATHROW)
+
     mn.visitEnd()
     cn.methods.add(mn)
 
@@ -90,10 +108,12 @@ fun main() {
     val cld = MyClassLoader()
     val c = cld.defineClass("com.primogemstudio.advancedfmk.kui.Dyn", cw.toByteArray())
 
-    Files.write(Path.of("/home/coder2/Test.class"), cw.toByteArray())
+    Files.write(Path.of("/home/coder2/Advanced-Framework/Test.class"), cw.toByteArray())
 
     val r = c.getMethod("test")
-    r.invoke(null)
+    val cs = c.getConstructor()
+    val ins = cs.newInstance()
+    r.invoke(ins)
 }
 
 class MyClassLoader : ClassLoader() {
