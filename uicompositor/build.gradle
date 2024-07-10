@@ -41,7 +41,6 @@ dependencies {
     implementation(project(path: ':fontengine', configuration: "namedElements"))
     implementation("org.antlr:antlr4-runtime:${project.antlr4_runtime_version}")
 
-    implementation("org.graalvm.sdk:graal-sdk:${project.graalvm_version}")
     implementation("org.graalvm.js:js:${project.graalvm_version}")
     implementation("org.graalvm.js:js-scriptengine:${project.graalvm_version}")
 }

@@ -54,5 +54,6 @@ fun main() {
     jsEngine.eval(FileReader(jsResource?.path ?: ""))
 
     val res = funcCall.invokeFunction("f", mutableMapOf(Pair("a", "abc")))
-    println(res)
+    res as Map<*, *>
+    println((res["msg"] as Map<*, *>)["a"])
 }
