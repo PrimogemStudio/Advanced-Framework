@@ -59,7 +59,8 @@ fun main() {
             )
         )
     val prg = parser.program()
-    QMLMainVisitor().visit(prg)
+    val r0 = QMLMainVisitor().visit(prg)
+    println(r0)
 
     val cn = ClassNode()
     cn.access = ACC_PUBLIC

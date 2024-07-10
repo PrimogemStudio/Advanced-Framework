@@ -3,6 +3,9 @@ package com.primogemstudio.advancedfmk.kui.qml.ast
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.AstNop
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.AstObject
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.AstRoot
+import com.primogemstudio.advancedfmk.kui.qml.ast.node.expr.Assign
+import com.primogemstudio.advancedfmk.kui.qml.ast.node.expr.AstExprAssign
+import com.primogemstudio.advancedfmk.kui.qml.ast.node.expr.AstExprBase
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.imp.AstImport
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.imp.AstImports
 import com.primogemstudio.advancedfmk.kui.qml.ast.node.instance.AstInstance
@@ -54,9 +57,158 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
 
     override fun visitObjectMember(ctx: QMLParser.ObjectMemberContext): AstInstanceInit {
         return AstInstanceInit(
-            ctx.qualifiedId(0).text
+            if (ctx.propertyType() != null) ctx.JsIdentifier().text else ctx.qualifiedId(0).text,
+            if (ctx.propertyType() != null) ctx.propertyType().JsIdentifier().text else null,
+            visitScriptStatement(ctx.scriptStatement())
         )
     }
+
+    override fun visitScriptStatement(ctx: QMLParser.ScriptStatementContext): AstExprBase? {
+        return visitExpression(ctx.expressionStatement().expression())
+    }
+
+    override fun visitExpressionStatement(ctx: QMLParser.ExpressionStatementContext): AstNop = AstNop()
+
+    override fun visitExpression(ctx: QMLParser.ExpressionContext): AstExprBase? {
+        if (ctx.assignmentExpression()
+                .assignmentOperator() != null
+        ) return visitAssignmentExpression(ctx.assignmentExpression())
+        return null
+    }
+
+    override fun visitAssignmentExpression(ctx: QMLParser.AssignmentExpressionContext): AstExprAssign {
+        var t: Assign? = null
+        ctx.assignmentOperator().also {
+            if (it.EQ() != null) t = Assign.EQ
+            else if (it.STAR_EQ() != null) t = Assign.STAR_EQ
+            else if (it.DIVIDE_EQ() != null) t = Assign.DIVIDE_EQ
+            else if (it.REMAINDER_EQ() != null) t = Assign.REMAINDER_EQ
+            else if (it.PLUS_EQ() != null) t = Assign.PLUS_EQ
+            else if (it.MINUS_EQ() != null) t = Assign.MINUS_EQ
+            else if (it.LLEQ() != null) t = Assign.LLEQ
+            else if (it.GGEQ() != null) t = Assign.GGEQ
+            else if (it.GGGEQ() != null) t = Assign.GGGEQ
+            else if (it.AND_EQ() != null) t = Assign.AND_EQ
+            else if (it.XOR_EQ() != null) t = Assign.XOR_EQ
+            else if (it.OR_EQ() != null) t = Assign.OR_EQ
+        }
+
+        return AstExprAssign(
+            null, t, visitConditionalExpression(ctx.assignmentExpression().conditionalExpression())
+        )
+    }
+
+    override fun visitConditionalExpression(ctx: QMLParser.ConditionalExpressionContext): AstExprBase? {
+        return null
+    }
+
+    override fun visitAssignmentExpressionNotIn(ctx: QMLParser.AssignmentExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitAssignmentOperator(ctx: QMLParser.AssignmentOperatorContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitConditionalExpressionNotIn(ctx: QMLParser.ConditionalExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitLogicalORExpressionNotIn(ctx: QMLParser.LogicalORExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitLogicalANDExpressionNotIn(ctx: QMLParser.LogicalANDExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseORExpressionNotIn(ctx: QMLParser.BitwiseORExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseXORExpressionNotIn(ctx: QMLParser.BitwiseXORExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseANDExpressionNotIn(ctx: QMLParser.BitwiseANDExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitEqualityExpressionNotIn(ctx: QMLParser.EqualityExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitRelationalExpressionNotIn(ctx: QMLParser.RelationalExpressionNotInContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitLogicalORExpression(ctx: QMLParser.LogicalORExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitLogicalANDExpression(ctx: QMLParser.LogicalANDExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseORExpression(ctx: QMLParser.BitwiseORExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseXORExpression(ctx: QMLParser.BitwiseXORExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBitwiseANDExpression(ctx: QMLParser.BitwiseANDExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitEqualityExpression(ctx: QMLParser.EqualityExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitRelationalExpression(ctx: QMLParser.RelationalExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitShiftExpression(ctx: QMLParser.ShiftExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitAdditiveExpression(ctx: QMLParser.AdditiveExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitMultiplicativeExpression(ctx: QMLParser.MultiplicativeExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitUnaryExpression(ctx: QMLParser.UnaryExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitPostfixExpression(ctx: QMLParser.PostfixExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitNewExpression(ctx: QMLParser.NewExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitMemberExpression(ctx: QMLParser.MemberExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitPrimaryExpression(ctx: QMLParser.PrimaryExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitLeftHandSideExpression(ctx: QMLParser.LeftHandSideExpressionContext): AstObject {
+        TODO("Not yet implemented")
+    }
+
+
+
+
 
     override fun visitPropertyDeclaration(ctx: QMLParser.PropertyDeclarationContext): AstObject {
         TODO("Not yet implemented")
@@ -75,10 +227,6 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
     }
 
     override fun visitArrayMemberList(ctx: QMLParser.ArrayMemberListContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitScriptStatement(ctx: QMLParser.ScriptStatementContext): AstObject {
         TODO("Not yet implemented")
     }
 
@@ -135,46 +283,6 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
     }
 
     override fun visitExpressionNotIn(ctx: QMLParser.ExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitAssignmentExpressionNotIn(ctx: QMLParser.AssignmentExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitAssignmentOperator(ctx: QMLParser.AssignmentOperatorContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitConditionalExpressionNotIn(ctx: QMLParser.ConditionalExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitLogicalORExpressionNotIn(ctx: QMLParser.LogicalORExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitLogicalANDExpressionNotIn(ctx: QMLParser.LogicalANDExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseORExpressionNotIn(ctx: QMLParser.BitwiseORExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseXORExpressionNotIn(ctx: QMLParser.BitwiseXORExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseANDExpressionNotIn(ctx: QMLParser.BitwiseANDExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitEqualityExpressionNotIn(ctx: QMLParser.EqualityExpressionNotInContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitRelationalExpressionNotIn(ctx: QMLParser.RelationalExpressionNotInContext): AstObject {
         TODO("Not yet implemented")
     }
 
@@ -242,33 +350,11 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
         TODO("Not yet implemented")
     }
 
-    override fun visitExpressionStatement(ctx: QMLParser.ExpressionStatementContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitExpression(ctx: QMLParser.ExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitAssignmentExpression(ctx: QMLParser.AssignmentExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitLeftHandSideExpression(ctx: QMLParser.LeftHandSideExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
     override fun visitCallExpression(ctx: QMLParser.CallExpressionContext): AstObject {
         TODO("Not yet implemented")
     }
 
-    override fun visitNewExpression(ctx: QMLParser.NewExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
 
-    override fun visitMemberExpression(ctx: QMLParser.MemberExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
 
     override fun visitArgumentList(ctx: QMLParser.ArgumentListContext): AstObject {
         TODO("Not yet implemented")
@@ -298,10 +384,6 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
         TODO("Not yet implemented")
     }
 
-    override fun visitPrimaryExpression(ctx: QMLParser.PrimaryExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
     override fun visitPropertyAssignmentListOpt(ctx: QMLParser.PropertyAssignmentListOptContext): AstObject {
         TODO("Not yet implemented")
     }
@@ -327,58 +409,6 @@ class QMLMainVisitor : AbstractParseTreeVisitor<AstObject>(), QMLVisitor<AstObje
     }
 
     override fun visitElision(ctx: QMLParser.ElisionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitConditionalExpression(ctx: QMLParser.ConditionalExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitLogicalORExpression(ctx: QMLParser.LogicalORExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitLogicalANDExpression(ctx: QMLParser.LogicalANDExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseORExpression(ctx: QMLParser.BitwiseORExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseXORExpression(ctx: QMLParser.BitwiseXORExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitBitwiseANDExpression(ctx: QMLParser.BitwiseANDExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitEqualityExpression(ctx: QMLParser.EqualityExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitRelationalExpression(ctx: QMLParser.RelationalExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitShiftExpression(ctx: QMLParser.ShiftExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitAdditiveExpression(ctx: QMLParser.AdditiveExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitMultiplicativeExpression(ctx: QMLParser.MultiplicativeExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitUnaryExpression(ctx: QMLParser.UnaryExpressionContext): AstObject {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitPostfixExpression(ctx: QMLParser.PostfixExpressionContext): AstObject {
         TODO("Not yet implemented")
     }
 
