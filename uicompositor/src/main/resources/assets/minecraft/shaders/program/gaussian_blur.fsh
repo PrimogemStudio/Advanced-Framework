@@ -72,4 +72,6 @@ void main() {
     fragColor.x += random(dst.xy * 0.03125 * texCoord) * NoiseStrength;
     fragColor.y += random(dst.xz * 0.03125 * texCoord) * NoiseStrength;
     fragColor.z += random(dst.yz * 0.03125 * texCoord) * NoiseStrength;
+    fragColor.a = dst.a;
+    fragColor *= ColorModulate;
 }
