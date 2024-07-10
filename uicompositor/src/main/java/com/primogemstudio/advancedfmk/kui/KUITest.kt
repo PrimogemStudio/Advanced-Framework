@@ -8,6 +8,11 @@ import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
 import org.ladysnake.satin.api.managed.ShaderEffectManager
+import java.io.FileReader
+import java.util.function.Predicate
+import javax.script.Invocable
+import javax.script.ScriptContext
+import javax.script.ScriptEngineManager
 
 class KUITest {
     val elem = GroupElement(
@@ -36,4 +41,18 @@ class KUITest {
 }
 
 fun main() {
+    System.setProperty("polyglot.engine.WarnInterpreterOnly", "false")
+    val engineManager = ScriptEngineManager()
+    val jsEngine = engineManager.getEngineByName("graal.js")
+    val funcCall = jsEngine as Invocable
+
+    val bindings = jsEngine.getBindings(ScriptContext.ENGINE_SCOPE)
+    bindings["polyglot.js.allowHostAccess"] = true
+    bindings["polyglot.js.allowHostClassLookup"] = Predicate<String> { true }
+
+    val jsResource = KUITest::class.java.classLoader.getResource("assets/advancedfmk/ui/ui.js")
+    jsEngine.eval(FileReader(jsResource?.path ?: ""))
+
+    val res = funcCall.invokeFunction("f", mutableMapOf(Pair("a", "abc")))
+    println(res)
 }
