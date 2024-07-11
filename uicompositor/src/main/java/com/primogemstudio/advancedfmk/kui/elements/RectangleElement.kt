@@ -13,6 +13,7 @@ import org.joml.Vector2f
 import org.joml.Vector4f
 
 class RectangleElement(
+    override var id: String,
     override var pos: Vector2f,
     var size: Vector2f,
     var color: Vector4f,
@@ -21,8 +22,9 @@ class RectangleElement(
     var smoothedge: Float,
     var texturePath: ResourceLocation? = null,
     var filter: FilterBase? = null
-) : RealElement(pos), FilteredElement {
+) : RealElement(id, pos), FilteredElement {
     override fun filter(): FilterBase? = filter
+    override fun subElement(id: String): UIElement? = null
     override fun render(data: GlobalData) {
         filter?.init()
 

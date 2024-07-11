@@ -4,4 +4,5 @@ import com.primogemstudio.advancedfmk.kui.GlobalData
 
 interface UIElement {
     fun render(data: GlobalData)
+    fun subElement(id: String): UIElement?
 }

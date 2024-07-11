@@ -11,12 +11,14 @@ import org.joml.Vector4f
 private val FONT = ComposedFont()
 
 class TextElement(
+    override var id: String,
     override var pos: Vector2f,
     var text: String,
     var color: Vector4f,
     var textsize: Int,
     var vanilla: Boolean = false
-) : RealElement(pos) {
+) : RealElement(id, pos) {
+    override fun subElement(id: String): UIElement? = null
     override fun render(data: GlobalData) {
         val c = (color.x * 255).toInt().and(0xFF).shl(16) +
                 (color.y * 255).toInt().and(0xFF).shl(8) +

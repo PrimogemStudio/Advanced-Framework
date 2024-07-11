@@ -16,8 +16,10 @@ import org.objectweb.asm.tree.MethodNode
 
 class KUITest {
     val elem = GroupElement(
+        "main",
         listOf(
             RectangleElement(
+                "test",
                 Vector2f(0f, 0f),
                 Vector2f(100f, 100f),
                 Vector4f(1f, 1f, 1f, 0.25f),
@@ -31,6 +33,7 @@ class KUITest {
                 )
             ),
             TextElement(
+                "test",
                 Vector2f(0f, 0f),
                 "测试！Hello world from UI compositor!",
                 Vector4f(1f),
