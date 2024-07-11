@@ -5,7 +5,7 @@ import java.nio.file.attribute.BasicFileAttributes
 //file:noinspection GroovyAccessibility
 plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
 }
 
 allprojects {

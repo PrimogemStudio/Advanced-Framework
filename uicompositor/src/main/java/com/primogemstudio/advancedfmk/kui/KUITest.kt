@@ -8,11 +8,10 @@ import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
 import org.ladysnake.satin.api.managed.ShaderEffectManager
-import java.io.FileReader
-import java.util.function.Predicate
-import javax.script.Invocable
-import javax.script.ScriptContext
-import javax.script.ScriptEngineManager
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.Opcodes.*
+import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.tree.MethodNode
 
 class KUITest {
     val elem = GroupElement(
@@ -41,19 +40,56 @@ class KUITest {
 }
 
 fun main() {
-    System.setProperty("polyglot.engine.WarnInterpreterOnly", "false")
-    val engineManager = ScriptEngineManager()
-    val jsEngine = engineManager.getEngineByName("graal.js")
-    val funcCall = jsEngine as Invocable
+    val cn = ClassNode()
+    cn.access = ACC_PUBLIC
+    cn.version = V21
+    cn.name = "com/primogemstudio/advancedfmk/kui/Dyn"
+    cn.superName = "java/lang/Object"
+    cn.sourceFile = "test.yaml"
 
-    val bindings = jsEngine.getBindings(ScriptContext.ENGINE_SCOPE)
-    bindings["polyglot.js.allowHostAccess"] = true
-    bindings["polyglot.js.allowHostClassLookup"] = Predicate<String> { true }
+    val mnc = MethodNode(
+        ACC_PUBLIC,
+        "<init>", "()V", null, null
+    )
+    mnc.visitCode()
+    mnc.visitVarInsn(ALOAD, 0)
+    mnc.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
+    mnc.visitInsn(RETURN)
+    mnc.visitEnd()
+    cn.methods.add(mnc)
 
-    val jsResource = KUITest::class.java.classLoader.getResource("assets/advancedfmk/ui/ui.js")
-    jsEngine.eval(FileReader(jsResource?.path ?: ""))
+    val mn = MethodNode(
+        ACC_PUBLIC,
+        "test", "()V", null, arrayOf("java/lang/Exception")
+    )
+    mn.visitCode()
+    mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
+    mn.visitLdcInsn("Test")
+    mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
 
-    val res = funcCall.invokeFunction("f", mutableMapOf(Pair("a", "abc")))
-    res as Map<*, *>
-    println((res["msg"] as Map<*, *>)["a"])
+    mn.visitTypeInsn(NEW, "java/lang/Exception")
+    mn.visitInsn(DUP)
+    mn.visitLdcInsn("This is a generated exception")
+    mn.visitMethodInsn(INVOKESPECIAL, "java/lang/Exception", "<init>", "(Ljava/lang/String;)V", false)
+    mn.visitInsn(ATHROW)
+
+    mn.visitEnd()
+    cn.methods.add(mn)
+
+    val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
+    cn.accept(cw)
+
+    val cld = MyClassLoader()
+    val c = cld.defineClass("com.primogemstudio.advancedfmk.kui.Dyn", cw.toByteArray())
+
+    val r = c.getMethod("test")
+    val cs = c.getConstructor()
+    val ins = cs.newInstance()
+    r.invoke(ins)
+}
+
+class MyClassLoader : ClassLoader() {
+    fun defineClass(name: String, b: ByteArray): Class<*> {
+        return super.defineClass(name, b, 0, b.size)
+    }
 }

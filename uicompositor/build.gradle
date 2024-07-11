@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'fabric-loom' version '1.7-SNAPSHOT'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
     id 'maven-publish'
     id 'signing'
     id 'org.jetbrains.dokka' version '1.9.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.20'
 }
 
 group = project.rootProject.maven_group
@@ -40,9 +41,7 @@ dependencies {
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
     implementation(project(path: ':fontengine', configuration: "namedElements"))
     implementation("org.antlr:antlr4-runtime:${project.antlr4_runtime_version}")
-
-    implementation("org.graalvm.js:js:${project.graalvm_version}")
-    implementation("org.graalvm.js:js-scriptengine:${project.graalvm_version}")
+    implementation "com.charleskorn.kaml:kaml:0.60.0"
 }
 
 test {
