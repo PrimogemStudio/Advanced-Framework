@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
+import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -12,7 +13,6 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
-import org.yaml.snakeyaml.Yaml
 
 class KUITest {
     val elem = GroupElement(
@@ -41,12 +41,12 @@ class KUITest {
 }
 
 fun main() {
-    val mp = Yaml().loadAs(
+    val r0 = YamlParser.parse(
         String(
             KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
-        ), Map::class.java
+        )
     )
-    println(mp)
+    println(r0)
 
     val cn = ClassNode()
     cn.access = ACC_PUBLIC
