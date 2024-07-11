@@ -3,19 +3,19 @@ root:
   components:
     test:
       type: "rect"
-        pos: [ 0, 0 ]
-        size: [ 100, 100 ]
-        color: [ 1, 1, 1, .25 ]
-        radius: 20
-        thickness: 0
-        smoothedge: 0.006
-        texture: "advancedfmk:ui/textures/microsoft.png"
-        filter:
-          type: "post"
-          location: "shaders/filter/gaussian_blur.json"
+      pos: [ 0, 0 ]
+      size: [ 100, 100 ]
+      color: [ 1, 1, 1, .25 ]
+      radius: 20
+      thickness: 0
+      smoothedge: 0.006
+      texture: "advancedfmk:ui/textures/microsoft.png"
+      filter:
+        type: "post"
+        location: "shaders/filter/gaussian_blur.json"
     testtext:
       type: "text"
-        pos: [ 0, 0 ]
-        text: "测试！Hello world from UI compositor!"
+      pos: [ 0, 0 ]
+      text: "测试！Hello world from UI compositor!"
       color: [ 1, 1, 1, 1 ]
-        textsize: 9
+      textsize: 9
