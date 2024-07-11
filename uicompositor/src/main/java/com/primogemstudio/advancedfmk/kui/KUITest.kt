@@ -12,6 +12,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
+import org.yaml.snakeyaml.Yaml
 
 class KUITest {
     val elem = GroupElement(
@@ -40,6 +41,13 @@ class KUITest {
 }
 
 fun main() {
+    val mp = Yaml().loadAs(
+        String(
+            KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
+        ), Map::class.java
+    )
+    println(mp)
+
     val cn = ClassNode()
     cn.access = ACC_PUBLIC
     cn.version = V21
