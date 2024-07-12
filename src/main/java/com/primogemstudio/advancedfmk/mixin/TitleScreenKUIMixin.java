@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.mixin;
 
 import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITest;
+import com.primogemstudio.advancedfmk.kui.elements.GroupElement;
 import com.primogemstudio.advancedfmk.kui.elements.RealElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -24,7 +25,7 @@ public class TitleScreenKUIMixin {
     static {
         new Thread(() -> {
             while (true) {
-                ((RealElement) test.getElem().getSubElements().getFirst()).getPos().set(mx - 50, my);
+                ((RealElement) ((GroupElement) test.getElem().getSubElements().getFirst()).getSubElements().getFirst()).getPos().set(mx - 50, my);
                 ((RealElement) test.getElem().getSubElements().get(1)).getPos().set(mx, my);
             }
         }).start();

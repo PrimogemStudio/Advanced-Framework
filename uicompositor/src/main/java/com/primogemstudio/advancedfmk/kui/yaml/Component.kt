@@ -1,9 +1,9 @@
 package com.primogemstudio.advancedfmk.kui.yaml
 
-enum class ComponentType {
-    GROUP,
-    TEXT,
-    RECTANGLE
+enum class ComponentType(val clz: String) {
+    GROUP("com/primogemstudio/advancedfmk/kui/elements/GroupElement"),
+    TEXT("com/primogemstudio/advancedfmk/kui/elements/TextElement"),
+    RECTANGLE("com/primogemstudio/advancedfmk/kui/elements/RectangleElement");
 }
 
 data class UIRoot(

@@ -3,7 +3,6 @@ package com.primogemstudio.advancedfmk.kui
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
-import com.primogemstudio.advancedfmk.kui.elements.UIElement
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.ObjBuilder
@@ -16,18 +15,23 @@ class KUITest {
     val elem = GroupElement(
         "main",
         listOf(
-            RectangleElement(
-                "test",
-                Vector2f(0f, 0f),
-                Vector2f(100f, 100f),
-                Vector4f(1f, 1f, 1f, 0.25f),
-                20f,
-                0f,
-                0.006f,
-                ResourceLocation.parse("advancedfmk:ui/textures/microsoft.png"),
-                PostShaderFilter(
-                    ShaderEffectManager.getInstance()
-                        .manage(ResourceLocation.withDefaultNamespace("shaders/filter/gaussian_blur.json"))
+            GroupElement(
+                "test0",
+                listOf(
+                    RectangleElement(
+                        "test1",
+                        Vector2f(0f, 0f),
+                        Vector2f(100f, 100f),
+                        Vector4f(1f, 1f, 1f, 0.25f),
+                        20f,
+                        0f,
+                        0.006f,
+                        ResourceLocation.parse("advancedfmk:ui/textures/microsoft.png"),
+                        PostShaderFilter(
+                            ShaderEffectManager.getInstance()
+                                .manage(ResourceLocation.withDefaultNamespace("shaders/filter/gaussian_blur.json"))
+                        )
+                    )
                 )
             ),
             TextElement(

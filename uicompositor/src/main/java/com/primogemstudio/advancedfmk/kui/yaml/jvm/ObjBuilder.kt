@@ -45,7 +45,8 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         mn.aload0()
         mn.invokespecial("java/lang/Object", "<init>", "()V")
 
-        // Push stack (this)
+
+        /*// Push stack (this)
         mn.aload0()
         // New instance
         mn.new("com/primogemstudio/advancedfmk/kui/elements/GroupElement")
@@ -191,7 +192,7 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         // final init
         mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V")
         // save to variable
-        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
+        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")*/
         mn.return_()
 
         mn.visitEnd()
