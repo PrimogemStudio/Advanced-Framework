@@ -8,6 +8,23 @@ import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 import java.io.File
 
+fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
+fun MethodNode.aload1() = visitVarInsn(ALOAD, 1)
+fun MethodNode.astore1() = visitVarInsn(ASTORE, 1)
+fun MethodNode.aastore() = visitInsn(AASTORE)
+fun MethodNode.dup() = visitInsn(DUP)
+fun MethodNode.iconst0() = visitInsn(ICONST_0)
+fun MethodNode.iconst1() = visitInsn(ICONST_1)
+fun MethodNode.iconst2() = visitInsn(ICONST_2)
+fun MethodNode.fconst0() = visitInsn(FCONST_0)
+fun MethodNode.fconst1() = visitInsn(FCONST_1)
+fun MethodNode.ldc(v: Any) = visitLdcInsn(v)
+fun MethodNode.return_() = visitInsn(RETURN)
+fun MethodNode.new(s: String) = visitTypeInsn(NEW, s)
+fun MethodNode.checkcast(s: String) = visitTypeInsn(CHECKCAST, s)
+fun MethodNode.anewarray(s: String) = visitTypeInsn(ANEWARRAY, s)
+fun MethodNode.invokespecial(s: String, s2: String, s3: String) = visitMethodInsn(INVOKESPECIAL, s, s2, s3, false)
+
 class ObjBuilder(val root: UIRoot): ClassLoader() {
     fun build() {
         val cn = ClassNode()
@@ -25,69 +42,69 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         )
         mn.visitCode()
         // Super init
-        mn.visitVarInsn(ALOAD, 0)
-        mn.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
+        mn.aload0()
+        mn.invokespecial("java/lang/Object", "<init>", "()V")
 
         // stdout
         mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
-        mn.visitLdcInsn("Test")
+        mn.ldc("Test")
         mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
 
         // Push stack (this)
-        mn.visitVarInsn(ALOAD, 0)
+        mn.aload0()
         // New instance
-        mn.visitTypeInsn(NEW, "com/primogemstudio/advancedfmk/kui/elements/GroupElement")
-        mn.visitInsn(DUP)
+        mn.new("com/primogemstudio/advancedfmk/kui/elements/GroupElement")
+        mn.dup()
         // arg 1
-        mn.visitLdcInsn("main")
+        mn.ldc("main")
         // arg 2 - array length
-        mn.visitInsn(ICONST_2)
+        mn.iconst2()
         // arg 2 - array
-        mn.visitTypeInsn(ANEWARRAY, "com/primogemstudio/advancedfmk/kui/elements/RealElement")
+        mn.anewarray("com/primogemstudio/advancedfmk/kui/elements/RealElement")
         // ???
-        mn.visitVarInsn(ASTORE, 1)
-        mn.visitVarInsn(ALOAD, 1)
+        mn.astore1()
+        mn.aload1()
         run {
             // array[0] construct
-            mn.visitInsn(ICONST_0)
+            mn.iconst0()
 
             // New instance
-            mn.visitTypeInsn(NEW, "com/primogemstudio/advancedfmk/kui/elements/RectangleElement")
-            mn.visitInsn(DUP)
+            mn.new("com/primogemstudio/advancedfmk/kui/elements/RectangleElement")
+            mn.dup()
             // arg 1
-            mn.visitLdcInsn("test")
+            mn.ldc("test")
 
             // arg 2
-            mn.visitTypeInsn(NEW, "org/joml/Vector2f")
-            mn.visitInsn(DUP)
-            mn.visitInsn(FCONST_0)
-            mn.visitInsn(FCONST_0)
-            mn.visitMethodInsn(INVOKESPECIAL, "org/joml/Vector2f", "<init>", "(FF)V", false)
+            mn.new("org/joml/Vector2f")
+            mn.dup()
+            mn.fconst0()
+            mn.fconst0()
+            mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
 
             // arg 3
-            mn.visitTypeInsn(NEW, "org/joml/Vector2f")
-            mn.visitInsn(DUP)
-            mn.visitLdcInsn(100f)
-            mn.visitLdcInsn(100f)
-            mn.visitMethodInsn(INVOKESPECIAL, "org/joml/Vector2f", "<init>", "(FF)V", false)
+            mn.new("org/joml/Vector2f")
+            mn.dup()
+            mn.ldc(100f)
+            mn.ldc(100f)
+            mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
 
             // arg 4
-            mn.visitTypeInsn(NEW, "org/joml/Vector4f")
-            mn.visitInsn(DUP)
-            mn.visitInsn(FCONST_1)
-            mn.visitInsn(FCONST_1)
-            mn.visitInsn(FCONST_1)
-            mn.visitLdcInsn(0.25f)
-            mn.visitMethodInsn(INVOKESPECIAL, "org/joml/Vector4f", "<init>", "(FFFF)V", false)
+            mn.new("org/joml/Vector4f")
+            mn.dup()
+            mn.fconst1()
+            mn.fconst1()
+            mn.fconst1()
+            mn.ldc(0.25f)
+            mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
 
             // arg 5
-            mn.visitLdcInsn(20f)
+            mn.ldc(20f)
             // arg 6
-            mn.visitInsn(FCONST_0)
+            mn.fconst0()
             // arg 7
-            mn.visitLdcInsn(0.006f)
+            mn.ldc(0.006f)
             // arg 8
-            mn.visitLdcInsn("advancedfmk:ui/textures/microsoft.png")
+            mn.ldc("advancedfmk:ui/textures/microsoft.png")
 
             // arg 9
             mn.visitMethodInsn(
@@ -98,8 +115,8 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
                 false
             )
 
-            mn.visitTypeInsn(NEW, "com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter")
-            mn.visitInsn(DUP)
+            mn.new("com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter")
+            mn.dup()
             mn.visitMethodInsn(
                 INVOKESTATIC,
                 "org/ladysnake/satin/api/managed/ShaderEffectManager",
@@ -107,7 +124,7 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
                 "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
                 true
             )
-            mn.visitLdcInsn("shaders/filter/gaussian_blur.json")
+            mn.ldc("shaders/filter/gaussian_blur.json")
             mn.visitMethodInsn(
                 INVOKESTATIC,
                 "net/minecraft/resources/ResourceLocation",
@@ -130,7 +147,7 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
                 "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V",
                 false
             )
-            mn.visitTypeInsn(CHECKCAST, "com/primogemstudio/advancedfmk/kui/pipe/FilterBase")
+            mn.checkcast("com/primogemstudio/advancedfmk/kui/pipe/FilterBase")
             mn.visitMethodInsn(
                 INVOKESPECIAL,
                 "com/primogemstudio/advancedfmk/kui/elements/RectangleElement",
@@ -139,49 +156,48 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
                 false
             )
             // store array[0]
-            mn.visitInsn(AASTORE)
-            mn.visitVarInsn(ALOAD, 1)
+            mn.aastore()
+            mn.aload1()
         }
 
         run {
             // array[1]
-            mn.visitInsn(ICONST_1)
+            mn.iconst1()
             // New instance
-            mn.visitTypeInsn(NEW, "com/primogemstudio/advancedfmk/kui/elements/TextElement")
-            mn.visitInsn(DUP)
+            mn.new("com/primogemstudio/advancedfmk/kui/elements/TextElement")
+            mn.dup()
             // arg 1
-            mn.visitLdcInsn("test")
+            mn.ldc("test")
             // arg 2
-            mn.visitTypeInsn(NEW, "org/joml/Vector2f")
-            mn.visitInsn(DUP)
-            mn.visitInsn(FCONST_0)
-            mn.visitInsn(FCONST_0)
-            mn.visitMethodInsn(INVOKESPECIAL, "org/joml/Vector2f", "<init>", "(FF)V", false)
+            mn.new("org/joml/Vector2f")
+            mn.dup()
+            mn.fconst0()
+            mn.fconst0()
+            mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
             // arg3
-            mn.visitLdcInsn("测试！Hello world from UI compositor!")
+            mn.ldc("测试！Hello world from UI compositor!")
             // arg4
-            mn.visitTypeInsn(NEW, "org/joml/Vector4f")
-            mn.visitInsn(DUP)
-            mn.visitInsn(FCONST_1)
-            mn.visitMethodInsn(INVOKESPECIAL, "org/joml/Vector4f", "<init>", "(F)V", false)
+            mn.new("org/joml/Vector4f")
+            mn.dup()
+            mn.fconst1()
+            mn.invokespecial( "org/joml/Vector4f", "<init>", "(F)V")
             // arg 5
-            mn.visitLdcInsn(9)
+            mn.ldc(9)
             // arg 6
-            mn.visitLdcInsn(false)
+            mn.ldc(false)
 
 
-            mn.visitMethodInsn(INVOKESPECIAL, "com/primogemstudio/advancedfmk/kui/elements/TextElement", "<init>", "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V", false)
-            mn.visitInsn(AASTORE)
-            mn.visitVarInsn(ALOAD, 1)
+            mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/TextElement", "<init>", "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
+            mn.aastore()
+            mn.aload1()
         }
         // build list
         mn.visitMethodInsn(INVOKESTATIC, "kotlin/collections/CollectionsKt", "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
         // final init
-        mn.visitMethodInsn(INVOKESPECIAL, "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V", false)
+        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V")
         // save to variable
         mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
-
-        mn.visitInsn(RETURN)
+        mn.return_()
 
         mn.visitEnd()
         cn.methods.add(mn)
