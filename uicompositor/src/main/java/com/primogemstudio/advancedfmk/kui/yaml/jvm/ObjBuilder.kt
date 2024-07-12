@@ -45,11 +45,6 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         mn.aload0()
         mn.invokespecial("java/lang/Object", "<init>", "()V")
 
-        // stdout
-        mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
-        mn.ldc("Test")
-        mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
-
         // Push stack (this)
         mn.aload0()
         // New instance
