@@ -1,5 +1,6 @@
 class: com.primogemstudio.advancedfmk.kui.TestUI
 root:
+  name: main
   type: group
   components:
     test:

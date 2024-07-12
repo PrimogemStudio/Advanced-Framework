@@ -8,6 +8,7 @@ enum class ComponentType {
 
 data class UIRoot(
     val className: String,
+    val rootName: String,
     val component: Component?
 )
 
