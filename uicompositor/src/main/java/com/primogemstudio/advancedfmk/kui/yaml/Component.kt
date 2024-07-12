@@ -6,6 +6,11 @@ enum class ComponentType {
     RECTANGLE
 }
 
+data class UIRoot(
+    val className: String,
+    val component: Component?
+)
+
 abstract class Component(
     open var type: ComponentType? = null
 )

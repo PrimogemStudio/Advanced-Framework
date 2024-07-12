@@ -4,8 +4,9 @@ import org.yaml.snakeyaml.Yaml
 
 object YamlParser {
     val parser = Yaml()
-    fun parse(s: String): Component? {
-        return parse(parser.loadAs(s, Map::class.java)["root"] as Map<*, *>)
+    fun parse(s: String): UIRoot {
+        val i = parser.loadAs(s, Map::class.java)
+        return UIRoot(i["class"] as String, parse(i["root"] as Map<*, *>))
     }
 
     @Suppress("UNCHECKED_CAST")
