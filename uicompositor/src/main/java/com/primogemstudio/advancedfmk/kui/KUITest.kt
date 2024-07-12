@@ -48,9 +48,3 @@ fun main() {
     )
     ObjBuilder(r0).build()
 }
-
-class MyClassLoader : ClassLoader() {
-    fun defineClass(name: String, b: ByteArray): Class<*> {
-        return super.defineClass(name, b, 0, b.size)
-    }
-}

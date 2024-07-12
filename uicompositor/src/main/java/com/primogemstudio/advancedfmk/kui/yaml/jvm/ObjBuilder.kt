@@ -1,13 +1,12 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
-import com.primogemstudio.advancedfmk.kui.MyClassLoader
 import com.primogemstudio.advancedfmk.kui.yaml.UIRoot
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
 
-class ObjBuilder(val root: UIRoot) {
+class ObjBuilder(val root: UIRoot): ClassLoader() {
     fun build() {
         val cn = ClassNode()
         cn.access = ACC_PUBLIC
@@ -48,12 +47,15 @@ class ObjBuilder(val root: UIRoot) {
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
         cn.accept(cw)
 
-        val cld = MyClassLoader()
-        val c = cld.defineClass(root.className, cw.toByteArray())
+        val c = defineClass(root.className, cw.toByteArray())
 
         val r = c.getMethod("test")
         val cs = c.getConstructor()
         val ins = cs.newInstance()
         r.invoke(ins)
+    }
+
+    private fun defineClass(name: String, b: ByteArray): Class<*> {
+        return super.defineClass(name, b, 0, b.size)
     }
 }
