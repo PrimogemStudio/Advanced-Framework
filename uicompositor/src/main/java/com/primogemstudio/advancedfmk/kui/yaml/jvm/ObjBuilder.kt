@@ -3,7 +3,6 @@ package com.primogemstudio.advancedfmk.kui.yaml.jvm
 import com.primogemstudio.advancedfmk.kui.yaml.UIRoot
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
-import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
@@ -18,28 +17,21 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         cn.superName = "java/lang/Object"
         cn.sourceFile = "<yaml>"
 
-        cn.fields.add(FieldNode(ACC_PRIVATE, "_internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;", null, null))
-
-        val mnc = MethodNode(
-            ACC_PUBLIC,
-            "<init>", "()V", null, null
-        )
-        mnc.visitCode()
-        mnc.visitVarInsn(ALOAD, 0)
-        mnc.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
-        mnc.visitInsn(RETURN)
-        mnc.visitEnd()
-        cn.methods.add(mnc)
+        cn.fields.add(FieldNode(ACC_PUBLIC or ACC_FINAL, "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;", null, null))
 
         val mn = MethodNode(
             ACC_PUBLIC,
-            "test", "()V", null, arrayOf("java/lang/Exception")
+            "<init>", "()V", null, null
         )
         mn.visitCode()
+        mn.visitVarInsn(ALOAD, 0)
+        mn.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
+
         mn.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;")
         mn.visitLdcInsn("Test")
         mn.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false)
 
+        mn.visitVarInsn(ALOAD, 0)
         mn.visitTypeInsn(NEW, "com/primogemstudio/advancedfmk/kui/elements/GroupElement")
         mn.visitInsn(DUP)
         mn.visitLdcInsn("main")
@@ -120,7 +112,7 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         mn.visitMethodInsn(INVOKESTATIC, "kotlin/collections/CollectionsKt", "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
         mn.visitMethodInsn(INVOKESPECIAL, "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V", false)
 
-        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "_internal", "Lcom/primogemstudio/advancedfmk/kui/elements/GroupElement;")
+        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
 
         mn.visitInsn(RETURN)
 
@@ -133,11 +125,9 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         File("run/TestUI.class").writeBytes(cw.toByteArray())
         val c = defineClass(root.className, cw.toByteArray())
 
-        println(c.fields)
-        val r = c.getMethod("test")
         val cs = c.getConstructor()
         val ins = cs.newInstance()
-        r.invoke(ins)
+        println(c.getField("internal").get(ins))
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {

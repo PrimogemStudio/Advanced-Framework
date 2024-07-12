@@ -3,6 +3,7 @@ package com.primogemstudio.advancedfmk.kui
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
+import com.primogemstudio.advancedfmk.kui.elements.UIElement
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.ObjBuilder
