@@ -14,7 +14,9 @@ import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 import java.io.File
+import java.nio.file.Files
 import java.security.CodeSource
+import kotlin.io.path.Path
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
 fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
@@ -34,7 +36,7 @@ fun MethodNode.checkcast(s: String) = visitTypeInsn(CHECKCAST, s)
 fun MethodNode.anewarray(s: String) = visitTypeInsn(ANEWARRAY, s)
 fun MethodNode.invokespecial(s: String, s2: String, s3: String) = visitMethodInsn(INVOKESPECIAL, s, s2, s3, false)
 
-class YamlCompiler(val root: UIRoot): ClassLoader() {
+class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
     fun build(): Any {
         val cn = ClassNode()
         cn.access = ACC_PUBLIC or ACC_FINAL
@@ -71,6 +73,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader() {
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
         cn.accept(cw)
 
+        Files.write(Path("TestUI.class"), cw.toByteArray())
         val c = defineClass(root.className, cw.toByteArray())
 
         val cs = c.getConstructor()
@@ -90,8 +93,10 @@ class YamlCompiler(val root: UIRoot): ClassLoader() {
         mn.astore1()
         mn.aload1()
 
+        var i = 0
         c.components?.forEach { (t, u) ->
-            mn.iconst1()
+            mn.ldc(i)
+            i++
             when (u?.type) {
                 TEXT -> buildTextElement(mn, u as TextComponent, t)
                 GROUP -> buildGroupElement(mn, u as GroupComponent, t)
@@ -222,11 +227,6 @@ class YamlCompiler(val root: UIRoot): ClassLoader() {
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {
-        val cls = Class.forName("net.fabricmc.loader.impl.launch.knot.KnotClassLoader")
-        val meth = cls.getDeclaredMethod("defineClassFwd", String::class.java, ByteArray::class.java, Int::class.java, Int::class.java, CodeSource::class.java)
-
-        meth.trySetAccessible()
-        return meth.invoke(ClassLoaderUtil.getClassLoader(), name, b, 0, b.size, null) as Class<*>
-        // return super.defineClass(name, b, 0, b.size)
+        return super.defineClass(name, b, 0, b.size)
     }
 }
