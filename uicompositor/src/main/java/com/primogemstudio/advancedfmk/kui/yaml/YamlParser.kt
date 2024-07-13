@@ -16,11 +16,11 @@ object YamlParser {
             GroupComponent(r)
         }
 
-        "text" -> parser.loadAs(parser.dump(i.toMutableMap().apply { this["type"] = null }), TextComponent::class.java)
+        "text" -> parser.loadAs(parser.dump(i.toMutableMap().apply { this["type"] = null }), TextComponent::class.java).apply { type = ComponentType.TEXT }
         "rect" -> parser.loadAs(
             parser.dump(i.toMutableMap().apply { this["type"] = null }),
             RectangleComponent::class.java
-        )
+        ).apply { type = ComponentType.RECTANGLE }
 
         else -> null
     }
