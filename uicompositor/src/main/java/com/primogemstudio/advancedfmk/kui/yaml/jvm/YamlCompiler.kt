@@ -1,21 +1,17 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
 import com.ibm.icu.impl.ClassLoaderUtil
-import com.primogemstudio.advancedfmk.kui.elements.GroupElement
-import com.primogemstudio.advancedfmk.kui.elements.TextElement
-import com.primogemstudio.advancedfmk.kui.elements.UIElement
-import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
-import net.fabricmc.loader.api.FabricLoader
-import net.fabricmc.loader.impl.FabricLoaderImpl
+import com.primogemstudio.advancedfmk.kui.yaml.GroupComponent
+import com.primogemstudio.advancedfmk.kui.yaml.RectangleComponent
+import com.primogemstudio.advancedfmk.kui.yaml.TextComponent
+import com.primogemstudio.advancedfmk.kui.yaml.UIRoot
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
-import java.io.File
 import java.nio.file.Files
-import java.security.CodeSource
 import kotlin.io.path.Path
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
@@ -27,9 +23,30 @@ fun MethodNode.dup() = visitInsn(DUP)
 fun MethodNode.iconst0() = visitInsn(ICONST_0)
 fun MethodNode.iconst1() = visitInsn(ICONST_1)
 fun MethodNode.iconst2() = visitInsn(ICONST_2)
+fun MethodNode.iconst3() = visitInsn(ICONST_3)
+fun MethodNode.iconst4() = visitInsn(ICONST_4)
+fun MethodNode.iconst5() = visitInsn(ICONST_5)
 fun MethodNode.fconst0() = visitInsn(FCONST_0)
 fun MethodNode.fconst1() = visitInsn(FCONST_1)
-fun MethodNode.ldc(v: Any) = visitLdcInsn(v)
+fun MethodNode.fconst2() = visitInsn(FCONST_2)
+fun MethodNode.dconst0() = visitInsn(DCONST_0)
+fun MethodNode.dconst1() = visitInsn(DCONST_1)
+fun MethodNode.ldc(v: Any) {
+    when (v) {
+        0 -> iconst0()
+        1 -> iconst1()
+        2-> iconst2()
+        3 -> iconst3()
+        4 -> iconst4()
+        5 -> iconst5()
+        0f -> fconst0()
+        1f -> fconst1()
+        2f -> fconst2()
+        0.0 -> dconst0()
+        1.0 -> dconst1()
+        else -> visitLdcInsn(v)
+    }
+}
 fun MethodNode.return_() = visitInsn(RETURN)
 fun MethodNode.new(s: String) = visitTypeInsn(NEW, s)
 fun MethodNode.checkcast(s: String) = visitTypeInsn(CHECKCAST, s)
