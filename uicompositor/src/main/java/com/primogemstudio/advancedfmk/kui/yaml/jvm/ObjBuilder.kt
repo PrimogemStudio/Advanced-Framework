@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
+import com.primogemstudio.advancedfmk.kui.yaml.TextComponent
 import com.primogemstudio.advancedfmk.kui.yaml.UIRoot
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
@@ -46,7 +47,7 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         mn.invokespecial("java/lang/Object", "<init>", "()V")
 
 
-        /*// Push stack (this)
+        // Push stack (this)
         mn.aload0()
         // New instance
         mn.new("com/primogemstudio/advancedfmk/kui/elements/GroupElement")
@@ -159,31 +160,13 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         run {
             // array[1]
             mn.iconst1()
-            // New instance
-            mn.new("com/primogemstudio/advancedfmk/kui/elements/TextElement")
-            mn.dup()
-            // arg 1
-            mn.ldc("test")
-            // arg 2
-            mn.new("org/joml/Vector2f")
-            mn.dup()
-            mn.fconst0()
-            mn.fconst0()
-            mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
-            // arg3
-            mn.ldc("测试！Hello world from UI compositor!")
-            // arg4
-            mn.new("org/joml/Vector4f")
-            mn.dup()
-            mn.fconst1()
-            mn.invokespecial( "org/joml/Vector4f", "<init>", "(F)V")
-            // arg 5
-            mn.ldc(9)
-            // arg 6
-            mn.ldc(false)
-
-
-            mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/TextElement", "<init>", "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
+            buildTextElement(mn, TextComponent(
+                listOf(0f, 0f),
+                "Test!",
+                listOf(1f, 1f, 1f, 0.5f),
+                9,
+                false
+            ), "test")
             mn.aastore()
             mn.aload1()
         }
@@ -192,7 +175,8 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         // final init
         mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V")
         // save to variable
-        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")*/
+        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
+
         mn.return_()
 
         mn.visitEnd()
@@ -207,6 +191,33 @@ class ObjBuilder(val root: UIRoot): ClassLoader() {
         val cs = c.getConstructor()
         val ins = cs.newInstance()
         println(c.getField("internal").get(ins))
+    }
+
+    private fun buildTextElement(mn: MethodNode, c: TextComponent, n: String) {
+        mn.new("com/primogemstudio/advancedfmk/kui/elements/TextElement")
+        mn.dup()
+        mn.ldc(n)
+
+        mn.new("org/joml/Vector2f")
+        mn.dup()
+        mn.ldc(c.pos!![0])
+        mn.ldc(c.pos!![1])
+        mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
+
+        mn.ldc(c.text?: "<null>")
+
+        mn.new("org/joml/Vector4f")
+        mn.dup()
+        mn.ldc(c.color!![0])
+        mn.ldc(c.color!![1])
+        mn.ldc(c.color!![2])
+        mn.ldc(c.color!![3])
+        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+
+        mn.ldc(c.textsize?: 12)
+        mn.ldc(c.vanilla?: false)
+
+        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/TextElement", "<init>", "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {

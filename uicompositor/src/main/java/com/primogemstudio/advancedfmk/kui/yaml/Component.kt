@@ -35,5 +35,6 @@ class TextComponent(
     var pos: List<Float>? = null,
     var text: String? = null,
     var color: List<Float>? = null,
-    var textsize: Int? = null
+    var textsize: Int? = null,
+    var vanilla: Boolean? = false
 ) : Component(ComponentType.TEXT)
