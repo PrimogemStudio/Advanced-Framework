@@ -1,16 +1,20 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
+import com.ibm.icu.impl.ClassLoaderUtil
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
 import com.primogemstudio.advancedfmk.kui.elements.UIElement
 import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
+import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.impl.FabricLoaderImpl
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 import java.io.File
+import java.security.CodeSource
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
 fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
@@ -218,6 +222,11 @@ class YamlCompiler(val root: UIRoot): ClassLoader() {
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {
-        return super.defineClass(name, b, 0, b.size)
+        val cls = Class.forName("net.fabricmc.loader.impl.launch.knot.KnotClassLoader")
+        val meth = cls.getDeclaredMethod("defineClassFwd", String::class.java, ByteArray::class.java, Int::class.java, Int::class.java, CodeSource::class.java)
+
+        meth.trySetAccessible()
+        return meth.invoke(ClassLoaderUtil.getClassLoader(), name, b, 0, b.size, null) as Class<*>
+        // return super.defineClass(name, b, 0, b.size)
     }
 }
