@@ -24,8 +24,8 @@ public class TitleScreenKUIMixin {
     static {
         new Thread(() -> {
             while (true) {
-                ((RealElement) test.getElem().getSubElements().getFirst()).getPos().set(mx - 50, my);
-                ((RealElement) test.getElem().getSubElements().get(1)).getPos().set(mx, my);
+                test.getElem().subElement("test").getPos().set(mx - 50, my);
+                test.getElem().subElement("testtext").getPos().set(mx, my);
             }
         }).start();
     }
