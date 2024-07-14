@@ -14,7 +14,7 @@ root:
       texture: advancedfmk:ui/textures/microsoft.png
       filter:
         type: post
-        location: shaders/filter/gaussian_blur.json
+        location: minecraft:shaders/filter/gaussian_blur.json
     testtext:
       type: text
       pos: [ 0, 0 ]

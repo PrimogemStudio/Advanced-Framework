@@ -184,7 +184,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                     mn.visitMethodInsn(
                         INVOKESTATIC,
                         "net/minecraft/resources/ResourceLocation",
-                        "withDefaultNamespace",
+                        "parse",
                         "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
                         false
                     )
