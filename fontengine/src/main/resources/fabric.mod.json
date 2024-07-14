@@ -20,6 +20,9 @@
   "entrypoints": {
     "client": [
       "com.primogemstudio.advancedfmk.client.AdvancedFrameworkFontEngineClient"
+    ],
+    "preLaunch": [
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkFontEngineEarlyInit"
     ]
   },
   "mixins": [

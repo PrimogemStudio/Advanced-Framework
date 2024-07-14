@@ -99,20 +99,7 @@ class FreeTypeFont : Closeable {
         hb_upem = hb_face_get_upem(hb_face)
         hb_font = hb_font_create(hb_face)
         hb_font_set_scale(hb_font, hb_upem, hb_upem)
-    }
-
-    private fun getAllChars(): List<Char> {
-        val map = mutableListOf<Char>()
-        MemoryStack.stackPush().use {
-            val index = it.mallocInt(1)
-            var chr = FT_Get_First_Char(face, index).toInt().toChar()
-            while (index.get(0) != 0) {
-                map.add(chr)
-                chr = FT_Get_Next_Char(face, chr.code.toLong(), index).toInt().toChar()
-                if (map.contains(chr)) break
-            }
-        }
-        return map
+        hb_ft_font_set_funcs(hb_font)
     }
 
     override fun close() {
