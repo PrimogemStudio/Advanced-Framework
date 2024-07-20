@@ -38,6 +38,7 @@ dependencies {
     modApi modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modApi modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     api implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}")
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${project.kotlin_version}"
     modApi modImplementation("org.ladysnake:satin:${project.satin_version}")
     implementation(project(path: ':fontengine', configuration: "namedElements"))
     implementation("org.antlr:antlr4-runtime:${project.antlr4_runtime_version}")
