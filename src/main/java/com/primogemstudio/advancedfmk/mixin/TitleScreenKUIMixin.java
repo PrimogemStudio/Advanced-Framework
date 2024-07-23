@@ -14,30 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenKUIMixin {
     @Unique
     private static final KUITest test = new KUITest();
-
-    @Unique
-    private static int mx = 0;
-    @Unique
-    private static int my = 0;
-
-    static {
-        new Thread(() -> {
-            while (true) {
-                if (test.getTestAnimation().finished() > 1000) test.getTestAnimation().reset();
-                test.getTestAnimation().setStart((float) mx);
-                test.getTestAnimation().setTarget((float) mx + 100);
-                test.getTestAnimation().update();
-
-                test.getElem().subElement("test").getPos().y = my;
-                test.getElem().subElement("testtext").getPos().y = my;
-            }
-        }).start();
-    }
-
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         test.getElem().render(GlobalData.genData(graphics, partialTick));
-        mx = mouseX;
-        my = mouseY;
     }
 }

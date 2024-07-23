@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.kui.animation
 
 import kotlin.math.min
 
-data class AnimationEvent<T: Number>(
+open class AnimationEvent<T: Number>(
     var timestamp: Long,
     val duration: Long,
     var start: T,
@@ -10,9 +10,11 @@ data class AnimationEvent<T: Number>(
     val interprocess: DataGenerator,
     val func: (T) -> Unit
 ) {
+    var onEventTrigger: (AnimationEvent<T>) -> Unit = {}
     @Suppress("UNCHECKED_CAST")
-    fun update() {
+    open fun update() {
         if (duration <= 0) return
+        onEventTrigger(this)
 
         val s = start
         val t = target
