@@ -25,4 +25,4 @@ void main()
     vec2 size = Size / Resolution.y;
     float radius = Radius / Resolution.y;
     fragColor = mix(vec4(0), vertexColor, roundedRectangleSDF(st, size, radius));
-}
+} // /usr/lib/mangohud/libMangoHud_dlsym.so:/usr/lib/mangohud/libMangoHud_opengl.so:
