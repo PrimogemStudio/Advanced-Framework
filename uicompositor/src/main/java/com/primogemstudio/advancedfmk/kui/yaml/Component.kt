@@ -1,5 +1,7 @@
 package com.primogemstudio.advancedfmk.kui.yaml
 
+import org.joml.Vector4f
+
 enum class ComponentType(val clz: String) {
     GROUP("com/primogemstudio/advancedfmk/kui/elements/GroupElement"),
     TEXT("com/primogemstudio/advancedfmk/kui/elements/TextElement"),
@@ -28,6 +30,7 @@ class RectangleComponent(
     var thickness: Float? = null,
     var smoothedge: Float? = null,
     var texture: String? = null,
+    var textureUV: Vector4f? = null,
     var filter: Map<String, String>? = null
 ) : Component(ComponentType.RECTANGLE)
 

@@ -20,6 +20,7 @@ class RectangleElement(
     var radius: Float,
     var thickness: Float,
     var smoothedge: Float,
+    var textureUV: Vector4f,
     var texturePath: ResourceLocation? = null,
     var filter: FilterBase? = null
 ) : RealElement(id, pos), FilteredElement {
@@ -55,16 +56,16 @@ class RectangleElement(
                 .setColor(color.x, color.y, color.z, color.w)
         } else {
             buff.addVertex(matrix, pos.x - bdsize, pos.y - bdsize, 0f)
-                .setUv(0f, 0f)
+                .setUv(textureUV[0], textureUV[2])
                 .setColor(color.x, color.y, color.z, color.w)
             buff.addVertex(matrix, pos.x - bdsize, pos.y + size.y + bdsize, 0f)
-                .setUv(0f, 1f)
+                .setUv(textureUV[0], textureUV[3])
                 .setColor(color.x, color.y, color.z, color.w)
             buff.addVertex(matrix, pos.x + size.x + bdsize, pos.y + size.y + bdsize, 0f)
-                .setUv(1f, 1f)
+                .setUv(textureUV[1], textureUV[3])
                 .setColor(color.x, color.y, color.z, color.w)
             buff.addVertex(matrix, pos.x + size.x + bdsize, pos.y - bdsize, 0f)
-                .setUv(1f, 0f)
+                .setUv(textureUV[1], textureUV[2])
                 .setColor(color.x, color.y, color.z, color.w)
         }
         if (filter != null) RenderSystem.disableBlend() else RenderSystem.enableBlend()

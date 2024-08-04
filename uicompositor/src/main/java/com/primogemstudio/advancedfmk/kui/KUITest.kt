@@ -16,12 +16,36 @@ import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 
+val instance = KUITest()
+
 class KUITest {
-    val elem = YamlCompiler(YamlParser.parse(
+    companion object {
+        var res = YamlCompiler(YamlParser.parse(
+            String(
+                KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml")!!.readAllBytes()
+            )
+        )).build() as GroupElement
+    }
+
+    var elem = YamlCompiler(YamlParser.parse(
         String(
             KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
         )
     )).build() as GroupElement
+
+    fun reload() {
+        elem = YamlCompiler(YamlParser.parse(
+            String(
+                KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
+            )
+        )).build() as GroupElement
+        res = YamlCompiler(YamlParser.parse(
+            String(
+                KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml")!!.readAllBytes()
+            )
+        )).build() as GroupElement
+    }
+
     val t = "0123456789abcdef"
     val snake = Main()
 

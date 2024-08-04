@@ -13,6 +13,7 @@ import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 import java.nio.file.Files
 import kotlin.io.path.Path
+import kotlin.random.Random
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
 fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
@@ -56,9 +57,10 @@ fun MethodNode.invokespecial(s: String, s2: String, s3: String) = visitMethodIns
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
     fun build(): Any {
         val cn = ClassNode()
+        val cnn = root.className.replace("\$random", Random.nextInt().toString())
         cn.access = ACC_PUBLIC or ACC_FINAL
         cn.version = V21
-        cn.name = root.className.replace(".", "/")
+        cn.name = cnn.replace(".", "/")
         cn.superName = "java/lang/Object"
         cn.sourceFile = "<yaml>"
 
@@ -80,7 +82,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             RECTANGLE -> buildRectangleElement(mn, root.component as RectangleComponent, root.rootName)
             null -> throw NullPointerException()
         }
-        mn.visitFieldInsn(PUTFIELD, root.className.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
+        mn.visitFieldInsn(PUTFIELD, cnn.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
 
         mn.return_()
 
@@ -91,7 +93,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         cn.accept(cw)
 
         Files.write(Path("TestUI.class"), cw.toByteArray())
-        val c = defineClass(root.className, cw.toByteArray())
+        val c = defineClass(cnn, cw.toByteArray())
 
         val cs = c.getConstructor()
         val ins = cs.newInstance()
@@ -157,6 +159,14 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.thickness?: 0f)
         mn.ldc(c.smoothedge?: 0f)
 
+        mn.new("org/joml/Vector4f")
+        mn.dup()
+        mn.ldc(c.textureUV?.get(0)?: 0f)
+        mn.ldc(c.textureUV?.get(1)?: 1f)
+        mn.ldc(c.textureUV?.get(2)?: 0f)
+        mn.ldc(c.textureUV?.get(3)?: 1f)
+        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+
         if (c.texture != null) {
             mn.ldc(c.texture!!)
             mn.visitMethodInsn(
@@ -212,7 +222,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.invokespecial(
             "com/primogemstudio/advancedfmk/kui/elements/RectangleElement",
             "<init>",
-            "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLnet/minecraft/resources/ResourceLocation;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
+            "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLorg/joml/Vector4f;Lnet/minecraft/resources/ResourceLocation;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
         )
     }
 
