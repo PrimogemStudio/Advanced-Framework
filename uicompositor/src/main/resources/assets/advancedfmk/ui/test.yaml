@@ -11,6 +11,9 @@ root:
       radius: 5
       thickness: 0
       smoothedge: 0.006
+      filter:
+        type: post
+        location: minecraft:shaders/filter/gaussian_blur.json
 
     test_rect_01:
       type: rect

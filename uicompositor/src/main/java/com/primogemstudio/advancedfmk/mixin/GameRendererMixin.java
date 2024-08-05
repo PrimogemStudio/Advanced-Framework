@@ -19,8 +19,8 @@ public class GameRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/gui/GuiGraphics;<init>(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V"))
     private void preRender(DeltaTracker deltaTracker, boolean bl, CallbackInfo ci) {
-        int w = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        int h = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        int w = Minecraft.getInstance().getWindow().getWidth();
+        int h = Minecraft.getInstance().getWindow().getHeight();
 
         if (width != w || height != h) {
             width = w;
