@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "advancedfmk_neoui",
+  "version": "${version}",
+  "name": "Neo UI (Advanced Framework)",
+  "description": "Rewritten UI parser & renderer for Advanced Framework",
+  "authors": [
+    "Jack253-png",
+    "hackermdch"
+  ],
+  "contact": {
+    "repo": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "sources": "https://github.com/PrimogemStudio/Advanced-Framework",
+    "issues": "https://github.com/PrimogemStudio/Advanced-Framework/issues",
+    "homepage": "https://primogemstudio.github.io/advancedfmk-wiki"
+  },
+  "license": "GPLv3",
+  "icon": "assets/advancedfmk_neoui/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+    ]
+  },
+  "mixins": [
+    "advancedfmk.neoui.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric": ">=0.100.1",
+    "minecraft": "1.21"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "parent": "advancedfmk"
+    }
+  }
+}

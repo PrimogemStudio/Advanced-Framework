@@ -7,6 +7,8 @@
   "modmenu.descriptionTranslation.advancedfmk_commonutils": "Advanced Framework 使用的工具函数",
   "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_uicompositor": "Advanced Framework 的 UI 解析器 & 渲染器",
+  "modmenu.nameTranslation.advancedfmk_neoui": "neoui (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_neoui": "Advanced Framework 经过重写的的 UI 解析器 & 渲染器",
   "modmenu.nameTranslation.advancedfmk_simulator": "simulator (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_simulator": "Advanced Framework 的数学模型模拟器",
   "modmenu.nameTranslation.advancedfmk_binfiles": "binfiles (Advanced Framework)",
