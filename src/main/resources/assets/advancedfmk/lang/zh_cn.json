@@ -12,5 +12,7 @@
   "modmenu.nameTranslation.advancedfmk_simulator": "simulator (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_simulator": "Advanced Framework 的数学模型模拟器",
   "modmenu.nameTranslation.advancedfmk_binfiles": "binfiles (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_binfiles": "Advanced Framework 的二进制文件读写支持"
+  "modmenu.descriptionTranslation.advancedfmk_binfiles": "Advanced Framework 的二进制文件读写支持",
+  "modmenu.nameTranslation.advancedfmk_fontengine": "fontengine (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_fontengine": "Advanced Framework 的字体引擎"
 }
