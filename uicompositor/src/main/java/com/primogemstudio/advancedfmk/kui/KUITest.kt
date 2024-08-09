@@ -53,7 +53,7 @@ class KUITest {
         PipeAnimationEvent<Float> {
             for (x in 0 ..< 16) {
                 for (y in 0 ..< 16) {
-                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.y = it + y * 12
+                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.y = it + y * 10
                 }
             }
             elem.pos.y = it
@@ -61,7 +61,7 @@ class KUITest {
         PipeAnimationEvent<Float> {
             for (x in 0 ..< 16) {
                 for (y in 0 ..< 16) {
-                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.x = it + x * 12
+                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.x = it + x * 10
                 }
             }
             elem.pos.x = it

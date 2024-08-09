@@ -72,9 +72,7 @@ class RectangleElement(
         BufferUploader.drawWithShader(buff.build()!!)
         if (filter != null) RenderSystem.enableBlend() else RenderSystem.disableBlend()
 
-        RenderSystem.disableBlend()
         filter?.arg("Radius", 16)
         filter?.apply(data)
-        RenderSystem.enableBlend()
     }
 }
