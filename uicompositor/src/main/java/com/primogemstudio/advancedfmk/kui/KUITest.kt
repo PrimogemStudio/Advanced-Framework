@@ -48,8 +48,16 @@ class KUITest {
 
     val t = "0123456789abcdef"
     val snake = Main()
+    var off = 0f
 
     val animations: List<AnimationEvent<Float>> = listOf(
+        AnimationEvent(
+            System.currentTimeMillis(),
+            1000,
+            0f,
+            50f,
+            BackOut
+        ) { off = it }.apply { onEventTrigger = { if (finished() > 1000) reset() } },
         PipeAnimationEvent<Float> {
             for (x in 0 ..< 16) {
                 for (y in 0 ..< 16) {
@@ -61,7 +69,7 @@ class KUITest {
         PipeAnimationEvent<Float> {
             for (x in 0 ..< 16) {
                 for (y in 0 ..< 16) {
-                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.x = it + x * 10
+                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.x = it + x * 10 + off
                 }
             }
             elem.pos.x = it
