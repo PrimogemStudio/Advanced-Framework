@@ -69,7 +69,7 @@ class RectangleElement(
                 .setColor(color.x, color.y, color.z, color.w)
         }
         if (filter != null) RenderSystem.disableBlend() else RenderSystem.enableBlend()
-        BufferUploader.drawWithShader(buff.build()!!)
+        BufferUploader.drawWithShader(buff.buildOrThrow())
         if (filter != null) RenderSystem.enableBlend() else RenderSystem.disableBlend()
 
         filter?.arg("Radius", 16)

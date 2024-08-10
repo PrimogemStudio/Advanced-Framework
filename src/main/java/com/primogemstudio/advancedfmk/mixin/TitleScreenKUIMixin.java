@@ -18,6 +18,8 @@ public class TitleScreenKUIMixin {
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
+
+        // AdvancedFrameworkUICompositorClient.test(graphics.pose().last().pose());
     }
 
     @Mixin(Minecraft.class)
