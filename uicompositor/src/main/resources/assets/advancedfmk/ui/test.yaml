@@ -3,6 +3,9 @@ root:
   name: main
   type: group
   components:
+    test:
+      type: line
+
     test_rect_00:
       type: rect
       pos: [ 0, 0 ]

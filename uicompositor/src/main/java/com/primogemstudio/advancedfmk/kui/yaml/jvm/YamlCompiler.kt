@@ -1,11 +1,8 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
 import com.ibm.icu.impl.ClassLoaderUtil
+import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
-import com.primogemstudio.advancedfmk.kui.yaml.GroupComponent
-import com.primogemstudio.advancedfmk.kui.yaml.RectangleComponent
-import com.primogemstudio.advancedfmk.kui.yaml.TextComponent
-import com.primogemstudio.advancedfmk.kui.yaml.UIRoot
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
@@ -81,6 +78,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             TEXT -> buildTextElement(mn, root.component as TextComponent, root.rootName)
             RECTANGLE -> buildRectangleElement(mn, root.component as RectangleComponent, root.rootName)
             null -> throw NullPointerException()
+            GEOMETRY_LINE -> buildGeometryLineElement(mn, root.component as GeometryLineComponent, root.rootName)
         }
         mn.visitFieldInsn(PUTFIELD, cnn.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
 
@@ -98,6 +96,56 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         val cs = c.getConstructor()
         val ins = cs.newInstance()
         return c.getField("internal").get(ins)
+    }
+
+    private fun buildGeometryLineElement(mn: MethodNode, c: GeometryLineComponent, n: String) {
+        mn.new("com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement")
+        mn.dup()
+
+        mn.ldc(n)
+
+        if (c.filter != null) {
+            when (c.filter!!["type"]) {
+                "post" -> {
+                    mn.new("com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter")
+                    mn.dup()
+                    mn.visitMethodInsn(
+                        INVOKESTATIC,
+                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        "getInstance",
+                        "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
+                        true
+                    )
+                    mn.ldc(c.filter!!["location"] as String)
+                    mn.visitMethodInsn(
+                        INVOKESTATIC,
+                        "net/minecraft/resources/ResourceLocation",
+                        "parse",
+                        "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
+                        false
+                    )
+
+                    mn.visitMethodInsn(
+                        INVOKEINTERFACE,
+                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        "manage",
+                        "(Lnet/minecraft/resources/ResourceLocation;)Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
+                        true
+                    )
+
+                    mn.invokespecial(
+                        "com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter",
+                        "<init>",
+                        "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V"
+                    )
+                    mn.checkcast("com/primogemstudio/advancedfmk/kui/pipe/FilterBase")
+                }
+                else -> mn.aconst_null()
+            }
+        }
+        else mn.aconst_null()
+
+        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement", "<init>", "(Ljava/lang/String;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
     }
 
     private fun buildGroupElement(mn: MethodNode, c: GroupComponent, n: String) {
@@ -121,6 +169,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 GROUP -> buildGroupElement(mn, u as GroupComponent, t)
                 RECTANGLE -> buildRectangleElement(mn, u as RectangleComponent, t)
                 null -> throw NullPointerException()
+                GEOMETRY_LINE -> buildGeometryLineElement(mn, u as GeometryLineComponent, t)
             }
             mn.aastore()
             mn.aload1()

@@ -5,7 +5,8 @@ import org.joml.Vector4f
 enum class ComponentType(val clz: String) {
     GROUP("com/primogemstudio/advancedfmk/kui/elements/GroupElement"),
     TEXT("com/primogemstudio/advancedfmk/kui/elements/TextElement"),
-    RECTANGLE("com/primogemstudio/advancedfmk/kui/elements/RectangleElement");
+    RECTANGLE("com/primogemstudio/advancedfmk/kui/elements/RectangleElement"),
+    GEOMETRY_LINE("com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement");
 }
 
 data class UIRoot(
@@ -41,3 +42,7 @@ class TextComponent(
     var textsize: Int? = null,
     var vanilla: Boolean? = false
 ) : Component(ComponentType.TEXT)
+
+class GeometryLineComponent(
+    var filter: Map<String, String>? = null
+) : Component(ComponentType.GEOMETRY_LINE)

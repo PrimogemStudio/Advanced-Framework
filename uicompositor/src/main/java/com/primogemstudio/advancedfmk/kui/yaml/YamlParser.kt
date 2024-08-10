@@ -21,6 +21,7 @@ object YamlParser {
             parser.dump(i.toMutableMap().apply { this["type"] = null }),
             RectangleComponent::class.java
         ).apply { type = ComponentType.RECTANGLE }
+        "line" -> parser.loadAs(parser.dump(i.toMutableMap().apply { this["type"] = null }), GeometryLineComponent::class.java).apply { type = ComponentType.GEOMETRY_LINE }
 
         else -> null
     }
