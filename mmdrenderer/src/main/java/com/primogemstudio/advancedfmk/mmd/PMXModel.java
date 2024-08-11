@@ -12,8 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.*;
 
 public class PMXModel implements AutoCloseable {
     @AccessFromNative
@@ -40,8 +39,6 @@ public class PMXModel implements AutoCloseable {
         textureManager.register(texture);
         mappingVertices();
         ibo = GlStateManager._glGenBuffers();
-        GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), GL_STATIC_DRAW);
         var p = ptr;
         var tm = textureManager;
         var t_ibo = ibo;
@@ -70,6 +67,7 @@ public class PMXModel implements AutoCloseable {
 
     public void bindIndices() {
         GlStateManager._glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        RenderSystem.glBufferData(GL_ELEMENT_ARRAY_BUFFER, getIndices(), GL_STATIC_DRAW);
     }
 
     private float lastTime = System.nanoTime() / 1000000000f;
