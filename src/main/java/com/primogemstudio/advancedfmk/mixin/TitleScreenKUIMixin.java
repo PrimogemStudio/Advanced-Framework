@@ -31,28 +31,17 @@ public class TitleScreenKUIMixin {
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
-
         if (wrapper == null) {
-            wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
-            wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
+            wrapper = new EntityRenderWrapper(new PMXModel(new File("D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\lumine.pmx")));
+            wrapper.getModel().animation.add(new File("d:/1.vmd"));
             wrapper.getModel().animation.setupAnimation();
         }
-
-        var m = Minecraft.getInstance().gameRenderer.getProjectionMatrix(30);
-        // m.translate(0f, 0f, 11000f);
-        // m.scale(0.1f, 0.1f, 1f);
-        // m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
-        RenderSystem.setProjectionMatrix(m, VertexSorting.DISTANCE_TO_ORIGIN);
-
+        RenderSystem.setProjectionMatrix(Minecraft.getInstance().gameRenderer.getProjectionMatrix(30), VertexSorting.DISTANCE_TO_ORIGIN);
         var ps = new PoseStack();
         ps.scale(0.5f, 0.5f, 0.5f);
         ps.translate(-1f, -1.45f, 22000f);
-        RenderSystem.disableCull();
-        RenderSystem.disableDepthTest();
         wrapper.render(0f, ps, source, 0xFF);
-        source.endBatch(wrapper.getRenderType());
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableCull();
+        source.endBatch();
     }
 
     @Mixin(Minecraft.class)

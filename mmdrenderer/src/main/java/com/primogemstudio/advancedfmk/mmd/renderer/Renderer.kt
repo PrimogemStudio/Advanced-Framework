@@ -167,7 +167,6 @@ class TextureManager(private val texture: MMDTextureAtlas) {
 }
 
 object CustomRenderType {
-    @Suppress("INACCESSIBLE_TYPE")
     fun saba(id: ResourceLocation): RenderType {
         return RenderType.create(
             "mmd_dbg_saba",
@@ -176,12 +175,11 @@ object CustomRenderType {
             0x200000,
             false,
             false,
-            CompositeState.builder().setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+            CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setOverlayState(RenderStateShard.OVERLAY).setLightmapState(RenderStateShard.LIGHTMAP)
-                .createCompositeState(true)
+                .setTransparencyState(RenderStateShard.NO_TRANSPARENCY).setOverlayState(RenderStateShard.NO_OVERLAY)
+                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
         )
     }
 }
