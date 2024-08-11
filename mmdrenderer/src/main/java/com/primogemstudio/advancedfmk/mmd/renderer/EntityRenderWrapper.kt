@@ -13,7 +13,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class EntityRenderWrapper(val model: PMXModel) {
-    private val renderType: RenderType = CustomRenderType.saba(model.textureManager.id)
+    val renderType: RenderType = CustomRenderType.saba(model.textureManager.id)
 
     companion object {
         private val constant_buffer: ByteBuffer = ByteBuffer.allocateDirect(128).order(ByteOrder.nativeOrder())

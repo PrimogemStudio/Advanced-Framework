@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,18 +38,22 @@ public class TitleScreenKUIMixin {
             wrapper.getModel().animation.setupAnimation();
         }
 
-        var mc = Minecraft.getInstance();
-        var old = RenderSystem.getProjectionMatrix();
-        var vs = RenderSystem.getVertexSorting();
-        RenderSystem.setProjectionMatrix(mc.gameRenderer.getProjectionMatrix(70), VertexSorting.DISTANCE_TO_ORIGIN);
+        var m = new Matrix4f();
+        m.translate(0f, 0f, 11000f);
+        m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
 
-        var ps = new PoseStack();
-        ps.scale(0.5f, 0.5f, 0.5f);
-        ps.translate(0, 0, 5);
+        RenderSystem.setProjectionMatrix(m, VertexSorting.ORTHOGRAPHIC_Z);
 
-        wrapper.render(180f, ps, source, 0xFF);
-        source.endBatch();
-        RenderSystem.setProjectionMatrix(old, vs);
+        graphics.pose().pushPose();
+        graphics.pose().scale(0.5f, 0.5f, 0.5f);
+        graphics.pose().translate(-1f, -1.25f, -1f);
+        RenderSystem.disableCull();
+        RenderSystem.disableDepthTest();
+        wrapper.render(180f, graphics.pose(), source, 0xFF);
+        source.endBatch(wrapper.getRenderType());
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
+        graphics.pose().popPose();
     }
 
     @Mixin(Minecraft.class)
