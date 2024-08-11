@@ -1,19 +1,15 @@
 package com.primogemstudio.advancedfmk.mixin;
 
-import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
-import com.primogemstudio.advancedfmk.kui.animation.DefaultFunctionsKt;
 import com.primogemstudio.advancedfmk.mmd.PMXModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,6 +26,7 @@ public class TitleScreenKUIMixin {
     private EntityRenderWrapper wrapper;
     @Unique
     private MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
+
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
@@ -40,22 +37,18 @@ public class TitleScreenKUIMixin {
             wrapper.getModel().animation.setupAnimation();
         }
 
-        var m = new Matrix4f();
-        m.translate(0f, 0f, 11000f);
-        m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
+        var mc = Minecraft.getInstance();
+        var old = RenderSystem.getProjectionMatrix();
+        var vs = RenderSystem.getVertexSorting();
+        RenderSystem.setProjectionMatrix(mc.gameRenderer.getProjectionMatrix(70), VertexSorting.DISTANCE_TO_ORIGIN);
 
-        RenderSystem.setProjectionMatrix(m, VertexSorting.DISTANCE_TO_ORIGIN);
+        var ps = new PoseStack();
+        ps.scale(0.5f, 0.5f, 0.5f);
+        ps.translate(0, 0, 5);
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(0.5f, 0.5f, 0.5f);
-        graphics.pose().translate(-1f, -2.45f, -1f);
-        RenderSystem.disableCull();
-        RenderSystem.disableDepthTest();
-        wrapper.render(180f, graphics.pose(), source, 0xFF);
-        source.endBatch(wrapper.getRenderType());
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableCull();
-        graphics.pose().popPose();
+        wrapper.render(180f, ps, source, 0xFF);
+        source.endBatch();
+        RenderSystem.setProjectionMatrix(old, vs);
     }
 
     @Mixin(Minecraft.class)
