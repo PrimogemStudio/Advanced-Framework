@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
+import com.primogemstudio.advancedfmk.kui.animation.DefaultFunctionsKt;
 import com.primogemstudio.advancedfmk.mmd.PMXModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
 import net.minecraft.client.Minecraft;
@@ -38,14 +39,19 @@ public class TitleScreenKUIMixin {
         }
 
         var m = new Matrix4f();
-        m.translate(0f, -0.02f, 11000f);
+        m.translate(0f, 0f, 11000f);
         m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
+
         RenderSystem.setProjectionMatrix(m, VertexSorting.DISTANCE_TO_ORIGIN);
 
+        graphics.pose().pushPose();
+        graphics.pose().scale(0.5f, 0.5f, 0.5f);
+        graphics.pose().translate(-1f, -2.45f, 0f);
         RenderSystem.disableCull();
-        wrapper.render(90f, graphics.pose(), source, 0xFF);
+        wrapper.render(180f, graphics.pose(), source, 0xFF);
         source.endBatch(wrapper.getRenderType());
         RenderSystem.enableCull();
+        graphics.pose().popPose();
     }
 
     @Mixin(Minecraft.class)
