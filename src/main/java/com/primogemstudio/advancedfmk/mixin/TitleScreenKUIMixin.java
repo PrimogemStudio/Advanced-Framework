@@ -30,12 +30,13 @@ public class TitleScreenKUIMixin {
     private EntityRenderWrapper wrapper;
     @Unique
     private MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
+
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
         if (wrapper == null) {
-            wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
+            wrapper = new EntityRenderWrapper(new PMXModel(new File("D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\lumine.pmx")));
         }
 
         var m = new Matrix4f();

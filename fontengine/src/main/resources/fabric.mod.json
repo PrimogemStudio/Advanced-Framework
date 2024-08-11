@@ -29,9 +29,9 @@
     "advancedfmk.fontengine.mixin.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "fabric": ">=0.100.1",
-    "minecraft": "1.21"
+    "fabricloader": ">=0.16",
+    "fabric": ">=0.102",
+    "minecraft": ">=1.21.1"
   },
   "custom": {
     "modmenu": {

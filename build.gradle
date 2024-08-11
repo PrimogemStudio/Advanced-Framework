@@ -84,7 +84,7 @@ dependencies {
     implementation "org.apiguardian:apiguardian-api:${project.apiguardian_api_version}"
 
     modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modRuntimeOnly "maven.modrinth:fpsdisplay:${project.fpsdisplay_version}"
+//    modRuntimeOnly "maven.modrinth:fpsdisplay:${project.fpsdisplay_version}"
 //    modRuntimeOnly "maven.modrinth:iris:${project.iris_version}"
     // runtimeOnly "org.anarres:jcpp:${project.jcpp_version}"
     // runtimeOnly "io.github.douira:glsl-transformer:${project.glsl_transformer_version}"
