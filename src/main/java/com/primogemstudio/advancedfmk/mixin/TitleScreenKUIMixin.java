@@ -38,22 +38,21 @@ public class TitleScreenKUIMixin {
             wrapper.getModel().animation.setupAnimation();
         }
 
-        var m = new Matrix4f();
+        var m = Minecraft.getInstance().gameRenderer.getProjectionMatrix(30);
         m.translate(0f, 0f, 11000f);
-        m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
+        // m.scale(0.1f, 0.1f, 1f);
+        // m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
+        RenderSystem.setProjectionMatrix(m, VertexSorting.DISTANCE_TO_ORIGIN);
 
-        RenderSystem.setProjectionMatrix(m, VertexSorting.ORTHOGRAPHIC_Z);
-
-        graphics.pose().pushPose();
-        graphics.pose().scale(0.5f, 0.5f, 0.5f);
-        graphics.pose().translate(-1f, -1.25f, -1f);
+        var ps = new PoseStack();
+        ps.scale(0.5f, 0.5f, 0.5f);
+        ps.translate(0f, -2f, -1f);
         RenderSystem.disableCull();
         RenderSystem.disableDepthTest();
-        wrapper.render(180f, graphics.pose(), source, 0xFF);
+        wrapper.render(0f, ps, source, 0xFF);
         source.endBatch(wrapper.getRenderType());
         RenderSystem.enableDepthTest();
         RenderSystem.enableCull();
-        graphics.pose().popPose();
     }
 
     @Mixin(Minecraft.class)
