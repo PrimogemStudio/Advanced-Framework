@@ -30,13 +30,14 @@ public class TitleScreenKUIMixin {
     private EntityRenderWrapper wrapper;
     @Unique
     private MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
-
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
         if (wrapper == null) {
-            wrapper = new EntityRenderWrapper(new PMXModel(new File("D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\lumine.pmx")));
+            wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
+            wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
+            wrapper.getModel().animation.setupAnimation();
         }
 
         var m = new Matrix4f();
@@ -47,10 +48,12 @@ public class TitleScreenKUIMixin {
 
         graphics.pose().pushPose();
         graphics.pose().scale(0.5f, 0.5f, 0.5f);
-        graphics.pose().translate(-1f, -2.45f, 0f);
+        graphics.pose().translate(-1f, -2.45f, -1f);
         RenderSystem.disableCull();
+        RenderSystem.disableDepthTest();
         wrapper.render(180f, graphics.pose(), source, 0xFF);
         source.endBatch(wrapper.getRenderType());
+        RenderSystem.enableDepthTest();
         RenderSystem.enableCull();
         graphics.pose().popPose();
     }
