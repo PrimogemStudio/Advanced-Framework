@@ -39,14 +39,14 @@ public class TitleScreenKUIMixin {
         }
 
         var m = Minecraft.getInstance().gameRenderer.getProjectionMatrix(30);
-        m.translate(0f, 0f, 11000f);
+        // m.translate(0f, 0f, 11000f);
         // m.scale(0.1f, 0.1f, 1f);
         // m.scale(1f, (float) Minecraft.getInstance().getWindow().getWidth() / Minecraft.getInstance().getWindow().getHeight(), 1f);
         RenderSystem.setProjectionMatrix(m, VertexSorting.DISTANCE_TO_ORIGIN);
 
         var ps = new PoseStack();
         ps.scale(0.5f, 0.5f, 0.5f);
-        ps.translate(0f, -2f, -1f);
+        ps.translate(-1f, -1.45f, 22000f);
         RenderSystem.disableCull();
         RenderSystem.disableDepthTest();
         wrapper.render(0f, ps, source, 0xFF);
