@@ -13,7 +13,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class EntityRenderWrapper(val model: PMXModel) {
-    val renderType: RenderType = CustomRenderType.saba(model.textureManager.id)
+    private val renderType: RenderType = CustomRenderType.saba(model.textureManager.id)
 
     companion object {
         private val constant_buffer: ByteBuffer = ByteBuffer.allocateDirect(128).order(ByteOrder.nativeOrder())
@@ -24,25 +24,6 @@ class EntityRenderWrapper(val model: PMXModel) {
     ) {
         val vc = buffer.getBuffer(renderType)
         val buf = vc as BufferBuilder
-        buf as BufferBuilderExt
-        buf.setPMXModel(model)
-        poseStack.pushPose()
-        poseStack.scale(0.1f, 0.1f, 0.1f)
-        poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
-        with(poseStack.last()) {
-            pose().get(0, constant_buffer)
-            normal().get(64, constant_buffer)
-            Vector2i(OverlayTexture.NO_OVERLAY, packedLight).get(100, constant_buffer)
-            constant_buffer.putInt(108, buf.padding())
-        }
-        model.updateAnimation()
-        model.render(buf.resize(model.vertexCount), constant_buffer)
-        poseStack.popPose()
-    }
-
-    fun render(
-        entityYaw: Float, poseStack: PoseStack, buf: BufferBuilder, packedLight: Int
-    ) {
         buf as BufferBuilderExt
         buf.setPMXModel(model)
         poseStack.pushPose()

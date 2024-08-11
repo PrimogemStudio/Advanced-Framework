@@ -178,8 +178,9 @@ object CustomRenderType {
             CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER)
                 .setTextureState(RenderStateShard.TextureStateShard(id, false, false))
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                .setTransparencyState(RenderStateShard.NO_TRANSPARENCY).setOverlayState(RenderStateShard.NO_OVERLAY)
-                .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(true)
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setOverlayState(RenderStateShard.OVERLAY).setLightmapState(RenderStateShard.LIGHTMAP)
+                .createCompositeState(true)
         )
     }
 }
