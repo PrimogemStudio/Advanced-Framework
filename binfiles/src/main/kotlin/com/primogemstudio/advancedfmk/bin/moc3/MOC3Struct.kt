@@ -181,6 +181,12 @@ data class MOC3ParametersV42PointerMap(
     var blendShapeParameterBindingSourcesCountsOffset: Int
 )
 
+data class MOC3BlendShapeParameterBindingsPointerMap(
+    var keySourcesBeginIndicesOffset: Int,
+    var keySourcesCountsOffset: Int,
+    var baseKeyIndicesOffset: Int
+)
+
 data class MOC3PointerMap(
     var countInfoOffset: Int,
     var canvasInfoOffset: Int,
@@ -217,7 +223,8 @@ data class MOC3PointerMap(
     var artMeshesV42KeyformColorSourcesBeginIndicesOffset: Int,
     var keyformColorsMultiplyOffset: MOC3KeyformColorsMultiplyPointerMap,
     var keyformColorsScreenOffset: MOC3KeyformColorsScreenPointerMap,
-    var parametersV42Offset: MOC3ParametersV42PointerMap
+    var parametersV42Offset: MOC3ParametersV42PointerMap,
+    var blendShapeParameterBindingsOffset: MOC3BlendShapeParameterBindingsPointerMap
 )
 
 data class MOC3Model(

@@ -185,7 +185,12 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
-            ) else MOC3ParametersV42PointerMap(-1, -1, -1)
+            ) else MOC3ParametersV42PointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapeParameterBindingsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapeParameterBindingsPointerMap(-1, -1, -1)
         )
     }
 
