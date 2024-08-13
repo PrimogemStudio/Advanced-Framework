@@ -1,6 +1,6 @@
 package com.primogemstudio.advancedfmk.tests
 
-import com.primogemstudio.advancedfmk.bin.NBTInputTextStream
+import com.primogemstudio.advancedfmk.bin.nbt.NBTInputTextStream
 import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
 import com.primogemstudio.advancedfmk.simulator.starrailike.file.Compressions
 import com.primogemstudio.advancedfmk.simulator.starrailike.file.SimulateResultBinaryFileOutputStream

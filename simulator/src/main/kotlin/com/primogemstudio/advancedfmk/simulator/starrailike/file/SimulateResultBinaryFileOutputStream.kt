@@ -1,6 +1,6 @@
 package com.primogemstudio.advancedfmk.simulator.starrailike.file
 
-import com.primogemstudio.advancedfmk.bin.NBTOutputStream
+import com.primogemstudio.advancedfmk.bin.nbt.NBTOutputStream
 import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
 import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.OBJECT_HP
 import org.apache.logging.log4j.LogManager

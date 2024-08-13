@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.bin
+package com.primogemstudio.advancedfmk.bin.nbt
 
 import java.io.DataInputStream
 import java.io.InputStream
