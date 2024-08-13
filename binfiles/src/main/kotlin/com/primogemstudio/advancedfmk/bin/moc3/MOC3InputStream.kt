@@ -261,6 +261,23 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
             parseInt(header.bigEndian)
         )
     }

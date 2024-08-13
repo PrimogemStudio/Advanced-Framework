@@ -312,7 +312,24 @@ data class MOC3CountInfoTableData(
     var warpDeformers: Int,
     var rotationDeformers: Int,
     var artMeshes: Int,
-    var parameters: Int
+    var parameters: Int,
+    var partKeyforms: Int,
+    var warpDeformerKeyforms: Int,
+    var rotationDeformerKeyforms: Int,
+    var artMeshKeyforms: Int,
+    var keyformPositions: Int,
+    var parameterBindingIndices: Int,
+    var keyformBindings: Int,
+    var parameterBindings: Int,
+    var keys: Int,
+    var uvs: Int,
+    var positionIndices: Int,
+    var drawableMasks: Int,
+    var drawOrderGroups: Int,
+    var drawOrderGroupObjects: Int,
+    var glue: Int,
+    var glueInfo: Int,
+    var glueKeyforms: Int
 )
 
 data class MOC3Data(
