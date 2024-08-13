@@ -104,10 +104,38 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian)
             ),
             parseInt(header.bigEndian),
-            MOC3WarpDeformerKeyforms(
+            MOC3WarpDeformerKeyformsPointerMap(
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
-            )
+            ),
+            MOC3RotateDeformerKeyformsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3ArtMeshKeyformsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            MOC3KeyformsBindingsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3ParameterBindingsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian)
         )
     }
 

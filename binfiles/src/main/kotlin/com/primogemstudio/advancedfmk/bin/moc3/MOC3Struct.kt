@@ -97,9 +97,35 @@ data class MOC3ParametersPointerMap(
     var parametersBindingSourcesCountOffset: Int
 )
 
-data class MOC3WarpDeformerKeyforms(
+data class MOC3WarpDeformerKeyformsPointerMap(
     var opacitiesOffset: Int,
     var keyformPositionSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3RotateDeformerKeyformsPointerMap(
+    var opacitiesOffset: Int,
+    var anglesOffset: Int,
+    var xOriginsOffset: Int,
+    var yOriginsOffset: Int,
+    var scalesOffset: Int,
+    var reflectOnXOffset: Int,
+    var reflectOnYOffset: Int
+)
+
+data class MOC3ArtMeshKeyformsPointerMap(
+    var opacitiesOffset: Int,
+    var drawOrdersOffset: Int,
+    var keyformPositionSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3KeyformsBindingsPointerMap(
+    var parametersBindingIndexSourcesBeginIndicesOffset: Int,
+    var parametersBindingIndexSourcesCountsOffset: Int
+)
+
+data class MOC3ParameterBindingsPointerMap(
+    var keySourcesBeginIndicesOffset: Int,
+    var keySourcesCounts: Int
 )
 
 data class MOC3PointerMap(
@@ -113,7 +139,17 @@ data class MOC3PointerMap(
     var artMeshesPointerMap: MOC3ArtMeshesPointerMap,
     var parametersPointerMap: MOC3ParametersPointerMap,
     var partKeyframesDrawOrdersOffset: Int,
-    var warpDeformerKeyformsOffset: MOC3WarpDeformerKeyforms
+    var warpDeformerKeyformsOffset: MOC3WarpDeformerKeyformsPointerMap,
+    var rotateDeformerKeyformsOffset: MOC3RotateDeformerKeyformsPointerMap,
+    var artMeshKeyformsOffset: MOC3ArtMeshKeyformsPointerMap,
+    var keyformsPositionsCoordinatesOffset: Int,
+    var parameterBindingIndicesBindingSourceIndicesOffset: Int,
+    var keyformsBindingsOffset: MOC3KeyformsBindingsPointerMap,
+    var parameterBindingsOffset: MOC3ParameterBindingsPointerMap,
+    var keyValuesOffset: Int,
+    var uvOffset: Int,
+    var positionIndicesOffset: Int,
+    var drawableMasksAstMeshSourcesIndicesOffset: Int
 )
 
 data class MOC3Model(
