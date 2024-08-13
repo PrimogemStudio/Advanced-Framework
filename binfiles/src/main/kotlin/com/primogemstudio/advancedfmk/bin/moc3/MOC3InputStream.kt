@@ -135,7 +135,40 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
-            parseInt(header.bigEndian)
+            parseInt(header.bigEndian),
+            MOC3DrawOrderGroupsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3DrawOrderGroupObjectsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3GluePointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3GlueInfoPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            parseInt(header.bigEndian),
+            if (header.version?.flag!! >= MOC3Header.Version.V3_03_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3ParameterExtensionsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3ParameterExtensionsPointerMap(-1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1
         )
     }
 

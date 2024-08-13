@@ -125,7 +125,42 @@ data class MOC3KeyformsBindingsPointerMap(
 
 data class MOC3ParameterBindingsPointerMap(
     var keySourcesBeginIndicesOffset: Int,
-    var keySourcesCounts: Int
+    var keySourcesCountsOffset: Int
+)
+
+data class MOC3DrawOrderGroupsPointerMap(
+    var objectSourcesBeginIndicesOffset: Int,
+    var objectSourcesCountsOffset: Int,
+    var objectSourcesTotalCountsOffset: Int,
+    var maximumDrawOrdersOffset: Int,
+    var minimumDrawOrdersOffset: Int
+)
+
+data class MOC3DrawOrderGroupObjectsPointerMap(
+    var typesOffset: Int,
+    var indicesOffset: Int,
+    var selfIndicesOffset: Int
+)
+
+data class MOC3GluePointerMap(
+    var runtimeSpace0Offset: Int,
+    var keyformBindingSourcesIndicesOffset: Int,
+    var keyformSourcesBeginIndicesOffset: Int,
+    var keyformBindingSourcesCountsOffset: Int,
+    var artMeshIndicesAOffset: Int,
+    var artMeshIndicesBOffset: Int,
+    var infoSourcesBeginIndicesOffset: Int,
+    var infoSourcesCountsOffset: Int
+)
+
+data class MOC3GlueInfoPointerMap(
+    var weightsOffset: Int,
+    var positionIndicesOffset: Int
+)
+
+data class MOC3ParameterExtensionsPointerMap(
+    var keySourcesBeginIndicesOffset: Int,
+    var keySourcesCountsOffset: Int
 )
 
 data class MOC3PointerMap(
@@ -149,7 +184,17 @@ data class MOC3PointerMap(
     var keyValuesOffset: Int,
     var uvOffset: Int,
     var positionIndicesOffset: Int,
-    var drawableMasksAstMeshSourcesIndicesOffset: Int
+    var drawableMasksAstMeshSourcesIndicesOffset: Int,
+    var drawOrderGroupsOffset: MOC3DrawOrderGroupsPointerMap,
+    var drawOrderGroupObjectsOffset: MOC3DrawOrderGroupObjectsPointerMap,
+    var glueOffset: MOC3GluePointerMap,
+    var glueInfoOffset: MOC3GlueInfoPointerMap,
+    var glueKeyformsIntensitiesOffset: Int,
+    // >= v3.03
+    var warpDeformerKeyformsV33QuadSourceOffset: Int,
+    // >= v4.02
+    var parameterExtensionOffset: MOC3ParameterExtensionsPointerMap,
+    var warpDeformerKeyformsV42KeyformColorColorSourcesBeginIndicesOffset: Int
 )
 
 data class MOC3Model(

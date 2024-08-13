@@ -5,7 +5,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 fun main() {
-    val i = MOC3InputStream(Files.newInputStream(Path.of("/home/coder2/mmd/live2d/test.moc3")))
+    val i = MOC3InputStream(Files.newInputStream(Path.of("/home/coder2/mmd/live2d/test2.moc3")))
     val y = i.parse()
     println(y)
 }
