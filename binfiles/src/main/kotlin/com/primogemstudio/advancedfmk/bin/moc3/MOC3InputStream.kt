@@ -31,6 +31,23 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
         }
     }
 
+    fun parsePointerMap(header: MOC3Header): MOC3PointerMap {
+        return MOC3PointerMap(
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            MOC3PartPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+            )
+        )
+    }
+
     @OptIn(ExperimentalStdlibApi::class)
     fun test() {
         println("Current offset: ${size - available()}")
@@ -39,13 +56,12 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    fun parse() {
-        val header = parseHeader()
-        println(header)
-        println(parseInt(header.bigEndian))
-        println(parseInt(header.bigEndian))
-        println(parseInt(header.bigEndian).toHexString())
-        test()
+    fun parse(): MOC3Model {
+        return parseHeader().let {
+            MOC3Model(
+                it,
+                parsePointerMap(it)
+            )
+        }.apply { test() }
     }
 }

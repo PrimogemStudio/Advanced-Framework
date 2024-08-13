@@ -1,9 +1,9 @@
 package com.primogemstudio.advancedfmk.bin.moc3
 
 data class MOC3Header(
-    val magic: String,
-    val version: Version?,
-    val bigEndian: Boolean
+    var magic: String,
+    var version: Version?,
+    var bigEndian: Boolean
 ) {
     enum class Version(
         val flag: Int
@@ -21,3 +21,25 @@ data class MOC3Header(
         }
     }
 }
+
+data class MOC3PointerMap(
+    var countInfoOffset: Int,
+    var canvasInfoOffset: Int,
+    var runtimeDataOffset: Int,
+    var partOffset: MOC3PartPointerMap
+)
+
+data class MOC3PartPointerMap(
+    var idOffset: Int,
+    var keyframeBindingSourceIndicesOffset: Int,
+    var keyframeSourcesBeginIndicesOffset: Int,
+    var keyframeSourcesContentOffset: Int,
+    var visibleOffset: Int,
+    var enabledOffset: Int,
+    var parentPartIndicesOffset: Int
+)
+
+data class MOC3Model(
+    var header: MOC3Header,
+    val pointers: MOC3PointerMap
+)

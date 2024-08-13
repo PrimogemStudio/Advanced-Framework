@@ -6,5 +6,5 @@ import java.nio.file.Path
 
 fun main() {
     val i = MOC3InputStream(Files.newInputStream(Path.of("/home/coder2/mmd/live2d/test.moc3")))
-    i.parse()
+    println(i.parse())
 }
