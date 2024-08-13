@@ -1,14 +1,12 @@
 package com.primogemstudio.advancedfmk.bin.moc3
 
+import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
-    val size = available()
-
-    @OptIn(ExperimentalStdlibApi::class)
+class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`in`)) {
     fun parseInt(be: Boolean): Int {
         if (be) return readInt()
         else {
@@ -20,6 +18,7 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
     }
 
     fun parseHeader(): MOC3Header {
+        mark(-1)
         return MOC3Header(
             String(readNBytes(4)),
             MOC3Header.Version.get(readByte()),
@@ -252,23 +251,32 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
         )
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    fun test2() { println("Current offset: 0x${(size - available()).toHexString()}") }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    fun test() {
-        test2()
-        readNBytes(64).forEach {
-            print("0x" + it.toHexString() + " ")
-        }
+    fun parseCountInfoTableData(header: MOC3Header, pointers: MOC3PointerMap): MOC3CountInfoTableData {
+        reset()
+        mark(-1)
+        skipNBytes(pointers.countInfoOffset.toLong())
+        return MOC3CountInfoTableData(
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian)
+        )
     }
+
+    fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = MOC3Data(
+        parseCountInfoTableData(header, pointers)
+    )
 
     fun parse(): MOC3Model {
         return parseHeader().let {
+            val pointers = parsePointerMap(it)
             MOC3Model(
                 it,
-                parsePointerMap(it)
+                pointers,
+                parseData(it, pointers)
             )
-        }.apply { test() }
+        }
     }
 }

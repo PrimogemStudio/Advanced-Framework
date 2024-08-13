@@ -306,7 +306,21 @@ data class MOC3PointerMap(
     var blendShapesGlueOffset: MOC3BlendShapesGluePointerMap
 )
 
+data class MOC3CountInfoTableData(
+    var parts: Int,
+    var deformers: Int,
+    var warpDeformers: Int,
+    var rotationDeformers: Int,
+    var artMeshes: Int,
+    var parameters: Int
+)
+
+data class MOC3Data(
+    var countInfoTable: MOC3CountInfoTableData
+)
+
 data class MOC3Model(
     var header: MOC3Header,
-    val pointers: MOC3PointerMap
+    var pointers: MOC3PointerMap,
+    var data: MOC3Data
 )
