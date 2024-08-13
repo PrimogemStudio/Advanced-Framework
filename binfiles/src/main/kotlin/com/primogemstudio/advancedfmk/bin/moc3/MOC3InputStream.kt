@@ -44,24 +44,88 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3DeformersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3WarpDeformersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3RotateDeformersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3ArtMeshesPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            MOC3ParametersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ),
+            parseInt(header.bigEndian),
+            MOC3WarpDeformerKeyforms(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
             )
         )
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     fun test() {
-        println("Current offset: ${size - available()}")
+        println("Current offset: 0x${(size - available()).toHexString()}")
         readNBytes(16).forEach {
             print("0x" + it.toHexString() + " ")
         }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     fun parse(): MOC3Model {
         return parseHeader().let {
             MOC3Model(
                 it,
                 parsePointerMap(it)
             )
-        }.apply { test() }
+        }.apply { println(parseInt(header.bigEndian).toHexString()); test() }
     }
 }

@@ -1,5 +1,7 @@
 package com.primogemstudio.advancedfmk.bin.moc3
 
+import java.time.ZoneOffset
+
 data class MOC3Header(
     var magic: String,
     var version: Version?,
@@ -22,13 +24,6 @@ data class MOC3Header(
     }
 }
 
-data class MOC3PointerMap(
-    var countInfoOffset: Int,
-    var canvasInfoOffset: Int,
-    var runtimeDataOffset: Int,
-    var partOffset: MOC3PartPointerMap
-)
-
 data class MOC3PartPointerMap(
     var idOffset: Int,
     var keyframeBindingSourceIndicesOffset: Int,
@@ -36,7 +31,89 @@ data class MOC3PartPointerMap(
     var keyframeSourcesContentOffset: Int,
     var visibleOffset: Int,
     var enabledOffset: Int,
-    var parentPartIndicesOffset: Int
+    var parentPartIndicesOffset: Int,
+    var runtimeSpace0Offset: Int,
+)
+
+data class MOC3DeformersPointerMap(
+    var idOffset: Int,
+    var keyframeBindingSourceIndicesOffset: Int,
+    var visibleOffset: Int,
+    var enabledOffset: Int,
+    var parentPartIndicesOffset: Int,
+    var parentDeformerIndicesOffset: Int,
+    var typesIndicesOffset: Int,
+    var specificSourcesIndicesOffset: Int
+)
+
+data class MOC3WarpDeformersPointerMap(
+    var keyframeBindingSourceIndicesOffset: Int,
+    var keyframeSourcesBeginIndicesOffset: Int,
+    var keyframeSourcesContentOffset: Int,
+    var vertexCountsOffset: Int,
+    var rowsOffset: Int,
+    var columnsOffset: Int
+)
+
+data class MOC3RotateDeformersPointerMap(
+    var keyframeBindingSourceIndicesOffset: Int,
+    var keyframeSourcesBeginIndicesOffset: Int,
+    var keyframeSourcesContentOffset: Int,
+    var baseAngleOffset: Int
+)
+
+data class MOC3ArtMeshesPointerMap(
+    var runtimeSpace0Offset: Int,
+    var runtimeSpace1Offset: Int,
+    var runtimeSpace20Offset: Int,
+    var runtimeSpace3Offset: Int,
+    var idOffset: Int,
+    var keyframeBindingSourceIndicesOffset: Int,
+    var keyframeSourcesBeginIndicesOffset: Int,
+    var keyframeSourcesContentOffset: Int,
+    var visibleOffset: Int,
+    var enabledOffset: Int,
+    var parentPartIndicesOffset: Int,
+    var parentDeformerIndicesOffset: Int,
+    var textureNumberOffset: Int,
+    var drawableFlagsOffset: Int,
+    var vertexCountsOffset: Int,
+    var uvSourcesBeginOffset: Int,
+    var positionIndexSourcesBeginIndicesOffset: Int,
+    var positionIndexSourcesConutsOffset: Int,
+    var drawableMasksSourcesBeginIndicesOffset: Int,
+    var drawableMasksSourcesConutsOffset: Int
+)
+
+data class MOC3ParametersPointerMap(
+    var runtimeSpace0Offset: Int,
+    var idOffset: Int,
+    var maxValuesOffset: Int,
+    var minValuesOffset: Int,
+    var defaultValuesOffset: Int,
+    var repeatOffset: Int,
+    var decimalPlacesOffset: Int,
+    var parametersBindingSourcesBeginIndicesOffset: Int,
+    var parametersBindingSourcesCountOffset: Int
+)
+
+data class MOC3WarpDeformerKeyforms(
+    var opacitiesOffset: Int,
+    var keyformPositionSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3PointerMap(
+    var countInfoOffset: Int,
+    var canvasInfoOffset: Int,
+    var runtimeDataOffset: Int,
+    var partOffset: MOC3PartPointerMap,
+    var deformersOffset: MOC3DeformersPointerMap,
+    var warpDeformersOffset: MOC3WarpDeformersPointerMap,
+    var rotateDeformersOffset: MOC3RotateDeformersPointerMap,
+    var artMeshesPointerMap: MOC3ArtMeshesPointerMap,
+    var parametersPointerMap: MOC3ParametersPointerMap,
+    var partKeyframesDrawOrdersOffset: Int,
+    var warpDeformerKeyformsOffset: MOC3WarpDeformerKeyforms
 )
 
 data class MOC3Model(
