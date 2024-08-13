@@ -144,6 +144,7 @@ data class MOC3DrawOrderGroupObjectsPointerMap(
 
 data class MOC3GluePointerMap(
     var runtimeSpace0Offset: Int,
+    var idOffset: Int,
     var keyformBindingSourcesIndicesOffset: Int,
     var keyformSourcesBeginIndicesOffset: Int,
     var keyformBindingSourcesCountsOffset: Int,
@@ -159,6 +160,7 @@ data class MOC3GlueInfoPointerMap(
 )
 
 data class MOC3ParameterExtensionsPointerMap(
+    var runtimeSpace0Offset: Int,
     var keySourcesBeginIndicesOffset: Int,
     var keySourcesCountsOffset: Int
 )
@@ -185,6 +187,70 @@ data class MOC3BlendShapeParameterBindingsPointerMap(
     var keySourcesBeginIndicesOffset: Int,
     var keySourcesCountsOffset: Int,
     var baseKeyIndicesOffset: Int
+)
+
+data class MOC3BlendShapeKeyformBindingsPointerMap(
+    var parameterBindingSourcesIndicesOffset: Int,
+    var keyformSourcesBlendShapeIndicesOffset: Int,
+    var keyformSourcesBlendShapeCountsOffset: Int,
+    var blendShapeConstraintIndexSourcesBeginIndicesOffset: Int,
+    var blendShapeConstraintIndexSourcesCounts: Int
+)
+
+data class MOC3BlendShapesWarpDeformersPointerMap(
+    var targetIndicesOffset: Int,
+    var blendShapeKeyformBindingSourcesBeginIndicesOffset: Int,
+    var blendShapeKeyformBindingSourcesCounts: Int
+)
+
+data class MOC3BlendShapesArtMeshesPointerMap(
+    var targetIndicesOffset: Int,
+    var blendShapeKeyformBindingSourcesBeginIndicesOffset: Int,
+    var blendShapeKeyformBindingSourcesCounts: Int
+)
+
+data class MOC3BlendShapesConstraintsPointerMap(
+    var parametersIndicesOffset: Int,
+    var blendShapeConstraintValueSourcesBeginIndicesOffset: Int,
+    var blendShapeConstraintValueSourcesCounts: Int
+)
+
+data class MOC3BlendShapesConstraintValuesPointerMap(
+    var keysOffset: Int,
+    var valuesOffset: Int
+)
+
+data class MOC3WarpDeformerKeyformsV50PointerMap(
+    var keyformMultiplyColorSourcesBeginIndicesOffset: Int,
+    var keyformScreenColorSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3RotateDeformerKeyformsV50PointerMap(
+    var keyformMultiplyColorSourcesBeginIndicesOffset: Int,
+    var keyformScreenColorSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3ArtMeshKeyformsV50PointerMap(
+    var keyformMultiplyColorSourcesBeginIndicesOffset: Int,
+    var keyformScreenColorSourcesBeginIndicesOffset: Int
+)
+
+data class MOC3BlendShapesPartsPointerMap(
+    var targetIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceBeginIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceCounts: Int
+)
+
+data class MOC3BlendShapesRotateDeformersPointerMap(
+    var targetIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceBeginIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceCounts: Int
+)
+
+data class MOC3BlendShapesGluePointerMap(
+    var targetIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceBeginIndicesOffset: Int,
+    var blendShapeKeyformBindingSourceCounts: Int
 )
 
 data class MOC3PointerMap(
@@ -224,7 +290,20 @@ data class MOC3PointerMap(
     var keyformColorsMultiplyOffset: MOC3KeyformColorsMultiplyPointerMap,
     var keyformColorsScreenOffset: MOC3KeyformColorsScreenPointerMap,
     var parametersV42Offset: MOC3ParametersV42PointerMap,
-    var blendShapeParameterBindingsOffset: MOC3BlendShapeParameterBindingsPointerMap
+    var blendShapeParameterBindingsOffset: MOC3BlendShapeParameterBindingsPointerMap,
+    var blendShapeKeyformBindingsOffset: MOC3BlendShapeKeyformBindingsPointerMap,
+    var blendShapesWarpDeformersOffset: MOC3BlendShapesWarpDeformersPointerMap,
+    var blendShapesArtMeshesOffset: MOC3BlendShapesArtMeshesPointerMap,
+    var blendShapeConstraintSourcesIndicesOffset: Int,
+    var blendShapeConstraintOffset: MOC3BlendShapesConstraintsPointerMap,
+    var blendShapeConstraintValueOffset: MOC3BlendShapesConstraintValuesPointerMap,
+    // >= v5.00
+    var warpDeformerKeyformsV50Offset: MOC3WarpDeformerKeyformsV50PointerMap,
+    var rotateDeformerKeyformsV50Offset: MOC3RotateDeformerKeyformsV50PointerMap,
+    var artMeshDeformerKeyformsV50Offset: MOC3ArtMeshKeyformsV50PointerMap,
+    var blendShapesParts: MOC3BlendShapesPartsPointerMap,
+    var blendShapesRotateDeformersOffset: MOC3BlendShapesRotateDeformersPointerMap,
+    var blendShapesGlueOffset: MOC3BlendShapesGluePointerMap
 )
 
 data class MOC3Model(

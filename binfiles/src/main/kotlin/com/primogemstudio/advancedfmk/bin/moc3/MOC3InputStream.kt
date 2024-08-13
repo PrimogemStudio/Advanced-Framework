@@ -8,6 +8,7 @@ import java.nio.ByteOrder
 class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
     val size = available()
 
+    @OptIn(ExperimentalStdlibApi::class)
     fun parseInt(be: Boolean): Int {
         if (be) return readInt()
         else {
@@ -31,6 +32,7 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
         }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     fun parsePointerMap(header: MOC3Header): MOC3PointerMap {
         return MOC3PointerMap(
             parseInt(header.bigEndian),
@@ -156,6 +158,7 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
             ),
             MOC3GlueInfoPointerMap(
@@ -166,8 +169,9 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
             if (header.version?.flag!! >= MOC3Header.Version.V3_03_00.flag) parseInt(header.bigEndian) else -1,
             if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3ParameterExtensionsPointerMap(
                 parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
-            ) else MOC3ParameterExtensionsPointerMap(-1, -1),
+            )  else MOC3ParameterExtensionsPointerMap(-1, -1, -1),
             if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
             if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
             if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
@@ -190,25 +194,81 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
-            ) else MOC3BlendShapeParameterBindingsPointerMap(-1, -1, -1)
+            ) else MOC3BlendShapeParameterBindingsPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapeKeyformBindingsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapeKeyformBindingsPointerMap(-1, -1, -1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapesWarpDeformersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesWarpDeformersPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapesArtMeshesPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesArtMeshesPointerMap(-1, -1, -1),
+            parseInt(header.bigEndian),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapesConstraintsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesConstraintsPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3BlendShapesConstraintValuesPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesConstraintValuesPointerMap(-1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3WarpDeformerKeyformsV50PointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3WarpDeformerKeyformsV50PointerMap(-1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3RotateDeformerKeyformsV50PointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3RotateDeformerKeyformsV50PointerMap(-1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3ArtMeshKeyformsV50PointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3ArtMeshKeyformsV50PointerMap(-1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3BlendShapesPartsPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesPartsPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3BlendShapesRotateDeformersPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesRotateDeformersPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) MOC3BlendShapesGluePointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3BlendShapesGluePointerMap(-1, -1, -1),
         )
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    fun test2() { println("Current offset: 0x${(size - available()).toHexString()}") }
+
+    @OptIn(ExperimentalStdlibApi::class)
     fun test() {
-        println("Current offset: 0x${(size - available()).toHexString()}")
-        readNBytes(16).forEach {
+        test2()
+        readNBytes(64).forEach {
             print("0x" + it.toHexString() + " ")
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun parse(): MOC3Model {
         return parseHeader().let {
             MOC3Model(
                 it,
                 parsePointerMap(it)
             )
-        }.apply { println(parseInt(header.bigEndian).toHexString()); test() }
+        }.apply { test() }
     }
 }
