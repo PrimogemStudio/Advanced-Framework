@@ -168,7 +168,19 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(`in`) {
                 parseInt(header.bigEndian),
                 parseInt(header.bigEndian)
             ) else MOC3ParameterExtensionsPointerMap(-1, -1),
-            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3KeyformColorsMultiplyPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3KeyformColorsMultiplyPointerMap(-1, -1, -1),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) MOC3KeyformColorsScreenPointerMap(
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian),
+                parseInt(header.bigEndian)
+            ) else MOC3KeyformColorsScreenPointerMap(-1, -1, -1)
         )
     }
 

@@ -163,6 +163,18 @@ data class MOC3ParameterExtensionsPointerMap(
     var keySourcesCountsOffset: Int
 )
 
+data class MOC3KeyformColorsMultiplyPointerMap(
+    var redValuesOffset: Int,
+    var greenValuesOffset: Int,
+    var blueValuesOffset: Int,
+)
+
+data class MOC3KeyformColorsScreenPointerMap(
+    var redValuesOffset: Int,
+    var greenValuesOffset: Int,
+    var blueValuesOffset: Int,
+)
+
 data class MOC3PointerMap(
     var countInfoOffset: Int,
     var canvasInfoOffset: Int,
@@ -194,7 +206,11 @@ data class MOC3PointerMap(
     var warpDeformerKeyformsV33QuadSourceOffset: Int,
     // >= v4.02
     var parameterExtensionOffset: MOC3ParameterExtensionsPointerMap,
-    var warpDeformerKeyformsV42KeyformColorColorSourcesBeginIndicesOffset: Int
+    var warpDeformerKeyformsV42KeyformColorColorSourcesBeginIndicesOffset: Int,
+    var rotateDeformersV42KeyformColorSourcesBeginIndicesOffset: Int,
+    var artMeshesV42KeyformColorSourcesBeginIndicesOffset: Int,
+    var keyformColorsMultiplyOffset: MOC3KeyformColorsMultiplyPointerMap,
+    var keyformColorsScreenOffset: MOC3KeyformColorsScreenPointerMap
 )
 
 data class MOC3Model(
