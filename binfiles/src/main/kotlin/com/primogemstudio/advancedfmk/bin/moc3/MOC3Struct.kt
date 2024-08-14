@@ -329,7 +329,19 @@ data class MOC3CountInfoTableData(
     var drawOrderGroupObjects: Int,
     var glue: Int,
     var glueInfo: Int,
-    var glueKeyforms: Int
+    var glueKeyforms: Int,
+    // >= v4.02
+    var keyformColorsMultiply: Int,
+    var blendShapeParameterBindings: Int,
+    var blendShapeKeyformBindings: Int,
+    var blendShapesWarpDeformers: Int,
+    var blendShapeConstraintIndices: Int,
+    var blendShapeConstraints: Int,
+    var blendShapeConstraintValues: Int,
+    // >= v5.00
+    var blendShapesParts: Int,
+    var blendShapesRotationDeformers: Int,
+    var blendShapesGlues: Int
 )
 
 data class MOC3Data(

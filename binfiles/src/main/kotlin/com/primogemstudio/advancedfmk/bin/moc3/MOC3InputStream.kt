@@ -278,7 +278,17 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
             parseInt(header.bigEndian),
-            parseInt(header.bigEndian)
+            parseInt(header.bigEndian),
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V4_02_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) parseInt(header.bigEndian) else -1,
+            if (header.version?.flag!! >= MOC3Header.Version.V5_00_00.flag) parseInt(header.bigEndian) else -1
         )
     }
 
