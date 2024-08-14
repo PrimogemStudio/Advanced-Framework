@@ -1,7 +1,5 @@
 package com.primogemstudio.advancedfmk.bin.moc3
 
-import java.time.ZoneOffset
-
 data class MOC3Header(
     var magic: String,
     var version: Version?,
@@ -28,7 +26,7 @@ data class MOC3PartPointerMap(
     var idOffset: Int,
     var keyframeBindingSourceIndicesOffset: Int,
     var keyframeSourcesBeginIndicesOffset: Int,
-    var keyframeSourcesContentOffset: Int,
+    var keyframeSourcesCountOffset: Int,
     var visibleOffset: Int,
     var enabledOffset: Int,
     var parentPartIndicesOffset: Int,
@@ -37,7 +35,7 @@ data class MOC3PartPointerMap(
 
 data class MOC3DeformersPointerMap(
     var idOffset: Int,
-    var keyframeBindingSourceIndicesOffset: Int,
+    var keyformBindingSourceIndicesOffset: Int,
     var visibleOffset: Int,
     var enabledOffset: Int,
     var parentPartIndicesOffset: Int,
@@ -355,16 +353,24 @@ data class MOC3CanvasInfo(
 
 data class MOC3Parts(
     var ids: Array<String>,
-    var keyframeBindingSourceIndices: Array<Int>,
-    var keyframeSourcesBeginIndices: Array<Int>,
-    var keyframeSourcesContent: Array<Int>,
-    var visible: Array<Boolean>
+    var keyformBindingSourceIndices: Array<Int>,
+    var keyformSourcesBeginIndices: Array<Int>,
+    var keyformSourcesContent: Array<Int>,
+    var visible: Array<Boolean>,
+    var enabled: Array<Boolean>,
+    var parentPartIndices: Array<Int>
+)
+
+data class MOC3Deformers(
+    var ids: Array<String>,
+    var keyformBindingSourcesIndices: Array<Int>
 )
 
 data class MOC3Data(
     var countInfoTable: MOC3CountInfoTableData,
     var canvasInfo: MOC3CanvasInfo,
-    var parts: MOC3Parts
+    var parts: MOC3Parts,
+    var deformers: MOC3Deformers
 )
 
 data class MOC3Model(

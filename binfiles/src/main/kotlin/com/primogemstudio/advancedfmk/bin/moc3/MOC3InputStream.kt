@@ -331,10 +331,10 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
 
-    fun parsePartKeyframeSourcesContent(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+    fun parsePartKeyframeSourcesCount(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
         reset()
         mark(2147483647)
-        skipNBytes(pointers.partOffset.keyframeSourcesContentOffset.toLong())
+        skipNBytes(pointers.partOffset.keyframeSourcesCountOffset.toLong())
 
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
@@ -347,13 +347,54 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         return Array(counts.parts) { parseInt(header.bigEndian) != 0 }
     }
 
+    fun parsePartEnabled(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Boolean> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.enabledOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) != 0 }
+    }
+
+    fun parsePartParentPartIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.parentPartIndicesOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) }
+    }
+
     fun parseParts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3Parts {
         return MOC3Parts(
             parsePartsID(pointers, counts),
             parsePartKeyframeBindingSourceIndices(header, pointers, counts),
             parsePartKeyframeSourcesBeginIndices(header, pointers, counts),
-            parsePartKeyframeSourcesContent(header, pointers, counts),
+            parsePartKeyframeSourcesCount(header, pointers, counts),
             parsePartVisible(header, pointers, counts),
+            parsePartEnabled(header, pointers, counts),
+            parsePartParentPartIndices(header, pointers, counts)
+        )
+    }
+
+    fun parseDeformersID(pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<String> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.deformersOffset.idOffset.toLong())
+
+        return Array(counts.parts) { String(readNBytes(64)) }
+    }
+
+    fun parseDeformersKeyformBindingSourcesIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.deformersOffset.keyformBindingSourceIndicesOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) }
+    }
+
+    fun parseDeformers(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3Deformers {
+        return MOC3Deformers(
+            parseDeformersID(pointers, counts),
+            parseDeformersKeyformBindingSourcesIndices(header, pointers, counts)
         )
     }
 
@@ -361,7 +402,8 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         MOC3Data(
             it,
             parseCanvasInfo(header, pointers),
-            parseParts(header, pointers, it)
+            parseParts(header, pointers, it),
+            parseDeformers(header, pointers, it)
         )
     }
 
