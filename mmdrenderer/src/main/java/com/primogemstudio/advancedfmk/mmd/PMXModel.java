@@ -11,6 +11,7 @@ import java.lang.ref.Cleaner;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.NullPointerException;
 
 import static org.lwjgl.opengl.GL15.*;
 
@@ -30,6 +31,9 @@ public class PMXModel implements AutoCloseable {
     private final int ibo;
 
     public PMXModel(File file) {
+	if (file.getParentFile() == null) {
+	    throw new NullPointerException("Invaild path!");
+	}
         load(file);
         vertexCount = getVertexCount();
         indexCount = getIndexCount();
