@@ -292,8 +292,23 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         )
     }
 
+    fun parseCanvasInfo(header: MOC3Header, pointers: MOC3PointerMap): MOC3CanvasInfo {
+        reset()
+        mark(-1)
+        skipNBytes(pointers.canvasInfoOffset.toLong())
+        return MOC3CanvasInfo(
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian),
+            parseInt(header.bigEndian)
+        )
+    }
+
     fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = MOC3Data(
-        parseCountInfoTableData(header, pointers)
+        parseCountInfoTableData(header, pointers),
+        parseCanvasInfo(header, pointers)
     )
 
     fun parse(): MOC3Model {

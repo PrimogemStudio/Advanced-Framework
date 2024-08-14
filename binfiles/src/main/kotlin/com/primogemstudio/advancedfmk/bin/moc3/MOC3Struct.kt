@@ -344,8 +344,18 @@ data class MOC3CountInfoTableData(
     var blendShapesGlues: Int
 )
 
+data class MOC3CanvasInfo(
+    var pixelsPerUnit: Int,
+    var xOrigin: Int,
+    var yOrigin: Int,
+    var width: Int,
+    var height: Int,
+    var flags: Int
+)
+
 data class MOC3Data(
-    var countInfoTable: MOC3CountInfoTableData
+    var countInfoTable: MOC3CountInfoTableData,
+    var canvasInfo: MOC3CanvasInfo
 )
 
 data class MOC3Model(
