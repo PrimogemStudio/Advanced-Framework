@@ -7,6 +7,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`in`)) {
+    init {
+        mark(2147483647)
+    }
     fun parseInt(be: Boolean): Int {
         if (be) return readInt()
         else {
@@ -18,7 +21,6 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
     }
 
     fun parseHeader(): MOC3Header {
-        mark(-1)
         return MOC3Header(
             String(readNBytes(4)),
             MOC3Header.Version.get(readByte()),
@@ -31,7 +33,6 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun parsePointerMap(header: MOC3Header): MOC3PointerMap {
         return MOC3PointerMap(
             parseInt(header.bigEndian),
@@ -253,7 +254,7 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
 
     fun parseCountInfoTableData(header: MOC3Header, pointers: MOC3PointerMap): MOC3CountInfoTableData {
         reset()
-        mark(-1)
+        mark(2147483647)
         skipNBytes(pointers.countInfoOffset.toLong())
         return MOC3CountInfoTableData(
             parseInt(header.bigEndian),
@@ -294,7 +295,7 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
 
     fun parseCanvasInfo(header: MOC3Header, pointers: MOC3PointerMap): MOC3CanvasInfo {
         reset()
-        mark(-1)
+        mark(2147483647)
         skipNBytes(pointers.canvasInfoOffset.toLong())
         return MOC3CanvasInfo(
             parseInt(header.bigEndian),
@@ -306,10 +307,36 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         )
     }
 
-    fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = MOC3Data(
-        parseCountInfoTableData(header, pointers),
-        parseCanvasInfo(header, pointers)
-    )
+    fun parsePartsID(pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<String> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.idOffset.toLong())
+
+        return Array(counts.parts) { String(readNBytes(64)) }
+    }
+
+    fun parsePartKeyframeBindingSourceIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.keyframeBindingSourceIndicesOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) }
+    }
+
+    fun parseParts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3Parts {
+        return MOC3Parts(
+            parsePartsID(pointers, counts),
+            parsePartKeyframeBindingSourceIndices(header, pointers, counts)
+        )
+    }
+
+    fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = parseCountInfoTableData(header, pointers).let {
+        MOC3Data(
+            it,
+            parseCanvasInfo(header, pointers),
+            parseParts(header, pointers, it)
+        )
+    }
 
     fun parse(): MOC3Model {
         return parseHeader().let {

@@ -353,9 +353,15 @@ data class MOC3CanvasInfo(
     var flags: Int
 )
 
+data class MOC3Parts(
+    var ids: Array<String>,
+    var keyframeBindingSourceIndices: Array<Int>
+)
+
 data class MOC3Data(
     var countInfoTable: MOC3CountInfoTableData,
-    var canvasInfo: MOC3CanvasInfo
+    var canvasInfo: MOC3CanvasInfo,
+    var parts: MOC3Parts
 )
 
 data class MOC3Model(
