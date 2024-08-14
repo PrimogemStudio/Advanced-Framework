@@ -355,7 +355,10 @@ data class MOC3CanvasInfo(
 
 data class MOC3Parts(
     var ids: Array<String>,
-    var keyframeBindingSourceIndices: Array<Int>
+    var keyframeBindingSourceIndices: Array<Int>,
+    var keyframeSourcesBeginIndices: Array<Int>,
+    var keyframeSourcesContent: Array<Int>,
+    var visible: Array<Boolean>
 )
 
 data class MOC3Data(

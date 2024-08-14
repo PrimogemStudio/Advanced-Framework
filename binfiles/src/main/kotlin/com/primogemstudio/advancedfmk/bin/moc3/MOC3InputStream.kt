@@ -323,10 +323,37 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
 
+    fun parsePartKeyframeSourcesBeginIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.keyframeSourcesBeginIndicesOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) }
+    }
+
+    fun parsePartKeyframeSourcesContent(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.keyframeSourcesContentOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) }
+    }
+
+    fun parsePartVisible(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Boolean> {
+        reset()
+        mark(2147483647)
+        skipNBytes(pointers.partOffset.visibleOffset.toLong())
+
+        return Array(counts.parts) { parseInt(header.bigEndian) != 0 }
+    }
+
     fun parseParts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3Parts {
         return MOC3Parts(
             parsePartsID(pointers, counts),
-            parsePartKeyframeBindingSourceIndices(header, pointers, counts)
+            parsePartKeyframeBindingSourceIndices(header, pointers, counts),
+            parsePartKeyframeSourcesBeginIndices(header, pointers, counts),
+            parsePartKeyframeSourcesContent(header, pointers, counts),
+            parsePartVisible(header, pointers, counts),
         )
     }
 
