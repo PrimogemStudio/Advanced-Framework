@@ -104,6 +104,16 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         mn.ldc(n)
 
+        mn.ldc(c.width!!)
+
+        mn.new("org/joml/Vector4f")
+        mn.dup()
+        mn.ldc(c.color!![0])
+        mn.ldc(c.color!![1])
+        mn.ldc(c.color!![2])
+        mn.ldc(c.color!![3])
+        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+
         if (c.filter != null) {
             when (c.filter!!["type"]) {
                 "post" -> {
@@ -145,7 +155,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         }
         else mn.aconst_null()
 
-        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement", "<init>", "(Ljava/lang/String;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
+        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement", "<init>", "(Ljava/lang/String;FLorg/joml/Vector4f;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
     }
 
     private fun buildGroupElement(mn: MethodNode, c: GroupComponent, n: String) {

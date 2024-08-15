@@ -5,35 +5,36 @@ import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
-import com.primogemstudio.advancedfmk.client.AdvancedFrameworkUICompositorClient
 import com.primogemstudio.advancedfmk.kui.GlobalData
 import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
 import net.minecraft.client.renderer.GameRenderer
 import org.joml.Vector2f
+import org.joml.Vector4f
 
 class GeometryLineElement(
     override var id: String,
-    var filter: FilterBase? = null
+    var width: Float,
+    var color: Vector4f,
+    var filter: FilterBase? = null,
 ): RealElement(id, Vector2f(0f)), FilteredElement {
     override fun render(data: GlobalData) {
         filter?.init()
 
-        // AdvancedFrameworkUICompositorClient.test()
         val m = data.graphics.pose().last().pose()
         RenderSystem.disableBlend()
         RenderSystem.disableCull()
         RenderSystem.depthMask(false)
 
         RenderSystem.setShader { GameRenderer.getRendertypeLinesShader() }
-        RenderSystem.lineWidth(15f)
+        RenderSystem.lineWidth(width)
         val buff = Tesselator.getInstance().begin(
             VertexFormat.Mode.LINES,
             DefaultVertexFormat.POSITION_COLOR_NORMAL
         )
-        buff.addVertex(m, 0f, 0f, 0f).setColor(1f, 1f, 1f, 1f).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 100f, 50f, 0f).setColor(0f, 1f, 1f, 1f).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 100f, 50f, 0f).setColor(0f, 1f, 1f, 1f).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 0f, 100f, 0f).setColor(1f, 1f, 0f, 1f).setNormal(0f, 1f, 0f)
+        buff.addVertex(m, 0f, 0f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+        buff.addVertex(m, 100f, 50f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+        buff.addVertex(m, 100f, 50f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+        buff.addVertex(m, 0f, 100f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
 
         BufferUploader.drawWithShader(buff.buildOrThrow())
         RenderSystem.depthMask(true)
