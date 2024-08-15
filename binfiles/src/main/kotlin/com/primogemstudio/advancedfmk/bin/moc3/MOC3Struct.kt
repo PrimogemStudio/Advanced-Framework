@@ -359,12 +359,78 @@ data class MOC3Parts(
     var visible: Array<Boolean>,
     var enabled: Array<Boolean>,
     var parentPartIndices: Array<Int>
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MOC3Parts
+
+        if (!ids.contentEquals(other.ids)) return false
+        if (!keyformBindingSourceIndices.contentEquals(other.keyformBindingSourceIndices)) return false
+        if (!keyformSourcesBeginIndices.contentEquals(other.keyformSourcesBeginIndices)) return false
+        if (!keyformSourcesContent.contentEquals(other.keyformSourcesContent)) return false
+        if (!visible.contentEquals(other.visible)) return false
+        if (!enabled.contentEquals(other.enabled)) return false
+        if (!parentPartIndices.contentEquals(other.parentPartIndices)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = ids.contentHashCode()
+        result = 31 * result + keyformBindingSourceIndices.contentHashCode()
+        result = 31 * result + keyformSourcesBeginIndices.contentHashCode()
+        result = 31 * result + keyformSourcesContent.contentHashCode()
+        result = 31 * result + visible.contentHashCode()
+        result = 31 * result + enabled.contentHashCode()
+        result = 31 * result + parentPartIndices.contentHashCode()
+        return result
+    }
+}
+
+enum class MOC3DeformerType { WARP, ROTATE }
 
 data class MOC3Deformers(
     var ids: Array<String>,
-    var keyformBindingSourcesIndices: Array<Int>
-)
+    var keyformBindingSourcesIndices: Array<Int>,
+    var visible: Array<Boolean>,
+    var enabled: Array<Boolean>,
+    var parentPartIndices: Array<Int>,
+    var parentDeformerIndices: Array<Int>,
+    var types: Array<MOC3DeformerType>,
+    var specificSourceIndices: Array<Int>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MOC3Deformers
+
+        if (!ids.contentEquals(other.ids)) return false
+        if (!keyformBindingSourcesIndices.contentEquals(other.keyformBindingSourcesIndices)) return false
+        if (!visible.contentEquals(other.visible)) return false
+        if (!enabled.contentEquals(other.enabled)) return false
+        if (!parentPartIndices.contentEquals(other.parentPartIndices)) return false
+        if (!parentDeformerIndices.contentEquals(other.parentDeformerIndices)) return false
+        if (!types.contentEquals(other.types)) return false
+        if (!specificSourceIndices.contentEquals(other.specificSourceIndices)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = ids.contentHashCode()
+        result = 31 * result + keyformBindingSourcesIndices.contentHashCode()
+        result = 31 * result + visible.contentHashCode()
+        result = 31 * result + enabled.contentHashCode()
+        result = 31 * result + parentPartIndices.contentHashCode()
+        result = 31 * result + parentDeformerIndices.contentHashCode()
+        result = 31 * result + types.contentHashCode()
+        result = 31 * result + specificSourceIndices.contentHashCode()
+        return result
+    }
+}
 
 data class MOC3Data(
     var countInfoTable: MOC3CountInfoTableData,
