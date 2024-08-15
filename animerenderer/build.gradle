@@ -62,11 +62,11 @@ processResources {
 }
 
 jar {
-    archiveBaseName = "advancedfmk-mmdrenderer"
+    archiveBaseName = "advancedfmk-animerenderer"
 }
 
 remapJar {
-    archiveBaseName = "advancedfmk-mmdrenderer"
+    archiveBaseName = "advancedfmk-animerenderer"
 }
 
 task sourcesJar(type: Jar) {
@@ -97,7 +97,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'advancedfmk-mmdrenderer'
+            artifactId = 'advancedfmk-animerenderer'
             version = version
 
             from components.kotlin
@@ -105,8 +105,8 @@ publishing {
             artifact javadocJar
 
             pom {
-                name = 'mmdrenderer (Advanced Framework)'
-                description = 'MMD renderer for Advanced Framework'
+                name = 'animerenderer (Advanced Framework)'
+                description = 'MMD renderer / Live2D renderer for Advanced Framework'
                 url = 'http://github.com/PrimogemStudio/Advanced-Framework'
                 licenses {
                     license {

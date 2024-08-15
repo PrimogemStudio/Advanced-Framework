@@ -7,7 +7,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-include 'mmdrenderer'
+include 'animerenderer'
 include 'commonutils'
 include 'uicompositor'
 include 'fontengine'

@@ -1,8 +1,8 @@
 {
   "modmenu.nameTranslation.advancedfmk": "Advanced Framework",
   "modmenu.descriptionTranslation.advancedfmk": "一个致力于渲染 UI 和 3D 模型的现代渲染框架",
-  "modmenu.nameTranslation.advancedfmk_mmdrenderer": "mmdrenderer (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_mmdrenderer": "Advanced Framework 的 MMD 渲染器",
+  "modmenu.nameTranslation.advancedfmk_animerenderer": "animerenderer (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_animerenderer": "Advanced Framework 的 MMD / Live2D 渲染器",
   "modmenu.nameTranslation.advancedfmk_commonutils": "commonutils (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_commonutils": "Advanced Framework 使用的工具函数",
   "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",

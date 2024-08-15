@@ -1,8 +1,8 @@
 {
   "modmenu.nameTranslation.advancedfmk": "Advanced Framework",
   "modmenu.descriptionTranslation.advancedfmk": "A modern render framework for rendering ui and 3d models & shaders",
-  "modmenu.nameTranslation.advancedfmk_mmdrenderer": "mmdrenderer (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_mmdrenderer": "MMD renderer for Advanced Framework",
+  "modmenu.nameTranslation.advancedfmk_animerenderer": "animerenderer (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_animerenderer": "MMD renderer / Live2D renderer for Advanced Framework",
   "modmenu.nameTranslation.advancedfmk_commonutils": "commonutils (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_commonutils": "Util functions for Advanced Framework",
   "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",

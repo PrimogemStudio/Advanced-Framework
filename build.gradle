@@ -65,7 +65,7 @@ loom {
 }
 
 dependencies {
-    include(implementation(project(path: ':mmdrenderer', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
+    include(implementation(project(path: ':animerenderer', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':uicompositor', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':fontengine', configuration: "namedElements"))).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))

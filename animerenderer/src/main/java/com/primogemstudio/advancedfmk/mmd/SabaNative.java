@@ -36,7 +36,7 @@ public final class SabaNative {
             }
         } catch (Throwable e) {
             available = false;
-            logger.warn("advancedfmk-mmdrenderer doesn't support this platform! MMD renderer is unavailable");
+            logger.warn("advancedfmk-animerenderer doesn't support this platform! MMD renderer is unavailable");
         }
     }
 
