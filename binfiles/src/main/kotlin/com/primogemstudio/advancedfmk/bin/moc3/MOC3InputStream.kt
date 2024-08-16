@@ -16,13 +16,16 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         skipNBytes(pos.toLong())
     }
     fun parseInt(be: Boolean): Int {
-        if (be) return readInt()
-        else {
-            val buff = ByteBuffer.allocate(4)
-            buff.putInt(readInt())
-            buff.order(ByteOrder.LITTLE_ENDIAN)
-            return buff.getInt(0)
-        }
+        val buff = ByteBuffer.allocate(4)
+        buff.putInt(readInt())
+        buff.order(if (be) ByteOrder.BIG_ENDIAN else ByteOrder.LITTLE_ENDIAN)
+        return buff.getInt(0)
+    }
+    fun parseFloat(be: Boolean): Float {
+        val buff = ByteBuffer.allocate(4)
+        buff.putFloat(readFloat())
+        buff.order(if (be) ByteOrder.BIG_ENDIAN else ByteOrder.LITTLE_ENDIAN)
+        return buff.getFloat(0)
     }
 
     fun parseHeader(): MOC3Header {
@@ -315,19 +318,19 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
     }
 
     fun parsePartKeyframeBindingSourceIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
-       seekTo(pointers.partOffset.keyframeBindingSourceIndicesOffset)
+       seekTo(pointers.partOffset.keyformBindingSourceIndicesOffset)
 
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
 
     fun parsePartKeyframeSourcesBeginIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
-        seekTo(pointers.partOffset.keyframeSourcesBeginIndicesOffset)
+        seekTo(pointers.partOffset.keyformSourcesBeginIndicesOffset)
 
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
 
     fun parsePartKeyframeSourcesCount(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
-        seekTo(pointers.partOffset.keyframeSourcesCountOffset)
+        seekTo(pointers.partOffset.keyformSourcesCountOffset)
 
         return Array(counts.parts) { parseInt(header.bigEndian) }
     }
@@ -423,12 +426,114 @@ class MOC3InputStream(`in`: InputStream): DataInputStream(BufferedInputStream(`i
         )
     }
 
-    fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = parseCountInfoTableData(header, pointers).let {
+    fun parseWarpDeformersKeyformBindingSourcesIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.keyformBindingSourceIndicesOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseWarpDeformersKeyformSourcesBeginIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.keyformSourcesBeginIndicesOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseWarpDeformersKeyformSourcesCounts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.keyformSourcesCountOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseWarpDeformersVertexCounts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.vertexCountsOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseWarpDeformersRows(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.rowsOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseWarpDeformersColumns(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.warpDeformersOffset.columnsOffset)
+
+        return Array(counts.warpDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseRotationDeformersKeyformBindingSourcesIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.rotateDeformersOffset.keyformBindingSourceIndicesOffset)
+
+        return Array(counts.rotationDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseRotationDeformersKeyformSourcesBeginIndices(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.rotateDeformersOffset.keyformSourcesBeginIndicesOffset)
+
+        return Array(counts.rotationDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseRotationDeformersKeyformSourcesCounts(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Int> {
+        seekTo(pointers.rotateDeformersOffset.keyformSourcesCountOffset)
+
+        return Array(counts.rotationDeformers) { parseInt(header.bigEndian) }
+    }
+
+    fun parseRotationDeformersBaseAngles(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<Float> {
+        seekTo(pointers.rotateDeformersOffset.baseAngleOffset)
+
+        return Array(counts.rotationDeformers) { parseFloat(header.bigEndian) }
+    }
+
+    fun parseRotationDeformers(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3RotationDeformers {
+        return MOC3RotationDeformers(
+            parseRotationDeformersKeyformBindingSourcesIndices(header, pointers, counts),
+            parseRotationDeformersKeyformSourcesBeginIndices(header, pointers, counts) ,
+            parseRotationDeformersKeyformSourcesCounts(header, pointers, counts),
+            parseRotationDeformersBaseAngles(header, pointers, counts)
+        )
+    }
+
+    fun parseWarpDeformers(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): MOC3WarpDeformers {
+        return MOC3WarpDeformers(
+            parseWarpDeformersKeyformBindingSourcesIndices(header, pointers, counts),
+            parseWarpDeformersKeyformSourcesBeginIndices(header, pointers, counts),
+            parseWarpDeformersKeyformSourcesCounts(header, pointers, counts),
+            parseWarpDeformersVertexCounts(header, pointers, counts),
+            parseWarpDeformersRows(header, pointers, counts),
+            parseWarpDeformersColumns(header, pointers, counts)
+        )
+    }
+
+    fun parseArtMeshesID(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<String> {
+        seekTo(pointers.artMeshesOffset.idOffset)
+
+        return Array(counts.artMeshes) { String(readNBytes(64)) }
+    }
+
+    fun parseArtMeshesDrawableFlags(header: MOC3Header, pointers: MOC3PointerMap, counts: MOC3CountInfoTableData): Array<MOC3ArtMeshesDrawableFlags> {
+        seekTo(pointers.artMeshesOffset.drawableFlagsOffset)
+
+        return Array(counts.artMeshes) {
+            parseInt(header.bigEndian).let {
+                MOC3ArtMeshesDrawableFlags(
+                    if (header.bigEndian) it.shr(6).toByte() else it.and(0b00000011).toByte(),
+                    if (header.bigEndian) it.shr(5).and(0b1) == 1 else it.shr(2).and(0b000001) == 1,
+                    if (header.bigEndian) it.shr(4).and(0b1) == 1 else it.shr(3).and(0b000001) == 1,
+                )
+            }
+        }
+    }
+
+    fun parseData(header: MOC3Header, pointers: MOC3PointerMap): MOC3Data = parseCountInfoTableData(header, pointers).let { counts ->
         MOC3Data(
-            it,
+            counts,
             parseCanvasInfo(header, pointers),
-            parseParts(header, pointers, it),
-            parseDeformers(header, pointers, it)
+            parseParts(header, pointers, counts),
+            parseDeformers(header, pointers, counts),
+            parseWarpDeformers(header, pointers, counts),
+            parseRotationDeformers(header, pointers, counts)
         )
     }
 

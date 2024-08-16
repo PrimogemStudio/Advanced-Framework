@@ -24,9 +24,9 @@ data class MOC3Header(
 
 data class MOC3PartPointerMap(
     var idOffset: Int,
-    var keyframeBindingSourceIndicesOffset: Int,
-    var keyframeSourcesBeginIndicesOffset: Int,
-    var keyframeSourcesCountOffset: Int,
+    var keyformBindingSourceIndicesOffset: Int,
+    var keyformSourcesBeginIndicesOffset: Int,
+    var keyformSourcesCountOffset: Int,
     var visibleOffset: Int,
     var enabledOffset: Int,
     var parentPartIndicesOffset: Int,
@@ -45,18 +45,18 @@ data class MOC3DeformersPointerMap(
 )
 
 data class MOC3WarpDeformersPointerMap(
-    var keyframeBindingSourceIndicesOffset: Int,
-    var keyframeSourcesBeginIndicesOffset: Int,
-    var keyframeSourcesContentOffset: Int,
+    var keyformBindingSourceIndicesOffset: Int,
+    var keyformSourcesBeginIndicesOffset: Int,
+    var keyformSourcesCountOffset: Int,
     var vertexCountsOffset: Int,
     var rowsOffset: Int,
     var columnsOffset: Int
 )
 
 data class MOC3RotateDeformersPointerMap(
-    var keyframeBindingSourceIndicesOffset: Int,
-    var keyframeSourcesBeginIndicesOffset: Int,
-    var keyframeSourcesContentOffset: Int,
+    var keyformBindingSourceIndicesOffset: Int,
+    var keyformSourcesBeginIndicesOffset: Int,
+    var keyformSourcesCountOffset: Int,
     var baseAngleOffset: Int
 )
 
@@ -66,9 +66,9 @@ data class MOC3ArtMeshesPointerMap(
     var runtimeSpace20Offset: Int,
     var runtimeSpace3Offset: Int,
     var idOffset: Int,
-    var keyframeBindingSourceIndicesOffset: Int,
-    var keyframeSourcesBeginIndicesOffset: Int,
-    var keyframeSourcesContentOffset: Int,
+    var keyformBindingSourceIndicesOffset: Int,
+    var keyformSourcesBeginIndicesOffset: Int,
+    var keyformSourcesCountOffset: Int,
     var visibleOffset: Int,
     var enabledOffset: Int,
     var parentPartIndicesOffset: Int,
@@ -259,8 +259,8 @@ data class MOC3PointerMap(
     var deformersOffset: MOC3DeformersPointerMap,
     var warpDeformersOffset: MOC3WarpDeformersPointerMap,
     var rotateDeformersOffset: MOC3RotateDeformersPointerMap,
-    var artMeshesPointerMap: MOC3ArtMeshesPointerMap,
-    var parametersPointerMap: MOC3ParametersPointerMap,
+    var artMeshesOffset: MOC3ArtMeshesPointerMap,
+    var parametersOffset: MOC3ParametersPointerMap,
     var partKeyframesDrawOrdersOffset: Int,
     var warpDeformerKeyformsOffset: MOC3WarpDeformerKeyformsPointerMap,
     var rotateDeformerKeyformsOffset: MOC3RotateDeformerKeyformsPointerMap,
@@ -432,11 +432,145 @@ data class MOC3Deformers(
     }
 }
 
+data class MOC3WarpDeformers(
+    var keyformBindingSourcesIndices: Array<Int>,
+    var keyformSourcesBeginIndices: Array<Int>,
+    var keyformSourcesCounts: Array<Int>,
+    var vertexCounts: Array<Int>,
+    var rows: Array<Int>,
+    var columns: Array<Int>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MOC3WarpDeformers
+
+        if (!keyformBindingSourcesIndices.contentEquals(other.keyformBindingSourcesIndices)) return false
+        if (!keyformSourcesBeginIndices.contentEquals(other.keyformSourcesBeginIndices)) return false
+        if (!keyformSourcesCounts.contentEquals(other.keyformSourcesCounts)) return false
+        if (!vertexCounts.contentEquals(other.vertexCounts)) return false
+        if (!rows.contentEquals(other.rows)) return false
+        if (!columns.contentEquals(other.columns)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = keyformBindingSourcesIndices.contentHashCode()
+        result = 31 * result + keyformSourcesBeginIndices.contentHashCode()
+        result = 31 * result + keyformSourcesCounts.contentHashCode()
+        result = 31 * result + vertexCounts.contentHashCode()
+        result = 31 * result + rows.contentHashCode()
+        result = 31 * result + columns.contentHashCode()
+        return result
+    }
+}
+
+data class MOC3RotationDeformers(
+    var keyformBindingSourcesIndices: Array<Int>,
+    var keyformSourcesBeginIndices: Array<Int>,
+    var keyformSourcesCounts: Array<Int>,
+    var baseAngles: Array<Float>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MOC3RotationDeformers
+
+        if (!keyformBindingSourcesIndices.contentEquals(other.keyformBindingSourcesIndices)) return false
+        if (!keyformSourcesBeginIndices.contentEquals(other.keyformSourcesBeginIndices)) return false
+        if (!keyformSourcesCounts.contentEquals(other.keyformSourcesCounts)) return false
+        if (!baseAngles.contentEquals(other.baseAngles)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = keyformBindingSourcesIndices.contentHashCode()
+        result = 31 * result + keyformSourcesBeginIndices.contentHashCode()
+        result = 31 * result + keyformSourcesCounts.contentHashCode()
+        result = 31 * result + baseAngles.contentHashCode()
+        return result
+    }
+}
+
+data class MOC3ArtMeshesDrawableFlags(
+    var blendMode: Byte,
+    var isDoubleSided: Boolean,
+    var isInverted: Boolean
+)
+
+data class MOC3ArtMeshes(
+    var ids: Array<String>,
+    var keyformBindingSourcesIndices: Array<Int>,
+    var keyformSourcesBeginIndices: Array<Int>,
+    var keyformSourcesCounts: Array<Int>,
+    var visible: Array<Boolean>,
+    var enabled: Array<Boolean>,
+    var parentPartIndices: Array<Int>,
+    var parentDeformerIndices: Array<Int>,
+    var drawableFlags: Array<MOC3ArtMeshesDrawableFlags>,
+    var vertexCounts: Array<Int>,
+    var uvSourcesBeginIndices: Array<Int>,
+    var positionIndexSourecsBeginIndices: Array<Int>,
+    var positionIndexSourcesCounts: Array<Int>,
+    var drawableMaskSourcesBeginIndices: Array<Int>,
+    var drawableMaskSourcesCounts: Array<Int>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MOC3ArtMeshes
+
+        if (!ids.contentEquals(other.ids)) return false
+        if (!keyformBindingSourcesIndices.contentEquals(other.keyformBindingSourcesIndices)) return false
+        if (!keyformSourcesBeginIndices.contentEquals(other.keyformSourcesBeginIndices)) return false
+        if (!keyformSourcesCounts.contentEquals(other.keyformSourcesCounts)) return false
+        if (!visible.contentEquals(other.visible)) return false
+        if (!enabled.contentEquals(other.enabled)) return false
+        if (!parentPartIndices.contentEquals(other.parentPartIndices)) return false
+        if (!parentDeformerIndices.contentEquals(other.parentDeformerIndices)) return false
+        if (!drawableFlags.contentEquals(other.drawableFlags)) return false
+        if (!vertexCounts.contentEquals(other.vertexCounts)) return false
+        if (!uvSourcesBeginIndices.contentEquals(other.uvSourcesBeginIndices)) return false
+        if (!positionIndexSourecsBeginIndices.contentEquals(other.positionIndexSourecsBeginIndices)) return false
+        if (!positionIndexSourcesCounts.contentEquals(other.positionIndexSourcesCounts)) return false
+        if (!drawableMaskSourcesBeginIndices.contentEquals(other.drawableMaskSourcesBeginIndices)) return false
+        if (!drawableMaskSourcesCounts.contentEquals(other.drawableMaskSourcesCounts)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = ids.contentHashCode()
+        result = 31 * result + keyformBindingSourcesIndices.contentHashCode()
+        result = 31 * result + keyformSourcesBeginIndices.contentHashCode()
+        result = 31 * result + keyformSourcesCounts.contentHashCode()
+        result = 31 * result + visible.contentHashCode()
+        result = 31 * result + enabled.contentHashCode()
+        result = 31 * result + parentPartIndices.contentHashCode()
+        result = 31 * result + parentDeformerIndices.contentHashCode()
+        result = 31 * result + drawableFlags.contentHashCode()
+        result = 31 * result + vertexCounts.contentHashCode()
+        result = 31 * result + uvSourcesBeginIndices.contentHashCode()
+        result = 31 * result + positionIndexSourecsBeginIndices.contentHashCode()
+        result = 31 * result + positionIndexSourcesCounts.contentHashCode()
+        result = 31 * result + drawableMaskSourcesBeginIndices.contentHashCode()
+        result = 31 * result + drawableMaskSourcesCounts.contentHashCode()
+        return result
+    }
+}
+
 data class MOC3Data(
     var countInfoTable: MOC3CountInfoTableData,
     var canvasInfo: MOC3CanvasInfo,
     var parts: MOC3Parts,
-    var deformers: MOC3Deformers
+    var deformers: MOC3Deformers,
+    var warpDeformers: MOC3WarpDeformers,
+    var rotationDeformers: MOC3RotationDeformers
 )
 
 data class MOC3Model(
