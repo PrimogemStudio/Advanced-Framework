@@ -13,7 +13,7 @@ public final class SabaNative {
     static {
         try {
             var arch = System.getProperty("os.arch");
-            var path = "/natives/saba/";
+            var path = "/natives/";
             var os = System.getProperty("os.name");
             var name = "";
             if (arch.equals("aarch64")) {

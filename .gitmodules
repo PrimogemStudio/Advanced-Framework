@@ -1,0 +1,3 @@
+[submodule "animerenderer/src/main/resources/natives"]
+	path = animerenderer/src/main/resources/natives
+	url = https://github.com/PrimogemStudio/saba-native-binary.git
