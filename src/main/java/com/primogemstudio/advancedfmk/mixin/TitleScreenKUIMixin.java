@@ -43,9 +43,10 @@ public class TitleScreenKUIMixin {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, model.registeredTextures.get(idx));
             var vertices = model.getVertices(idx);
-            for (int i = 0; i < vertices.size() / 4; i++) {
-                buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 200 + 20, (1 - vertices.get(i * 4 + 1)) * 200 + 20, 0).setUv(vertices.get(i * 4 + 2), vertices.get(i * 4 + 3));
-            }
+            var indices = model.getVertexIndices(idx);
+
+            indices.forEach(i -> buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 200 + 20, (1 - vertices.get(i * 4 + 1)) * 200 + 20, 0).setUv(vertices.get(i * 4 + 2), vertices.get(i * 4 + 3)));
+
             RenderSystem.disableBlend();
             RenderSystem.disableCull();
             BufferUploader.drawWithShader(buff.buildOrThrow());

@@ -33,19 +33,14 @@ public class Live2DModel implements AutoCloseable {
         if (inited) return;
         inited = true;
         getTextures().forEach(file -> {
-            System.out.println("test1");
             var l = ResourceLocation.fromNamespaceAndPath("advancedfmk_animerenderer", String.valueOf(random.nextLong()));
-            System.out.println("test2");
             try {
                 Minecraft.getInstance().getTextureManager().register(l, new Live2DTexture(NativeImage.read(Files.newInputStream(file.toPath()))));
-                System.out.println("test3");
             }
             catch (IOException e) {
                 LogManager.getLogger("Loader").error("Error while loading texture", e);
             }
-            System.out.println("test4");
             registeredTextures.add(l);
-            System.out.println("test5");
         });
     }
 
@@ -58,6 +53,7 @@ public class Live2DModel implements AutoCloseable {
     private native void load(String name, String path);
     public native List<File> getTextures();
     public native List<Float> getVertices(int texture_idx);
+    public native List<Integer> getVertexIndices(int texture_idx);
     public native void update();
     private static native void release(long ptr);
 }
