@@ -35,20 +35,25 @@ public class TitleScreenKUIMixin {
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
-
-        var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(GameRenderer::getRendertypeGuiShader);
-        var vertices = model.getVertices(0);
-        for (int i = 0; i < vertices.size() / 4; i++) {
-            buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 100, (1 - vertices.get(i * 4 + 1)) * 100, 0).setColor(1f, 1f, 1f, 1f);
+        model.registerTextures();
+        model.update();
+        int s = model.registeredTextures.size();
+        for (int idx = 0; idx < s; idx++) {
+            var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, model.registeredTextures.get(idx));
+            var vertices = model.getVertices(idx);
+            for (int i = 0; i < vertices.size() / 4; i++) {
+                buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 200 + 20, (1 - vertices.get(i * 4 + 1)) * 200 + 20, 0).setUv(vertices.get(i * 4 + 2), vertices.get(i * 4 + 3));
+            }
+            RenderSystem.disableBlend();
+            RenderSystem.disableCull();
+            BufferUploader.drawWithShader(buff.buildOrThrow());
+            RenderSystem.enableCull();
+            RenderSystem.enableBlend();
         }
-        RenderSystem.disableBlend();
-        RenderSystem.disableCull();
-        BufferUploader.drawWithShader(buff.buildOrThrow());
-        RenderSystem.enableCull();
-        RenderSystem.enableBlend();
 
-        if (wrapper == null) {
+        /*if (wrapper == null) {
             wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
             wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
             wrapper.getModel().animation.setupAnimation();
@@ -64,7 +69,7 @@ public class TitleScreenKUIMixin {
         ps.translate(0f, -1.45f, 0f);
         wrapper.render(0f, ps, source, 0xFF);
         source.endBatch();
-        RenderSystem.setProjectionMatrix(pm, vs);
+        RenderSystem.setProjectionMatrix(pm, vs);*/
     }
 
     @Mixin(Minecraft.class)
