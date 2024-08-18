@@ -11,6 +11,7 @@ import kotlin.random.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,10 +36,11 @@ public class TitleScreenKUIMixin {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
-        var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+        var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+        RenderSystem.setShader(GameRenderer::getRendertypeGuiShader);
         var vertices = model.getVertices(0);
         for (int i = 0; i < vertices.size() / 4; i++) {
-            buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 100, (1 - vertices.get(i * 4 + 1)) * 100, 0).setColor(1f, 1f, 1f, 1f).setNormal(0f, 1f, 0f);
+            buff.addVertex(graphics.pose().last().pose(), vertices.get(i * 4) * 100, (1 - vertices.get(i * 4 + 1)) * 100, 0).setColor(1f, 1f, 1f, 1f);
         }
         RenderSystem.disableBlend();
         RenderSystem.disableCull();
