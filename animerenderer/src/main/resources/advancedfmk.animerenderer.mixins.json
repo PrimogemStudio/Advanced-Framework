@@ -6,7 +6,7 @@
   "client": [
     "BufferBuilderMixin",
     "BufferBuilderMixin$DrawStateMixin",
-    "GLFWMixin",
+    "WindowMixin",
     "PngInfoMixin",
     "VertexBufferMixin"
   ],
