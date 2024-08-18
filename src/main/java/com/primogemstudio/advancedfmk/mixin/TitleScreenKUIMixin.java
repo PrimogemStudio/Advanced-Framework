@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
+import com.primogemstudio.advancedfmk.live2d.Live2DModel;
 import com.primogemstudio.advancedfmk.mmd.PMXModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
 import net.minecraft.client.Minecraft;
@@ -35,6 +36,7 @@ public class TitleScreenKUIMixin {
             wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
             wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
             wrapper.getModel().animation.setupAnimation();
+            System.out.println(new Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/"));
         }
         var m = new Matrix4f().perspective(30 * 0.01745329238474369f, Minecraft.getInstance().getWindow().getWidth() / (float) Minecraft.getInstance().getWindow().getHeight(), 1f, -1f);
         m.translate(0f, 0f, 10998f);

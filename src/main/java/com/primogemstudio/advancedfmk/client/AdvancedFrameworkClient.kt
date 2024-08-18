@@ -96,7 +96,6 @@ class AdvancedFrameworkClient : ClientModInitializer {
         }
         SabaNative.init()
         Live2DNative.init()
-        println(Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/"))
     }
 }
 
