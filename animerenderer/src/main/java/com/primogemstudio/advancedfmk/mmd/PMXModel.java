@@ -29,6 +29,7 @@ public class PMXModel implements AutoCloseable {
     public final int vertexCount, indexCount;
     public final Animation animation;
     private final int ibo;
+    private static final Cleaner cleanerInstance = Cleaner.create();
 
     public PMXModel(File file) {
         if (file.getParentFile() == null) {
@@ -46,7 +47,7 @@ public class PMXModel implements AutoCloseable {
         var p = ptr;
         var tm = textureManager;
         var t_ibo = ibo;
-        cleaner = SabaNative.cleaner.register(this, () -> {
+        cleaner = cleanerInstance.register(this, () -> {
             release(p);
             tm.release();
             RenderSystem.glDeleteBuffers(t_ibo);
