@@ -14,6 +14,7 @@ public class Live2DModel implements AutoCloseable {
         load(name, path);
         long ptr_i = ptr;
         getTextures().forEach(System.out::println);
+        getVertices(0).forEach(System.out::println);
         cleaner = Live2DNative.cleaner.register(this, () -> release(ptr_i));
     }
 
@@ -25,5 +26,6 @@ public class Live2DModel implements AutoCloseable {
     public static native void setGlfwGetTimeHandle(long handle);
     private native void load(String name, String path);
     public native List<File> getTextures();
+    public native List<Float> getVertices(int texture_idx);
     private static native void release(long ptr);
 }
