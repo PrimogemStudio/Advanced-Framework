@@ -3,6 +3,8 @@ package com.primogemstudio.advancedfmk.client
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
+import com.primogemstudio.advancedfmk.live2d.Live2DModel
+import com.primogemstudio.advancedfmk.live2d.Live2DNative
 import com.primogemstudio.advancedfmk.mmd.SabaNative
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
 import com.primogemstudio.advancedfmk.network.TestEntityAddPacket
@@ -93,6 +95,8 @@ class AdvancedFrameworkClient : ClientModInitializer {
             )
         }
         SabaNative.init()
+        Live2DNative.init()
+        println(Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/"))
     }
 }
 
