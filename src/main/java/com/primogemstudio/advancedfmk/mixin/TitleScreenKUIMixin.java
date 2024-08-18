@@ -32,8 +32,8 @@ public class TitleScreenKUIMixin {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
         if (wrapper == null) {
-            wrapper = new EntityRenderWrapper(new PMXModel(new File("D:\\360极速浏览器X下载\\【女主角_荧】_by_原神_44aee89b335a6bcb7f0183dbfdeab3e5\\lumine.pmx")));
-            wrapper.getModel().animation.add(new File("d:/1.vmd"));
+            wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
+            wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
             wrapper.getModel().animation.setupAnimation();
         }
         var m = new Matrix4f().perspective(30 * 0.01745329238474369f, Minecraft.getInstance().getWindow().getWidth() / (float) Minecraft.getInstance().getWindow().getHeight(), 1f, -1f);
