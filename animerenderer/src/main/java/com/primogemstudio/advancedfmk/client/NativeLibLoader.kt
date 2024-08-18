@@ -13,6 +13,7 @@ object NativeLibLoader {
     var available = mutableMapOf<String, Boolean>()
 
     fun loadLib(libname: String) {
+        if (available(libname)) return;
         try {
             val arch = System.getProperty("os.arch")
             var path = "/natives/$libname/"
