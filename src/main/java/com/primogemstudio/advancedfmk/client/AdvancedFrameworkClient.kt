@@ -95,7 +95,6 @@ class AdvancedFrameworkClient : ClientModInitializer {
             )
         }
         SabaNative.init()
-        Live2DNative.init()
     }
 }
 

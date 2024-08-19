@@ -7,7 +7,8 @@
     "BufferBuilderMixin",
     "BufferBuilderMixin$DrawStateMixin",
     "PngInfoMixin",
-    "VertexBufferMixin"
+    "VertexBufferMixin",
+    "WindowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

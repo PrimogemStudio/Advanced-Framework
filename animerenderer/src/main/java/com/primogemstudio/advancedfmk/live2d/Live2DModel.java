@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.live2d;
 
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
+
 import java.lang.ref.Cleaner;
 import java.util.Random;
 
