@@ -54,7 +54,7 @@ object NativeLibLoader {
         }
         catch (e: Throwable) {
             available[libname] = false
-            logger.warn("advancedfmk-animerenderer doesn't support this platform! $libname lib is unavailable")
+            logger.warn("advancedfmk-animerenderer doesn't support this platform! $libname lib is unavailable", e)
         }
     }
 }

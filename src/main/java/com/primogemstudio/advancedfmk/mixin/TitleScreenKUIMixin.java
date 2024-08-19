@@ -36,29 +36,7 @@ public class TitleScreenKUIMixin {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
-        model.registerTextures();
-        model.update(glfwGetTime());
-
-        model.getDrawableOrders().forEach(idx -> {
-            if (model.getDrawableVisible(idx)) {
-                var vertices = model.getDrawableVertices(idx);
-                var indices = model.getDrawableVertexIndices(idx);
-
-                if (!indices.isEmpty()) {
-                    var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
-                    RenderSystem.setShader(Shader.INSTANCE::getLIVE2D_SHADER);
-                    RenderSystem.setShaderTexture(0, model.registeredTextures.get(model.getDrawableTextureIndex(idx)));
-                    indices.stream().map(vertices::get).forEach(vi -> buff.addVertex(vi.x * 200 + 100, (1 - vi.y) * 200, 0).setUv(vi.z, 1 - vi.w));
-
-                    RenderSystem.disableCull();
-                    RenderSystem.disableDepthTest();
-                    RenderSystem.disableScissor();
-                    RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-                    BufferUploader.drawWithShader(buff.buildOrThrow());
-                }
-            }
-        });
+        model.update(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight(), glfwGetTime());
 
         /*model.registerTextures();
         model.update();
