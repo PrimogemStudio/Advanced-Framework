@@ -61,3 +61,5 @@ jobs:
           path: |
             build/libs/*.jar
             !build/libs/*-sources.jar
+            build/devlibs/*.jar
+            !build/devlibs/*-sources.jar
