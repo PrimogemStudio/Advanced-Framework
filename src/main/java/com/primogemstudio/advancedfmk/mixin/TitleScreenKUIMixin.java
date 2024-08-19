@@ -2,15 +2,16 @@ package com.primogemstudio.advancedfmk.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.primogemstudio.advancedfmk.client.Shader;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
 import com.primogemstudio.advancedfmk.live2d.Live2DModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
+import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,23 +35,23 @@ public class TitleScreenKUIMixin {
 
         model.registerTextures();
         model.update();
+
         model.getDrawableOrders().forEach(idx -> {
-            if (idx != 78 && idx != 77) {
-                var vertices = model.getDrawableVertices(idx);
-                var indices = model.getDrawableVertexIndices(idx);
+            var vertices = model.getDrawableVertices(idx);
+            var indices = model.getDrawableVertexIndices(idx);
 
-                if (!indices.isEmpty()) {
-                    var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                    RenderSystem.setShaderTexture(0, model.registeredTextures.get(model.getDrawableTextureIndex(idx)));
-                    indices.stream().map(vertices::get).forEach(vi -> buff.addVertex(vi.x * 200 + 100, (1 - vi.y) * 200, 0).setUv(vi.z, vi.w));
+            if (!indices.isEmpty()) {
+                var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
+                RenderSystem.setShader(Shader.INSTANCE::getLIVE2D_SHADER);
+                RenderSystem.setShaderTexture(0, model.registeredTextures.get(model.getDrawableTextureIndex(idx)));
+                indices.stream().map(vertices::get).forEach(vi -> buff.addVertex(vi.x * 200 + 100, (1 - vi.y) * 200, 0).setUv(vi.z, 1 - vi.w));
 
-                    RenderSystem.disableBlend();
-                    RenderSystem.disableCull();
-                    BufferUploader.drawWithShader(buff.buildOrThrow());
-                    RenderSystem.enableCull();
-                    RenderSystem.enableBlend();
-                }
+                RenderSystem.disableCull();
+                RenderSystem.disableDepthTest();
+                RenderSystem.disableScissor();
+                RenderSystem.enableBlend();
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                BufferUploader.drawWithShader(buff.buildOrThrow());
             }
         });
 
