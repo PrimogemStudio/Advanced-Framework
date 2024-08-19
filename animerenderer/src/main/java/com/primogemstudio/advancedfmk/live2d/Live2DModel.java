@@ -24,6 +24,8 @@ public class Live2DModel implements AutoCloseable {
     }
 
     private native void load(String name, String path);
-    public native void update(int width, int height, double time);
+
+    public native void update(int width, int height);
+
     private static native void release(long ptr);
 }

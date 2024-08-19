@@ -1,18 +1,13 @@
 package com.primogemstudio.advancedfmk.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.primogemstudio.advancedfmk.client.Shader;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
 import com.primogemstudio.advancedfmk.live2d.Live2DModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
-import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,12 +26,13 @@ public class TitleScreenKUIMixin {
     @Unique
     private static final MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
     @Unique
-    private static final Live2DModel model = new Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/");
+    private static final Live2DModel model = new Live2DModel("Hiyori", "F:\\C++\\CubismSdkForNative-5-r.1\\Samples\\Resources/Hiyori/");
+
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
-        model.update(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight(), glfwGetTime());
+        model.update(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
 
         /*model.registerTextures();
         model.update();

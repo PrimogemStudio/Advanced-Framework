@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
 import com.primogemstudio.advancedfmk.mmd.renderer.MMDTextureAtlas;
 import com.primogemstudio.advancedfmk.mmd.renderer.TextureManager;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.lang.ref.Cleaner;
