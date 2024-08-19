@@ -5,6 +5,7 @@ import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
+import org.joml.Vector4f;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +53,11 @@ public class Live2DModel implements AutoCloseable {
     public static native void setGlfwGetTimeHandle(long handle);
     private native void load(String name, String path);
     public native List<File> getTextures();
-    public native List<Float> getVertices(int texture_idx);
-    public native List<Integer> getVertexIndices(int texture_idx);
+    public native int getDrawableCount();
+    public native List<Integer> getDrawableOrders();
+    public native int getDrawableTextureIndex(int index);
+    public native List<Integer> getDrawableVertexIndices(int index);
+    public native List<Vector4f> getDrawableVertices(int index);
     public native void update();
     private static native void release(long ptr);
 }
