@@ -50,7 +50,6 @@ public class Live2DModel implements AutoCloseable {
         if (cleaner != null) cleaner.clean();
     }
 
-    public static native void setGlfwGetTimeHandle(long handle);
     private native void load(String name, String path);
     public native List<File> getTextures();
     public native int getDrawableCount();
@@ -58,6 +57,7 @@ public class Live2DModel implements AutoCloseable {
     public native int getDrawableTextureIndex(int index);
     public native List<Integer> getDrawableVertexIndices(int index);
     public native List<Vector4f> getDrawableVertices(int index);
-    public native void update();
+    public native boolean getDrawableVisible(int index);
+    public native void update(double time);
     private static native void release(long ptr);
 }

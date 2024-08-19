@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
+
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenKUIMixin {
@@ -34,24 +37,26 @@ public class TitleScreenKUIMixin {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
         model.registerTextures();
-        model.update();
+        model.update(glfwGetTime());
 
         model.getDrawableOrders().forEach(idx -> {
-            var vertices = model.getDrawableVertices(idx);
-            var indices = model.getDrawableVertexIndices(idx);
+            if (model.getDrawableVisible(idx)) {
+                var vertices = model.getDrawableVertices(idx);
+                var indices = model.getDrawableVertexIndices(idx);
 
-            if (!indices.isEmpty()) {
-                var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
-                RenderSystem.setShader(Shader.INSTANCE::getLIVE2D_SHADER);
-                RenderSystem.setShaderTexture(0, model.registeredTextures.get(model.getDrawableTextureIndex(idx)));
-                indices.stream().map(vertices::get).forEach(vi -> buff.addVertex(vi.x * 200 + 100, (1 - vi.y) * 200, 0).setUv(vi.z, 1 - vi.w));
+                if (!indices.isEmpty()) {
+                    var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
+                    RenderSystem.setShader(Shader.INSTANCE::getLIVE2D_SHADER);
+                    RenderSystem.setShaderTexture(0, model.registeredTextures.get(model.getDrawableTextureIndex(idx)));
+                    indices.stream().map(vertices::get).forEach(vi -> buff.addVertex(vi.x * 200 + 100, (1 - vi.y) * 200, 0).setUv(vi.z, 1 - vi.w));
 
-                RenderSystem.disableCull();
-                RenderSystem.disableDepthTest();
-                RenderSystem.disableScissor();
-                RenderSystem.enableBlend();
-                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-                BufferUploader.drawWithShader(buff.buildOrThrow());
+                    RenderSystem.disableCull();
+                    RenderSystem.disableDepthTest();
+                    RenderSystem.disableScissor();
+                    RenderSystem.enableBlend();
+                    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                    BufferUploader.drawWithShader(buff.buildOrThrow());
+                }
             }
         });
 
