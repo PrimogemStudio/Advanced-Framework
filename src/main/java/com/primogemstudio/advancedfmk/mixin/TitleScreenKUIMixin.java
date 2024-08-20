@@ -26,7 +26,7 @@ public class TitleScreenKUIMixin {
     @Unique
     private static final MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
     @Unique
-    private static final Live2DModel model = new Live2DModel("Hiyori", "F:\\C++\\CubismSdkForNative-5-r.1\\Samples\\Resources/Hiyori/");
+    private static final Live2DModel model = new Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/");
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
