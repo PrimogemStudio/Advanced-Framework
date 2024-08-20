@@ -4,9 +4,11 @@ import com.mojang.blaze3d.vertex.*;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
 import com.primogemstudio.advancedfmk.live2d.Live2DModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,9 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
-@Mixin(TitleScreen.class)
+@Mixin(GameRenderer.class)
 public class TitleScreenKUIMixin {
     @Unique
     private EntityRenderWrapper wrapper;
@@ -29,7 +29,7 @@ public class TitleScreenKUIMixin {
     private static final Live2DModel model = new Live2DModel("Hiyori", "/home/coder2/live2d-demo/res/Hiyori/");
 
     @Inject(at = @At("RETURN"), method = "render")
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    public void render(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
 
         model.update(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
