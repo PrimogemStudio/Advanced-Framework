@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.concurrent.CompletableFuture;
 
 @Mixin(GameRenderer.class)
-public class TitleScreenKUIMixin {
+public class GameRendererMixin {
     @Unique
     private EntityRenderWrapper wrapper;
     @Unique

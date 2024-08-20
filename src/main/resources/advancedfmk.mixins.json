@@ -4,8 +4,8 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "TitleScreenKUIMixin",
-    "TitleScreenKUIMixin$MinecraftMixin",
+    "GameRendererMixin",
+    "GameRendererMixin$MinecraftMixin",
     "PackEntryMixin"
   ],
   "injectors": {
