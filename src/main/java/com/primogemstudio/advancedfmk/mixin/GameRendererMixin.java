@@ -2,11 +2,10 @@ package com.primogemstudio.advancedfmk.mixin;
 
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
-import com.primogemstudio.advancedfmk.live2d.Live2DModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,20 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mixin(GameRenderer.class)
+@Mixin(TitleScreen.class)
 public class GameRendererMixin {
     @Unique
     private EntityRenderWrapper wrapper;
     @Unique
     private static final MultiBufferSource.BufferSource source = MultiBufferSource.immediate(new ByteBufferBuilder(0x200000));
-    @Unique
-    private static final Live2DModel model = new Live2DModel("草神", "C:/Users/Hacker/Downloads/nahida/nahida/草神/");
 
     @Inject(at = @At("RETURN"), method = "render")
-    public void render(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
-
-        model.update(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
 
         /*model.registerTextures();
         model.update();

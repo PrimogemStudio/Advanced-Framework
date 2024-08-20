@@ -6,7 +6,8 @@
   "client": [
     "GameRendererMixin",
     "GameRendererMixin$MinecraftMixin",
-    "PackEntryMixin"
+    "PackEntryMixin",
+    "TestMixin"
   ],
   "injectors": {
     "defaultRequire": 1
