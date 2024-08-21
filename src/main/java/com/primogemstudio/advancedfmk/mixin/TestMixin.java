@@ -16,7 +16,7 @@ import java.util.Random;
 @Mixin(GameRenderer.class)
 public class TestMixin {
     @Unique
-    private static final Live2DModel model = new Live2DModel("Haru", "F:\\C++\\CubismSdkForNative-5-r.1\\Samples\\Resources\\Haru/");
+    private static final Live2DModel model = new Live2DModel("Haru", "/home/coder2/CubismSdkForNative-5-r.1/Samples/Resources/Haru/");
     @Unique
     private static final Random random = new Random();
     @Unique
@@ -25,9 +25,9 @@ public class TestMixin {
     @Inject(at = @At("RETURN"), method = "render")
     public void render(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
         if (!init) {
-            var c = model.getMotionCount("Idle");
+            var c = model.getMotionCount(Live2DModel.MotionGroupIdle);
             var es = model.getExpressions();
-            model.startMotion("Idle", random.nextInt(c), MotionPriority.FORCE);
+            model.startMotion(Live2DModel.MotionGroupIdle, random.nextInt(c), MotionPriority.FORCE);
             model.setExpression(es[random.nextInt(es.length)]);
             init = true;
         }

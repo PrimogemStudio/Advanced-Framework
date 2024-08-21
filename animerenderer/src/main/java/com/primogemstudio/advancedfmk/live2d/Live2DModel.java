@@ -5,6 +5,11 @@ import com.primogemstudio.advancedfmk.interfaces.AccessFromNative;
 import java.lang.ref.Cleaner;
 
 public class Live2DModel implements AutoCloseable {
+    public static String MotionGroupIdle = "Idle";
+    public static String MotionGroupTapBody = "TapBody";
+    public static String HitAreaNameHead = "Head";
+    public static String HitAreaNameBody = "Body";
+
     @AccessFromNative
     private long ptr;
     private final Cleaner.Cleanable cleaner;
@@ -31,6 +36,10 @@ public class Live2DModel implements AutoCloseable {
     public native int getMotionCount(String group);
 
     public native String[] getExpressions();
+
+    public native boolean hitTest(String part, float x, float y);
+
+    public native void setDragging(float x, float y);
 
     private static native void release(long ptr);
 }
