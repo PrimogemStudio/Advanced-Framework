@@ -17,7 +17,7 @@
   "license": "GPLv3",
   "icon": "assets/advancedfmk_animerenderer/icon.png",
   "environment": "*",
-  "accessWidener": "META-INF/aw2.accesswidener",
+  "accessWidener": "advancedfmk.animerenderer.accesswidener",
   "entrypoints": {
     "client": [
       "com.primogemstudio.advancedfmk.client.AdvancedFrameworkMMDClient"

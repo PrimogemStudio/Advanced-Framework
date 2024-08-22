@@ -11,7 +11,7 @@ group = project.rootProject.maven_group
 version = project.rootProject.mod_version
 
 loom {
-    accessWidenerPath = file("src/main/resources/META-INF/aw2.accesswidener")
+    accessWidenerPath = file("src/main/resources/advancedfmk.animerenderer.accesswidener")
 }
 
 kotlin {
