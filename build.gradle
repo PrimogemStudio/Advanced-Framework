@@ -65,12 +65,12 @@ loom {
 }
 
 dependencies {
-    implementation(project(path: ':animerenderer', configuration: "namedElements"))
-    include(project(':animerenderer'))
-    implementation(project(path: ':uicompositor', configuration: "namedElements"))
-    include(project(':uicompositor'))
-    implementation(project(path: ':fontengine', configuration: "namedElements"))
-    include(project(':fontengine'))
+    implementation(project(path: ':animerenderer', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
+    include(project(':animerenderer')).exclude(group: "net.fabricmc.fabric-api")
+    implementation(project(path: ':uicompositor', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
+    include(project(':uicompositor')).exclude(group: "net.fabricmc.fabric-api")
+    implementation(project(path: ':fontengine', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
+    include(project(':fontengine')).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     include(implementation(project(path: ':simulator')))
     include(implementation(project(path: ':binfiles')))
