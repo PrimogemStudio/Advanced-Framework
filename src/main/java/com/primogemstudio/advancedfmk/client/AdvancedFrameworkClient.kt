@@ -3,10 +3,9 @@ package com.primogemstudio.advancedfmk.client
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
-import com.primogemstudio.advancedfmk.live2d.Live2DModel
-import com.primogemstudio.advancedfmk.live2d.Live2DNative
 import com.primogemstudio.advancedfmk.mmd.SabaNative
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
+import com.primogemstudio.advancedfmk.network.Live2DEntityAddPacket
 import com.primogemstudio.advancedfmk.network.TestEntityAddPacket
 import com.primogemstudio.advancedfmk.network.UpdatePacket
 import com.primogemstudio.advancedfmk.util.NativeFileDialog
@@ -27,8 +26,10 @@ class AdvancedFrameworkClient : ClientModInitializer {
     override fun onInitializeClient() {
         PayloadTypeRegistry.playS2C().register(UpdatePacket.TYPE, UpdatePacket.CODEC)
         PayloadTypeRegistry.playS2C().register(TestEntityAddPacket.TYPE, TestEntityAddPacket.CODEC)
+        PayloadTypeRegistry.playS2C().register(Live2DEntityAddPacket.TYPE, Live2DEntityAddPacket.CODEC)
         ClientPlayNetworking.registerGlobalReceiver(UpdatePacket.TYPE, UpdatePacket.Handler)
         ClientPlayNetworking.registerGlobalReceiver(TestEntityAddPacket.TYPE, TestEntityAddPacket.Handler)
+        ClientPlayNetworking.registerGlobalReceiver(Live2DEntityAddPacket.TYPE, Live2DEntityAddPacket.Handler)
         ClientCommandRegistrationCallback.EVENT.register { dis, _ ->
             dis.register(
                 literal("advancedfmk").then(literal("flush").executes { UpdatePacket.flush();0 })

@@ -19,10 +19,16 @@ object Entities {
                 { entityType, level -> TestEntity(entityType, level) }, MobCategory.MISC
             ).build("test_entity")
         )
-        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) EntityRendererRegistry.register(entity) {
-            TestEntityRenderer(
-                it
-            )
+        val live2d_entity = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "live2d_entity"),
+            EntityType.Builder.of(
+                { entityType, level -> Live2DEntity(entityType, level) }, MobCategory.MISC
+            ).build("live2d_entity")
+        )
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
+            EntityRendererRegistry.register(entity) { TestEntityRenderer(it) }
+            EntityRendererRegistry.register(live2d_entity) { Live2DEntityRenderer(it) }
         }
     }
 }
