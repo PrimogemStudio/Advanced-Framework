@@ -9,7 +9,12 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderType.CompositeState
 
 val target = TextureTarget(1920, 1080, false, false)
-class CustomTextureStateShard: RenderStateShard.EmptyTextureStateShard(Runnable { RenderSystem.setShaderTexture(0, target.colorTextureId) }, Runnable {  })
+class CustomTextureStateShard: RenderStateShard.EmptyTextureStateShard(Runnable {
+    RenderSystem.setShaderTexture(0, target.colorTextureId)
+    RenderSystem.disableCull()
+}, Runnable {
+    RenderSystem.enableCull()
+})
 val renderType = RenderType.create(
     "live2d_deferred",
     DefaultVertexFormat.POSITION_TEX,

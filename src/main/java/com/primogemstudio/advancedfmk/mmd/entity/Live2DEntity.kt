@@ -2,7 +2,6 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.primogemstudio.advancedfmk.live2d.Live2DModel
 import com.primogemstudio.advancedfmk.network.Live2DEntityAddPacket
-import com.primogemstudio.advancedfmk.network.TestEntityAddPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking

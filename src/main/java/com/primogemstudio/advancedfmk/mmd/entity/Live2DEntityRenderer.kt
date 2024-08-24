@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -30,11 +31,14 @@ class Live2DEntityRenderer(context: EntityRendererProvider.Context) : EntityRend
             Minecraft.getInstance().mainRenderTarget.bindWrite(true)
 
             val buff = buffer.getBuffer(renderType)
+            poseStack.pushPose()
+            poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw))
             val matrix = poseStack.last().pose()
-            buff.addVertex(matrix, 0f, 0f, 0f).setUv(0f, 0f)
-            buff.addVertex(matrix, 1f, 0f, 0f).setUv(1f, 0f)
-            buff.addVertex(matrix, 1f, 1f, 0f).setUv(1f, 1f)
-            buff.addVertex(matrix, 0f, 1f, 0f).setUv(0f, 1f)
+            buff.addVertex(matrix, -1f, 0f, 0f).setUv(0f, 0f)
+            buff.addVertex(matrix, 0.920f, 0f, 0f).setUv(1f, 0f)
+            buff.addVertex(matrix, 0.920f, 1.080f, 0f).setUv(1f, 1f)
+            buff.addVertex(matrix, -1f, 1.080f, 0f).setUv(0f, 1f)
+            poseStack.popPose()
         }
     }
 }

@@ -4,6 +4,8 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.mmd.SabaNative
+import com.primogemstudio.advancedfmk.mmd.entity.Entities
+import com.primogemstudio.advancedfmk.mmd.entity.Live2DEntity
 import com.primogemstudio.advancedfmk.mmd.entity.TestEntity
 import com.primogemstudio.advancedfmk.network.Live2DEntityAddPacket
 import com.primogemstudio.advancedfmk.network.TestEntityAddPacket
@@ -88,7 +90,8 @@ class AdvancedFrameworkClient : ClientModInitializer {
                         model ?: return@executes 0
                         try {
                             System.load(model.absolutePath)
-                        } catch (e: Exception) {
+                        }
+                        catch (e: Exception) {
                             e.fullMsg(it)
                         }
                         0

@@ -1,7 +1,6 @@
 package com.primogemstudio.advancedfmk.mixin;
 
 import com.primogemstudio.advancedfmk.live2d.Live2DModel;
-import com.primogemstudio.advancedfmk.live2d.MotionPriority;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
