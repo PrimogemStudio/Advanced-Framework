@@ -1,15 +1,15 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
 import com.ibm.icu.impl.ClassLoaderUtil
+import com.primogemstudio.advancedfmk.kui.elements.UIElement
 import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
+import net.minecraft.resources.ResourceLocation
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
-import java.nio.file.Files
-import kotlin.io.path.Path
 import kotlin.random.Random
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
@@ -58,19 +58,19 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         cn.access = ACC_PUBLIC or ACC_FINAL
         cn.version = V21
         cn.name = cnn.replace(".", "/")
-        cn.superName = "java/lang/Object"
+        cn.superName = sig(Object::class)
         cn.sourceFile = "<yaml>"
 
-        cn.fields.add(FieldNode(ACC_PUBLIC or ACC_FINAL, "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;", null, null))
+        cn.fields.add(FieldNode(ACC_PUBLIC or ACC_FINAL, "internal", sigt(UIElement::class), null, null))
 
         val mn = MethodNode(
             ACC_PUBLIC,
-            "<init>", "()V", null, null
+            INIT, "()V", null, null
         )
         mn.visitCode()
-        // Super init
+
         mn.aload0()
-        mn.invokespecial("java/lang/Object", "<init>", "()V")
+        mn.invokespecial(sig(Object::class), "<init>", "()V")
 
         mn.aload0()
         when (root.component?.type) {
@@ -80,7 +80,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             null -> throw NullPointerException()
             GEOMETRY_LINE -> buildGeometryLineElement(mn, root.component as GeometryLineComponent, root.rootName)
         }
-        mn.visitFieldInsn(PUTFIELD, cnn.replace(".", "/"), "internal", "Lcom/primogemstudio/advancedfmk/kui/elements/UIElement;")
+        mn.visitFieldInsn(PUTFIELD, cnn.replace(".", "/"), "internal", sigt(UIElement::class))
 
         mn.return_()
 
@@ -89,8 +89,6 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
         cn.accept(cw)
-
-        Files.write(Path("TestUI.class"), cw.toByteArray())
         val c = defineClass(cnn, cw.toByteArray())
 
         val cs = c.getConstructor()
@@ -129,9 +127,9 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                     mn.ldc(c.filter!!["location"] as String)
                     mn.visitMethodInsn(
                         INVOKESTATIC,
-                        "net/minecraft/resources/ResourceLocation",
+                        sig(ResourceLocation::class),
                         "parse",
-                        "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
+                        "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
                         false
                     )
 
@@ -139,7 +137,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                         INVOKEINTERFACE,
                         "org/ladysnake/satin/api/managed/ShaderEffectManager",
                         "manage",
-                        "(Lnet/minecraft/resources/ResourceLocation;)Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
+                        "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
                         true
                     )
 
@@ -230,9 +228,9 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.ldc(c.texture!!)
             mn.visitMethodInsn(
                 INVOKESTATIC,
-                "net/minecraft/resources/ResourceLocation",
+                sig(ResourceLocation::class),
                 "parse",
-                "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
+                "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
                 false
             )
         } else mn.aconst_null()
@@ -252,9 +250,9 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                     mn.ldc(c.filter!!["location"] as String)
                     mn.visitMethodInsn(
                         INVOKESTATIC,
-                        "net/minecraft/resources/ResourceLocation",
+                        sig(ResourceLocation::class),
                         "parse",
-                        "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
+                        "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
                         false
                     )
 
@@ -262,7 +260,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                         INVOKEINTERFACE,
                         "org/ladysnake/satin/api/managed/ShaderEffectManager",
                         "manage",
-                        "(Lnet/minecraft/resources/ResourceLocation;)Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
+                        "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
                         true
                     )
 
@@ -281,7 +279,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.invokespecial(
             "com/primogemstudio/advancedfmk/kui/elements/RectangleElement",
             "<init>",
-            "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLorg/joml/Vector4f;Lnet/minecraft/resources/ResourceLocation;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
+            "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLorg/joml/Vector4f;${sigt(ResourceLocation::class)}Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
         )
     }
 
