@@ -17,12 +17,12 @@ class CustomTextureStateShard: RenderStateShard.EmptyTextureStateShard(Runnable 
 })
 val renderType = RenderType.create(
     "live2d_deferred",
-    DefaultVertexFormat.POSITION_TEX,
+    DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
     VertexFormat.Mode.QUADS,
     0x200,
     false,
     false,
-    CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+    CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER)
         .setTextureState(CustomTextureStateShard())
         .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
         .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
