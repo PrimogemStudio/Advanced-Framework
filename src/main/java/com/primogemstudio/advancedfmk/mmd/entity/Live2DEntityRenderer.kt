@@ -2,13 +2,13 @@ package com.primogemstudio.advancedfmk.mmd.entity
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
+import com.primogemstudio.advancedfmk.live2d.renderType
+import com.primogemstudio.advancedfmk.live2d.target
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.resources.ResourceLocation
-import com.primogemstudio.advancedfmk.live2d.target
-import com.primogemstudio.advancedfmk.live2d.renderType
-import net.minecraft.client.Minecraft
 
 class Live2DEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<Live2DEntity>(context) {
     override fun getTextureLocation(entity: Live2DEntity): ResourceLocation {
