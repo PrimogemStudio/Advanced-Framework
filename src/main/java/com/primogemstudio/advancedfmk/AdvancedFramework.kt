@@ -13,6 +13,7 @@ import org.joml.Matrix4f
 class AdvancedFramework : ModInitializer {
     override fun onInitialize() {
         Entities.register()
+        Items.register()
     }
 
     companion object {
