@@ -95,7 +95,12 @@ class AdvancedFrameworkClient : ClientModInitializer {
                             e.fullMsg(it)
                         }
                         0
-                    })
+                    }).then(literal("load_live2d").then(argument("name", StringArgumentType.string()).then(argument("path", StringArgumentType.string()).executes {
+                        it.source.player.connection.sendCommand(
+                            "summon ${MOD_ID}:live2d_entity ~ ~ ~ {ModelName:\"${StringArgumentType.getString(it, "name")}\",ModelPath:\"${StringArgumentType.getString(it, "path")}\"}"
+                        )
+                        0
+                    })))
             )
         }
         SabaNative.init()

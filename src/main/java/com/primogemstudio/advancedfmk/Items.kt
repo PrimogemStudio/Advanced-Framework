@@ -20,7 +20,7 @@ object Items {
                 tooltipComponents: MutableList<Component>,
                 tooltipFlag: TooltipFlag
             ) {
-                tooltipComponents.add(Component.literal("启动!"))
+                tooltipComponents.add(Component.literal("启动!").withColor(0xFFFF00))
             }})
     }
 }
