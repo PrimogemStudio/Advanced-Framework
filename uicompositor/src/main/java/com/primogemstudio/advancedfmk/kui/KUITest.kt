@@ -90,10 +90,6 @@ class KUITest {
             }
 
             elem.subElement("test", GeometryLineElement::class).apply {
-                if (snake.worm.cells.size > 1) {
-                    println(vertices)
-                }
-
                 vertices.clear()
 
                 snake.worm.cells.forEach {
