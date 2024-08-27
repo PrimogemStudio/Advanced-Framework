@@ -100,7 +100,7 @@ class KUITest {
             }
         },
         TimedEvent<Float>(300) { snake.step() }.apply {
-            durationFetch = { dur = it / 300f }
+            durationFetch = { dur = ExponentialOut.gen(it / 300.0).toFloat() }
         },
         CustomAnimationEvent {
             if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_A)) snake.worm.crp(LEFT)

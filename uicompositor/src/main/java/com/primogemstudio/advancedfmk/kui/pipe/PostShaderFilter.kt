@@ -1,19 +1,23 @@
 package com.primogemstudio.advancedfmk.kui.pipe
 
+import com.mojang.blaze3d.pipeline.RenderTarget
 import com.primogemstudio.advancedfmk.kui.GlobalData
 import org.ladysnake.satin.api.managed.ManagedShaderEffect
 
 class PostShaderFilter(
     val shader: ManagedShaderEffect
 ) : FilterBase {
+    var delegate: RenderTarget? = null
     override fun init() {
-        COMPOSE_FRAME.clear(IS_OSX)
-        COMPOSE_FRAME.bindWrite(true)
+        (delegate?: COMPOSE_FRAME).clear(IS_OSX)
+        (delegate?: COMPOSE_FRAME).bindWrite(true)
     }
 
     override fun apply(data: GlobalData) {
-        shader.setSamplerUniform("InputSampler", COMPOSE_FRAME)
+        shader.setSamplerUniform("InputSampler", (delegate?: COMPOSE_FRAME))
         shader.render(data.tick)
+
+        delegate = null
     }
 
     override fun arg(key: String, a: Int) = shader.setUniformValue(key, a)
