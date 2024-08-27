@@ -46,5 +46,6 @@ class TextComponent(
 class GeometryLineComponent(
     var width: Float? = null,
     var color: List<Float>? = null,
+    var points: List<List<Float>>? = null,
     var filter: Map<String, String>? = null,
 ) : Component(ComponentType.GEOMETRY_LINE)

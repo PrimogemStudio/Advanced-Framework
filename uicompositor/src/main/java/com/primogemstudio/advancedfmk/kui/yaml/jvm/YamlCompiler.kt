@@ -1,20 +1,28 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
 import com.ibm.icu.impl.ClassLoaderUtil
-import com.primogemstudio.advancedfmk.kui.elements.UIElement
+import com.primogemstudio.advancedfmk.kui.elements.*
+import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
+import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
 import net.minecraft.resources.ResourceLocation
+import org.joml.Vector2f
+import org.joml.Vector4f
+import org.ladysnake.satin.api.managed.ShaderEffectManager
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
+import java.nio.file.Files
+import java.nio.file.Path
 import kotlin.random.Random
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
 fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
 fun MethodNode.aload1() = visitVarInsn(ALOAD, 1)
+fun MethodNode.astore0() = visitVarInsn(ASTORE, 0)
 fun MethodNode.astore1() = visitVarInsn(ASTORE, 1)
 fun MethodNode.aastore() = visitInsn(AASTORE)
 fun MethodNode.dup() = visitInsn(DUP)
@@ -50,6 +58,8 @@ fun MethodNode.new(s: String) = visitTypeInsn(NEW, s)
 fun MethodNode.checkcast(s: String) = visitTypeInsn(CHECKCAST, s)
 fun MethodNode.anewarray(s: String) = visitTypeInsn(ANEWARRAY, s)
 fun MethodNode.invokespecial(s: String, s2: String, s3: String) = visitMethodInsn(INVOKESPECIAL, s, s2, s3, false)
+fun MethodNode.invokevirtual(s: String, s2: String, s3: String) = visitMethodInsn(INVOKEVIRTUAL, s, s2, s3, false)
+fun MethodNode.pop() = visitInsn(POP)
 
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
     fun build(): Any {
@@ -70,7 +80,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.visitCode()
 
         mn.aload0()
-        mn.invokespecial(sig(Object::class), "<init>", "()V")
+        mn.invokespecial(sig(Object::class), INIT, "()V")
 
         mn.aload0()
         when (root.component?.type) {
@@ -91,35 +101,41 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         cn.accept(cw)
         val c = defineClass(cnn, cw.toByteArray())
 
+        Files.write(Path.of("$cnn.class"), cw.toByteArray())
+
         val cs = c.getConstructor()
         val ins = cs.newInstance()
         return c.getField("internal").get(ins)
     }
 
     private fun buildGeometryLineElement(mn: MethodNode, c: GeometryLineComponent, n: String) {
-        mn.new("com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement")
+        mn.new(sig(GeometryLineElement::class))
         mn.dup()
 
         mn.ldc(n)
 
         mn.ldc(c.width!!)
 
-        mn.new("org/joml/Vector4f")
+        mn.new(sig(Vector4f::class))
         mn.dup()
         mn.ldc(c.color!![0])
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
+
+        mn.new(sig(ArrayList::class))
+        mn.dup()
+        mn.invokespecial(sig(ArrayList::class), INIT, "()V")
 
         if (c.filter != null) {
             when (c.filter!!["type"]) {
                 "post" -> {
-                    mn.new("com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter")
+                    mn.new(sig(PostShaderFilter::class))
                     mn.dup()
                     mn.visitMethodInsn(
                         INVOKESTATIC,
-                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        sig(ShaderEffectManager::class),
                         "getInstance",
                         "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
                         true
@@ -135,36 +151,35 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
                     mn.visitMethodInsn(
                         INVOKEINTERFACE,
-                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        sig(ShaderEffectManager::class),
                         "manage",
                         "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
                         true
                     )
 
                     mn.invokespecial(
-                        "com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter",
-                        "<init>",
+                        sig(PostShaderFilter::class),
+                        INIT,
                         "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V"
                     )
-                    mn.checkcast("com/primogemstudio/advancedfmk/kui/pipe/FilterBase")
+                    mn.checkcast(sig(FilterBase::class))
                 }
                 else -> mn.aconst_null()
             }
         }
         else mn.aconst_null()
 
-        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement", "<init>", "(Ljava/lang/String;FLorg/joml/Vector4f;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
+        mn.invokespecial(sig(GeometryLineElement::class), INIT, "(Ljava/lang/String;FLorg/joml/Vector4f;Ljava/util/List;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
     }
 
     private fun buildGroupElement(mn: MethodNode, c: GroupComponent, n: String) {
-        mn.new("com/primogemstudio/advancedfmk/kui/elements/GroupElement")
+        mn.new(sig(GroupElement::class))
         mn.dup()
 
         mn.ldc(n)
 
         mn.ldc(c.components?.size?: 0)
-
-        mn.anewarray("com/primogemstudio/advancedfmk/kui/elements/RealElement")
+        mn.anewarray(sig(RealElement::class))
         mn.astore1()
         mn.aload1()
 
@@ -176,53 +191,53 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 TEXT -> buildTextElement(mn, u as TextComponent, t)
                 GROUP -> buildGroupElement(mn, u as GroupComponent, t)
                 RECTANGLE -> buildRectangleElement(mn, u as RectangleComponent, t)
-                null -> throw NullPointerException()
                 GEOMETRY_LINE -> buildGeometryLineElement(mn, u as GeometryLineComponent, t)
+                null -> throw NullPointerException()
             }
             mn.aastore()
             mn.aload1()
         }
-        mn.visitMethodInsn(INVOKESTATIC, "kotlin/collections/CollectionsKt", "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
-        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/GroupElement", "<init>", "(Ljava/lang/String;Ljava/util/List;)V")
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
+        mn.invokespecial(sig(GroupElement::class), INIT, "(Ljava/lang/String;Ljava/util/List;)V")
     }
 
     private fun buildRectangleElement(mn: MethodNode, c: RectangleComponent, n: String) {
-        mn.new("com/primogemstudio/advancedfmk/kui/elements/RectangleElement")
+        mn.new(sig(RectangleElement::class))
         mn.dup()
 
         mn.ldc(n)
 
-        mn.new("org/joml/Vector2f")
+        mn.new(sig(Vector2f::class))
         mn.dup()
         mn.ldc(c.pos!![0])
         mn.ldc(c.pos!![1])
-        mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
 
-        mn.new("org/joml/Vector2f")
+        mn.new(sig(Vector2f::class))
         mn.dup()
         mn.ldc(c.size!![0])
         mn.ldc(c.size!![1])
-        mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
 
-        mn.new("org/joml/Vector4f")
+        mn.new(sig(Vector4f::class))
         mn.dup()
         mn.ldc(c.color!![0])
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
 
         mn.ldc(c.radius?: 0f)
         mn.ldc(c.thickness?: 0f)
         mn.ldc(c.smoothedge?: 0f)
 
-        mn.new("org/joml/Vector4f")
+        mn.new(sig(Vector4f::class))
         mn.dup()
         mn.ldc(c.textureUV?.get(0)?: 0f)
         mn.ldc(c.textureUV?.get(1)?: 1f)
         mn.ldc(c.textureUV?.get(2)?: 0f)
         mn.ldc(c.textureUV?.get(3)?: 1f)
-        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
 
         if (c.texture != null) {
             mn.ldc(c.texture!!)
@@ -238,11 +253,11 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         if (c.filter != null) {
             when (c.filter!!["type"]) {
                 "post" -> {
-                    mn.new("com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter")
+                    mn.new(sig(PostShaderFilter::class))
                     mn.dup()
                     mn.visitMethodInsn(
                         INVOKESTATIC,
-                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        sig(ShaderEffectManager::class),
                         "getInstance",
                         "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
                         true
@@ -258,18 +273,18 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
                     mn.visitMethodInsn(
                         INVOKEINTERFACE,
-                        "org/ladysnake/satin/api/managed/ShaderEffectManager",
+                        sig(ShaderEffectManager::class),
                         "manage",
                         "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
                         true
                     )
 
                     mn.invokespecial(
-                        "com/primogemstudio/advancedfmk/kui/pipe/PostShaderFilter",
-                        "<init>",
+                        sig(PostShaderFilter::class),
+                        INIT,
                         "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V"
                     )
-                    mn.checkcast("com/primogemstudio/advancedfmk/kui/pipe/FilterBase")
+                    mn.checkcast(sig(FilterBase::class))
                 }
                 else -> mn.aconst_null()
             }
@@ -277,37 +292,37 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         else mn.aconst_null()
 
         mn.invokespecial(
-            "com/primogemstudio/advancedfmk/kui/elements/RectangleElement",
-            "<init>",
+            sig(RectangleElement::class),
+            INIT,
             "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLorg/joml/Vector4f;${sigt(ResourceLocation::class)}Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
         )
     }
 
     private fun buildTextElement(mn: MethodNode, c: TextComponent, n: String) {
-        mn.new("com/primogemstudio/advancedfmk/kui/elements/TextElement")
+        mn.new(sig(TextElement::class))
         mn.dup()
         mn.ldc(n)
 
-        mn.new("org/joml/Vector2f")
+        mn.new(sig(Vector2f::class))
         mn.dup()
         mn.ldc(c.pos!![0])
         mn.ldc(c.pos!![1])
-        mn.invokespecial( "org/joml/Vector2f", "<init>", "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
 
         mn.ldc(c.text?: "<null>")
 
-        mn.new("org/joml/Vector4f")
+        mn.new(sig(Vector4f::class))
         mn.dup()
         mn.ldc(c.color!![0])
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial( "org/joml/Vector4f", "<init>", "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
 
         mn.ldc(c.textsize?: 12)
         mn.ldc(c.vanilla?: false)
 
-        mn.invokespecial( "com/primogemstudio/advancedfmk/kui/elements/TextElement", "<init>", "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
+        mn.invokespecial(sig(TextElement::class), INIT, "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {

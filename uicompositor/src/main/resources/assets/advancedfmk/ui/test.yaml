@@ -6,7 +6,8 @@ root:
     test:
       type: line
       width: 10.0
-      color: [1, 0, 1, 1]
+      points: [[ 0, 0 ], [ 100, 50 ], [ 0, 100 ]]
+      color: [ 1, 0, 1, 1 ]
 
     test_rect_00:
       type: rect

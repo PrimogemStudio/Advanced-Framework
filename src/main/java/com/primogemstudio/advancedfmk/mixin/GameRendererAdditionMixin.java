@@ -1,6 +1,7 @@
 package com.primogemstudio.advancedfmk.mixin;
 
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITestKt;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
 import net.minecraft.client.Minecraft;
@@ -25,26 +26,7 @@ public class GameRendererAdditionMixin {
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        // KUITestKt.getInstance().getElem().render(GlobalData.genData(graphics, partialTick));
-
-        /*model.registerTextures();
-        model.update();
-        int s = model.registeredTextures.size();
-        for (int idx = 0; idx < s; idx++) {
-            var buff = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, model.registeredTextures.get(idx));
-            var vertices = model.getVertices(idx);
-            var indices = model.getVertexIndices(idx);
-
-            indices.forEach(i -> buff.addVertex(vertices.get(i * 5) * 200 + 20, (1 - vertices.get(i * 5 + 1)) * 200 + 20, vertices.get(i * 5 + 2) * 10000).setUv(vertices.get(i * 5 + 3), vertices.get(i * 5 + 4)));
-
-            RenderSystem.disableBlend();
-            RenderSystem.disableCull();
-            BufferUploader.drawWithShader(buff.buildOrThrow());
-            RenderSystem.enableCull();
-            RenderSystem.enableBlend();
-        }*/
+        KUITestKt.getInstance().getElem().render(GlobalData.genData(guiGraphics, partialTick));
 
         /*if (wrapper == null) {
             wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));

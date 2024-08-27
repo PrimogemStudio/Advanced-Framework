@@ -15,9 +15,11 @@ class GeometryLineElement(
     override var id: String,
     var width: Float,
     var color: Vector4f,
+    var vertices: MutableList<Vector2f>,
     var filter: FilterBase? = null,
 ): RealElement(id, Vector2f(0f)), FilteredElement {
     override fun render(data: GlobalData) {
+        println(vertices)
         filter?.init()
 
         val m = data.graphics.pose().last().pose()
