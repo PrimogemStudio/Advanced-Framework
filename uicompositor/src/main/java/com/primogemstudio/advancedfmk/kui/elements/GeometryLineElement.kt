@@ -36,8 +36,8 @@ class GeometryLineElement(
         for (i in 0 ..< vertices.size - 1) {
             val v1 = vertices[i]
             val v2 = vertices[i + 1]
-            buff.addVertex(m, v1.x, v1.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
-            buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+            buff.addVertex(m, v1.x, v1.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(v1.x, v1.y, 0f)
+            buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(v1.x, v1.y, 0f)
         }
 
         buff.build()?.apply { BufferUploader.drawWithShader(this) }

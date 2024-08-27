@@ -74,6 +74,21 @@ class KUITest {
                 }
             }
         }.apply { source = { mouseX.toFloat() - 80 } },
+        CustomAnimationEvent {
+            val func: (Int, Int) -> RectangleElement = { x, y -> elem.subElement("test_rect_${t[x]}${t[y]}") as RectangleElement }
+
+            elem.subElement("test", GeometryLineElement::class).apply {
+                while (snake.worm.cells.size != vertices.size) {
+                    if (snake.worm.cells.size > vertices.size) vertices.add(Vector2f())
+                    else vertices.removeLast()
+                }
+
+                for (i in 0 ..< vertices.size) {
+                    val t = func(snake.worm.cells[i]!!.x, snake.worm.cells[i]!!.y).pos
+                    vertices[i].set(t.x + 5, t.y + 5)
+                }
+            }
+        },
         TimedEvent(150) {
             snake.step()
             val func: (Int, Int) -> RectangleElement = { x, y -> elem.subElement("test_rect_${t[x]}${t[y]}") as RectangleElement }
@@ -87,14 +102,6 @@ class KUITest {
             func(snake.food.x, snake.food.y).color.set(1f, 0f, 0f, 0.5f)
             snake.worm.cells.forEach {
                 func(it!!.x, it.y).color.set(0f, 0f, 1f, 0.5f)
-            }
-
-            elem.subElement("test", GeometryLineElement::class).apply {
-                vertices.clear()
-
-                snake.worm.cells.forEach {
-                    vertices.add(func(it!!.x, it.y).pos)
-                }
             }
         },
         CustomAnimationEvent {
