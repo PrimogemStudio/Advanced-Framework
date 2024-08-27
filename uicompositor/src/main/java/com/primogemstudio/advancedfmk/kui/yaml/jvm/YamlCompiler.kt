@@ -124,9 +124,25 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.color!![3])
         mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
 
-        mn.new(sig(ArrayList::class))
-        mn.dup()
-        mn.invokespecial(sig(ArrayList::class), INIT, "()V")
+        mn.ldc(c.points?.size?: 0)
+        mn.anewarray(sig(Vector2f::class))
+        mn.astore1()
+        mn.aload1()
+        var i = 0
+        c.points!!.forEach {
+            mn.ldc(i)
+            i++
+
+            mn.new(sig(Vector2f::class))
+            mn.dup()
+            mn.ldc(it[0].toFloat())
+            mn.ldc(it[1].toFloat())
+            mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
+
+            mn.aastore()
+            mn.aload1()
+        }
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
 
         if (c.filter != null) {
             when (c.filter!!["type"]) {
@@ -180,8 +196,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         mn.ldc(c.components?.size?: 0)
         mn.anewarray(sig(RealElement::class))
-        mn.astore1()
-        mn.aload1()
+        mn.astore0()
+        mn.aload0()
 
         var i = 0
         c.components?.forEach { (t, u) ->
@@ -195,7 +211,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 null -> throw NullPointerException()
             }
             mn.aastore()
-            mn.aload1()
+            mn.aload0()
         }
         mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
         mn.invokespecial(sig(GroupElement::class), INIT, "(Ljava/lang/String;Ljava/util/List;)V")
