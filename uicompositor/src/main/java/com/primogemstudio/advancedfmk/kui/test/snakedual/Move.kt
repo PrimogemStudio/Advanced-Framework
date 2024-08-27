@@ -3,7 +3,8 @@ package com.primogemstudio.advancedfmk.kui.test.snakedual
 class Move {
     var cells: Array<Node?>
 
-    private var currentDirection: Int
+    var currentDirection: Int
+        private set
 
     init {
         cells = arrayOfNulls(DEFAULT_LENGTH)
@@ -84,7 +85,7 @@ class Move {
     }
 
     companion object {
-        const val DEFAULT_LENGTH: Int = 2
+        const val DEFAULT_LENGTH: Int = 3
         const val UP: Int = 1
         const val DOWN: Int = -1
         const val LEFT: Int = 2

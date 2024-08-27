@@ -17,7 +17,7 @@ root:
 
     test:
       type: line
-      width: 10.0
+      width: 5.0
       points: [[ 0, 0 ], [ 0, 0 ]]
       color: [ 0, 0, 0, 1 ]
 
