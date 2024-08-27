@@ -19,7 +19,6 @@ class GeometryLineElement(
     var filter: FilterBase? = null,
 ): RealElement(id, Vector2f(0f)), FilteredElement {
     override fun render(data: GlobalData) {
-        println(vertices)
         filter?.init()
 
         val m = data.graphics.pose().last().pose()
@@ -33,10 +32,13 @@ class GeometryLineElement(
             VertexFormat.Mode.LINES,
             DefaultVertexFormat.POSITION_COLOR_NORMAL
         )
-        buff.addVertex(m, 0f, 0f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 100f, 50f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 100f, 50f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
-        buff.addVertex(m, 0f, 100f, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+
+        for (i in 0 ..< vertices.size - 1) {
+            val v1 = vertices[i]
+            val v2 = vertices[i + 1]
+            buff.addVertex(m, v1.x, v1.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+            buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
+        }
 
         BufferUploader.drawWithShader(buff.buildOrThrow())
         RenderSystem.depthMask(true)
