@@ -67,13 +67,6 @@ class Move {
         return creep(currentDirection, food)
     }
 
-    fun creep() {
-        for (i in cells.size - 1 downTo 1) {
-            cells[i] = cells[i - 1]
-        }
-        cells[0] = createHead(currentDirection)
-    }
-
     private fun createHead(direction: Int): Node {
         var x = cells[0]!!.x
         var y = cells[0]!!.y
@@ -91,7 +84,7 @@ class Move {
     }
 
     companion object {
-        const val DEFAULT_LENGTH: Int = 1
+        const val DEFAULT_LENGTH: Int = 2
         const val UP: Int = 1
         const val DOWN: Int = -1
         const val LEFT: Int = 2

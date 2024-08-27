@@ -48,7 +48,6 @@ class KUITest {
         )).build() as GroupElement
     }
 
-    val t = "0123456789abcdef"
     val snake = Main()
     var off = 0f
 
@@ -60,23 +59,7 @@ class KUITest {
             50f,
             BackOut
         ) { off = it }.apply { onEventTrigger = { if (finished() > 1000) reset() } },
-        PipeAnimationEvent<Float> {
-            for (x in 0 ..< 16) {
-                for (y in 0 ..< 16) {
-                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.y = it + y * 10
-                }
-            }
-        }.apply { source = { mouseY.toFloat() - 80 } },
-        PipeAnimationEvent<Float> {
-            for (x in 0 ..< 16) {
-                for (y in 0 ..< 16) {
-                    elem.subElement("test_rect_${t[x]}${t[y]}")?.pos?.x = it + x * 10 + off
-                }
-            }
-        }.apply { source = { mouseX.toFloat() - 80 } },
         CustomAnimationEvent {
-            val func: (Int, Int) -> RectangleElement = { x, y -> elem.subElement("test_rect_${t[x]}${t[y]}") as RectangleElement }
-
             elem.subElement("test", GeometryLineElement::class).apply {
                 while (snake.worm.cells.size != vertices.size) {
                     if (snake.worm.cells.size > vertices.size) vertices.add(Vector2f())
@@ -84,26 +67,28 @@ class KUITest {
                 }
 
                 for (i in 0 ..< vertices.size) {
-                    val t = func(snake.worm.cells[i]!!.x, snake.worm.cells[i]!!.y).pos
-                    vertices[i].set(t.x + 5, t.y + 5)
-                }
-            }
-        },
-        TimedEvent(150) {
-            snake.step()
-            val func: (Int, Int) -> RectangleElement = { x, y -> elem.subElement("test_rect_${t[x]}${t[y]}") as RectangleElement }
-
-            for (x in 0 ..< 16) {
-                for (y in 0 ..< 16) {
-                    func(x, y).color.set(1f, 1f, 1f, 0.5f)
+                    vertices[i].set(
+                        mouseX.toFloat() - 80 + snake.worm.cells[i]!!.x * 10 + off + 5,
+                        mouseY.toFloat() - 80 + snake.worm.cells[i]!!.y * 10 + 5
+                    )
                 }
             }
 
-            func(snake.food.x, snake.food.y).color.set(1f, 0f, 0f, 0.5f)
-            snake.worm.cells.forEach {
-                func(it!!.x, it.y).color.set(0f, 0f, 1f, 0.5f)
+            elem.subElement("rect_food", RectangleElement::class).apply {
+                pos.set(
+                    mouseX.toFloat() - 80 + snake.food.x * 10 + off,
+                    mouseY.toFloat() - 80 + snake.food.y * 10
+                )
+            }
+
+            elem.subElement("rect_panel", RectangleElement::class).apply {
+                pos.set(
+                    mouseX.toFloat() - 80 + off,
+                    mouseY.toFloat() - 80
+                )
             }
         },
+        TimedEvent(150) { snake.step() },
         CustomAnimationEvent {
             if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_A)) snake.worm.crp(LEFT)
             else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_D)) snake.worm.crp(RIGHT)
