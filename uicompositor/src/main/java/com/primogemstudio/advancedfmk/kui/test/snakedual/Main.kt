@@ -1,21 +1,18 @@
 package com.primogemstudio.advancedfmk.kui.test.snakedual
 
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.LEFT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.RIGHT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.UP
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.DOWN
+import org.joml.Vector2i
 import java.util.*
 
 class Main {
     var worm: Move
-    var food: Node
+    var food: Vector2i
 
     init {
         worm = Move()
         food = createFood()
     }
 
-    private fun createFood(): Node {
+    private fun createFood(): Vector2i {
         var x: Int
         var y: Int
         val r = Random()
@@ -23,7 +20,7 @@ class Main {
             x = r.nextInt(COLS)
             y = r.nextInt(ROWS)
         } while (worm.contains(x, y))
-        return Node(x, y)
+        return Vector2i(x, y)
     }
 
     fun step() {

@@ -94,8 +94,8 @@ class KUITest {
 
             elem.subElement("rect_panel", RectangleElement::class).apply {
                 pos.set(
-                    mouseX.toFloat() - 80,
-                    mouseY.toFloat() - 80
+                    mouseX.toFloat() - 80 - 5,
+                    mouseY.toFloat() - 80 - 5
                 )
             }
         },

@@ -1,7 +1,9 @@
 package com.primogemstudio.advancedfmk.kui.test.snakedual
 
+import org.joml.Vector2i
+
 class Move {
-    var cells: Array<Node?>
+    var cells: Array<Vector2i?>
 
     var currentDirection: Int
         private set
@@ -9,15 +11,15 @@ class Move {
     init {
         cells = arrayOfNulls(DEFAULT_LENGTH)
         for (i in cells.indices) {
-            cells[i] = Node(i, 0) // [0,0] [1,0] [2,0]
+            cells[i] = Vector2i(i, 0) // [0,0] [1,0] [2,0]
         }
         currentDirection = DOWN
     }
 
     fun contains(x: Int, y: Int): Boolean {
         for (i in cells.indices) {
-            val node = cells[i]
-            if (node!!.x == x && node.y == y) {
+            val Vector2i = cells[i]
+            if (Vector2i!!.x == x && Vector2i.y == y) {
                 return true
             }
         }
@@ -29,7 +31,7 @@ class Move {
         currentDirection = direction
     }
 
-    fun creep(direction: Int, food: Node): Boolean {
+    fun creep(direction: Int, food: Vector2i): Boolean {
         if (currentDirection + direction == 0) {
             return false
         }
@@ -56,19 +58,19 @@ class Move {
             return true
         }
         for (i in 0 until cells.size - 1) {
-            val node = cells[i]
-            if (node!!.x == head.x && node.y == head.y) {
+            val vector2i = cells[i]
+            if (vector2i!!.x == head.x && vector2i.y == head.y) {
                 return true
             }
         }
         return false
     }
 
-    fun creep(food: Node): Boolean {
+    fun creep(food: Vector2i): Boolean {
         return creep(currentDirection, food)
     }
 
-    private fun createHead(direction: Int): Node {
+    private fun createHead(direction: Int): Vector2i {
         var x = cells[0]!!.x
         var y = cells[0]!!.y
         when (direction) {
@@ -77,7 +79,7 @@ class Move {
             LEFT -> x--
             RIGHT -> x++
         }
-        return Node(x, y)
+        return Vector2i(x, y)
     }
 
     override fun toString(): String {
