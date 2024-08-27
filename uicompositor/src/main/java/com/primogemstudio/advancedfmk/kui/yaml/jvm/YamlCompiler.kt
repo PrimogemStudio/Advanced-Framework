@@ -142,7 +142,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.aastore()
             mn.aload1()
         }
-        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
 
         if (c.filter != null) {
             when (c.filter!!["type"]) {
@@ -213,7 +213,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.aastore()
             mn.aload0()
         }
-        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "listOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
         mn.invokespecial(sig(GroupElement::class), INIT, "(Ljava/lang/String;Ljava/util/List;)V")
     }
 

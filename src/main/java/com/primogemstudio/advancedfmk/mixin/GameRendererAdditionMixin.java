@@ -6,6 +6,7 @@ import com.primogemstudio.advancedfmk.kui.KUITestKt;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mixin(TitleScreen.class)
+@Mixin(Screen.class)
 public class GameRendererAdditionMixin {
     @Unique
     private EntityRenderWrapper wrapper;

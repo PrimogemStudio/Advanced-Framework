@@ -40,7 +40,7 @@ class GeometryLineElement(
             buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(0f, 1f, 0f)
         }
 
-        BufferUploader.drawWithShader(buff.buildOrThrow())
+        buff.build()?.apply { BufferUploader.drawWithShader(this) }
         RenderSystem.depthMask(true)
         RenderSystem.enableCull()
         RenderSystem.enableBlend()
