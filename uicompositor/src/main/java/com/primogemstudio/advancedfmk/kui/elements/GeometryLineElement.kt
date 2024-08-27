@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.kui.GlobalData
 import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.RenderType
 import org.joml.Vector2f
 import org.joml.Vector4f
 
@@ -26,6 +27,7 @@ class GeometryLineElement(
         RenderSystem.disableCull()
         RenderSystem.depthMask(false)
 
+        RenderType.lines()
         RenderSystem.setShader { GameRenderer.getRendertypeLinesShader() }
         RenderSystem.lineWidth(width)
         val buff = Tesselator.getInstance().begin(
@@ -36,8 +38,10 @@ class GeometryLineElement(
         for (i in 0 ..< vertices.size - 1) {
             val v1 = vertices[i]
             val v2 = vertices[i + 1]
-            buff.addVertex(m, v1.x, v1.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(v2.x, v2.y, 0f)
-            buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w).setNormal(v1.x, v1.y, 0f)
+            buff.addVertex(m, v1.x, v1.y, 0f).setColor(color.x, color.y, color.z, color.w)
+                .setNormal(v1.x - v2.x, v1.y - v2.y, 0f)
+            buff.addVertex(m, v2.x, v2.y, 0f).setColor(color.x, color.y, color.z, color.w)
+                .setNormal(v1.x - v2.x, v1.y - v2.y, 0f)
         }
 
         buff.build()?.apply { BufferUploader.drawWithShader(this) }
