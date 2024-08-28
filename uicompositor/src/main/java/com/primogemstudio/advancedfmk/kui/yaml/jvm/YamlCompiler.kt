@@ -20,6 +20,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.random.Random
 
+fun createResourceLocation(s: String): ResourceLocation = ResourceLocation.parse(s)
+
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
     fun build(): Any {
         val cn = ClassNode()
@@ -234,8 +236,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.ldc(c.texture!!)
             mn.visitMethodInsn(
                 INVOKESTATIC,
-                sig(ResourceLocation::class),
-                "parse",
+                "com/primogemstudio/advancedfmk/kui/yaml/jvm/YamlCompilerKt",
+                "createResourceLocation",
                 sigf(ResourceLocation::class, String::class),
                 false
             )
@@ -293,8 +295,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                     mn.ldc(f["location"] as String)
                     mn.visitMethodInsn(
                         INVOKESTATIC,
-                        sig(ResourceLocation::class),
-                        "parse",
+                        "com/primogemstudio/advancedfmk/kui/yaml/jvm/YamlCompilerKt",
+                        "createResourceLocation",
                         sigf(ResourceLocation::class, String::class),
                         false
                     )

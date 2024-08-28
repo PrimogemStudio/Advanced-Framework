@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
+import net.fabricmc.loader.api.FabricLoader
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.MethodNode
 import kotlin.reflect.KClass
@@ -22,6 +23,8 @@ fun sigt(cls: KClass<*>): String = sig(cls).let { if (it.startsWith("[") || inty
 fun sig(cls: KClass<*>): String = sig(cls.java.name)
 fun sig(s: String): String = s.toNType()
 fun sigf(ret: KClass<*>, vararg args: KClass<*>): String = "(${args.joinToString("") { sigt(it) }})${sigt(ret)}"
+
+fun sigfr(cls: KClass<*>, n: String, sig: String): String = FabricLoader.getInstance().mappingResolver.mapMethodName("", cls.java.name, n, sig)
 
 val INIT = "<init>"
 val KT_KOLLECTIONS = "kotlin/collections/CollectionsKt"
