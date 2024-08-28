@@ -4,13 +4,16 @@ root:
   type: group
   components:
     rect_panel:
-      type: rect
+      type: live2d
       pos: [ 0, 0 ]
       size: [ 170, 170 ]
-      color: [ 1, 1, 1, .5 ]
+      color: [ 1, 1, 1, 1 ]
+      textureUV: [1, 0, 1, 0]
       radius: 5
       thickness: 0
       smoothedge: 0.006
+      modelName: "JingYuan"
+      modelPath: "/home/coder2/LpkUnpacker/Test/character/"
       filter:
         type: post
         location: "shaders/filter/gaussian_blur.json"

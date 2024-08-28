@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import com.primogemstudio.advancedfmk.kui.animation.*
 import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
+import com.primogemstudio.advancedfmk.kui.elements.Live2DElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.pipe.mouseX
 import com.primogemstudio.advancedfmk.kui.pipe.mouseY
@@ -92,7 +93,7 @@ class KUITest {
                 )
             }
 
-            elem.subElement("rect_panel", RectangleElement::class).apply {
+            elem.subElement("rect_panel", Live2DElement::class).apply {
                 pos.set(
                     mouseX.toFloat() - 80 - 5,
                     mouseY.toFloat() - 80 - 5

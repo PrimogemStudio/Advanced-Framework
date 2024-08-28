@@ -48,6 +48,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             RECTANGLE -> buildRectangleElement(mn, root.component as RectangleComponent, root.rootName)
             null -> throw NullPointerException()
             GEOMETRY_LINE -> buildGeometryLineElement(mn, root.component as GeometryLineComponent, root.rootName)
+            LIVE2D -> buildLive2DElement(mn, root.component as Live2DComponent, root.rootName)
         }
         mn.visitFieldInsn(PUTFIELD, sig(cnn), "internal", sigt(UIElement::class))
 
@@ -128,6 +129,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 GROUP -> buildGroupElement(mn, u as GroupComponent, t)
                 RECTANGLE -> buildRectangleElement(mn, u as RectangleComponent, t)
                 GEOMETRY_LINE -> buildGeometryLineElement(mn, u as GeometryLineComponent, t)
+                LIVE2D -> buildLive2DElement(mn, u as Live2DComponent, t)
                 null -> throw NullPointerException()
             }
             mn.aastore()
@@ -135,6 +137,59 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         }
         mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", sigf(List::class, Array<Any>::class), false)
         mn.invokespecial(sig(GroupElement::class), INIT, sigf(Nothing::class, String::class, List::class))
+    }
+
+    private fun buildLive2DElement(mn: MethodNode, c: Live2DComponent, n: String) {
+        mn.new(sig(Live2DElement::class))
+        mn.dup()
+
+        mn.ldc(n)
+
+        mn.new(sig(Vector2f::class))
+        mn.dup()
+        mn.ldc(c.pos!![0])
+        mn.ldc(c.pos!![1])
+        mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
+
+        mn.new(sig(Vector2f::class))
+        mn.dup()
+        mn.ldc(c.size!![0])
+        mn.ldc(c.size!![1])
+        mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
+
+        mn.new(sig(Vector4f::class))
+        mn.dup()
+        mn.ldc(c.color!![0])
+        mn.ldc(c.color!![1])
+        mn.ldc(c.color!![2])
+        mn.ldc(c.color!![3])
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
+
+        mn.ldc(c.radius?: 0f)
+        mn.ldc(c.thickness?: 0f)
+        mn.ldc(c.smoothedge?: 0f)
+
+        mn.new(sig(Vector4f::class))
+        mn.dup()
+        mn.ldc(c.textureUV?.get(0)?: 0f)
+        mn.ldc(c.textureUV?.get(1)?: 1f)
+        mn.ldc(c.textureUV?.get(2)?: 0f)
+        mn.ldc(c.textureUV?.get(3)?: 1f)
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
+
+        mn.new(sig(Pair::class))
+        mn.dup()
+        mn.ldc(c.modelName!!)
+        mn.ldc(c.modelPath!!)
+        mn.invokespecial(sig(Pair::class), INIT, sigf(Nothing::class, Any::class, Any::class))
+
+        buildFilter(mn, c.filter)
+
+        mn.invokespecial(
+            sig(Live2DElement::class),
+            INIT,
+            sigf(Nothing::class, String::class, Vector2f::class, Vector2f::class, Vector4f::class, Float::class, Float::class, Float::class, Vector4f::class, Pair::class, FilterBase::class)
+        )
     }
 
     private fun buildRectangleElement(mn: MethodNode, c: RectangleComponent, n: String) {

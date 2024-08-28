@@ -1,13 +1,13 @@
 package com.primogemstudio.advancedfmk.kui.yaml
 
-import org.apache.logging.log4j.core.util.Integers
 import org.joml.Vector4f
 
-enum class ComponentType(val clz: String) {
-    GROUP("com/primogemstudio/advancedfmk/kui/elements/GroupElement"),
-    TEXT("com/primogemstudio/advancedfmk/kui/elements/TextElement"),
-    RECTANGLE("com/primogemstudio/advancedfmk/kui/elements/RectangleElement"),
-    GEOMETRY_LINE("com/primogemstudio/advancedfmk/kui/elements/GeometryLineElement");
+enum class ComponentType {
+    GROUP,
+    TEXT,
+    RECTANGLE,
+    GEOMETRY_LINE,
+    LIVE2D;
 }
 
 data class UIRoot(
@@ -37,6 +37,20 @@ class RectangleComponent(
     var textureUV: Vector4f? = null,
     var filter: Map<String, String>? = null
 ) : Component(ComponentType.RECTANGLE)
+
+class Live2DComponent(
+    var name: String? = null,
+    var pos: List<Float>? = null,
+    var size: List<Float>? = null,
+    var color: List<Float>? = null,
+    var radius: Float? = null,
+    var thickness: Float? = null,
+    var smoothedge: Float? = null,
+    var modelName: String? = null,
+    var modelPath: String? = null,
+    var textureUV: Vector4f? = null,
+    var filter: Map<String, String>? = null
+) : Component(ComponentType.LIVE2D)
 
 class TextComponent(
     var name: String? = null,
