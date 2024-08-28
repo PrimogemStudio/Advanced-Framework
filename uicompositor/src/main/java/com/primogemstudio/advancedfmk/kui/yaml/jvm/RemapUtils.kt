@@ -4,9 +4,25 @@ import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.MethodNode
 import kotlin.reflect.KClass
 
-fun sigt(cls: KClass<*>): String = "L${sig(cls)};"
-fun sig(s: String): String = s.replace(".", "/")
-fun sig(cls: KClass<*>): String = cls.java.name.replace(".", "/")
+fun String.toNType(): String = this
+    .replace("char", "C")
+    .replace("byte", "B")
+    .replace("short", "S")
+    .replace("int", "I")
+    .replace("long", "J")
+    .replace("double", "D")
+    .replace("float", "F")
+    .replace("boolean", "Z")
+    .replace("java.lang.Void", "V")
+    .replace(".", "/")
+
+private val intypes = listOf("C", "B", "S", "I", "J", "D", "F", "Z", "V")
+
+fun sigt(cls: KClass<*>): String = sig(cls).let { if (it.startsWith("[") || intypes.indexOf(it) >= 0) it else "L${it};" }
+fun sig(cls: KClass<*>): String = sig(cls.java.name)
+fun sig(s: String): String = s.toNType()
+fun sigf(ret: KClass<*>, vararg args: KClass<*>): String = "(${args.joinToString("") { sigt(ret) }})${sigt(ret)}"
+
 val INIT = "<init>"
 val KT_KOLLECTIONS = "kotlin/collections/CollectionsKt"
 
@@ -49,3 +65,7 @@ fun MethodNode.new(s: String) = visitTypeInsn(NEW, s)
 fun MethodNode.checkcast(s: String) = visitTypeInsn(CHECKCAST, s)
 fun MethodNode.anewarray(s: String) = visitTypeInsn(ANEWARRAY, s)
 fun MethodNode.invokespecial(s: String, s2: String, s3: String) = visitMethodInsn(INVOKESPECIAL, s, s2, s3, false)
+
+fun main() {
+    println(sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
+}

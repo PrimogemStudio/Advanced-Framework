@@ -19,7 +19,7 @@ class TextElement(
     var vanilla: Boolean = false
 ) : RealElement(id, pos) {
     override fun subElement(id: String): UIElement? = null
-    override fun render(data: GlobalData) {
+    override fun renderActual(data: GlobalData) {
         val c = (color.x * 255).toInt().and(0xFF).shl(16) +
                 (color.y * 255).toInt().and(0xFF).shl(8) +
                 (color.z * 255).toInt().and(0xFF)

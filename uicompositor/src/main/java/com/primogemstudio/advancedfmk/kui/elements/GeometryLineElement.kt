@@ -19,7 +19,7 @@ class GeometryLineElement(
     var vertices: MutableList<Vector2f>,
     var filter: FilterBase? = null,
 ): RealElement(id, Vector2f(0f)), FilteredElement {
-    override fun render(data: GlobalData) {
+    override fun renderActual(data: GlobalData) {
         filter?.init()
 
         val m = data.graphics.pose().last().pose()

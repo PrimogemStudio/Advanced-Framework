@@ -26,7 +26,7 @@ class RectangleElement(
 ) : RealElement(id, pos), FilteredElement {
     override fun filter(): FilterBase? = filter
     override fun subElement(id: String): UIElement? = null
-    override fun render(data: GlobalData) {
+    override fun renderActual(data: GlobalData) {
         filter?.init()
 
         val shader = if (texturePath != null) Shaders.ROUNDED_RECT_TEX else Shaders.ROUNDED_RECT

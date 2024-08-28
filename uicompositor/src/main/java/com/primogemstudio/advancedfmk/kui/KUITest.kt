@@ -53,7 +53,7 @@ class KUITest {
     var dur = 0f
 
     val animations: List<AnimationEvent<Float>> = listOf(
-        CustomAnimationEvent { runBlocking { elem.lock.lock() } },
+        CustomAnimationEvent { runBlocking { elem.renderLock.lock() } },
         CustomAnimationEvent {
             elem.subElement("test", GeometryLineElement::class).apply {
                 while (snake.worm.cells.size != vertices.size) {
@@ -108,7 +108,7 @@ class KUITest {
             else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_S)) snake.worm.crp(DOWN)
             else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_W)) snake.worm.crp(UP)
         },
-        CustomAnimationEvent { elem.lock.unlock() }
+        CustomAnimationEvent { elem.renderLock.unlock() }
     )
 
     init {
