@@ -56,6 +56,8 @@ class KUITest {
     val animations: List<AnimationEvent<Float>> = listOf(
         CustomAnimationEvent { runBlocking { elem.renderLock.lock() } },
         CustomAnimationEvent {
+            val w = Minecraft.getInstance().window.guiScaledWidth
+            val h = Minecraft.getInstance().window.guiScaledHeight
             elem.subElement("test", GeometryLineElement::class).apply {
                 while (snake.worm.cells.size != vertices.size) {
                     if (snake.worm.cells.size > vertices.size) vertices.add(Vector2f())
@@ -64,8 +66,8 @@ class KUITest {
 
                 for (i in 0 ..< vertices.size) {
                     vertices[i].set(
-                        mouseX.toFloat() - 80 + snake.worm.cells[i]!!.x * 10 + 5,
-                        mouseY.toFloat() - 80 + snake.worm.cells[i]!!.y * 10 + 5
+                        w / 2f - 80f + snake.worm.cells[i]!!.x * 10 + 5,
+                        h / 2f - 80f + snake.worm.cells[i]!!.y * 10 + 5
                     )
                 }
 
@@ -88,15 +90,22 @@ class KUITest {
 
             elem.subElement("rect_food", RectangleElement::class).apply {
                 pos.set(
-                    mouseX.toFloat() - 80 + snake.food.x * 10,
-                    mouseY.toFloat() - 80 + snake.food.y * 10
+                    w / 2f - 80f + snake.food.x * 10,
+                    h / 2f - 80f + snake.food.y * 10
                 )
             }
 
             elem.subElement("rect_panel", Live2DElement::class).apply {
                 pos.set(
-                    mouseX.toFloat() - 80 - 5,
-                    mouseY.toFloat() - 80 - 5
+                    0f,
+                    h - size.x + 30f
+                )
+            }
+
+            elem.subElement("rect_panelbase", RectangleElement::class).apply {
+                pos.set(
+                    w / 2f - 80f - 5f,
+                    h / 2f - 80f - 5f
                 )
             }
         },

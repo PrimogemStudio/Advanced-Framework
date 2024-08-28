@@ -1,9 +1,5 @@
 package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
-import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
-import net.minecraft.resources.ResourceLocation
-import org.joml.Vector2f
-import org.joml.Vector4f
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.MethodNode
 import kotlin.reflect.KClass

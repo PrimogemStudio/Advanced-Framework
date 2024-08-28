@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component
 
 class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        renderBlurredBackground(partialTick)
         instance.elem.render(genData(guiGraphics, partialTick))
     }
 }

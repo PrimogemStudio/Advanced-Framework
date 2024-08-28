@@ -18,6 +18,18 @@ root:
         type: post
         location: "shaders/filter/gaussian_blur.json"
 
+    rect_panelbase:
+      type: rect
+      pos: [ 0, 0 ]
+      size: [ 170, 170 ]
+      color: [ 1, 1, 1, .5 ]
+      radius: 5
+      thickness: 0
+      smoothedge: 0.006
+      filter:
+        type: post
+        location: "shaders/filter/gaussian_blur.json"
+
     test:
       type: line
       width: 10.0
