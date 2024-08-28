@@ -1,10 +1,13 @@
 package com.primogemstudio.advancedfmk.mixin;
 
+import com.primogemstudio.advancedfmk.kui.pipe.ProgramEnvKt;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +17,7 @@ import static com.primogemstudio.advancedfmk.kui.pipe.IndeterminateVarsKt.compos
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
+    @Shadow @Final private Minecraft minecraft;
     @Unique
     private static int width, height = 0;
 
@@ -27,5 +31,16 @@ public class GameRendererMixin {
             height = h;
             composeFrame().resize(w, h, Util.getPlatform() == Util.OS.OSX);
         }
+
+
+        int x = (int) (
+                this.minecraft.mouseHandler.xpos() * (double) this.minecraft.getWindow().getGuiScaledWidth() / (double) this.minecraft.getWindow().getScreenWidth()
+        );
+        int y = (int) (
+                this.minecraft.mouseHandler.ypos() * (double) this.minecraft.getWindow().getGuiScaledHeight() / (double) this.minecraft.getWindow().getScreenHeight()
+        );
+
+        ProgramEnvKt.setMouseX(x);
+        ProgramEnvKt.setMouseY(y);
     }
 }

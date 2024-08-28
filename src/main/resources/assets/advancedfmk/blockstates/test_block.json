@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "advancedfmk:block/test_block"
+    }
+  }
+}
