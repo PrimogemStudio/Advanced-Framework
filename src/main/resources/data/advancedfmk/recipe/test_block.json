@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "minecraft:iron_ingot"
+    },
+    "E": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    "AA",
+    "BE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "advancedfmk:test_block_item"
+  }
+}
