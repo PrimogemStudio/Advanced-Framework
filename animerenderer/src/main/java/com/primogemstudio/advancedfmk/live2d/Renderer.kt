@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderStateShard
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderType.CompositeState
 
-val target = TextureTarget(1920, 1080, false, false)
+val target = TextureTarget(1920, 1080, true, false)
 class CustomTextureStateShard: RenderStateShard.EmptyTextureStateShard(Runnable {
     RenderSystem.setShaderTexture(0, target.colorTextureId)
     RenderSystem.disableCull()
