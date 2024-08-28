@@ -1,7 +1,7 @@
 package com.primogemstudio.advancedfmk.kui.test.snakedual
 
 import org.joml.Vector2i
-import java.util.*
+import kotlin.random.Random
 
 class Main {
     var worm: Move
@@ -15,11 +15,11 @@ class Main {
     private fun createFood(): Vector2i {
         var x: Int
         var y: Int
-        val r = Random()
         do {
-            x = r.nextInt(COLS)
-            y = r.nextInt(ROWS)
-        } while (worm.contains(x, y))
+            x = Random.nextInt(COLS)
+            y = Random.nextInt(ROWS)
+        }
+        while (worm.contains(x, y))
         return Vector2i(x, y)
     }
 
@@ -27,7 +27,8 @@ class Main {
         if (worm.hit()) {
             worm = Move()
             food = createFood()
-        } else {
+        }
+        else {
             if (worm.creep(food)) food = createFood()
         }
     }
