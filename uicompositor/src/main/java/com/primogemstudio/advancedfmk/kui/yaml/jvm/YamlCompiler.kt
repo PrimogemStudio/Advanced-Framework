@@ -9,6 +9,7 @@ import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
+import org.ladysnake.satin.api.managed.ManagedShaderEffect
 import org.ladysnake.satin.api.managed.ShaderEffectManager
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
@@ -25,7 +26,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         val cnn = root.className.replace("\$random", Random.nextInt().toString())
         cn.access = ACC_PUBLIC or ACC_FINAL
         cn.version = V21
-        cn.name = cnn.replace(".", "/")
+        cn.name = sig(cnn)
         cn.superName = sig(Object::class)
         cn.sourceFile = "<yaml>"
 
@@ -33,12 +34,12 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         val mn = MethodNode(
             ACC_PUBLIC,
-            INIT, "()V", null, null
+            INIT, sigf(Nothing::class), null, null
         )
         mn.visitCode()
 
         mn.aload0()
-        mn.invokespecial(sig(Object::class), INIT, "()V")
+        mn.invokespecial(sig(Object::class), INIT, sigf(Nothing::class))
 
         mn.aload0()
         when (root.component?.type) {
@@ -80,7 +81,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         mn.ldc(c.points?.size?: 0)
         mn.anewarray(sig(Vector2f::class))
@@ -95,55 +96,16 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.dup()
             mn.ldc(it[0].toFloat())
             mn.ldc(it[1].toFloat())
-            mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
+            mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
 
             mn.aastore()
             mn.aload1()
         }
-        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", sigf(List::class, Array<Any>::class), false)
 
-        if (c.filter != null) {
-            when (c.filter!!["type"]) {
-                "post" -> {
-                    mn.new(sig(PostShaderFilter::class))
-                    mn.dup()
-                    mn.visitMethodInsn(
-                        INVOKESTATIC,
-                        sig(ShaderEffectManager::class),
-                        "getInstance",
-                        "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
-                        true
-                    )
-                    mn.ldc(c.filter!!["location"] as String)
-                    mn.visitMethodInsn(
-                        INVOKESTATIC,
-                        sig(ResourceLocation::class),
-                        "parse",
-                        "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
-                        false
-                    )
+        buildFilter(mn, c.filter)
 
-                    mn.visitMethodInsn(
-                        INVOKEINTERFACE,
-                        sig(ShaderEffectManager::class),
-                        "manage",
-                        "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
-                        true
-                    )
-
-                    mn.invokespecial(
-                        sig(PostShaderFilter::class),
-                        INIT,
-                        "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V"
-                    )
-                    mn.checkcast(sig(FilterBase::class))
-                }
-                else -> mn.aconst_null()
-            }
-        }
-        else mn.aconst_null()
-
-        mn.invokespecial(sig(GeometryLineElement::class), INIT, "(Ljava/lang/String;FLorg/joml/Vector4f;Ljava/util/List;Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V")
+        mn.invokespecial(sig(GeometryLineElement::class), INIT, sigf(Nothing::class, String::class, Float::class, Vector4f::class, List::class, FilterBase::class))
     }
 
     private fun buildGroupElement(mn: MethodNode, c: GroupComponent, n: String) {
@@ -171,8 +133,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.aastore()
             mn.aload0()
         }
-        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", "([Ljava/lang/Object;)Ljava/util/List;", false)
-        mn.invokespecial(sig(GroupElement::class), INIT, "(Ljava/lang/String;Ljava/util/List;)V")
+        mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", sigf(List::class, Array<Any>::class), false)
+        mn.invokespecial(sig(GroupElement::class), INIT, sigf(Nothing::class, String::class, List::class))
     }
 
     private fun buildRectangleElement(mn: MethodNode, c: RectangleComponent, n: String) {
@@ -185,13 +147,13 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.dup()
         mn.ldc(c.pos!![0])
         mn.ldc(c.pos!![1])
-        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
 
         mn.new(sig(Vector2f::class))
         mn.dup()
         mn.ldc(c.size!![0])
         mn.ldc(c.size!![1])
-        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
 
         mn.new(sig(Vector4f::class))
         mn.dup()
@@ -199,7 +161,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         mn.ldc(c.radius?: 0f)
         mn.ldc(c.thickness?: 0f)
@@ -211,7 +173,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.textureUV?.get(1)?: 1f)
         mn.ldc(c.textureUV?.get(2)?: 0f)
         mn.ldc(c.textureUV?.get(3)?: 1f)
-        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         if (c.texture != null) {
             mn.ldc(c.texture!!)
@@ -219,56 +181,17 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 INVOKESTATIC,
                 sig(ResourceLocation::class),
                 "parse",
-                "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
+                sigf(ResourceLocation::class, String::class),
                 false
             )
         } else mn.aconst_null()
 
-        if (c.filter != null) {
-            when (c.filter!!["type"]) {
-                "post" -> {
-                    mn.new(sig(PostShaderFilter::class))
-                    mn.dup()
-                    mn.visitMethodInsn(
-                        INVOKESTATIC,
-                        sig(ShaderEffectManager::class),
-                        "getInstance",
-                        "()Lorg/ladysnake/satin/api/managed/ShaderEffectManager;",
-                        true
-                    )
-                    mn.ldc(c.filter!!["location"] as String)
-                    mn.visitMethodInsn(
-                        INVOKESTATIC,
-                        sig(ResourceLocation::class),
-                        "parse",
-                        "(Ljava/lang/String;)${sigt(ResourceLocation::class)}",
-                        false
-                    )
-
-                    mn.visitMethodInsn(
-                        INVOKEINTERFACE,
-                        sig(ShaderEffectManager::class),
-                        "manage",
-                        "(${sigt(ResourceLocation::class)})Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;",
-                        true
-                    )
-
-                    mn.invokespecial(
-                        sig(PostShaderFilter::class),
-                        INIT,
-                        "(Lorg/ladysnake/satin/api/managed/ManagedShaderEffect;)V"
-                    )
-                    mn.checkcast(sig(FilterBase::class))
-                }
-                else -> mn.aconst_null()
-            }
-        }
-        else mn.aconst_null()
+        buildFilter(mn, c.filter)
 
         mn.invokespecial(
             sig(RectangleElement::class),
             INIT,
-            "(Ljava/lang/String;Lorg/joml/Vector2f;Lorg/joml/Vector2f;Lorg/joml/Vector4f;FFFLorg/joml/Vector4f;${sigt(ResourceLocation::class)}Lcom/primogemstudio/advancedfmk/kui/pipe/FilterBase;)V"
+            sigf(Nothing::class, String::class, Vector2f::class, Vector2f::class, Vector4f::class, Float::class, Float::class, Float::class, Vector4f::class, ResourceLocation::class, FilterBase::class)
         )
     }
 
@@ -281,7 +204,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.dup()
         mn.ldc(c.pos!![0])
         mn.ldc(c.pos!![1])
-        mn.invokespecial(sig(Vector2f::class), INIT, "(FF)V")
+        mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
 
         mn.ldc(c.text?: "<null>")
 
@@ -291,12 +214,55 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.ldc(c.color!![1])
         mn.ldc(c.color!![2])
         mn.ldc(c.color!![3])
-        mn.invokespecial(sig(Vector4f::class), INIT, "(FFFF)V")
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         mn.ldc(c.textsize?: 12)
         mn.ldc(c.vanilla?: false)
 
-        mn.invokespecial(sig(TextElement::class), INIT, "(Ljava/lang/String;Lorg/joml/Vector2f;Ljava/lang/String;Lorg/joml/Vector4f;IZ)V")
+        mn.invokespecial(sig(TextElement::class), INIT, sigf(Nothing::class, String::class, Vector2f::class, String::class, Vector4f::class, Int::class, Boolean::class))
+    }
+
+    private fun buildFilter(mn: MethodNode, f: Map<String, String>?) {
+        if (f != null) {
+            when (f["type"]) {
+                "post" -> {
+                    mn.new(sig(PostShaderFilter::class))
+                    mn.dup()
+                    mn.visitMethodInsn(
+                        INVOKESTATIC,
+                        sig(ShaderEffectManager::class),
+                        "getInstance",
+                        sigf(ShaderEffectManager::class),
+                        true
+                    )
+                    mn.ldc(f["location"] as String)
+                    mn.visitMethodInsn(
+                        INVOKESTATIC,
+                        sig(ResourceLocation::class),
+                        "parse",
+                        sigf(ResourceLocation::class, String::class),
+                        false
+                    )
+
+                    mn.visitMethodInsn(
+                        INVOKEINTERFACE,
+                        sig(ShaderEffectManager::class),
+                        "manage",
+                        sigf(ManagedShaderEffect::class, ResourceLocation::class),
+                        true
+                    )
+
+                    mn.invokespecial(
+                        sig(PostShaderFilter::class),
+                        INIT,
+                        sigf(Nothing::class, ManagedShaderEffect::class)
+                    )
+                    mn.checkcast(sig(FilterBase::class))
+                }
+                else -> mn.aconst_null()
+            }
+        }
+        else mn.aconst_null()
     }
 
     private fun defineClass(name: String, b: ByteArray): Class<*> {

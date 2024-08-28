@@ -13,7 +13,7 @@ object YamlParser {
     private fun parse(i: Map<*, *>): Component? = when (i["type"]) {
         "group" -> {
             val r = (i["components"] as Map<String, *>).mapValues { parse(it.value as Map<*, *>) }
-            GroupComponent(r)
+            GroupComponent(null, r)
         }
 
         "text" -> parser.loadAs(parser.dump(i.toMutableMap().apply { this["type"] = null }), TextComponent::class.java).apply { type = ComponentType.TEXT }

@@ -21,10 +21,12 @@ abstract class Component(
 )
 
 class GroupComponent(
+    var name: String? = null,
     var components: Map<String, Component?>? = null
 ) : Component(ComponentType.GROUP)
 
 class RectangleComponent(
+    var name: String? = null,
     var pos: List<Float>? = null,
     var size: List<Float>? = null,
     var color: List<Float>? = null,
@@ -37,6 +39,7 @@ class RectangleComponent(
 ) : Component(ComponentType.RECTANGLE)
 
 class TextComponent(
+    var name: String? = null,
     var pos: List<Float>? = null,
     var text: String? = null,
     var color: List<Float>? = null,
@@ -45,6 +48,7 @@ class TextComponent(
 ) : Component(ComponentType.TEXT)
 
 class GeometryLineComponent(
+    var name: String? = null,
     var width: Float? = null,
     var color: List<Float>? = null,
     var points: List<List<Int>>? = null,

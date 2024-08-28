@@ -27,7 +27,7 @@ class KUITest {
             String(
                 KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml")!!.readAllBytes()
             )
-        )).build() as GroupElement
+        )).build() as RectangleElement
     }
 
     var elem = YamlCompiler(YamlParser.parse(
@@ -46,7 +46,7 @@ class KUITest {
             String(
                 KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml")!!.readAllBytes()
             )
-        )).build() as GroupElement
+        )).build() as RectangleElement
     }
 
     val snake = Main()
@@ -100,7 +100,7 @@ class KUITest {
             }
         },
         TimedEvent<Float>(300) { snake.step() }.apply {
-            durationFetch = { dur = ExponentialOut.gen(it / 300.0).toFloat() }
+            durationFetch = { dur = it / 300f }
         },
         CustomAnimationEvent {
             if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_A)) snake.worm.crp(LEFT)

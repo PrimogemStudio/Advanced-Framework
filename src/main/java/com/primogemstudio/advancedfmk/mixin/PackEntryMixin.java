@@ -3,6 +3,7 @@ package com.primogemstudio.advancedfmk.mixin;
 import com.primogemstudio.advancedfmk.kui.GlobalData;
 import com.primogemstudio.advancedfmk.kui.KUITest;
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement;
+import kotlin.reflect.KClass;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.packs.TransferableSelectionList;
 import net.minecraft.resources.ResourceLocation;
@@ -15,21 +16,21 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class PackEntryMixin {
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIFFIIII)V"), method = "render")
     public void renderIcon(GuiGraphics instance, ResourceLocation atlasLocation, int x, int y, float uOffset, float vOffset, int width, int height, int textureWidth, int textureHeight) {
-        KUITest.Companion.getRes().subElement("icon").getPos().set((float) x, (float) y);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getSize().set((float) width, (float) height);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).setTexturePath(atlasLocation);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getTextureUV().set(0, 1, 0, 1);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getColor().set(1f, 1f, 1f, 1f);
+        KUITest.Companion.getRes().getPos().set((float) x, (float) y);
+        ((RectangleElement) KUITest.Companion.getRes()).getSize().set((float) width, (float) height);
+        ((RectangleElement) KUITest.Companion.getRes()).setTexturePath(atlasLocation);
+        ((RectangleElement) KUITest.Companion.getRes()).getTextureUV().set(0, 1, 0, 1);
+        ((RectangleElement) KUITest.Companion.getRes()).getColor().set(1f, 1f, 1f, 1f);
         KUITest.Companion.getRes().render(GlobalData.genData(instance, 0f));
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"), method = "render")
     public void renderBg(GuiGraphics instance, int minX, int minY, int maxX, int maxY, int color) {
-        KUITest.Companion.getRes().subElement("icon").getPos().set((float) minX, (float) minY);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getSize().set((float) maxX - minX, (float) maxY - minY);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).setTexturePath(null);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getTextureUV().set(0, 1, 0, 1);
-        ((RectangleElement) KUITest.Companion.getRes().subElement("icon")).getColor().set(
+        KUITest.Companion.getRes().getPos().set((float) minX, (float) minY);
+        ((RectangleElement) KUITest.Companion.getRes()).getSize().set((float) maxX - minX, (float) maxY - minY);
+        ((RectangleElement) KUITest.Companion.getRes()).setTexturePath(null);
+        ((RectangleElement) KUITest.Companion.getRes()).getTextureUV().set(0, 1, 0, 1);
+        ((RectangleElement) KUITest.Companion.getRes()).getColor().set(
                 FastColor.ARGB32.red(color) / 255f,
                 FastColor.ARGB32.green(color) / 255f,
                 FastColor.ARGB32.blue(color) / 255f,
