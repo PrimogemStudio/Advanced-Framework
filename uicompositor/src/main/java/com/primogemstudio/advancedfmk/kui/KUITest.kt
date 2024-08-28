@@ -6,8 +6,6 @@ import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.Live2DElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
-import com.primogemstudio.advancedfmk.kui.pipe.mouseX
-import com.primogemstudio.advancedfmk.kui.pipe.mouseY
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Main
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.DOWN
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.LEFT
