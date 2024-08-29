@@ -1,6 +1,5 @@
 package com.primogemstudio.advancedfmk.kui
 
-import com.mojang.blaze3d.platform.InputConstants
 import com.primogemstudio.advancedfmk.kui.animation.*
 import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
@@ -16,9 +15,6 @@ import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import kotlinx.coroutines.runBlocking
 import net.minecraft.client.Minecraft
 import org.joml.Vector2f
-import org.lwjgl.glfw.GLFW
-import org.lwjgl.glfw.GLFWCharModsCallbackI
-import org.lwjgl.glfw.GLFWKeyCallbackI
 
 val instance = KUITest()
 
@@ -36,19 +32,6 @@ class KUITest {
             KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
         )
     )).build() as GroupElement
-
-    fun reload() {
-        elem = YamlCompiler(YamlParser.parse(
-            String(
-                KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
-            )
-        )).build() as GroupElement
-        res = YamlCompiler(YamlParser.parse(
-            String(
-                KUITest::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml")!!.readAllBytes()
-            )
-        )).build() as RectangleElement
-    }
 
     val snake = Main()
     var dur = 0f
@@ -112,25 +95,8 @@ class KUITest {
         TimedEvent<Float>(300) { snake.step() }.apply {
             durationFetch = { dur = it / 300f }
         },
-        CustomAnimationEvent {
-            if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_A)) snake.worm.crp(LEFT)
-            else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_D)) snake.worm.crp(RIGHT)
-            else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_S)) snake.worm.crp(DOWN)
-            else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_W)) snake.worm.crp(UP)
-        },
         CustomAnimationEvent { elem.renderLock.unlock() }
-    ).apply {
-        InputConstants.setupKeyboardCallbacks(Minecraft.getInstance().window.window,
-            { _, key, _, action, _ ->
-                if (action == 1) {
-                    if (key == GLFW.GLFW_KEY_A) snake.worm.crp(LEFT)
-                    if (key == GLFW.GLFW_KEY_D) snake.worm.crp(RIGHT)
-                    if (key == GLFW.GLFW_KEY_S) snake.worm.crp(DOWN)
-                    if (key == GLFW.GLFW_KEY_W) snake.worm.crp(UP)
-                }
-            },
-            { _, _, _ ->  })
-    }
+    )
 
     init {
         EventLoop.objects.add(AnimatedObject(elem, animations))

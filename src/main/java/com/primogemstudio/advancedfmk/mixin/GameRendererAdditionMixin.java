@@ -32,8 +32,6 @@ public class GameRendererAdditionMixin {
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        KUITestKt.getInstance().getElem().render(GlobalData.genData(guiGraphics, partialTick));
-
         /*if (wrapper == null) {
             wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
             wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
@@ -51,13 +49,5 @@ public class GameRendererAdditionMixin {
         wrapper.render(0f, ps, source, 0xFF);
         source.endBatch();
         RenderSystem.setProjectionMatrix(pm, vs);*/
-    }
-
-    @Mixin(Minecraft.class)
-    public static class MinecraftMixin {
-        @Inject(at = @At("HEAD"), method = "reloadResourcePacks(ZLnet/minecraft/client/Minecraft$GameLoadCookie;)Ljava/util/concurrent/CompletableFuture;")
-        public void onReload(CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-            KUITestKt.getInstance().reload();
-        }
     }
 }
