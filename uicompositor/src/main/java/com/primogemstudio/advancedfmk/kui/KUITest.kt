@@ -17,6 +17,8 @@ import kotlinx.coroutines.runBlocking
 import net.minecraft.client.Minecraft
 import org.joml.Vector2f
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFWCharModsCallbackI
+import org.lwjgl.glfw.GLFWKeyCallbackI
 
 val instance = KUITest()
 
@@ -117,7 +119,18 @@ class KUITest {
             else if (InputConstants.isKeyDown(Minecraft.getInstance().window.window, GLFW.GLFW_KEY_W)) snake.worm.crp(UP)
         },
         CustomAnimationEvent { elem.renderLock.unlock() }
-    )
+    ).apply {
+        InputConstants.setupKeyboardCallbacks(Minecraft.getInstance().window.window,
+            { _, key, _, action, _ ->
+                if (action == 1) {
+                    if (key == GLFW.GLFW_KEY_A) snake.worm.crp(LEFT)
+                    if (key == GLFW.GLFW_KEY_D) snake.worm.crp(RIGHT)
+                    if (key == GLFW.GLFW_KEY_S) snake.worm.crp(DOWN)
+                    if (key == GLFW.GLFW_KEY_W) snake.worm.crp(UP)
+                }
+            },
+            { _, _, _ ->  })
+    }
 
     init {
         EventLoop.objects.add(AnimatedObject(elem, animations))
