@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "GameRendererAdditionMixin",
-    "GameRendererAdditionMixin$MinecraftMixin",
     "PackEntryMixin"
   ],
   "injectors": {
