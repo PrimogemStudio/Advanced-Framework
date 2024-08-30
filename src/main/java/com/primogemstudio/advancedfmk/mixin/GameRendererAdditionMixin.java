@@ -1,27 +1,23 @@
 package com.primogemstudio.advancedfmk.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.primogemstudio.advancedfmk.kui.GlobalData;
-import com.primogemstudio.advancedfmk.kui.KUITestKt;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexSorting;
+import com.primogemstudio.advancedfmk.mmd.PMXModel;
 import com.primogemstudio.advancedfmk.mmd.renderer.EntityRenderWrapper;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
-import org.spongepowered.asm.mixin.Final;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.concurrent.CompletableFuture;
+import java.io.File;
 
 @Mixin(TitleScreen.class)
 public class GameRendererAdditionMixin {
@@ -32,7 +28,7 @@ public class GameRendererAdditionMixin {
 
     @Inject(at = @At("RETURN"), method = "render")
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        /*if (wrapper == null) {
+        if (wrapper == null) {
             wrapper = new EntityRenderWrapper(new PMXModel(new File("/home/coder2/mmd/lumine/lumine.pmx")));
             wrapper.getModel().animation.add(new File("/home/coder2/mmd/actions/custom_1.vmd"));
             wrapper.getModel().animation.setupAnimation();
@@ -48,6 +44,6 @@ public class GameRendererAdditionMixin {
         ps.translate(0f, -1.45f, 0f);
         wrapper.render(0f, ps, source, 0xFF);
         source.endBatch();
-        RenderSystem.setProjectionMatrix(pm, vs);*/
+        RenderSystem.setProjectionMatrix(pm, vs);
     }
 }
