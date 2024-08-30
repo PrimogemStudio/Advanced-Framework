@@ -5,11 +5,11 @@ import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.Live2DElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Main
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.DOWN
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.LEFT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.RIGHT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.UP
+import com.primogemstudio.advancedfmk.kui.test.snakedual.SnakeContainer
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.DOWN
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.LEFT
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.RIGHT
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.UP
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import kotlinx.coroutines.runBlocking
@@ -33,7 +33,7 @@ class KUITest {
         )
     )).build() as GroupElement
 
-    val snake = Main()
+    val snake = SnakeContainer()
     var dur = 0f
 
     val animations: List<AnimationEvent<Float>> = listOf(

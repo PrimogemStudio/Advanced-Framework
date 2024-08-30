@@ -3,12 +3,12 @@ package com.primogemstudio.advancedfmk.kui.test.snakedual
 import org.joml.Vector2i
 import kotlin.random.Random
 
-class Main {
-    var worm: Move
+class SnakeContainer {
+    var worm: Snake
     var food: Vector2i
 
     init {
-        worm = Move()
+        worm = Snake()
         food = createFood()
     }
 
@@ -25,7 +25,7 @@ class Main {
 
     fun step() {
         if (worm.hit()) {
-            worm = Move()
+            worm = Snake()
             food = createFood()
         }
         else {

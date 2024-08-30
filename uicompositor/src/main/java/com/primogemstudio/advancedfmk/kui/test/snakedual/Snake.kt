@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.kui.test.snakedual
 
 import org.joml.Vector2i
 
-class Move {
+class Snake {
     var cells: Array<Vector2i?>
 
     var currentDirection: Int
@@ -54,7 +54,7 @@ class Move {
             return false
         }
         val head = createHead(direction)
-        if (head.x < 0 || head.x >= Main.COLS || head.y < 0 || head.y >= Main.ROWS) {
+        if (head.x < 0 || head.x >= SnakeContainer.COLS || head.y < 0 || head.y >= SnakeContainer.ROWS) {
             return true
         }
         for (i in 0 until cells.size - 1) {

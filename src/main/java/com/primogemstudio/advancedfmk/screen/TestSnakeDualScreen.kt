@@ -2,10 +2,10 @@ package com.primogemstudio.advancedfmk.screen
 
 import com.primogemstudio.advancedfmk.kui.GlobalData.Companion.genData
 import com.primogemstudio.advancedfmk.kui.instance
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.DOWN
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.LEFT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.RIGHT
-import com.primogemstudio.advancedfmk.kui.test.snakedual.Move.Companion.UP
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.DOWN
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.LEFT
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.RIGHT
+import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.UP
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
