@@ -9,7 +9,6 @@ import com.primogemstudio.advancedfmk.kui.pipe.guiScaledHeight
 import com.primogemstudio.advancedfmk.kui.pipe.guiScaledWidth
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
-import kotlinx.coroutines.runBlocking
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -27,13 +26,8 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
             ElemLockEvent(elem),
             CustomAnimationEvent {
                 elem.subElement("rect_panel", RectangleElement::class).apply {
-                    size.set(guiScaledWidth / 6f * 4f, guiScaledHeight / 6f)
-                    pos.set(guiScaledWidth / 6f, guiScaledHeight / 2f - guiScaledHeight / 12f)
-                }
-                elem.subElement("line", GeometryLineElement::class).apply {
-                    val h = guiScaledHeight / 2f
-                    vertices[0].set(guiScaledWidth / 6f, h)
-                    vertices[1].set(guiScaledWidth / 6f * 5f, h)
+                    size.set(guiScaledWidth / 3f, guiScaledHeight / 1.3f)
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 6f, guiScaledHeight / 2f - guiScaledHeight / 2.6f)
                 }
             },
             ElemUnlockEvent(elem)

@@ -14,7 +14,7 @@ root:
       filter:
         type: post
         location: "shaders/filter/gaussian_blur.json"
-        args: "Radius:int(16)"
+        args: "Radius:int(16);DigType:int(1)"
 
     line:
       type: line
