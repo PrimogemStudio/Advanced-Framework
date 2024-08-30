@@ -15,7 +15,6 @@ import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.UP
 import com.primogemstudio.advancedfmk.kui.test.snakedual.SnakeContainer
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
-import kotlinx.coroutines.runBlocking
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -35,7 +34,7 @@ class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
         private var dur = 0f
 
         private val animations: List<AnimationEvent<Float>> = listOf(
-            CustomAnimationEvent { runBlocking { elem.renderLock.lock() } },
+            ElemLockEvent(elem),
             CustomAnimationEvent {
                 elem.subElement("test", GeometryLineElement::class).apply {
                     while (snake.worm.cells.size != vertices.size) {
@@ -91,7 +90,7 @@ class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
             TimedEvent<Float>(300) { snake.step() }.apply {
                 durationFetch = { dur = it / 300f }
             },
-            CustomAnimationEvent { elem.renderLock.unlock() }
+            ElemUnlockEvent(elem)
         )
 
         init {
