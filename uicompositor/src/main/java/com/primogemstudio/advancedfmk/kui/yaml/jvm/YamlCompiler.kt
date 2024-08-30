@@ -19,11 +19,14 @@ import org.objectweb.asm.tree.MethodNode
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.random.Random
+import kotlin.reflect.KClass
 
 fun createResourceLocation(s: String): ResourceLocation = ResourceLocation.parse(s)
 
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
-    fun build(): Any {
+    fun <T : Any> build(cls: KClass<T>): T = build(cls.java)
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> build(cls: Class<T>): T {
         val cn = ClassNode()
         val cnn = root.className.replace("\$random", Random.nextInt().toString())
         cn.access = ACC_PUBLIC or ACC_FINAL
@@ -67,7 +70,7 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         val cs = c.getConstructor()
         val ins = cs.newInstance()
-        return c.getField("internal").get(ins)
+        return c.getField("internal").get(ins) as T
     }
 
     private fun buildGeometryLineElement(mn: MethodNode, c: GeometryLineComponent, n: String) {

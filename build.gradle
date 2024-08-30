@@ -86,7 +86,7 @@ dependencies {
     include "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${project.kotlin_coroutines_version}"
     implementation "org.apiguardian:apiguardian-api:${project.apiguardian_api_version}"
 
-    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 //    modRuntimeOnly "maven.modrinth:fpsdisplay:${project.fpsdisplay_version}"
 //    modRuntimeOnly "maven.modrinth:iris:${project.iris_version}"
     // runtimeOnly "org.anarres:jcpp:${project.jcpp_version}"

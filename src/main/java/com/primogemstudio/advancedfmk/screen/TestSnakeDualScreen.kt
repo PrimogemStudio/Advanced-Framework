@@ -6,6 +6,8 @@ import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.Live2DElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
+import com.primogemstudio.advancedfmk.kui.pipe.guiScaledHeight
+import com.primogemstudio.advancedfmk.kui.pipe.guiScaledWidth
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.DOWN
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.LEFT
 import com.primogemstudio.advancedfmk.kui.test.snakedual.Snake.Companion.RIGHT
@@ -14,7 +16,6 @@ import com.primogemstudio.advancedfmk.kui.test.snakedual.SnakeContainer
 import com.primogemstudio.advancedfmk.kui.yaml.YamlParser
 import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import kotlinx.coroutines.runBlocking
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -28,16 +29,14 @@ class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
             String(
                 TestSnakeDualScreen::class.java.classLoader.getResourceAsStream("assets/advancedfmk/ui/test.yaml")!!.readAllBytes()
             )
-        )).build() as GroupElement
+        )).build(GroupElement::class)
 
         val snake = SnakeContainer()
-        var dur = 0f
+        private var dur = 0f
 
-        val animations: List<AnimationEvent<Float>> = listOf(
+        private val animations: List<AnimationEvent<Float>> = listOf(
             CustomAnimationEvent { runBlocking { elem.renderLock.lock() } },
             CustomAnimationEvent {
-                val w = Minecraft.getInstance().window.guiScaledWidth
-                val h = Minecraft.getInstance().window.guiScaledHeight
                 elem.subElement("test", GeometryLineElement::class).apply {
                     while (snake.worm.cells.size != vertices.size) {
                         if (snake.worm.cells.size > vertices.size) vertices.add(Vector2f())
@@ -46,8 +45,8 @@ class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
 
                     for (i in 0 ..< vertices.size) {
                         vertices[i].set(
-                            w / 2f - 80f + snake.worm.cells[i]!!.x * 10 + 5,
-                            h / 2f - 80f + snake.worm.cells[i]!!.y * 10 + 5
+                            guiScaledWidth / 2f - 80f + snake.worm.cells[i]!!.x * 10 + 5,
+                            guiScaledHeight / 2f - 80f + snake.worm.cells[i]!!.y * 10 + 5
                         )
                     }
 
@@ -70,22 +69,22 @@ class TestSnakeDualScreen: Screen(Component.literal("Test!")) {
 
                 elem.subElement("rect_food", RectangleElement::class).apply {
                     pos.set(
-                        w / 2f - 80f + snake.food.x * 10,
-                        h / 2f - 80f + snake.food.y * 10
+                        guiScaledWidth / 2f - 80f + snake.food.x * 10,
+                        guiScaledHeight / 2f - 80f + snake.food.y * 10
                     )
                 }
 
                 elem.subElement("rect_panel", Live2DElement::class).apply {
                     pos.set(
                         0f,
-                        h - size.x + 30f
+                        guiScaledHeight - size.x + 30f
                     )
                 }
 
                 elem.subElement("rect_panelbase", RectangleElement::class).apply {
                     pos.set(
-                        w / 2f - 80f - 5f,
-                        h / 2f - 80f - 5f
+                        guiScaledWidth / 2f - 80f - 5f,
+                        guiScaledHeight / 2f - 80f - 5f
                     )
                 }
             },

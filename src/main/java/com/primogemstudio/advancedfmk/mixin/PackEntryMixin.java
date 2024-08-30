@@ -22,7 +22,7 @@ public class PackEntryMixin {
 
     static {
         try {
-            ui = ((RectangleElement) new YamlCompiler(YamlParser.INSTANCE.parse(new String(PackEntryMixin.class.getClassLoader().getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml").readAllBytes()))).build());
+            ui = new YamlCompiler(YamlParser.INSTANCE.parse(new String(PackEntryMixin.class.getClassLoader().getResourceAsStream("assets/advancedfmk/ui/resourcepack_icon.yaml").readAllBytes()))).build(RectangleElement.class);
         }
         catch (IOException e) {
             e.printStackTrace();

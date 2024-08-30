@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk
 
 import com.primogemstudio.advancedfmk.AdvancedFramework.Companion.MOD_ID
 import com.primogemstudio.advancedfmk.screen.TestSnakeDualScreen
+import com.primogemstudio.advancedfmk.screen.TimelineTestScreen
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderType
@@ -41,7 +42,7 @@ object Items {
                 hitResult: BlockHitResult
             ): InteractionResult {
                 if (level.isClientSide) {
-                    Minecraft.getInstance().setScreen(TestSnakeDualScreen())
+                    Minecraft.getInstance().setScreen(TimelineTestScreen())
                     return InteractionResult.SUCCESS
                 }
                 else return InteractionResult.SUCCESS

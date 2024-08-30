@@ -42,5 +42,7 @@ public class GameRendererMixin {
 
         ProgramEnvKt.setMouseX(x);
         ProgramEnvKt.setMouseY(y);
+        ProgramEnvKt.setGuiScaledWidth(this.minecraft.getWindow().getGuiScaledWidth());
+        ProgramEnvKt.setGuiScaledHeight(this.minecraft.getWindow().getGuiScaledHeight());
     }
 }
