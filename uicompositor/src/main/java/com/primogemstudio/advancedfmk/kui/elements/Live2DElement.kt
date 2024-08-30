@@ -69,7 +69,6 @@ class Live2DElement(
         BufferUploader.drawWithShader(buff.buildOrThrow())
         if (filter != null) RenderSystem.enableBlend() else RenderSystem.disableBlend()
 
-        filter?.arg("Radius", 16)
         filter?.apply(data)
     }
 }

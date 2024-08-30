@@ -17,6 +17,7 @@ root:
       filter:
         type: post
         location: "shaders/filter/gaussian_blur.json"
+        args: ""
 
     rect_panelbase:
       type: rect
@@ -29,6 +30,7 @@ root:
       filter:
         type: post
         location: "shaders/filter/gaussian_blur.json"
+        args: ""
 
     test:
       type: line

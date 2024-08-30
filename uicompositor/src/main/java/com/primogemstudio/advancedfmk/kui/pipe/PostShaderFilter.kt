@@ -6,10 +6,10 @@ import org.joml.*
 import org.ladysnake.satin.api.managed.ManagedShaderEffect
 
 class PostShaderFilter(
-    val shader: ManagedShaderEffect
+    val shader: ManagedShaderEffect,
+    override var args: MutableMap<String, Any>
 ) : FilterBase {
     var delegate: RenderTarget? = null
-    override var args: MutableMap<String, Any> = mutableMapOf()
     override fun init() {
         (delegate?: COMPOSE_FRAME).clear(IS_OSX)
         (delegate?: COMPOSE_FRAME).bindWrite(true)

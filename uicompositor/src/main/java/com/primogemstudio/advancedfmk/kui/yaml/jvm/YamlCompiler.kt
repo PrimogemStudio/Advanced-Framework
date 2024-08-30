@@ -7,8 +7,7 @@ import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import com.primogemstudio.advancedfmk.kui.yaml.*
 import com.primogemstudio.advancedfmk.kui.yaml.ComponentType.*
 import net.minecraft.resources.ResourceLocation
-import org.joml.Vector2f
-import org.joml.Vector4f
+import org.joml.*
 import org.ladysnake.satin.api.managed.ManagedShaderEffect
 import org.ladysnake.satin.api.managed.ShaderEffectManager
 import org.objectweb.asm.ClassWriter
@@ -22,6 +21,35 @@ import kotlin.random.Random
 import kotlin.reflect.KClass
 
 fun createResourceLocation(s: String): ResourceLocation = ResourceLocation.parse(s)
+fun parseShaderArgs(i: String): MutableMap<String, Any> {
+    val target: MutableMap<String, Any> = mutableMapOf()
+    if (i == "") return target
+    i.split(";").forEach {
+        val n = it.split(":")
+
+        val argname = n[0]
+        val dtype = n[1].split("(")[0]
+        val args = n[1].split("(")[1].replace(")", "").split(",")
+
+        if (dtype != "float" && dtype != "int") return@forEach
+
+        val f = { s: String -> s.toFloat() }
+
+        when (args.size) {
+            1 -> target[argname] = if (dtype == "float") args[0].toFloat() else args[0].toInt()
+            2 -> target[argname] = if (dtype == "float") Vector2f(args.map { i -> i.toFloat() }.toTypedArray().toFloatArray()) else Vector2i(args.map { i -> i.toInt() }.toTypedArray().toIntArray())
+            3 -> target[argname] = if (dtype == "float") Vector3f(args.map { i -> i.toFloat() }.toTypedArray().toFloatArray()) else Vector3i(args.map { i -> i.toInt() }.toTypedArray().toIntArray())
+            4 -> target[argname] = if (dtype == "float") Vector4f(args.map { i -> i.toFloat() }.toTypedArray().toFloatArray()) else Vector4i(args.map { i -> i.toInt() }.toTypedArray().toIntArray())
+            16 -> if (dtype == "float") target[argname] = Matrix4f(
+                f(args[0]), f(args[1]), f(args[2]), f(args[3]),
+                f(args[4]), f(args[5]), f(args[6]), f(args[7]),
+                f(args[8]), f(args[9]), f(args[10]), f(args[11]),
+                f(args[12]), f(args[13]), f(args[14]), f(args[14]),
+            )
+        }
+    }
+    return target
+}
 
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
     fun <T : Any> build(cls: KClass<T>): T = build(cls.java)
@@ -312,10 +340,19 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                         true
                     )
 
+                    mn.ldc(f["args"] as String)
+                    mn.visitMethodInsn(
+                        INVOKESTATIC,
+                        "com/primogemstudio/advancedfmk/kui/yaml/jvm/YamlCompilerKt",
+                        "parseShaderArgs",
+                        sigf(Map::class, String::class),
+                        false
+                    )
+
                     mn.invokespecial(
                         sig(PostShaderFilter::class),
                         INIT,
-                        sigf(Nothing::class, ManagedShaderEffect::class)
+                        sigf(Nothing::class, ManagedShaderEffect::class, MutableMap::class)
                     )
                     mn.checkcast(sig(FilterBase::class))
                 }

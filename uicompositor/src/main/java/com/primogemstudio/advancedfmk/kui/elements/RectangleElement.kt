@@ -24,9 +24,6 @@ class RectangleElement(
     var texturePath: ResourceLocation? = null,
     var filter: FilterBase? = null
 ) : RealElement(id, pos), FilteredElement {
-    init {
-        filter?.args?.set("Radius", 32)
-    }
     override fun filter(): FilterBase? = filter
     override fun subElement(id: String): UIElement? = null
     override fun renderActual(data: GlobalData) {
