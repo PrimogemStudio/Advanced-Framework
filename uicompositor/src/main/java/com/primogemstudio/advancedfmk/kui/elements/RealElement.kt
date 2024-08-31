@@ -9,7 +9,6 @@ import org.joml.Vector4i
 
 abstract class RealElement(open var id: String, open var pos: Vector2f) : UIElement {
     val renderLock = Mutex()
-    var clip: Vector4i? = null
     private val internalMap = mutableMapOf<String, Any>()
     operator fun get(s: String): Any? = internalMap[s]
     operator fun set(s: String, v: Any) {
@@ -17,11 +16,7 @@ abstract class RealElement(open var id: String, open var pos: Vector2f) : UIElem
     }
 
     final override fun render(data: GlobalData) {
-        runBlocking { renderLock.withLock {
-            if (clip != null) data.graphics.enableScissor(clip!!.x, clip!!.y, clip!!.x + clip!!.z, clip!!.y + clip!!.w)
-            renderActual(data)
-            if (clip != null) data.graphics.disableScissor()
-        }}
+        runBlocking { renderLock.withLock { renderActual(data) }}
     }
     protected abstract fun renderActual(data: GlobalData)
 }
