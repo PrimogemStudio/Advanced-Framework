@@ -45,7 +45,7 @@ class RectangleElement(
         )
 
         val matrix = data.graphics.pose().last().pose()
-        val bdsize = 8
+        val bdsize = if (texturePath != null) 0 else 8
         if (texturePath == null) {
             buff.addVertex(matrix, pos.x - bdsize, pos.y - bdsize, 0f).setColor(color.x, color.y, color.z, color.w)
             buff.addVertex(matrix, pos.x - bdsize, pos.y + size.y + bdsize, 0f)
@@ -54,8 +54,8 @@ class RectangleElement(
                 .setColor(color.x, color.y, color.z, color.w)
             buff.addVertex(matrix, pos.x + size.x + bdsize, pos.y - bdsize, 0f)
                 .setColor(color.x, color.y, color.z, color.w)
-        } else {
-            // 0 1 0 1
+        }
+        else {
             buff.addVertex(matrix, pos.x - bdsize, pos.y - bdsize, 0f)
                 .setUv(textureUV[0], textureUV[2])
                 .setColor(color.x, color.y, color.z, color.w)

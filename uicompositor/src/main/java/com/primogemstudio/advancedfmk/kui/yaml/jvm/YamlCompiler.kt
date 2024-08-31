@@ -268,8 +268,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.dup()
         mn.ldc(c.textureUV?.get(0)?: 0f)
         mn.ldc(c.textureUV?.get(1)?: 1f)
-        mn.ldc(c.textureUV?.get(2)?: 1f)
-        mn.ldc(c.textureUV?.get(3)?: 0f)
+        mn.ldc(c.textureUV?.get(2)?: 0f)
+        mn.ldc(c.textureUV?.get(3)?: 1f)
         mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         if (c.texture != null) {

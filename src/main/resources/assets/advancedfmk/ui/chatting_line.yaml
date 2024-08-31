@@ -17,9 +17,10 @@ root:
       pos: [ 0, 0 ]
       size: [ 16, 16 ]
       color: [ 1, 1, 1, 1 ]
-      radius: 16
+      radius: 0
       thickness: 0
       smoothedge: 0.012
+      texture: "advancedfmk:ui/textures/avatars/jack253-png.png"
 
     text_name:
       type: text
