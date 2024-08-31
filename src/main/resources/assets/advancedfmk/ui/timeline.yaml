@@ -27,7 +27,7 @@ root:
       text: ""
       pos: [0, 0]
       color: [0, 0, 0, 1]
-      textsize: 12
+      textsize: 10
       vanilla: false
 
     text_sign:
@@ -35,5 +35,5 @@ root:
       text: ""
       pos: [ 0, 0 ]
       color: [ .3, .3, .3, 1 ]
-      textsize: 8
+      textsize: 7
       vanilla: false

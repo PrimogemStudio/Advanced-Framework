@@ -93,7 +93,7 @@ class FreeTypeFont : Closeable {
     }
 
     private fun initFontState() {
-        FT_Set_Pixel_Sizes(face, 0, 48)
+        FT_Set_Pixel_Sizes(face, 0, 8)
 
         hb_face = hb_face_create(hb_blob, 0)
         hb_upem = hb_face_get_upem(hb_face)

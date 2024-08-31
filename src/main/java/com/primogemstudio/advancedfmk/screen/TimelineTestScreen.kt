@@ -38,7 +38,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 }
                 elem.subElement("text_sign", TextElement::class).apply {
                     text = "Advanced Framework 主开发者"
-                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 18)
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 17.5f)
                 }
                 elem.subElement("name_split", GeometryLineElement::class).apply {
                     vertices[0].set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height + 30)
