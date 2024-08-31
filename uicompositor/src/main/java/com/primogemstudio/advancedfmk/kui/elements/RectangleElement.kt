@@ -55,6 +55,7 @@ class RectangleElement(
             buff.addVertex(matrix, pos.x + size.x + bdsize, pos.y - bdsize, 0f)
                 .setColor(color.x, color.y, color.z, color.w)
         } else {
+            // 0 1 0 1
             buff.addVertex(matrix, pos.x - bdsize, pos.y - bdsize, 0f)
                 .setUv(textureUV[0], textureUV[2])
                 .setColor(color.x, color.y, color.z, color.w)
