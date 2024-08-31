@@ -7,7 +7,7 @@ root:
       type: rect
       pos: [0, 0]
       size: [0, 0]
-      color: [ 1, 1, 1, .5 ]
+      color: [ 1, 1, 1, .8 ]
       radius: 15
       thickness: 0
       smoothedge: 0.006
@@ -16,23 +16,24 @@ root:
         location: "shaders/filter/gaussian_blur.json"
         args: "Radius:int(16);DigType:int(1)"
 
-    rect_test_container:
-      type: group
-      components:
-        rect_test:
-          type: rect
-          pos: [ 0, 0 ]
-          size: [ 0, 0 ]
-          color: [ 1, 1, 1, 1 ]
-          radius: 15
-          thickness: 0
-          smoothedge: 0.006
-          texture: "advancedfmk:ui/textures/microsoft.png"
+    name_split:
+      type: line
+      width: 2
+      color: [.8, .8, .8, 1]
+      points: [ [ 0, 0 ], [ 0, 0 ] ]
 
-    text:
+    text_name:
       type: text
       text: ""
       pos: [0, 0]
-      color: [1, 1, 1, 1]
+      color: [0, 0, 0, 1]
       textsize: 12
+      vanilla: false
+
+    text_sign:
+      type: text
+      text: ""
+      pos: [ 0, 0 ]
+      color: [ .3, .3, .3, 1 ]
+      textsize: 8
       vanilla: false

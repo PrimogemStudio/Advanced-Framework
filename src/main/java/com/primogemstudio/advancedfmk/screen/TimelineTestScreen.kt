@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.screen
 
 import com.primogemstudio.advancedfmk.kui.GlobalData
 import com.primogemstudio.advancedfmk.kui.animation.*
+import com.primogemstudio.advancedfmk.kui.elements.GeometryLineElement
 import com.primogemstudio.advancedfmk.kui.elements.GroupElement
 import com.primogemstudio.advancedfmk.kui.elements.RectangleElement
 import com.primogemstudio.advancedfmk.kui.elements.TextElement
@@ -12,7 +13,6 @@ import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import org.joml.Vector4i
 
 class TimelineTestScreen: Screen(Component.literal("Test!")) {
     companion object {
@@ -26,19 +26,23 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
         private val animations: List<AnimationEvent<Float>> = listOf(
             ElemLockEvent(elem),
             CustomAnimationEvent {
+                val height = guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f
+
                 elem.subElement("rect_panel", RectangleElement::class).apply {
-                    size.set(guiScaledWidth / 3f, guiScaledHeight / 1.3f)
-                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 6f, guiScaledHeight / 2f - guiScaledHeight / 2.6f)
+                    size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f)
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height)
                 }
-                elem.subElement("rect_test_container", GroupElement::class).apply {
-                    this.clip = Vector4i(0, 0, 75, 75)
-                    subElement("rect_test", RectangleElement::class).apply {
-                        pos.set(0f, 0f)
-                        size.set(100f, 100f)
-                    }
+                elem.subElement("text_name", TextElement::class).apply {
+                    text = "Coder2"
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 5)
                 }
-                elem.subElement("text", TextElement::class).apply {
-                    text = System.currentTimeMillis().toString()
+                elem.subElement("text_sign", TextElement::class).apply {
+                    text = "Advanced Framework 主开发者"
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 18)
+                }
+                elem.subElement("name_split", GeometryLineElement::class).apply {
+                    vertices[0].set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height + 30)
+                    vertices[1].set(guiScaledWidth / 2f + guiScaledWidth / 4.4f, height + 30)
                 }
             },
             ElemUnlockEvent(elem)

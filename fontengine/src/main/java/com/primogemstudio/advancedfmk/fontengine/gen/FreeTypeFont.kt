@@ -93,7 +93,7 @@ class FreeTypeFont : Closeable {
     }
 
     private fun initFontState() {
-        FT_Set_Pixel_Sizes(face, 0, 12)
+        FT_Set_Pixel_Sizes(face, 0, 48)
 
         hb_face = hb_face_create(hb_blob, 0)
         hb_upem = hb_face_get_upem(hb_face)
@@ -120,9 +120,9 @@ class FreeTypeFont : Closeable {
         FT_Outline_Decompose(outline, functions(target), 1)
 
         target.forEach {
-            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f)).mul(1024f)
-            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(1024f)
-            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))?.mul(1024f)
+            it.target.div(border).mul(Matrix2f(1f, 0f, 0f, -1f))
+            it.control1?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))
+            it.control2?.div(border)?.mul(Matrix2f(1f, 0f, 0f, -1f))
         }
         return target
     }

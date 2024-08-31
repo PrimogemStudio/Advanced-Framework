@@ -111,7 +111,7 @@ class ComposedFont {
         maxLineWidth: Int = -1
     ) {
         var currOffset = x
-        val siz = point.toFloat() / 12f
+        val siz = point.toFloat() / 48f
         var currY = y + point
         var currentLineH = 0
         poseStack.pushPose()
@@ -138,7 +138,7 @@ class ComposedFont {
 
     fun getTextBorder(text: String, point: Int, maxLineWidth: Int = -1): Vector2f {
         var currOffset = 0
-        val siz = point.toFloat() / 12f
+        val siz = point.toFloat() / 48f
         var currY = 0f
         var currentLineH = 0
         fetchGlyphs(text).forEach {
