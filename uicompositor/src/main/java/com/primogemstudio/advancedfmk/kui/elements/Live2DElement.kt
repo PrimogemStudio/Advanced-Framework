@@ -71,4 +71,10 @@ class Live2DElement(
 
         filter?.apply(data)
     }
+    override fun renderWithoutFilter(data: GlobalData) {
+        val f = filter
+        filter = null
+        render(data)
+        filter = f
+    }
 }

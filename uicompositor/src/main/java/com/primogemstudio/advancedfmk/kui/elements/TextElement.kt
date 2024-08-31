@@ -52,4 +52,8 @@ class TextElement(
             )
         }, data.graphics, data.tick)
     }
+
+    override fun renderWithoutFilter(data: GlobalData) {
+
+    }
 }

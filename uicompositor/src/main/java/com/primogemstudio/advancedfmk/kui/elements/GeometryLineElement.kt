@@ -55,4 +55,10 @@ class GeometryLineElement(
 
     override fun subElement(id: String): UIElement? = null
     override fun filter(): FilterBase? = filter
+    override fun renderWithoutFilter(data: GlobalData) {
+        val f = filter
+        filter = null
+        render(data)
+        filter = f
+    }
 }
