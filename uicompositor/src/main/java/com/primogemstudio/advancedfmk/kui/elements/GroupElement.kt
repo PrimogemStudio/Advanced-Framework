@@ -17,7 +17,10 @@ class GroupElement(override var id: String, subElements: List<UIElement>) : Real
     }
 
     override fun renderWithoutFilter(data: GlobalData) {
-        subElements.forEach { if (it is RealElement) it.renderWithoutFilter(data) else it.render(data) }
+        subElements.forEach {
+            if (it is TextElement) return@forEach
+            if (it is RealElement) it.renderWithoutFilter(data) else it.render(data)
+        }
     }
 
     override fun subElement(id: String): RealElement? = if (cacheMap.containsKey(id)) cacheMap[id] else subElements.filterIsInstance<RealElement>().find { it.id == id }?.apply { cacheMap[id] = this }
