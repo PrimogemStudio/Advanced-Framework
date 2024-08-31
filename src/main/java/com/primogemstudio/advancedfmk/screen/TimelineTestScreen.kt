@@ -44,8 +44,8 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
             target.subElement("text_main", TextElement::class).apply {
                 text = "这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！"
                 maxLineWidth = (guiScaledWidth / 2.2f).toInt() - 30 - 12 * 2
-                t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 12f)
-                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6 + 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 6)
+                t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
+                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6 + 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 4)
             }
             target.subElement("rect_background", RectangleElement::class).apply {
                 pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset)
