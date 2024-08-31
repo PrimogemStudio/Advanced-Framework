@@ -6,7 +6,7 @@ import org.joml.Vector4i
 
 class GroupElement(override var id: String, subElements: List<UIElement>) : RealElement(id, Vector2f(0f)) {
     private val cacheMap = mutableMapOf<String, RealElement>()
-    var subElements: List<UIElement> = subElements
+    private var subElements: List<UIElement> = subElements
         set(v) {
             cacheMap.clear()
             field = v
