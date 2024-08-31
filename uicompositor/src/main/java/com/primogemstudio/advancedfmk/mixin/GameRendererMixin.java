@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.primogemstudio.advancedfmk.kui.pipe.IndeterminateVarsKt.clipFrame;
 import static com.primogemstudio.advancedfmk.kui.pipe.IndeterminateVarsKt.composeFrame;
 
 @Mixin(GameRenderer.class)
@@ -30,6 +31,7 @@ public class GameRendererMixin {
             width = w;
             height = h;
             composeFrame().resize(w, h, Util.getPlatform() == Util.OS.OSX);
+            clipFrame().resize(w, h, Util.getPlatform() == Util.OS.OSX);
         }
 
 

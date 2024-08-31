@@ -47,7 +47,7 @@ object BufferManager {
         call(buff, poseStack)
         RenderSystem.enableBlend()
         RenderSystem.disableCull()
-        BufferUploader.drawWithShader(buff.buildOrThrow())
+        buff.build()?.apply { BufferUploader.drawWithShader(this) }
         RenderSystem.enableCull()
         RenderSystem.disableBlend()
         TEXT_BLUR.setSamplerUniform("BaseLayer", fontInternal)

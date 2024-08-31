@@ -31,9 +31,8 @@ val KT_KOLLECTIONS = "kotlin/collections/CollectionsKt"
 
 fun MethodNode.aconst_null() = visitInsn(ACONST_NULL)
 fun MethodNode.aload0() = visitVarInsn(ALOAD, 0)
-fun MethodNode.aload1() = visitVarInsn(ALOAD, 1)
-fun MethodNode.astore0() = visitVarInsn(ASTORE, 0)
-fun MethodNode.astore1() = visitVarInsn(ASTORE, 1)
+fun MethodNode.aload(i: Int) = visitVarInsn(ALOAD, i)
+fun MethodNode.astore(i: Int) = visitVarInsn(ASTORE, i)
 fun MethodNode.aastore() = visitInsn(AASTORE)
 fun MethodNode.dup() = visitInsn(DUP)
 fun MethodNode.iconst0() = visitInsn(ICONST_0)

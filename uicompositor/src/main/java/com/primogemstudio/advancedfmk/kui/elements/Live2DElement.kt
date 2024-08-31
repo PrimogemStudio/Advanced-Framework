@@ -22,7 +22,7 @@ class Live2DElement(
     var thickness: Float,
     var smoothedge: Float,
     var textureUV: Vector4f,
-    var modelPath: Pair<String, String>,
+    modelPath: Pair<String, String>,
     var filter: FilterBase? = null
 ) : RealElement(id, pos), FilteredElement {
     private val model = Live2DModel(modelPath.first, modelPath.second)

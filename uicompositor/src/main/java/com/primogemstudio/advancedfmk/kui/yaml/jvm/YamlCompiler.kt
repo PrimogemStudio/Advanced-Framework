@@ -53,6 +53,7 @@ fun parseShaderArgs(i: String): MutableMap<String, Any> {
 }
 
 class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader()) {
+    private var arrDep = 0
     fun <T : Any> build(cls: KClass<T>): T = build(cls.java)
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> build(cls: Class<T>): T {
@@ -120,8 +121,11 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         mn.ldc(c.points?.size?: 0)
         mn.anewarray(sig(Vector2f::class))
-        mn.astore1()
-        mn.aload1()
+        val dep = arrDep
+        arrDep ++
+        mn.astore(dep)
+        mn.aload(dep)
+
         var i = 0
         c.points!!.forEach {
             mn.ldc(i)
@@ -134,8 +138,9 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             mn.invokespecial(sig(Vector2f::class), INIT, sigf(Nothing::class, Float::class, Float::class))
 
             mn.aastore()
-            mn.aload1()
+            mn.aload(dep)
         }
+        arrDep --
         mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", sigf(List::class, Array<Any>::class), false)
 
         buildFilter(mn, c.filter)
@@ -151,8 +156,10 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
 
         mn.ldc(c.components?.size?: 0)
         mn.anewarray(sig(RealElement::class))
-        mn.astore0()
-        mn.aload0()
+        val dep = arrDep
+        arrDep ++
+        mn.astore(dep)
+        mn.aload(dep)
 
         var i = 0
         c.components?.forEach { (t, u) ->
@@ -167,8 +174,9 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
                 null -> throw NullPointerException()
             }
             mn.aastore()
-            mn.aload0()
+            mn.aload(dep)
         }
+        arrDep --
         mn.visitMethodInsn(INVOKESTATIC, KT_KOLLECTIONS, "mutableListOf", sigf(List::class, Array<Any>::class), false)
         mn.invokespecial(sig(GroupElement::class), INIT, sigf(Nothing::class, String::class, List::class))
     }
@@ -207,8 +215,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.dup()
         mn.ldc(c.textureUV?.get(0)?: 0f)
         mn.ldc(c.textureUV?.get(1)?: 1f)
-        mn.ldc(c.textureUV?.get(2)?: 0f)
-        mn.ldc(c.textureUV?.get(3)?: 1f)
+        mn.ldc(c.textureUV?.get(2)?: 1f)
+        mn.ldc(c.textureUV?.get(3)?: 0f)
         mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         mn.new(sig(Pair::class))
@@ -260,8 +268,8 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
         mn.dup()
         mn.ldc(c.textureUV?.get(0)?: 0f)
         mn.ldc(c.textureUV?.get(1)?: 1f)
-        mn.ldc(c.textureUV?.get(2)?: 0f)
-        mn.ldc(c.textureUV?.get(3)?: 1f)
+        mn.ldc(c.textureUV?.get(2)?: 1f)
+        mn.ldc(c.textureUV?.get(3)?: 0f)
         mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
 
         if (c.texture != null) {

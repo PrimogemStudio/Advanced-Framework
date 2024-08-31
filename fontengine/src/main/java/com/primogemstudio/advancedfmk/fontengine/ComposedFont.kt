@@ -112,7 +112,7 @@ class ComposedFont {
     ) {
         var currOffset = x
         val siz = point.toFloat() / 12f
-        var currY = y
+        var currY = y + point
         var currentLineH = 0
         poseStack.pushPose()
         fetchGlyphs(text).forEach {

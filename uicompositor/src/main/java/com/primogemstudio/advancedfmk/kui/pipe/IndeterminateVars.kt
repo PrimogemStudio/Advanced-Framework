@@ -9,4 +9,9 @@ val COMPOSE_FRAME = TextureTarget(1, 1, true, IS_OSX).apply {
     setClearColor(0f, 0f, 0f, 0f)
     clear(IS_OSX)
 }
+val CLIP_FRAME = TextureTarget(1, 1, true, IS_OSX).apply {
+    setClearColor(0f, 0f, 0f, 0f)
+    clear(IS_OSX)
+}
 fun composeFrame(): TextureTarget = COMPOSE_FRAME
+fun clipFrame(): TextureTarget = CLIP_FRAME
