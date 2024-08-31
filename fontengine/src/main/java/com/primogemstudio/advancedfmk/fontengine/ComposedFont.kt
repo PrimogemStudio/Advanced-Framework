@@ -141,9 +141,11 @@ class ComposedFont {
         val siz = point.toFloat() / 8f
         var currY = 0f
         var currentLineH = 0
+        var maxX = 0
         fetchGlyphs(text).forEach {
             currentLineH = max(currentLineH, (it.first.dimension.y * siz).toInt())
             if (maxLineWidth > 0 && currOffset + (it.first.dimension.x * siz).toInt() > maxLineWidth) {
+                maxX = max(maxX, currOffset)
                 currY += currentLineH
                 currentLineH = 0
                 currOffset = 0
@@ -151,6 +153,8 @@ class ComposedFont {
             currOffset += (it.first.dimension.x * siz).toInt()
         }
 
-        return Vector2f(currOffset.toFloat(), currY)
+        currY += currentLineH
+        maxX = max(maxX, currOffset)
+        return Vector2f(maxX.toFloat(), currY)
     }
 }

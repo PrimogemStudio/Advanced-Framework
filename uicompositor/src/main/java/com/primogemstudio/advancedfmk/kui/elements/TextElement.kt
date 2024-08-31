@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft
 import org.joml.Vector2f
 import org.joml.Vector4f
 
-private val FONT = ComposedFont()
+
 
 class TextElement(
     override var id: String,
@@ -18,6 +18,10 @@ class TextElement(
     var textsize: Int,
     var vanilla: Boolean = false
 ) : RealElement(id, pos) {
+    companion object {
+        val FONT = ComposedFont()
+    }
+    var maxLineWidth = -1
     override fun subElement(id: String): UIElement? = null
     override fun renderActual(data: GlobalData) {
         val c = (color.x * 255).toInt().and(0xFF).shl(16) +
@@ -43,7 +47,8 @@ class TextElement(
                 pos.x.toInt(),
                 pos.y.toInt(),
                 textsize,
-                color
+                color,
+                maxLineWidth
             )
         }, data.graphics, data.tick)
     }

@@ -1,4 +1,4 @@
-class: com.primogemstudio.advancedfmk.kui.TimelineUI
+class: com.primogemstudio.advancedfmk.kui.ChattingPanel
 root:
   name: main
   type: group
