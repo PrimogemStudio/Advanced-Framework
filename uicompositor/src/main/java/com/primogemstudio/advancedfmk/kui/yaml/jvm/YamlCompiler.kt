@@ -2,6 +2,7 @@ package com.primogemstudio.advancedfmk.kui.yaml.jvm
 
 import com.ibm.icu.impl.ClassLoaderUtil
 import com.primogemstudio.advancedfmk.kui.elements.*
+import com.primogemstudio.advancedfmk.kui.pipe.ClipFilter
 import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
 import com.primogemstudio.advancedfmk.kui.pipe.PostShaderFilter
 import com.primogemstudio.advancedfmk.kui.yaml.*
@@ -313,6 +314,11 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
     private fun buildFilter(mn: MethodNode, f: Map<String, String>?) {
         if (f != null) {
             when (f["type"]) {
+                "clip" -> {
+                    mn.new(sig(ClipFilter::class))
+                    mn.invokespecial(sig(ClipFilter::class), INIT, sigf(Nothing::class))
+                    mn.checkcast(sig(FilterBase::class))
+                }
                 "post" -> {
                     mn.new(sig(PostShaderFilter::class))
                     mn.dup()
