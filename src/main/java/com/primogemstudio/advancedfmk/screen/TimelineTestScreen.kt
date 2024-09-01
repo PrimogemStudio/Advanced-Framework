@@ -121,8 +121,8 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                     pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height)
                 }
                 elem.subElement("rect_panel_clip", RectangleElement::class).apply {
-                    size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f - 30 - 2)
-                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height + 30 + 2)
+                    size.set(guiScaledWidth / 2.2f - 2, guiScaledHeight / 1.3f + guiScaledHeight / 10f - 30 - 2 - 2)
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 1, height + 30 + 2 + 1)
                 }
                 elem.subElement("texts", GroupElement::class).apply {
                     subElement("text_name", TextElement::class).apply {

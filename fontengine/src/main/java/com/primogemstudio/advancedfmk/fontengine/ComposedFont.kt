@@ -143,11 +143,11 @@ class ComposedFont {
         var currentLineH = 0
         var maxX = 0
         fetchGlyphs(text).forEach {
+            if (currOffset == 0) currentLineH = 0
             currentLineH = max(currentLineH, (it.first.dimension.y * siz).toInt())
             if (maxLineWidth > 0 && currOffset + (it.first.dimension.x * siz).toInt() > maxLineWidth) {
                 maxX = max(maxX, currOffset)
                 currY += currentLineH
-                currentLineH = 0
                 currOffset = 0
             }
             currOffset += (it.first.dimension.x * siz).toInt()
