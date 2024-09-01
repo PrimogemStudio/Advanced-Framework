@@ -18,8 +18,8 @@ import org.joml.Vector2f
 
 class TimelineTestScreen: Screen(Component.literal("Test!")) {
     companion object {
-        val AVATAR1 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/jack253-png.png")
-        val AVATAR2 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/hackermdch.png")
+        private val AVATAR1 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/jack253-png.png")
+        private val AVATAR2 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/hackermdch.png")
 
         var elem = YamlCompiler(
             YamlParser.parse(
