@@ -32,6 +32,11 @@ object Shaders {
     )
 
     @JvmField
+    val RENDERTYPE_LINES_CLIP = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rendertype_lines_clip", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP
+    )
+
+    @JvmField
     val POSITION_COLOR_TEX =
         VertexFormat.builder().add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR)
             .add("UV0", VertexFormatElement.UV0).build()
