@@ -4,7 +4,6 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "PostChainAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

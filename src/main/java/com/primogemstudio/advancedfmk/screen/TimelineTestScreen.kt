@@ -31,8 +31,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 )
             )).build(GroupElement::class)
 
-        fun setPos() {
-            val yOffset = 0f
+        fun setPos(yOffset: Float): Float {
             var t: Vector2f?
             target.subElement("rect_avatar", RectangleElement::class).apply {
                 pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset)
@@ -51,6 +50,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset)
                 size.set(t)
             }
+            return t!!.y + 12 + 12
         }
 
         private val animations: List<AnimationEvent<Float>> = listOf(
@@ -61,6 +61,10 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 elem.subElement("rect_panel", RectangleElement::class).apply {
                     size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f)
                     pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height)
+                }
+                elem.subElement("rect_panel_clip", RectangleElement::class).apply {
+                    size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f - 30 - 2)
+                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height + 30 + 2)
                 }
                 elem.subElement("texts", GroupElement::class).apply {
                     subElement("text_name", TextElement::class).apply {
@@ -88,8 +92,11 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         elem.render(GlobalData.genData(guiGraphics, partialTick))
-        setPos()
-        target.clip = elem
+        target.clip = elem.subElement("rect_panel_clip")
+        var base = -40f
+        base += setPos(base)
+        target.render(GlobalData.genData(guiGraphics, partialTick))
+        base += setPos(base)
         target.render(GlobalData.genData(guiGraphics, partialTick))
     }
 }

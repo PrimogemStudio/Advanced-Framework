@@ -16,6 +16,15 @@ root:
         location: "shaders/filter/gaussian_blur.json"
         args: "Radius:int(16);DigType:int(1)"
 
+    rect_panel_clip:
+      type: rect
+      pos: [0, 0]
+      size: [0, 0]
+      color: [ 1, 1, 1, 0 ]
+      radius: 15
+      thickness: 0
+      smoothedge: 0.024
+
     name_split:
       type: line
       width: 2
