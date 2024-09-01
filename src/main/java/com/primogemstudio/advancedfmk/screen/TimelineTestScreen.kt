@@ -59,7 +59,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                     t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
                     pos.set(
                         guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6 + 6,
-                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 2
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 3
                     )
                 }
                 target.subElement("rect_background", RectangleElement::class).apply {
@@ -96,7 +96,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                     t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
                     pos.set(
                         guiScaledWidth / 2f + guiScaledWidth / 4.4f - 16 - 2 * 6 + 6 - t!!.x,
-                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 2
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 3
                     )
                 }
                 target.subElement("rect_background", RectangleElement::class).apply {
@@ -153,11 +153,9 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
         target.clip = elem.subElement("rect_panel_clip")
         // var base: Float = Linear.gen(System.currentTimeMillis().toDouble() % 2000 / 2000).toFloat() * -40f
         var base = 4f
-        base += setPos(base, "Coder2", "Test!")
+        base += setPos(base, "Coder2", "最近整了一个大活（")
         target.render(GlobalData.genData(guiGraphics, partialTick))
-        base += setPos(base, "hackermdch", "这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！", false)
-        target.render(GlobalData.genData(guiGraphics, partialTick))
-        base += setPos(base, "Coder2", "Test!")
+        base += setPos(base, "hackermdch", "不像（", false)
         target.render(GlobalData.genData(guiGraphics, partialTick))
     }
 }
