@@ -1,8 +1,6 @@
 package com.primogemstudio.advancedfmk.kui.elements
 
 import com.mojang.blaze3d.pipeline.TextureTarget
-import com.mojang.blaze3d.platform.GlConst.*
-import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -14,6 +12,7 @@ import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f
+import kotlin.random.Random
 
 class RectangleElement(
     override var id: String,
@@ -41,6 +40,15 @@ class RectangleElement(
         shader.getUniform("Thickness")!!.set(thickness)
         shader.getUniform("SmoothEdge")!!.set(smoothedge)
         shader.getUniform("Size")!!.set(size.x, size.y)
+
+        if (shader == Shaders.ROUNDED_RECT) {
+            shader.getUniform("RadiusSize")!!.set(
+                Random.nextFloat(),
+                Random.nextFloat(),
+                Random.nextFloat(),
+                Random.nextFloat()
+            )
+        }
 
         val buff = Tesselator.getInstance().begin(
             VertexFormat.Mode.QUADS,
