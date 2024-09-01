@@ -86,6 +86,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         elem.render(GlobalData.genData(guiGraphics, partialTick))
         setPos()
+        target.clip = elem
         target.render(GlobalData.genData(guiGraphics, partialTick))
     }
 }

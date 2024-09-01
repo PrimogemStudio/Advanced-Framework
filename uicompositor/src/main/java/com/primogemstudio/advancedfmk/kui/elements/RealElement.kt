@@ -19,5 +19,4 @@ abstract class RealElement(open var id: String, open var pos: Vector2f) : UIElem
         runBlocking { renderLock.withLock { renderActual(data) }}
     }
     protected abstract fun renderActual(data: GlobalData)
-    abstract fun renderWithoutFilter(data: GlobalData)
 }

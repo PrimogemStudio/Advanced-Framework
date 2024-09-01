@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.kui.elements
 
+import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.Tesselator
@@ -71,10 +72,18 @@ class Live2DElement(
 
         filter?.apply(data)
     }
+
+    override fun renderWithClip(data: GlobalData, texture: TextureTarget) {
+
+    }
+
     override fun renderWithoutFilter(data: GlobalData) {
         val f = filter
+        val a = color.w
+        color.w = 1f
         filter = null
         render(data)
         filter = f
+        color.w = a
     }
 }

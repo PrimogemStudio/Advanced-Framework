@@ -22,6 +22,16 @@ object Shaders {
     )
 
     @JvmField
+    val ROUNDED_RECT_CLIP = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rounded_rect_clip", DefaultVertexFormat.POSITION_COLOR
+    )
+
+    @JvmField
+    val ROUNDED_RECT_TEX_CLIP = ShaderInstance(
+        Minecraft.getInstance().resourceManager, "rounded_rect_tex_clip", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP
+    )
+
+    @JvmField
     val POSITION_COLOR_TEX =
         VertexFormat.builder().add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR)
             .add("UV0", VertexFormatElement.UV0).build()

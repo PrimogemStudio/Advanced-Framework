@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.kui.elements
 
+import com.mojang.blaze3d.pipeline.TextureTarget
 import com.primogemstudio.advancedfmk.fontengine.BufferManager.renderText
 import com.primogemstudio.advancedfmk.fontengine.BufferManager.updateBufferColor
 import com.primogemstudio.advancedfmk.fontengine.ComposedFont
@@ -55,5 +56,9 @@ class TextElement(
 
     override fun renderWithoutFilter(data: GlobalData) {
 
+    }
+
+    override fun renderWithClip(data: GlobalData, texture: TextureTarget) {
+        render(data)
     }
 }
