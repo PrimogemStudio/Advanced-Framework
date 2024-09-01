@@ -45,8 +45,8 @@ class TextElement(
                 vertexConsumer,
                 poseStack,
                 text,
-                pos.x.toInt(),
-                pos.y.toInt(),
+                pos.x,
+                pos.y,
                 textsize,
                 color,
                 maxLineWidth
@@ -76,8 +76,8 @@ class TextElement(
                 vertexConsumer,
                 poseStack,
                 text,
-                pos.x.toInt(),
-                pos.y.toInt(),
+                pos.x,
+                pos.y,
                 textsize,
                 color,
                 maxLineWidth

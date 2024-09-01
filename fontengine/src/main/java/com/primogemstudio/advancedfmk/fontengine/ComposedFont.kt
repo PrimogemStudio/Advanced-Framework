@@ -88,15 +88,15 @@ class ComposedFont {
         buff: VertexConsumer,
         poseStack: PoseStack,
         text: String,
-        x: Int,
-        y: Int,
+        x: Float,
+        y: Float,
         point: Int,
         maxLineWidth: Int,
         textColor: Vector4f
     ) {
         val rect = getTextBorder(text, point, maxLineWidth)
         drawText(
-            buff, poseStack, text, (x - rect.x / 2).toInt(), (y - rect.y / 2).toInt(), point, textColor, maxLineWidth
+            buff, poseStack, text, x - rect.x / 2, y - rect.y / 2, point, textColor, maxLineWidth
         )
     }
 
@@ -104,8 +104,8 @@ class ComposedFont {
         buff: VertexConsumer,
         poseStack: PoseStack,
         text: String,
-        x: Int,
-        y: Int,
+        x: Float,
+        y: Float,
         point: Int,
         textColor: Vector4f,
         maxLineWidth: Int = -1

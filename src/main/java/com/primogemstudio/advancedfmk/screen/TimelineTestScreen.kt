@@ -13,10 +13,14 @@ import com.primogemstudio.advancedfmk.kui.yaml.jvm.YamlCompiler
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 
 class TimelineTestScreen: Screen(Component.literal("Test!")) {
     companion object {
+        val AVATAR1 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/jack253-png.png")
+        val AVATAR2 = ResourceLocation.parse("advancedfmk:ui/textures/avatars/hackermdch.png")
+
         var elem = YamlCompiler(
             YamlParser.parse(
                 String(
@@ -31,26 +35,80 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 )
             )).build(GroupElement::class)
 
-        fun setPos(yOffset: Float): Float {
-            var t: Vector2f?
-            target.subElement("rect_avatar", RectangleElement::class).apply {
-                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset)
+        fun setPos(yOffset: Float, name: String, content: String, self: Boolean = true): Float {
+            if (self) {
+                var t: Vector2f?
+                target.subElement("rect_avatar", RectangleElement::class).apply {
+                    pos.set(
+                        guiScaledWidth / 2f - guiScaledWidth / 4.4f + 6,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset
+                    )
+                    texturePath = AVATAR1
+                }
+                target.subElement("text_name", TextElement::class).apply {
+                    text = name
+                    pos.set(
+                        guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset
+                    )
+                }
+                target.subElement("text_main", TextElement::class).apply {
+                    text =
+                        content
+                    maxLineWidth = (guiScaledWidth / 2.2f).toInt() - 30 - 12 * 2
+                    t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
+                    pos.set(
+                        guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6 + 6,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 2
+                    )
+                }
+                target.subElement("rect_background", RectangleElement::class).apply {
+                    pos.set(
+                        guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset
+                    )
+                    size.set(t)
+                    color.set(1f, 1f, 1f, 1f)
+                }
+                return t!!.y + 12 + 8
             }
-            target.subElement("text_name", TextElement::class).apply {
-                text = "Coder2"
-                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset)
+            else {
+                var t: Vector2f?
+                target.subElement("rect_avatar", RectangleElement::class).apply {
+                    pos.set(
+                        guiScaledWidth / 2f + guiScaledWidth / 4.4f - 6 - 16,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset
+                    )
+                    texturePath = AVATAR2
+                }
+                target.subElement("text_name", TextElement::class).apply {
+                    text = name
+                    val r = TextElement.FONT.getTextBorder(text, textsize)
+                    pos.set(
+                        guiScaledWidth / 2f + guiScaledWidth / 4.4f - 16 - 2 * 6 - r.x,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + yOffset
+                    )
+                }
+                target.subElement("text_main", TextElement::class).apply {
+                    text =
+                        content
+                    maxLineWidth = (guiScaledWidth / 2.2f).toInt() - 30 - 12 * 2
+                    t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
+                    pos.set(
+                        guiScaledWidth / 2f + guiScaledWidth / 4.4f - 16 - 2 * 6 + 6 - t!!.x,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 2
+                    )
+                }
+                target.subElement("rect_background", RectangleElement::class).apply {
+                    pos.set(
+                        guiScaledWidth / 2f + guiScaledWidth / 4.4f - 16 - 2 * 6 - t!!.x,
+                        guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset
+                    )
+                    size.set(t)
+                    color.set(1f, 0.8f, 0.05f, 1f)
+                }
+                return t!!.y + 12 + 8
             }
-            target.subElement("text_main", TextElement::class).apply {
-                text = "这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！"
-                maxLineWidth = (guiScaledWidth / 2.2f).toInt() - 30 - 12 * 2
-                t = TextElement.FONT.getTextBorder(text, textsize, maxLineWidth).add(12f, 8f)
-                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6 + 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset + 4)
-            }
-            target.subElement("rect_background", RectangleElement::class).apply {
-                pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 16 + 2 * 6, guiScaledHeight / 2f - guiScaledHeight / 2.6f - guiScaledHeight / 10f + 30 + 12 + yOffset)
-                size.set(t)
-            }
-            return t!!.y + 12 + 12
         }
 
         private val animations: List<AnimationEvent<Float>> = listOf(
@@ -93,10 +151,13 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         elem.render(GlobalData.genData(guiGraphics, partialTick))
         target.clip = elem.subElement("rect_panel_clip")
-        var base = -40f
-        base += setPos(base)
+        // var base: Float = Linear.gen(System.currentTimeMillis().toDouble() % 2000 / 2000).toFloat() * -40f
+        var base = 4f
+        base += setPos(base, "Coder2", "Test!")
         target.render(GlobalData.genData(guiGraphics, partialTick))
-        base += setPos(base)
+        base += setPos(base, "hackermdch", "这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！这是一行长文本！", false)
+        target.render(GlobalData.genData(guiGraphics, partialTick))
+        base += setPos(base, "Coder2", "Test!")
         target.render(GlobalData.genData(guiGraphics, partialTick))
     }
 }
