@@ -1,6 +1,8 @@
 package com.primogemstudio.advancedfmk.kui.elements
 
 import com.mojang.blaze3d.pipeline.TextureTarget
+import com.mojang.blaze3d.platform.GlConst.*
+import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -9,7 +11,6 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import com.primogemstudio.advancedfmk.kui.GlobalData
 import com.primogemstudio.advancedfmk.kui.Shaders
 import com.primogemstudio.advancedfmk.kui.pipe.FilterBase
-import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2f
 import org.joml.Vector4f

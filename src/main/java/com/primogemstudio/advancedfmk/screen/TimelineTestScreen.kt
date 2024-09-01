@@ -157,5 +157,9 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
         target.render(GlobalData.genData(guiGraphics, partialTick))
         base += setPos(base, "hackermdch", "不像（", false)
         target.render(GlobalData.genData(guiGraphics, partialTick))
+        base += setPos(base, "hackermdch", "正常玩家会来挑刺（", false)
+        target.render(GlobalData.genData(guiGraphics, partialTick))
+        base += setPos(base, "hackermdch", "相似度只有 40％（", false)
+        target.render(GlobalData.genData(guiGraphics, partialTick))
     }
 }
