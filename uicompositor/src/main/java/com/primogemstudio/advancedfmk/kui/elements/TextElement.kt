@@ -59,6 +59,32 @@ class TextElement(
     }
 
     override fun renderWithClip(data: GlobalData, texture: TextureTarget) {
-        render(data)
+        val c = (color.x * 255).toInt().and(0xFF).shl(16) +
+                (color.y * 255).toInt().and(0xFF).shl(8) +
+                (color.z * 255).toInt().and(0xFF)
+        if (vanilla) {
+            data.graphics.drawString(
+                Minecraft.getInstance().font,
+                text,
+                pos.x.toInt(),
+                pos.y.toInt(),
+                c + (color.w * 255).toInt().and(0xFF).shl(24)
+            )
+            return
+        }
+
+        updateBufferColor(c)
+        renderText({ vertexConsumer, poseStack ->
+            FONT.drawText(
+                vertexConsumer,
+                poseStack,
+                text,
+                pos.x.toInt(),
+                pos.y.toInt(),
+                textsize,
+                color,
+                maxLineWidth
+            )
+        }, data.graphics, data.tick, texture)
     }
 }

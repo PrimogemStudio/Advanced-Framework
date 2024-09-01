@@ -62,13 +62,16 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                     size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f)
                     pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height)
                 }
-                elem.subElement("text_name", TextElement::class).apply {
-                    text = "Coder2"
-                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 5)
-                }
-                elem.subElement("text_sign", TextElement::class).apply {
-                    text = "Advanced Framework 主开发者"
-                    pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 17.5f)
+                elem.subElement("texts", GroupElement::class).apply {
+                    subElement("text_name", TextElement::class).apply {
+                        text = "Coder2"
+                        pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 5)
+                    }
+                    subElement("text_sign", TextElement::class).apply {
+                        text = "Advanced Framework 主开发者"
+                        pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f + 15, height + 17.5f)
+                    }
+                    clip = elem.subElement("rect_panel", RectangleElement::class)
                 }
                 elem.subElement("name_split", GeometryLineElement::class).apply {
                     vertices[0].set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height + 30)

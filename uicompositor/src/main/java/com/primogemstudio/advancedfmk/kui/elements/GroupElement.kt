@@ -9,7 +9,7 @@ import org.joml.Vector2f
 
 class GroupElement(override var id: String, subElements: List<UIElement>) : RealElement(id, Vector2f(0f)) {
     private val cacheMap = mutableMapOf<String, RealElement>()
-    var clip: GroupElement? = null
+    var clip: UIElement? = null
     private var subElements: List<UIElement> = subElements
         set(v) {
             cacheMap.clear()

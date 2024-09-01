@@ -22,18 +22,21 @@ root:
       color: [.8, .8, .8, 1]
       points: [ [ 0, 0 ], [ 0, 0 ] ]
 
-    text_name:
-      type: text
-      text: ""
-      pos: [0, 0]
-      color: [0, 0, 0, 1]
-      textsize: 10
-      vanilla: false
+    texts:
+      type: group
+      components:
+        text_name:
+          type: text
+          text: ""
+          pos: [ 0, 0 ]
+          color: [ 0, 0, 0, 1 ]
+          textsize: 10
+          vanilla: false
 
-    text_sign:
-      type: text
-      text: ""
-      pos: [ 0, 0 ]
-      color: [ .3, .3, .3, 1 ]
-      textsize: 7
-      vanilla: false
+        text_sign:
+          type: text
+          text: ""
+          pos: [ 0, 0 ]
+          color: [ .3, .3, .3, 1 ]
+          textsize: 7
+          vanilla: false

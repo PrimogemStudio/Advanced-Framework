@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer
 
 object BufferManager {
     val fontInternal = TextureTarget(1, 1, true, Util.getPlatform() == OS.OSX).apply { setClearColor(1f, 1f, 1f, 0f) }
+    val defaultClip = TextureTarget(1, 1, true, Util.getPlatform() == OS.OSX).apply { setClearColor(1f, 1f, 1f, 1f); clear(false) }
     var sizew = 0
     var sizeh = 0
 
@@ -24,7 +25,7 @@ object BufferManager {
         )
     }
 
-    inline fun renderText(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float) {
+    inline fun renderText(call: (VertexConsumer, PoseStack) -> Unit, graphics: GuiGraphics, partialTick: Float, clip: TextureTarget = defaultClip) {
         fontInternal.clear(Util.getPlatform() === OS.OSX)
         if (sizew != Minecraft.getInstance().window.width || sizeh != Minecraft.getInstance().window.height) {
             sizew = Minecraft.getInstance().window.width
@@ -50,9 +51,8 @@ object BufferManager {
         RenderSystem.enableCull()
         RenderSystem.disableBlend()
 
-
-
         TEXT_BLUR.setSamplerUniform("BaseLayer", fontInternal)
+        TEXT_BLUR.setSamplerUniform("ClipSampler", clip)
         TEXT_BLUR.render(partialTick)
     }
 }
