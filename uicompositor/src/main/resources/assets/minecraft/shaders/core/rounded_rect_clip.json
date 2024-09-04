@@ -109,6 +109,14 @@
         300.0,
         300.0
       ]
+    },
+    {
+      "name": "RadiusSize",
+      "type": "float",
+      "count": 4,
+      "values": [
+        1, 1, 1, 1
+      ]
     }
   ]
 }
