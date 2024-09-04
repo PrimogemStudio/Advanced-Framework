@@ -24,6 +24,7 @@ class RectangleElement(
     var smoothedge: Float,
     var textureUV: Vector4f,
     var texturePath: ResourceLocation? = null,
+    var radiusSize: Vector4f? = null,
     var filter: FilterBase? = null
 ) : RealElement(id, pos), FilteredElement {
     override fun filter(): FilterBase? = filter
@@ -44,9 +45,9 @@ class RectangleElement(
         if (shader == Shaders.ROUNDED_RECT) {
             shader.getUniform("RadiusSize")!!.set(
                 Random.nextFloat(),
-                Random.nextFloat(),
-                Random.nextFloat(),
-                Random.nextFloat()
+                Random.nextFloat() * 0,
+                Random.nextFloat() * 0,
+                Random.nextFloat() * 0
             )
         }
 

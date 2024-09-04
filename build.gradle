@@ -12,6 +12,8 @@ allprojects {
     tasks.withType(Javadoc).configureEach { enabled = false }
 
     repositories {
+        maven { url = 'https://raw.githubusercontent.com/kotlin-graphics/mary/master' }
+        maven { url = 'https://www.jitpack.io' }
         mavenCentral() {
             content {
                 includeGroup "io.github.primogemstudio"
@@ -105,6 +107,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
     include(implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}"))
+    ext.imguiVersion = "1.89.7-1"
+    ["gl", "glfw", "core"].each {
+        implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
+            exclude group: "org.lwjgl"
+        }
+    }
 }
 
 tasks.test {

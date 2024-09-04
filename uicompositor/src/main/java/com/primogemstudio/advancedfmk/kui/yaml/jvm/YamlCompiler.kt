@@ -283,12 +283,20 @@ class YamlCompiler(val root: UIRoot): ClassLoader(ClassLoaderUtil.getClassLoader
             )
         } else mn.aconst_null()
 
+        mn.new(sig(Vector4f::class))
+        mn.dup()
+        mn.ldc(1f)
+        mn.ldc(1f)
+        mn.ldc(1f)
+        mn.ldc(1f)
+        mn.invokespecial(sig(Vector4f::class), INIT, sigf(Nothing::class, Float::class, Float::class, Float::class, Float::class))
+
         buildFilter(mn, c.filter)
 
         mn.invokespecial(
             sig(RectangleElement::class),
             INIT,
-            sigf(Nothing::class, String::class, Vector2f::class, Vector2f::class, Vector4f::class, Float::class, Float::class, Float::class, Vector4f::class, ResourceLocation::class, FilterBase::class)
+            sigf(Nothing::class, String::class, Vector2f::class, Vector2f::class, Vector4f::class, Float::class, Float::class, Float::class, Vector4f::class, ResourceLocation::class, Vector4f::class, FilterBase::class)
         )
     }
 
