@@ -3,16 +3,15 @@ package com.primogemstudio.advancedfmk.screen
 import glm_.vec2.Vec2
 import imgui.Cond
 import imgui.ImGui
-import imgui.api.slider
 
 object ImguiDebug {
-    private var Radius = 0
+    var RadiusSize = floatArrayOf(1f, 1f, 1f, 1f)
     fun init() { ImGui.io.fonts.addFontFromFileTTF("/usr/share/fonts/StarRailFont.ttf", 14f)!! }
 
     fun render(imgui: ImGui) {
-        imgui.begin("Minecraft")
+        imgui.begin("Advvanced Framework")
         imgui.setWindowSize(Vec2(320, 240), Cond.Once)
-        imgui.text("Hello Minecraft!")
-        imgui.slider("Radius", ::Radius, 1, 100)
+        imgui.text("UI Adjustment")
+        imgui.slider4("Radius Size", RadiusSize, 0f, 1f)
     }
 }

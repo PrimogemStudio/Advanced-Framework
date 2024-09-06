@@ -119,6 +119,7 @@ class TimelineTestScreen: Screen(Component.literal("Test!")) {
                 elem.subElement("rect_panel", RectangleElement::class).apply {
                     size.set(guiScaledWidth / 2.2f, guiScaledHeight / 1.3f + guiScaledHeight / 10f)
                     pos.set(guiScaledWidth / 2f - guiScaledWidth / 4.4f, height)
+                    radiusSize?.apply { set(ImguiDebug.RadiusSize) }
                 }
                 elem.subElement("rect_panel_clip", RectangleElement::class).apply {
                     size.set(guiScaledWidth / 2.2f - 2, guiScaledHeight / 1.3f + guiScaledHeight / 10f - 30 - 2 - 2)

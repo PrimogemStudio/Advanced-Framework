@@ -41,15 +41,7 @@ class RectangleElement(
         shader.getUniform("Thickness")!!.set(thickness)
         shader.getUniform("SmoothEdge")!!.set(smoothedge)
         shader.getUniform("Size")!!.set(size.x, size.y)
-
-        if (shader == Shaders.ROUNDED_RECT) {
-            shader.getUniform("RadiusSize")!!.set(
-                Random.nextFloat(),
-                Random.nextFloat() * 0,
-                Random.nextFloat() * 0,
-                Random.nextFloat() * 0
-            )
-        }
+        if (radiusSize != null) shader.getUniform("RadiusSize")!!.set(radiusSize!!)
 
         val buff = Tesselator.getInstance().begin(
             VertexFormat.Mode.QUADS,
