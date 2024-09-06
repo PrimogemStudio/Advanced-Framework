@@ -15,6 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class WindowMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
-        Live2DNative.init(GLFW.Functions.GetProcAddress, GLFW.Functions.GetTime);
+        // Live2DNative.init(GLFW.Functions.GetProcAddress, GLFW.Functions.GetTime);
     }
 }

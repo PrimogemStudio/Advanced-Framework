@@ -107,12 +107,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
     include(implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}"))
-    ext.imguiVersion = "1.89.7-1"
-    ["gl", "glfw", "core"].each {
-        implementation("kotlin.graphics:imgui-$it:$imguiVersion") {
-            exclude group: "org.lwjgl"
-        }
-    }
+
+    implementation("kotlin.graphics:imgui-gl:1.89.7-1")
+    implementation("kotlin.graphics:imgui-glfw:1.89.7-1")
+    implementation("kotlin.graphics:imgui-core:1.89.7-1")
 }
 
 tasks.test {

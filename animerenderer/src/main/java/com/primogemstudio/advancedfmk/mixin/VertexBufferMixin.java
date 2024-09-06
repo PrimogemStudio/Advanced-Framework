@@ -29,7 +29,7 @@ public abstract class VertexBufferMixin {
         return ((DrawStateExt) (Object) state).getPMXModel();
     }
 
-    @Redirect(method = "upload", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/MeshData$DrawState;indexCount()I"))
+    /*@Redirect(method = "upload", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/MeshData$DrawState;indexCount()I"))
     private int indexCount(MeshData.DrawState state) {
         var model = getModel(state);
         return model != null ? model.indexCount : state.indexCount();
@@ -39,7 +39,7 @@ public abstract class VertexBufferMixin {
     private VertexFormat.IndexType indexType(MeshData.DrawState state) {
         var model = getModel(state);
         return model != null ? VertexFormat.IndexType.INT : state.indexType();
-    }
+    }*/
 
     @Redirect(method = "upload", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;uploadIndexBuffer(Lcom/mojang/blaze3d/vertex/MeshData$DrawState;Ljava/nio/ByteBuffer;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;"))
     private RenderSystem.AutoStorageIndexBuffer uploadIndexBuffer(VertexBuffer instance, MeshData.DrawState state, ByteBuffer buffer) {
