@@ -1,9 +1,11 @@
 package com.primogemstudio.advancedfmk.client
 
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint
+import org.lwjgl.system.Configuration
+import org.lwjgl.util.freetype.FreeType
 
-class AdvancedFrameworkFontEngineEarlyInit: PreLaunchEntrypoint {
+class AdvancedFrameworkFontEngineEarlyInit : PreLaunchEntrypoint {
     override fun onPreLaunch() {
-        System.setProperty("org.lwjgl.harfbuzz.libname", "freetype")
+        Configuration.HARFBUZZ_LIBRARY_NAME.set(FreeType.getLibrary());
     }
 }
