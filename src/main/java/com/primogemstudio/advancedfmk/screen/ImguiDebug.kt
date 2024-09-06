@@ -18,7 +18,7 @@ object ImguiDebug {
     }
 
     fun render(imgui: ImGui) {
-        imgui.begin("Advvanced Framework")
+        imgui.begin("Advanced Framework")
         imgui.setWindowSize(Vec2(320, 240), Cond.Once)
         imgui.text("UI Adjustment")
         imgui.slider4("Radius Size", RadiusSize, 0f, 1f)
