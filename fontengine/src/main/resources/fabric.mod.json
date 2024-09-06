@@ -40,5 +40,8 @@
       ],
       "parent": "advancedfmk"
     }
+  },
+  "breaks": {
+    "vulkanmod": "*"
   }
 }
