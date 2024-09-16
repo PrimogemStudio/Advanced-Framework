@@ -1,97 +1,79 @@
 package com.primogemstudio.advancedfmk.tests
 
-import com.primogemstudio.advancedfmk.bin.nbt.NBTInputTextStream
-import com.primogemstudio.advancedfmk.simulator.starrailike.SimulatedUniverse
-import com.primogemstudio.advancedfmk.simulator.starrailike.file.Compressions
-import com.primogemstudio.advancedfmk.simulator.starrailike.file.SimulateResultBinaryFileOutputStream
-import com.primogemstudio.advancedfmk.simulator.starrailike.objects.CharacterObjectImpl
-import com.primogemstudio.advancedfmk.simulator.starrailike.objects.EnemyObjectImpl
-import com.primogemstudio.advancedfmk.simulator.starrailike.objects.constraints.ObjectWeakness.*
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import org.junit.jupiter.api.*
-import java.io.File
-import java.io.PrintStream
-import java.lang.Thread.sleep
-import java.nio.file.Files
-import java.nio.file.Path
-import java.util.zip.GZIPInputStream
-import java.util.zip.InflaterInputStream
+import com.primogemstudio.advancedfmk.flutter.BoolCallback
+import com.primogemstudio.advancedfmk.flutter.FlutterNative
+import com.primogemstudio.advancedfmk.flutter.PointerPhase.*
+import com.primogemstudio.advancedfmk.flutter.RendererConfig
+import com.primogemstudio.advancedfmk.flutter.UIntCallback
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFW.Functions.*
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-internal class SimulatorTest {
-    @OptIn(DelicateCoroutinesApi::class)
-    internal fun binOutput(c: Compressions, target: String) {
-        val uni = SimulatedUniverse(
-            listOf(
-                CharacterObjectImpl("Test character 1", 100f, 25f, 95u, 0.05f, 0.5f, Physical),
-                CharacterObjectImpl("Test character 2", 200f, 15f, 105u, 0.05f, 0.5f, Physical),
-                CharacterObjectImpl("Test character 3", 50f, 50f, 105u, 0.05f, 0.5f, Quantum),
-                CharacterObjectImpl("Test character 4", 150f, 20f, 125u, 0.05f, 0.5f, Imaginary)
-            ),
-            listOf(
-                EnemyObjectImpl("Test enemy 1", 50f * 1.5f, 20f * 1.5f, 60u, mutableListOf(Physical), 2),
-                EnemyObjectImpl("Test enemy 2", 75f * 1.5f, 20f * 1.5f, 65u, mutableListOf(Ice), 2)
-            ),
-            5, 3
-        )
-        val output = SimulateResultBinaryFileOutputStream(Files.newOutputStream(Path.of(target)), c)
-        var ended = false
-        GlobalScope.async {
-            while (!ended) {
-                try { sleep(15) } catch (_: InterruptedException) { break }
-                output.recStatus()
+var flutterInstance: Long = 0
+
+fun main() {
+    glfwInit()
+    FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+    val window = glfwCreateWindow(800, 600, "Flutter", 0, 0)
+    val config = RendererConfig()
+    config.makeCurrent = BoolCallback.create {
+        glfwMakeContextCurrent(window)
+        true
+    }
+    config.present = BoolCallback.create {
+        glfwSwapBuffers(window)
+        true
+    }
+    config.clearCurrent = BoolCallback.create {
+        glfwMakeContextCurrent(0)
+        true
+    }
+    config.fbo = UIntCallback.create { 0 }
+    flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app", config)
+    val width = intArrayOf(0)
+    val height = intArrayOf(0)
+    glfwGetFramebufferSize(window, width, height)
+    FlutterNative.setPixelRatio(flutterInstance, width[0].toDouble() / 800)
+    FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
+
+    glfwSetWindowSizeCallback(window) { _, w, h ->
+        FlutterNative.sendMetricsEvent(flutterInstance, w, h, 0)
+    }
+    glfwSetKeyCallback(window) { _, key, scancode, action, mods ->
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, true)
+        }
+        FlutterNative.sendKeyEvent(flutterInstance, window, key, scancode, action, mods);
+    }
+    glfwSetCharCallback(window) { _, codepoint ->
+        FlutterNative.sendCharEvent(flutterInstance, window, codepoint)
+    }
+    glfwSetMouseButtonCallback(window) { _, button, action, _ ->
+        if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+            val x = doubleArrayOf(0.0)
+            val y = doubleArrayOf(0.0)
+            glfwGetCursorPos(window, x, y)
+            FlutterNative.sendPosEvent(flutterInstance, kDown, x[0], y[0], 0)
+            glfwSetCursorPosCallback(window) { _, x1, y1 ->
+                FlutterNative.sendPosEvent(flutterInstance, kMove, x1, y1, 0)
             }
-        }.onAwait
-
-        output.writeRes(uni)
-        ended = true
-        output.recStatus()
-        output.close()
-    }
-
-    @Order(0)
-    @Test
-    fun binOutputGzipTest() {
-        binOutput(Compressions.GZIP, "tests/result.nbt")
-    }
-    @Order(0)
-    @Test
-    fun binOutputDeflaterTest() {
-        binOutput(Compressions.DEFLATER, "tests/result_def.nbt")
-    }
-
-    @Order(1)
-    @Test
-    fun binTranslateGzip() {
-        val o = PrintStream(Files.newOutputStream(Path.of("tests/result.txt")))
-        val `in` = NBTInputTextStream(GZIPInputStream(Files.newInputStream(Path.of("tests/result.nbt"))), o)
-        `in`.readCompoundTag()
-        `in`.close()
-    }
-
-    @Order(1)
-    @Test
-    fun binTranslateInflater() {
-        val o = PrintStream(Files.newOutputStream(Path.of("tests/result_def.txt")))
-        val `in` = NBTInputTextStream(InflaterInputStream(Files.newInputStream(Path.of("tests/result_def.nbt"))), o)
-        `in`.readCompoundTag()
-        `in`.close()
-    }
-
-    companion object {
-        @BeforeAll
-        @JvmStatic
-        internal fun configureLogging() {
-            System.setProperty("log4j.configurationFile", "configs/log4j_conf.xml")
         }
 
-        @BeforeAll
-        @JvmStatic
-        internal fun mkTestDir() {
-            File("tests").deleteRecursively()
-            File("tests").mkdirs()
+        if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
+            val x = doubleArrayOf(0.0)
+            val y = doubleArrayOf(0.0)
+            glfwGetCursorPos(window, x, y)
+            FlutterNative.sendPosEvent(flutterInstance, kUp, x[0], y[0], 0)
+            glfwSetCursorPosCallback(window, null)
         }
     }
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents()
+    }
+
+    FlutterNative.destroyInstance(flutterInstance)
+    glfwDestroyWindow(window)
+    glfwTerminate()
 }
