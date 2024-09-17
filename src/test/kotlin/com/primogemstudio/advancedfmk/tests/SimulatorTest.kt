@@ -4,6 +4,7 @@ import com.primogemstudio.advancedfmk.flutter.*
 import com.primogemstudio.advancedfmk.flutter.PointerPhase.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFW.Functions.*
+import org.lwjgl.system.MemoryUtil.memUTF8
 
 var flutterInstance: Long = 0
 
@@ -18,7 +19,7 @@ fun main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
     val window = glfwCreateWindow(800, 600, "Flutter", 0, 0)
-    glfwMakeContextCurrent(window)
+    // glfwMakeContextCurrent(window)
     val config = RendererConfig()
     config.makeCurrent = BoolCallback.create {
         glfwMakeContextCurrent(window)
@@ -34,9 +35,11 @@ fun main() {
     }
     config.fbo = UIntCallback.create { 0 }
     config.resolver = ProcResolver.create { _, name ->
-        nglfwGetProcAddress(name)
+        val cc = if (memUTF8(name) == "eglGetCurrentDisplay") 0x0 else nglfwGetProcAddress(name)
+        println("${memUTF8(name)} -> $cc")
+        cc
     }
-    flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app", config)
+    flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app", config)
     val width = intArrayOf(0)
     val height = intArrayOf(0)
     glfwGetFramebufferSize(window, width, height)
