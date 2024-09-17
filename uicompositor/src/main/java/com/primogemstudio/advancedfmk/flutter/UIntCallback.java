@@ -12,7 +12,7 @@ public abstract class UIntCallback extends Callback implements UIntCallbackI {
     }
 
     public static UIntCallback create(UIntCallbackI callback) {
-        return callback instanceof UIntCallback bc ? bc : new Container(callback.address(), callback);
+        return callback instanceof UIntCallback uc ? uc : new Container(callback.address(), callback);
     }
 
     private static class Container extends UIntCallback {

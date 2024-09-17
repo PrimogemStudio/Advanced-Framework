@@ -1,22 +1,24 @@
 package com.primogemstudio.advancedfmk.tests
 
-import com.primogemstudio.advancedfmk.flutter.BoolCallback
-import com.primogemstudio.advancedfmk.flutter.FlutterNative
+import com.primogemstudio.advancedfmk.flutter.*
 import com.primogemstudio.advancedfmk.flutter.PointerPhase.*
-import com.primogemstudio.advancedfmk.flutter.RendererConfig
-import com.primogemstudio.advancedfmk.flutter.UIntCallback
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFW.Functions.*
 
 var flutterInstance: Long = 0
 
+fun get(): Long {
+    return flutterInstance
+}
+
 fun main() {
     glfwInit()
-    FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress)
+    FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
     val window = glfwCreateWindow(800, 600, "Flutter", 0, 0)
+    glfwMakeContextCurrent(window)
     val config = RendererConfig()
     config.makeCurrent = BoolCallback.create {
         glfwMakeContextCurrent(window)
@@ -31,6 +33,9 @@ fun main() {
         true
     }
     config.fbo = UIntCallback.create { 0 }
+    config.resolver = ProcResolver.create { i, name ->
+        nglfwGetProcAddress(name)
+    }
     flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app", config)
     val width = intArrayOf(0)
     val height = intArrayOf(0)

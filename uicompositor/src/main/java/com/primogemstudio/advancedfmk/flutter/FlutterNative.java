@@ -7,7 +7,7 @@ public final class FlutterNative {
         System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
     }
 
-    public static native void init(long f1, long f2, long f3, long f4);
+    public static native void init(long f1, long f2, long f3);
 
     public static native long createInstance(String assets, RendererConfig config);
 
