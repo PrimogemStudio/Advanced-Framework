@@ -33,7 +33,7 @@ fun main() {
         true
     }
     config.fbo = UIntCallback.create { 0 }
-    config.resolver = ProcResolver.create { i, name ->
+    config.resolver = ProcResolver.create { _, name ->
         nglfwGetProcAddress(name)
     }
     flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app", config)
