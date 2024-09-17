@@ -4,7 +4,6 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "ImguiHook",
     "PackEntryMixin",
     "TitleScreenMixin"
   ],

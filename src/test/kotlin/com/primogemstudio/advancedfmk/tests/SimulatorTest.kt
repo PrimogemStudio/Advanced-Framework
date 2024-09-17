@@ -19,27 +19,20 @@ fun main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
     val window = glfwCreateWindow(800, 600, "Flutter", 0, 0)
-    // glfwMakeContextCurrent(window)
+    glfwMakeContextCurrent(window)
     val config = RendererConfig()
-    config.makeCurrent = BoolCallback.create {
-        glfwMakeContextCurrent(window)
-        true
-    }
+    config.makeCurrent = BoolCallback.create { true }
     config.present = BoolCallback.create {
         glfwSwapBuffers(window)
         true
     }
-    config.clearCurrent = BoolCallback.create {
-        glfwMakeContextCurrent(0)
-        true
-    }
+    config.clearCurrent = BoolCallback.create { true }
     config.fbo = UIntCallback.create { 0 }
     config.resolver = ProcResolver.create { _, name ->
-        val cc = if (memUTF8(name) == "eglGetCurrentDisplay") 0x0 else nglfwGetProcAddress(name)
-        println("${memUTF8(name)} -> $cc")
-        cc
+        if (memUTF8(name) == "eglQueryString") 0
+        else nglfwGetProcAddress(name)
     }
-    flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app", config)
+    flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app", config)
     val width = intArrayOf(0)
     val height = intArrayOf(0)
     glfwGetFramebufferSize(window, width, height)
@@ -78,6 +71,7 @@ fun main() {
         }
     }
     while (!glfwWindowShouldClose(window)) {
+        FlutterNative.pollEvents(flutterInstance)
         glfwPollEvents()
     }
 
