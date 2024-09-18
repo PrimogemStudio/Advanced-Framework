@@ -4,7 +4,7 @@ import org.lwjgl.system.NativeType;
 
 public final class FlutterNative {
     static {
-        System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
+        System.load("D:/engine/src/out/host_release_unopt/flutter_minecraft.dll");
     }
 
     public static native void init(long f1, long f2, long f3);
