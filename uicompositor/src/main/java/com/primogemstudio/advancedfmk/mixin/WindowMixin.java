@@ -16,6 +16,6 @@ import static org.lwjgl.glfw.GLFW.Functions.*;
 public class WindowMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
-        FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString);
+        FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
     }
 }

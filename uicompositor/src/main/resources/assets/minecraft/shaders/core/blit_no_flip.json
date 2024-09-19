@@ -1,0 +1,11 @@
+{
+  "vertex": "blit_no_flip",
+  "fragment": "blit_screen",
+  "samplers": [
+    {
+      "name": "DiffuseSampler"
+    }
+  ],
+  "uniforms": [
+  ]
+}

@@ -4,12 +4,12 @@ import org.lwjgl.system.NativeType;
 
 public final class FlutterNative {
     static {
-        System.load("D:/engine/src/out/host_release_unopt/flutter_minecraft.dll");
+        System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
     }
 
-    public static native void init(long f1, long f2, long f3);
+    public static native void init(long f1, long f2, long f3, long f4);
 
-    public static native long createInstance(String assets, RendererConfig config);
+    public static native long createInstance(String assets);
 
     public static native void destroyInstance(long instance);
 
@@ -21,7 +21,7 @@ public final class FlutterNative {
 
     public static native void sendMetricsEvent(long instance, int width, int height, long view);
 
-    public static native void setPixelRatio(long instance, double value);
-
     public static native void pollEvents(long instance);
+
+    public static native int getTexture(long instance);
 }
