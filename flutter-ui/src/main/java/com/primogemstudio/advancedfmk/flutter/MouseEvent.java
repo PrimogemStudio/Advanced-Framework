@@ -12,4 +12,14 @@ public class MouseEvent {
         }
         return false;
     }
+
+    public static boolean onMouseMove(double x, double y) {
+        for (var i : instances) {
+            if (i.hitTest(x, y)) {
+                FlutterNative.sendPosEvent(i.handle, PointerPhase.kHover, x - i.rect.left, y - i.rect.top, 0);
+                return true;
+            }
+        }
+        return false;
+    }
 }

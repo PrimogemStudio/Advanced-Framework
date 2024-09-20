@@ -32,4 +32,10 @@ public class MouseHandlerMixin {
             if (MouseEvent.onMouseButton(PointerPhase.kUp, x[0], y[0])) ci.cancel();
         }
     }
+
+    @Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
+    private void onMouseMove(long window, double x, double y, CallbackInfo ci) {
+        if (window != minecraft.getWindow().getWindow()) return;
+        if (MouseEvent.onMouseMove(x, y)) ci.cancel();
+    }
 }
