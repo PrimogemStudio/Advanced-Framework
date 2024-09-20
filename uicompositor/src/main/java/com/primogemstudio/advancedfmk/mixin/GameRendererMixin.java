@@ -23,7 +23,7 @@ public class GameRendererMixin {
     private static void flipFrame(long l, CallbackInfo ci) {
         if (FlutterNative.inited) {
             if (flutterInstance == 0) {
-                flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app");
+                flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app");
                 FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
             }
             FlutterNative.pollEvents(flutterInstance);
@@ -37,6 +37,7 @@ public class GameRendererMixin {
         GlStateManager._disableDepthTest();
         GlStateManager._depthMask(false);
         GlStateManager._viewport(0, 0, width, height);
+        GlStateManager._enableBlend();
         var shader = Shaders.BLIT_NO_FLIP;
         shader.setSampler("DiffuseSampler", FlutterNative.getTexture(flutterInstance));
         shader.apply();

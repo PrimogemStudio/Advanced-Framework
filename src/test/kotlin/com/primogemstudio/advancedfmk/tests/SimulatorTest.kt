@@ -115,9 +115,12 @@ fun main() {
     GL.createCapabilities()
     initResources()
     createShader()
-    flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app")
+    flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app")
     FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
 
+    glfwSetWindowSizeCallback(window) { _, w, h ->
+        FlutterNative.sendMetricsEvent(flutterInstance, w, h, 0)
+    }
     glfwSetKeyCallback(window) { _, key, scancode, action, mods ->
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true)

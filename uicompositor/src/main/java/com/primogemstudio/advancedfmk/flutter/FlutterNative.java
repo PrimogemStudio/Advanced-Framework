@@ -2,13 +2,9 @@ package com.primogemstudio.advancedfmk.flutter;
 
 import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.glfw.GLFW.Functions.*;
-import static org.lwjgl.glfw.GLFW.Functions.GetProcAddress;
-
 public final class FlutterNative {
     static {
-        System.load("/home/coder2/flutter/engine_build/test/src/out/host_release/libflutter_minecraft.so");
-        FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
+        System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
     }
 
     public static boolean inited = false;
