@@ -71,8 +71,6 @@ dependencies {
     include(project(':animerenderer')).exclude(group: "net.fabricmc.fabric-api")
     implementation(project(path: ':uicompositor', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
     include(project(':uicompositor')).exclude(group: "net.fabricmc.fabric-api")
-    implementation(project(path: ':fontengine', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
-    include(project(':fontengine')).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     include(implementation(project(path: ':simulator')))
     include(implementation(project(path: ':binfiles')))
@@ -105,8 +103,6 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test:${project.kotlin_version}"
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-
-    include(implementation("org.lwjgl:lwjgl-harfbuzz:${project.lwjgl_version}"))
 }
 
 tasks.test {

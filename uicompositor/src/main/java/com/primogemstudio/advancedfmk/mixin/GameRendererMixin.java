@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.flutter.FlutterNative;
-import com.primogemstudio.advancedfmk.kui.Shaders;
+import com.primogemstudio.advancedfmk.flutter.Shaders;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +23,7 @@ public abstract class GameRendererMixin {
     private static void flipFrame(long l, CallbackInfo ci) {
         if (FlutterNative.inited) {
             if (flutterInstance == 0) {
-                flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app");
+                flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app");
                 FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
             }
             FlutterNative.pollEvents(flutterInstance);

@@ -115,7 +115,7 @@ fun main() {
     GL.createCapabilities()
     initResources()
     createShader()
-    flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app")
+    flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app")
     FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
 
     glfwSetWindowSizeCallback(window) { _, w, h ->
