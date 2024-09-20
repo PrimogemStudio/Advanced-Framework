@@ -4,8 +4,6 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "PackEntryMixin",
-    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

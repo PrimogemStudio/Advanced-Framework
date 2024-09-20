@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderSystem.class)
-public class GameRendererMixin {
+public abstract class GameRendererMixin {
     @Unique
     private static long flutterInstance = 0;
 
@@ -48,6 +48,7 @@ public class GameRendererMixin {
         buff.addVertex(0.0F, 1.0F, 0.0F);
         BufferUploader.draw(buff.buildOrThrow());
         shader.clear();
+        GlStateManager._disableBlend();
         GlStateManager._depthMask(true);
         GlStateManager._colorMask(true, true, true, true);
     }
