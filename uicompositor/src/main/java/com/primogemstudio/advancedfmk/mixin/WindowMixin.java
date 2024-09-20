@@ -14,10 +14,10 @@ import static org.lwjgl.glfw.GLFW.Functions.*;
 
 @Mixin(Window.class)
 public class WindowMixin {
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/ScreenManager;getMonitor(J)Lcom/mojang/blaze3d/platform/Monitor;"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
-        /*System.out.println("Test!");
-        System.out.println(GetProcAddress);
-        FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);*/
+        FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
+        FlutterNative.inited = true;
+
     }
 }

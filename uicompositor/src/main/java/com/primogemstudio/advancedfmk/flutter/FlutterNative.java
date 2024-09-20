@@ -11,6 +11,8 @@ public final class FlutterNative {
         FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
     }
 
+    public static boolean inited = false;
+
     public static native void init(long f1, long f2, long f3, long f4);
 
     public static native long createInstance(String assets);
