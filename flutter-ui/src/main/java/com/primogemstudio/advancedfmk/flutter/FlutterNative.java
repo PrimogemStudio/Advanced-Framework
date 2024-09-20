@@ -4,10 +4,8 @@ import org.lwjgl.system.NativeType;
 
 public final class FlutterNative {
     static {
-        System.load("/home/coder2/flutter/engine_build/test/src/out/host_release/libflutter_minecraft.so");
+        System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
     }
-
-    public static boolean inited = false;
 
     public static native void init(long f1, long f2, long f3, long f4);
 

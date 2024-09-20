@@ -15,20 +15,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderSystem.class)
-public abstract class GameRendererMixin {
+public abstract class RenderSystemMixin {
     @Unique
     private static long flutterInstance = 0;
 
     @Inject(method = "flipFrame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwSwapBuffers(J)V"), remap = false)
     private static void flipFrame(long l, CallbackInfo ci) {
-        if (FlutterNative.inited) {
-            if (flutterInstance == 0) {
-                flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app");
-                FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
-            }
-            FlutterNative.pollEvents(flutterInstance);
-            blit(800, 600);
+        if (flutterInstance == 0) {
+            flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app");
+            FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
         }
+        FlutterNative.pollEvents(flutterInstance);
+        blit(800, 600);
     }
 
     @Unique

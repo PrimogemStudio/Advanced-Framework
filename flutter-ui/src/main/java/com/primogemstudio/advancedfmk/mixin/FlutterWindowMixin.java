@@ -17,6 +17,5 @@ public class FlutterWindowMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
         FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
-        FlutterNative.inited = true;
     }
 }

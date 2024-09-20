@@ -9,6 +9,6 @@ pluginManagement {
 }
 include 'animerenderer'
 include 'commonutils'
-include 'uicompositor'
+include 'flutter-ui'
 include 'simulator'
 include 'binfiles'

@@ -5,8 +5,8 @@
   "modmenu.descriptionTranslation.advancedfmk_animerenderer": "Advanced Framework 的 MMD / Live2D 渲染器",
   "modmenu.nameTranslation.advancedfmk_commonutils": "commonutils (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_commonutils": "Advanced Framework 使用的工具函数",
-  "modmenu.nameTranslation.advancedfmk_uicompositor": "uicompositor (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_uicompositor": "Advanced Framework 的 UI 解析器 & 渲染器",
+  "modmenu.nameTranslation.advancedfmk_flutter": "flutter-ui (Advanced Framework)",
+  "modmenu.descriptionTranslation.advancedfmk_flutter": "Minecraft的Flutter嵌入器",
   "modmenu.nameTranslation.advancedfmk_neoui": "neoui (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_neoui": "Advanced Framework 经过重写的的 UI 解析器 & 渲染器",
   "modmenu.nameTranslation.advancedfmk_simulator": "simulator (Advanced Framework)",
@@ -14,6 +14,5 @@
   "modmenu.nameTranslation.advancedfmk_binfiles": "binfiles (Advanced Framework)",
   "modmenu.descriptionTranslation.advancedfmk_binfiles": "Advanced Framework 的二进制文件读写支持",
   "modmenu.nameTranslation.advancedfmk_fontengine": "fontengine (Advanced Framework)",
-  "modmenu.descriptionTranslation.advancedfmk_fontengine": "Advanced Framework 的字体引擎",
-  "item.advancedfmk.test_item": "原神",
+  "modmenu.descriptionTranslation.advancedfmk_fontengine": "Advanced Framework 的字体引擎"
 }

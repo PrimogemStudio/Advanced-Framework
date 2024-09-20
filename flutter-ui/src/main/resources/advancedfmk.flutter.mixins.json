@@ -4,9 +4,9 @@
   "package": "com.primogemstudio.advancedfmk.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "GameRendererMixin",
     "FlutterWindowMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "RenderSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

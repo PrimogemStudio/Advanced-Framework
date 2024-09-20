@@ -69,8 +69,8 @@ loom {
 dependencies {
     implementation(project(path: ':animerenderer', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
     include(project(':animerenderer')).exclude(group: "net.fabricmc.fabric-api")
-    implementation(project(path: ':uicompositor', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
-    include(project(':uicompositor')).exclude(group: "net.fabricmc.fabric-api")
+    implementation(project(path: ':flutter-ui', configuration: "namedElements")).exclude(group: "net.fabricmc.fabric-api")
+    include(project(':flutter-ui')).exclude(group: "net.fabricmc.fabric-api")
     include(implementation(project(path: ':commonutils')))
     include(implementation(project(path: ':simulator')))
     include(implementation(project(path: ':binfiles')))

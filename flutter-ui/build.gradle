@@ -63,11 +63,11 @@ processResources {
 }
 
 jar {
-    archiveBaseName = "advancedfmk-uicompositor"
+    archiveBaseName = "advancedfmk-flutter-ui"
 }
 
 remapJar {
-    archiveBaseName = "advancedfmk-uicompositor"
+    archiveBaseName = "advancedfmk-flutter-ui"
 }
 
 task sourcesJar(type: Jar) {
@@ -98,7 +98,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'advancedfmk-uicompositor'
+            artifactId = 'advancedfmk-flutter-ui'
             version = version
 
             from components.kotlin
@@ -106,8 +106,8 @@ publishing {
             artifact javadocJar
 
             pom {
-                name = 'uicompositor (Advanced Framework)'
-                description = 'UI parser & renderer for Advanced Framework'
+                name = 'flutter-ui (Advanced Framework)'
+                description = 'Flutter for Minecraft'
                 url = 'http://github.com/PrimogemStudio/Advanced-Framework'
                 licenses {
                     license {

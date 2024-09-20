@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "advancedfmk_uicompositor",
+  "id": "advancedfmk_flutter",
   "version": "${version}",
-  "name": "uicompositor (Advanced Framework)",
-  "description": "UI parser & renderer for Advanced Framework",
+  "name": "flutter-ui (Advanced Framework)",
+  "description": "Flutter for Minecraft",
   "authors": [
     "Jack253-png",
     "hackermdch"
@@ -15,15 +15,15 @@
     "homepage": "https://primogemstudio.github.io/advancedfmk-wiki"
   },
   "license": "GPLv3",
-  "icon": "assets/advancedfmk_uicompositor/icon.png",
+  "icon": "assets/advancedfmk_flutter/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkUICompositorClient"
+      "com.primogemstudio.advancedfmk.client.AdvancedFrameworkFlutterClient"
     ]
   },
   "mixins": [
-    "advancedfmk.uicompositor.mixins.json"
+    "advancedfmk.flutter.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16",
