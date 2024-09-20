@@ -13,11 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static org.lwjgl.glfw.GLFW.Functions.*;
 
 @Mixin(Window.class)
-public class WindowMixin {
+public class FlutterWindowMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
         FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
         FlutterNative.inited = true;
-
     }
 }

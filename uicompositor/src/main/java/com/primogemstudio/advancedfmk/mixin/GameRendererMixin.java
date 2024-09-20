@@ -23,7 +23,7 @@ public class GameRendererMixin {
     private static void flipFrame(long l, CallbackInfo ci) {
         if (FlutterNative.inited) {
             if (flutterInstance == 0) {
-                flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app");
+                flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app");
                 FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
             }
             FlutterNative.pollEvents(flutterInstance);
