@@ -114,23 +114,22 @@ fun main() {
     glfwSetCharCallback(window) { _, codepoint ->
         FlutterNative.sendCharEvent(flutterInstance, window, codepoint)
     }
+    glfwSetCursorPosCallback(window) { _, x1, y1 ->
+        println("$x1,$y1")
+        FlutterNative.sendPosEvent(flutterInstance, kHover, x1, y1, 0)
+    }
     glfwSetMouseButtonCallback(window) { _, button, action, _ ->
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
             val x = doubleArrayOf(0.0)
             val y = doubleArrayOf(0.0)
             glfwGetCursorPos(window, x, y)
             FlutterNative.sendPosEvent(flutterInstance, kDown, x[0], y[0], 0)
-            glfwSetCursorPosCallback(window) { _, x1, y1 ->
-                FlutterNative.sendPosEvent(flutterInstance, kMove, x1, y1, 0)
-            }
         }
-
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
             val x = doubleArrayOf(0.0)
             val y = doubleArrayOf(0.0)
             glfwGetCursorPos(window, x, y)
             FlutterNative.sendPosEvent(flutterInstance, kUp, x[0], y[0], 0)
-            glfwSetCursorPosCallback(window, null)
         }
     }
     while (!glfwWindowShouldClose(window)) {
