@@ -57,23 +57,26 @@ var IBO: Int = 0
 
 fun initResources() {
     val vertices = floatArrayOf(
-        0.8f,
-        0.8f,
+        1.0f,
+        1.0f,
         0.0f,
         1.0f,
         0.0f,
-        0.8f,
-        -0.8f,
+
+        1.0f,
+        -1.0f,
         0.0f,
         1.0f,
         1.0f,
-        -0.8f,
-        -0.8f,
+
+        -1.0f,
+        -1.0f,
         0.0f,
         0.0f,
         1.0f,
-        -0.8f,
-        0.8f,
+
+        -1.0f,
+        1.0f,
         0.0f,
         0.0f,
         0.0f
@@ -105,12 +108,14 @@ fun main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE)
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE)
     val window = glfwCreateWindow(800, 600, "Flutter", 0, 0)
     glfwMakeContextCurrent(window)
     GL.createCapabilities()
     initResources()
     createShader()
-    flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app")
+    flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app")
     FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
 
     glfwSetKeyCallback(window) { _, key, scancode, action, mods ->

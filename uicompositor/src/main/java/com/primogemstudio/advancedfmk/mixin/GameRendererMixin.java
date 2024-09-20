@@ -8,21 +8,23 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.primogemstudio.advancedfmk.flutter.FlutterNative;
 import com.primogemstudio.advancedfmk.kui.Shaders;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(RenderSystem.class)
+@Mixin(TitleScreen.class)
 public class GameRendererMixin {
     @Unique
     private static long flutterInstance = 0;
 
-    @Inject(method = "flipFrame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwSwapBuffers(J)V"), remap = false)
-    private static void flipFrame(long l, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "RETURN"), remap = false)
+    private void flipFrame(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (flutterInstance == 0) {
-            flutterInstance = FlutterNative.createInstance("F:/c++/glfw-flutter/app");
+            flutterInstance = FlutterNative.createInstance("/home/coder2/flutter/glfw-flutter/app");
             FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0);
         }
         FlutterNative.pollEvents(flutterInstance);
