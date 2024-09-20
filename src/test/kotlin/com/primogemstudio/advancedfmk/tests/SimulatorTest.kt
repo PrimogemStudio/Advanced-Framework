@@ -109,13 +109,12 @@ fun main() {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true)
         }
-        FlutterNative.sendKeyEvent(flutterInstance, window, key, scancode, action, mods);
+        FlutterNative.sendKeyEvent(flutterInstance, window, key, scancode, action, mods)
     }
     glfwSetCharCallback(window) { _, codepoint ->
         FlutterNative.sendCharEvent(flutterInstance, window, codepoint)
     }
     glfwSetCursorPosCallback(window) { _, x1, y1 ->
-        println("$x1,$y1")
         FlutterNative.sendPosEvent(flutterInstance, kHover, x1, y1, 0)
     }
     glfwSetMouseButtonCallback(window) { _, button, action, _ ->

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "FlutterWindowMixin",
+    "KeyboardHandlerMixin",
     "MinecraftMixin",
     "MouseHandlerMixin",
     "RenderSystemMixin"

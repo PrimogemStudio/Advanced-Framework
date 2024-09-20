@@ -37,7 +37,6 @@ public abstract class RenderSystemMixin {
         GlStateManager._disableDepthTest();
         GlStateManager._depthMask(false);
         GlStateManager._viewport(0, 0, width, height);
-        GlStateManager._enableBlend();
         var shader = Shaders.BLIT_NO_FLIP;
         shader.setSampler("DiffuseSampler", instance.getTexture());
         shader.apply();
