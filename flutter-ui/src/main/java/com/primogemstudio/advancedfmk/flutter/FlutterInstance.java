@@ -4,6 +4,7 @@ public class FlutterInstance implements AutoCloseable {
     public final long handle;
     public final Rect rect;
     public int width, height;
+    public boolean pressed;
 
     public FlutterInstance(String assets, Rect rect, int width, int height) {
         handle = FlutterNative.createInstance(assets);

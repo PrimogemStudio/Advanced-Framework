@@ -38,4 +38,13 @@ public class MouseHandlerMixin {
         if (window != minecraft.getWindow().getWindow()) return;
         if (MouseEvent.onMouseMove(x, y)) ci.cancel();
     }
+
+    @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
+    private void onMouseScroll(long window, double xOffset, double yOffset, CallbackInfo ci) {
+        if (window != minecraft.getWindow().getWindow()) return;
+        double[] x = {0};
+        double[] y = {0};
+        glfwGetCursorPos(window, x, y);
+        if (MouseEvent.onMouseScroll(x[0], y[0], xOffset, yOffset)) ci.cancel();
+    }
 }

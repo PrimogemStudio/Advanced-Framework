@@ -2,6 +2,8 @@ package com.primogemstudio.advancedfmk.tests
 
 import com.primogemstudio.advancedfmk.flutter.FlutterNative
 import com.primogemstudio.advancedfmk.flutter.PointerPhase.*
+import com.primogemstudio.advancedfmk.flutter.SignalKind.None
+import com.primogemstudio.advancedfmk.flutter.SignalKind.Scroll
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFW.Functions.*
 import org.lwjgl.opengl.GL
@@ -85,6 +87,8 @@ fun initResources() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)
 }
 
+var pressed = false
+
 fun main() {
     glfwInit()
     FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress)
@@ -99,7 +103,7 @@ fun main() {
     GL.createCapabilities()
     initResources()
     createShader()
-    flutterInstance = FlutterNative.createInstance("f:/c++/glfw-flutter/app")
+    flutterInstance = FlutterNative.createInstance("F:/Else Language/Dart/flutter-starrail/build/app")
     FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
 
     glfwSetWindowSizeCallback(window) { _, w, h ->
@@ -111,24 +115,34 @@ fun main() {
         }
         FlutterNative.sendKeyEvent(flutterInstance, window, key, scancode, action, mods)
     }
+    glfwSetScrollCallback(window) { _, x1, y1 ->
+        val x = doubleArrayOf(0.0)
+        val y = doubleArrayOf(0.0)
+        glfwGetCursorPos(window, x, y)
+        FlutterNative.sendPointerEvent(
+            flutterInstance, if (pressed) kUp else kHover, x[0], y[0], Scroll, x1 * 20, -y1 * 20, 0
+        )
+    }
     glfwSetCharCallback(window) { _, codepoint ->
         FlutterNative.sendCharEvent(flutterInstance, window, codepoint)
     }
     glfwSetCursorPosCallback(window) { _, x1, y1 ->
-        FlutterNative.sendPosEvent(flutterInstance, kHover, x1, y1, 0)
+        FlutterNative.sendPointerEvent(flutterInstance, if (pressed) kMove else kHover, x1, y1, None, 0.0, 0.0, 0)
     }
     glfwSetMouseButtonCallback(window) { _, button, action, _ ->
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
             val x = doubleArrayOf(0.0)
             val y = doubleArrayOf(0.0)
             glfwGetCursorPos(window, x, y)
-            FlutterNative.sendPosEvent(flutterInstance, kDown, x[0], y[0], 0)
+            FlutterNative.sendPointerEvent(flutterInstance, kDown, x[0], y[0], None, 0.0, 0.0, 0)
+            pressed = true
         }
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
             val x = doubleArrayOf(0.0)
             val y = doubleArrayOf(0.0)
             glfwGetCursorPos(window, x, y)
-            FlutterNative.sendPosEvent(flutterInstance, kUp, x[0], y[0], 0)
+            FlutterNative.sendPointerEvent(flutterInstance, kUp, x[0], y[0], None, 0.0, 0.0, 0)
+            pressed = false
         }
     }
     while (!glfwWindowShouldClose(window)) {

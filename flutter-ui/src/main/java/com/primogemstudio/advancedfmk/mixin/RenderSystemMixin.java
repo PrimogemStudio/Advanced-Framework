@@ -25,7 +25,7 @@ public abstract class RenderSystemMixin {
     private static void flipFrame(long l, CallbackInfo ci) {
         if (instance == null) {
             var window = Minecraft.getInstance().getWindow();
-            instance = new FlutterInstance("f:/c++/glfw-flutter/app", new Rect(0, window.getHeight() - 600, 800, window.getHeight()), 800, 600);
+            instance = new FlutterInstance("F:/Else Language/Dart/flutter-starrail/build/app", new Rect(0, window.getHeight() - 600, 800, window.getHeight()), 800, 600);
         }
         instance.pollEvents();
         blit(800, 600);

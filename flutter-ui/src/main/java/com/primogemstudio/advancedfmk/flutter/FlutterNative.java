@@ -13,7 +13,7 @@ public final class FlutterNative {
 
     public static native void destroyInstance(long instance);
 
-    public static native void sendPosEvent(long instance, @NativeType("FlutterPointerPhase") int phase, double x, double y, long view);
+    public static native void sendPointerEvent(long instance, @NativeType("FlutterPointerPhase") int phase, double x, double y, int signalKind, double scrollDX, double scrollDY, long view);
 
     public static native void sendKeyEvent(long instance, @NativeType("GLFWwindow *") long window, int key, int scancode, int action, int mods);
 
