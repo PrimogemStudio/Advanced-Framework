@@ -23,7 +23,7 @@ public class FlutterInstance implements AutoCloseable {
         this.rect = rect;
         this.width = width;
         this.height = height;
-        FlutterNative.sendMetricsEvent(handle, rect.right - rect.left, rect.bottom - rect.top, 0);
+        sendSizeEvent();
         Events.register(this);
         var _handle = handle;
         cleaner = FlutterNative.cleaner.register(this, () -> FlutterNative.destroyInstance(_handle));
@@ -31,6 +31,16 @@ public class FlutterInstance implements AutoCloseable {
 
     public boolean hitTest(double x, double y) {
         return x > rect.left && x < rect.right && y > rect.top && y < rect.bottom;
+    }
+
+    void sendSizeEvent() {
+        FlutterNative.sendMetricsEvent(handle, rect.right - rect.left, rect.bottom - rect.top, 0);
+    }
+
+    public void resize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        ViewEvent.resize(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
     }
 
     public void pollEvents() {
