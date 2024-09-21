@@ -12,4 +12,9 @@ public class Rect {
 
     public Rect() {
     }
+
+    @Override
+    public String toString() {
+        return left + " " + top + " " + right + " " + bottom;
+    }
 }

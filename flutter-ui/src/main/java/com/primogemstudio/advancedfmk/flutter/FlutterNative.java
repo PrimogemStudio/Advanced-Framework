@@ -6,7 +6,7 @@ import java.lang.ref.Cleaner;
 
 public final class FlutterNative {
     static {
-        System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
+        System.load("/home/coder2/flutter/engine_build/test/src/out/host_release/libflutter_minecraft.so");
     }
 
     static Cleaner cleaner = Cleaner.create();
