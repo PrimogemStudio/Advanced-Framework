@@ -22,6 +22,7 @@ public abstract class RenderSystemMixin {
             instance.getComposeData().setBlurType(1);
             instance.getComposeData().setBlurRadius(8);
             instance.getComposeData().setNoise(0.005f);
+            instance.getComposeData().setOpacity(0.8f);
         }
         instance.pollEvents();
         instance.renderToScreen();

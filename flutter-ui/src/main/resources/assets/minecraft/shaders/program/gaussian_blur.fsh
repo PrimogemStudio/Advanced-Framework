@@ -7,6 +7,7 @@ uniform vec4 ColorModulate;
 uniform int Radius;
 uniform int DigType;
 uniform float NoiseStrength;
+uniform float Opacity;
 
 in vec2 texCoord;
 in vec2 oneTexel;
@@ -68,9 +69,7 @@ void main() {
         return;
     }
 
-    col.a = 0.88;
-
-    fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a);
+    fragColor = mix(DigType == 0 ? blur(Radius) : blur_dig2(Radius), vec4(col.xyz, 1.0), col.a * Opacity);
     fragColor.x += random(dst.xy * 0.03125 * texCoord) * NoiseStrength;
     fragColor.y += random(dst.xz * 0.03125 * texCoord) * NoiseStrength;
     fragColor.z += random(dst.yz * 0.03125 * texCoord) * NoiseStrength;
