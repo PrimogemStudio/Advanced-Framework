@@ -1,7 +1,10 @@
 package com.primogemstudio.advancedfmk.tests
 
 import com.primogemstudio.advancedfmk.flutter.FlutterNative
-import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.*
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kDown
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kHover
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kMove
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kUp
 import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.None
 import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.Scroll
 import org.lwjgl.glfw.GLFW.*

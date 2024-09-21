@@ -20,6 +20,7 @@ class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, va
     private val cleaner: Cleaner.Cleanable
     val handle: Long = FlutterNative.createInstance(assets)
     var pressed: Boolean = false
+    val composeData = FlutterComposeData()
 
     init {
         sendSizeEvent()
@@ -84,6 +85,9 @@ class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, va
         GlStateManager._colorMask(true, true, true, true)
 
         POST_BLUR.setSamplerUniform("InputSampler", ITARGET)
+        POST_BLUR.setUniformValue("Radius", composeData.blurRadius)
+        POST_BLUR.setUniformValue("DigType", composeData.blurType)
+        POST_BLUR.setUniformValue("NoiseStrength", composeData.noise)
         POST_BLUR.render(0f)
         // -Dorg.lwjgl.glfw.libname=/usr/lib/libglfw.so
     }
