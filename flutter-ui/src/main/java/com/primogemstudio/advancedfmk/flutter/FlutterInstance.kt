@@ -1,15 +1,22 @@
 package com.primogemstudio.advancedfmk.flutter
 
+import com.mojang.blaze3d.pipeline.TextureTarget
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.primogemstudio.advancedfmk.flutter.Shaders.POST_BLUR
 import net.minecraft.client.Minecraft
 import java.lang.ref.Cleaner
 
-class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, var height: Int) :
-    AutoCloseable {
+class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, var height: Int): AutoCloseable {
+    companion object {
+        val ITARGET = TextureTarget(1, 1, false, false).apply {
+            setClearColor(0f, 0f, 0f, 0f)
+            clear(false)
+        }
+    }
     private val cleaner: Cleaner.Cleanable
     val handle: Long = FlutterNative.createInstance(assets)
     var pressed: Boolean = false
@@ -47,13 +54,16 @@ class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, va
         get() = FlutterNative.getTexture(handle)
 
     fun renderToScreen() {
+        ITARGET.clear(false)
+        ITARGET.bindWrite(true)
+
         val x = rect.left
         val y = Minecraft.getInstance().window.height - rect.bottom
         val width = rect.right - rect.left
         val height = rect.bottom - rect.top
         val w = Minecraft.getInstance().window.width
         val h = Minecraft.getInstance().window.height
-        GlStateManager._colorMask(true, true, true, false)
+        GlStateManager._colorMask(true, true, true, true)
         GlStateManager._disableDepthTest()
         GlStateManager._depthMask(false)
         GlStateManager._viewport(x, y, width, height)
@@ -72,6 +82,10 @@ class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, va
         GlStateManager._disableBlend()
         GlStateManager._depthMask(true)
         GlStateManager._colorMask(true, true, true, true)
+
+        POST_BLUR.setSamplerUniform("InputSampler", ITARGET)
+        POST_BLUR.render(0f)
+        // -Dorg.lwjgl.glfw.libname=/usr/lib/libglfw.so
     }
 
     override fun close() {

@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk.flutter
 
+import com.primogemstudio.advancedfmk.flutter.FlutterInstance.Companion.ITARGET
 import java.util.function.Consumer
 
 object FlutterViewEvent {
@@ -11,5 +12,6 @@ object FlutterViewEvent {
             i.rect.bottom = (height + i.height) / 2
             i.sendSizeEvent()
         })
+        ITARGET.resize(width, height, false)
     }
 }
