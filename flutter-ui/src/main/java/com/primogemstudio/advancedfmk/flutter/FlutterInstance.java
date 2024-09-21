@@ -1,5 +1,14 @@
 package com.primogemstudio.advancedfmk.flutter;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
+import org.spongepowered.asm.mixin.Unique;
+
 import java.lang.ref.Cleaner;
 
 public class FlutterInstance implements AutoCloseable {
@@ -30,6 +39,34 @@ public class FlutterInstance implements AutoCloseable {
 
     public int getTexture() {
         return FlutterNative.getTexture(handle);
+    }
+
+    public void renderToScreen() {
+        var x = rect.left;
+        var y = Minecraft.getInstance().getWindow().getHeight() - rect.bottom;
+        var width = rect.right - rect.left;
+        var height = rect.bottom - rect.top;
+        var w = Minecraft.getInstance().getWindow().getWidth();
+        var h = Minecraft.getInstance().getWindow().getHeight();
+        GlStateManager._colorMask(true, true, true, false);
+        GlStateManager._disableDepthTest();
+        GlStateManager._depthMask(false);
+        GlStateManager._viewport(x, y, width, height);
+        GlStateManager._enableBlend();
+        var shader = Shaders.BLIT_NO_FLIP;
+        shader.getUniform("PositionOffset").set((float) (x / w), (float) (y / h));
+        shader.setSampler("DiffuseSampler", getTexture());
+        shader.apply();
+        BufferBuilder buff = RenderSystem.renderThreadTesselator().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLIT_SCREEN);
+        buff.addVertex(0.0F, 0.0F, 0.0F);
+        buff.addVertex(1.0F, 0.0F, 0.0F);
+        buff.addVertex(1.0F, 1.0F, 0.0F);
+        buff.addVertex(0.0F, 1.0F, 0.0F);
+        BufferUploader.draw(buff.buildOrThrow());
+        shader.clear();
+        GlStateManager._disableBlend();
+        GlStateManager._depthMask(true);
+        GlStateManager._colorMask(true, true, true, true);
     }
 
     @Override

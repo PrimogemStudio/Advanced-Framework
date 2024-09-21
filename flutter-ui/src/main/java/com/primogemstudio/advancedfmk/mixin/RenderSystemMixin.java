@@ -28,32 +28,6 @@ public abstract class RenderSystemMixin {
             instance = new FlutterInstance("/home/coder2/flutter/flutter_demo/build/linux/x64/release/bundle/data/flutter_assets", new Rect(0, window.getHeight() - 600 - 100, 800, window.getHeight() - 100), 800, 600);
         }
         instance.pollEvents();
-        var rect = instance.rect;
-        blit(rect.left, window.getHeight() - rect.bottom, rect.right - rect.left, rect.bottom - rect.top);
-    }
-
-    @Unique
-    private static void blit(int x, int y, int width, int height) {
-        var w = Minecraft.getInstance().getWindow().getWidth();
-        var h = Minecraft.getInstance().getWindow().getHeight();
-        GlStateManager._colorMask(true, true, true, false);
-        GlStateManager._disableDepthTest();
-        GlStateManager._depthMask(false);
-        GlStateManager._viewport(x, y, width, height);
-        GlStateManager._enableBlend();
-        var shader = Shaders.BLIT_NO_FLIP;
-        shader.getUniform("PositionOffset").set((float) (x / w), (float) (y / h));
-        shader.setSampler("DiffuseSampler", instance.getTexture());
-        shader.apply();
-        BufferBuilder buff = RenderSystem.renderThreadTesselator().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLIT_SCREEN);
-        buff.addVertex(0.0F, 0.0F, 0.0F);
-        buff.addVertex(1.0F, 0.0F, 0.0F);
-        buff.addVertex(1.0F, 1.0F, 0.0F);
-        buff.addVertex(0.0F, 1.0F, 0.0F);
-        BufferUploader.draw(buff.buildOrThrow());
-        shader.clear();
-        GlStateManager._disableBlend();
-        GlStateManager._depthMask(true);
-        GlStateManager._colorMask(true, true, true, true);
+        instance.renderToScreen();
     }
 }
