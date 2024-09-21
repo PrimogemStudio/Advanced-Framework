@@ -16,9 +16,11 @@ public class Live2DModel implements AutoCloseable {
     private final Cleaner.Cleanable cleaner;
 
     public Live2DModel(String name, String path) {
-        if (!new File(path + name + ".model3.json").exists()) throw new IllegalStateException("File not found with name=" + name + ", path=" + path);
+        if (!new File(path + name + ".model3.json").exists())
+            throw new IllegalStateException("File not found with name=" + name + ", path=" + path);
         load(name, path);
-        cleaner = Live2DNative.cleaner.register(this, () -> {});
+        var _ptr = ptr;
+        cleaner = Live2DNative.cleaner.register(this, () -> release(_ptr));
     }
 
     @Override

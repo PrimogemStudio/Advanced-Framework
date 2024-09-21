@@ -1,6 +1,9 @@
 package com.primogemstudio.advancedfmk.flutter;
 
+import java.lang.ref.Cleaner;
+
 public class FlutterInstance implements AutoCloseable {
+    private final Cleaner.Cleanable cleaner;
     public final long handle;
     public final Rect rect;
     public int width, height;
@@ -13,6 +16,8 @@ public class FlutterInstance implements AutoCloseable {
         this.height = height;
         FlutterNative.sendMetricsEvent(handle, rect.right - rect.left, rect.bottom - rect.top, 0);
         Events.register(this);
+        var _handle = handle;
+        cleaner = FlutterNative.cleaner.register(this, () -> FlutterNative.destroyInstance(_handle));
     }
 
     public boolean hitTest(double x, double y) {
@@ -30,6 +35,6 @@ public class FlutterInstance implements AutoCloseable {
     @Override
     public void close() {
         Events.unregister(this);
-        FlutterNative.destroyInstance(handle);
+        cleaner.clean();
     }
 }

@@ -2,10 +2,14 @@ package com.primogemstudio.advancedfmk.flutter;
 
 import org.lwjgl.system.NativeType;
 
+import java.lang.ref.Cleaner;
+
 public final class FlutterNative {
     static {
         System.load("D:/engine/src/out/host_release/flutter_minecraft.dll");
     }
+
+    static Cleaner cleaner = Cleaner.create();
 
     public static native void init(long f1, long f2, long f3, long f4);
 
