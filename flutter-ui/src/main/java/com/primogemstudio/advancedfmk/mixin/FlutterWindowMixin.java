@@ -4,9 +4,9 @@ import com.mojang.blaze3d.platform.DisplayData;
 import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.platform.WindowEventHandler;
+import com.primogemstudio.advancedfmk.flutter.FlutterKeyEvent;
 import com.primogemstudio.advancedfmk.flutter.FlutterNative;
-import com.primogemstudio.advancedfmk.flutter.KeyEvent;
-import com.primogemstudio.advancedfmk.flutter.ViewEvent;
+import com.primogemstudio.advancedfmk.flutter.FlutterViewEvent;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,11 +26,11 @@ public class FlutterWindowMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
         FlutterNative.init(GetKeyName, GetClipboardString, SetClipboardString, GetProcAddress);
-        GLFW.glfwSetCharCallback(window, KeyEvent::onChar);
+        GLFW.glfwSetCharCallback(window, FlutterKeyEvent.INSTANCE::onChar);
     }
 
     @Inject(method = "onResize", at = @At("RETURN"))
     private void onResize(long window, int width, int height, CallbackInfo ci) {
-        ViewEvent.resize(width, height);
+        FlutterViewEvent.INSTANCE.resize(width, height);
     }
 }

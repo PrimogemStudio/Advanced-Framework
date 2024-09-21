@@ -1,9 +1,9 @@
 package com.primogemstudio.advancedfmk.tests
 
 import com.primogemstudio.advancedfmk.flutter.FlutterNative
-import com.primogemstudio.advancedfmk.flutter.PointerPhase.*
-import com.primogemstudio.advancedfmk.flutter.SignalKind.None
-import com.primogemstudio.advancedfmk.flutter.SignalKind.Scroll
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.*
+import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.None
+import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.Scroll
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFW.Functions.*
 import org.lwjgl.opengl.GL

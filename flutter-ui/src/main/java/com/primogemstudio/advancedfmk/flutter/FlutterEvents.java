@@ -2,7 +2,7 @@ package com.primogemstudio.advancedfmk.flutter;
 
 import java.util.HashSet;
 
-public class Events {
+public class FlutterEvents {
     static final HashSet<FlutterInstance> instances = new HashSet<>();
 
     public static void register(FlutterInstance instance) {

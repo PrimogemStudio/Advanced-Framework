@@ -1,7 +1,7 @@
 package com.primogemstudio.advancedfmk.mixin;
 
-import com.primogemstudio.advancedfmk.flutter.MouseEvent;
-import com.primogemstudio.advancedfmk.flutter.PointerPhase;
+import com.primogemstudio.advancedfmk.flutter.FlutterMouseEvent;
+import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Final;
@@ -26,17 +26,17 @@ public class MouseHandlerMixin {
         double[] y = {0};
         glfwGetCursorPos(window, x, y);
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
-            if (MouseEvent.onMouseButton(PointerPhase.kDown, x[0], y[0])) ci.cancel();
+            if (FlutterMouseEvent.INSTANCE.onMouseButton(FlutterPointerPhase.kDown, x[0], y[0])) ci.cancel();
         }
         if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
-            if (MouseEvent.onMouseButton(PointerPhase.kUp, x[0], y[0])) ci.cancel();
+            if (FlutterMouseEvent.INSTANCE.onMouseButton(FlutterPointerPhase.kUp, x[0], y[0])) ci.cancel();
         }
     }
 
     @Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
     private void onMouseMove(long window, double x, double y, CallbackInfo ci) {
         if (window != minecraft.getWindow().getWindow()) return;
-        if (MouseEvent.onMouseMove(x, y)) ci.cancel();
+        if (FlutterMouseEvent.INSTANCE.onMouseMove(x, y)) ci.cancel();
     }
 
     @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
@@ -45,6 +45,6 @@ public class MouseHandlerMixin {
         double[] x = {0};
         double[] y = {0};
         glfwGetCursorPos(window, x, y);
-        if (MouseEvent.onMouseScroll(x[0], y[0], xOffset, yOffset)) ci.cancel();
+        if (FlutterMouseEvent.INSTANCE.onMouseScroll(x[0], y[0], xOffset, yOffset)) ci.cancel();
     }
 }
