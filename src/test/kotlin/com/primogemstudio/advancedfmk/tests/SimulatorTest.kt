@@ -106,7 +106,7 @@ fun main() {
     GL.createCapabilities()
     initResources()
     createShader()
-    flutterInstance = FlutterNative.createInstance("F:/Else Language/Dart/flutter-starrail/build/app")
+    flutterInstance = FlutterNative.createInstance("jar://app")
     FlutterNative.sendMetricsEvent(flutterInstance, 800, 600, 0)
 
     glfwSetWindowSizeCallback(window) { _, w, h ->
@@ -159,7 +159,6 @@ fun main() {
         glfwSwapBuffers(window)
         glfwPollEvents()
     }
-
     FlutterNative.destroyInstance(flutterInstance)
     glfwDestroyWindow(window)
     glfwTerminate()

@@ -18,7 +18,8 @@ public abstract class RenderSystemMixin {
     @Inject(method = "render", at = @At(value = "RETURN"))
     private void flipFrame(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
         if (instance == null) {
-            instance = new FlutterInstance("/home/coder2/flutter/flutter_demo/build/linux/x64/release/bundle/data/flutter_assets", new FlutterRect(), 600, 800);
+            instance = new FlutterInstance("jar://app", new FlutterRect(), 600, 800);
+            instance.sendSizeEvent();
             instance.getComposeData().setBlurType(1);
             instance.getComposeData().setBlurRadius(8);
             instance.getComposeData().setNoise(0.005f);
