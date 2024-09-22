@@ -4,3 +4,6 @@
 [submodule "animerenderer/src/main/resources/natives/live2d"]
 	path = animerenderer/src/main/resources/natives/live2d
 	url = https://github.com/PrimogemStudio/live2d-native-binary
+[submodule "flutter-ui/src/main/resources/natives"]
+	path = flutter-ui/src/main/resources/natives
+	url = https://github.com/PrimogemStudio/flutter-minecraft-prebuilt
