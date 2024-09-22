@@ -10,13 +10,14 @@ import com.primogemstudio.advancedfmk.flutter.Shaders.POST_BLUR
 import net.minecraft.client.Minecraft
 import java.lang.ref.Cleaner
 
-class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, var height: Int): AutoCloseable {
+class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, var height: Int) : AutoCloseable {
     companion object {
         val ITARGET = TextureTarget(1, 1, false, false).apply {
             setClearColor(0f, 0f, 0f, 0f)
             clear(false)
         }
     }
+
     private val cleaner: Cleaner.Cleanable
     val handle: Long = FlutterNative.createInstance(assets)
     var pressed: Boolean = false
