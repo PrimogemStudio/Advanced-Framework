@@ -1,4 +1,4 @@
-package com.primogemstudio.advancedfmk.tests
+package com.primogemstudio.advancedfmk
 
 import com.primogemstudio.advancedfmk.flutter.FlutterNative
 import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kDown
