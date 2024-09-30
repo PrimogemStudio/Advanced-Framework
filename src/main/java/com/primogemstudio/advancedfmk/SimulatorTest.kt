@@ -1,5 +1,6 @@
 package com.primogemstudio.advancedfmk
 
+import com.primogemstudio.advancedfmk.flutter.BasicMessageChannel
 import com.primogemstudio.advancedfmk.flutter.FlutterNative
 import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kDown
 import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kHover
@@ -7,10 +8,13 @@ import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kMove
 import com.primogemstudio.advancedfmk.flutter.FlutterPointerPhase.kUp
 import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.None
 import com.primogemstudio.advancedfmk.flutter.FlutterSignalKind.Scroll
+import com.primogemstudio.advancedfmk.flutter.MethodChannel
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFW.Functions.*
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL30.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 var flutterInstance: Long = 0
 var vertexShader: Int = 0
@@ -147,6 +151,41 @@ fun main() {
             pressed = false
         }
     }
+    val mc = MethodChannel(flutterInstance, "MainPage.Event")
+    mc.setHandler { call, result ->
+        if (call.method == "testPrint") {
+            println("平台消息！")
+            result.success(101)
+            return@setHandler
+        }
+        result.notImplemented()
+    }
+    val mc2 = BasicMessageChannel<String>(flutterInstance, "Channel2")
+    mc2.setHandler { message, reply ->
+        println(message)
+        reply.reply("Hello world")
+    }
+    val t = Thread {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        while (true) {
+            Thread.sleep(3000)
+            mc.invoke("addMsg", "平台消息！${sdf.format(Date())}", object : MethodChannel.Result {
+                override fun success(result: Any?) {
+                    println(result)
+                }
+
+                override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+                }
+
+                override fun notImplemented() {
+                }
+            })
+            Thread.sleep(500)
+            mc2.send("Hello flutter")
+        }
+    }
+    t.isDaemon = true
+    t.start()
     while (!glfwWindowShouldClose(window)) {
         FlutterNative.pollEvents(flutterInstance)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f)

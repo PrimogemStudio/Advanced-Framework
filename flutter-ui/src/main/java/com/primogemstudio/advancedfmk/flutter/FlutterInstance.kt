@@ -52,7 +52,7 @@ class FlutterInstance(assets: String?, val rect: FlutterRect, var width: Int, va
         FlutterNative.pollEvents(handle)
     }
 
-    val texture: Int
+    private val texture: Int
         get() = FlutterNative.getTexture(handle)
 
     fun renderToScreen() {

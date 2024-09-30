@@ -4,6 +4,7 @@ import org.lwjgl.system.NativeType;
 
 import java.io.FileOutputStream;
 import java.lang.ref.Cleaner;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public final class FlutterNative {
@@ -17,9 +18,6 @@ public final class FlutterNative {
         } else if (os.contains("Linux")) {
             path = "/natives/libflutter_minecraft.so";
             name = "libflutter_minecraft.so";
-        } else if (os.contains("Mac")) {
-            path = "/natives/libflutter_minecraft.dylib";
-            name = "libflutter_minecraft.dylib";
         } else {
             throw new RuntimeException("Unsupported OS: " + os);
         }
@@ -53,4 +51,10 @@ public final class FlutterNative {
     public static native void pollEvents(long instance);
 
     public static native int getTexture(long instance);
+
+    public static native void sendPlatformMessage(long instance, String channel, ByteBuffer data, BinaryReply reply);
+
+    public static native void sendMessageResponse(long reply, ByteBuffer data);
+
+    public static native void setMessageHandler(long instance, String channel, BinaryMessageHandler handler);
 }
